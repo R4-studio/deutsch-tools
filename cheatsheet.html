@@ -262,6 +262,28 @@ tr:hover td{background:var(--bg-row-hover)}
 }
 .theme-toggle:hover{background:var(--bg-row-hover)}
 
+/* Иконка "На главную" — стилизована под theme-toggle */
+.home-btn {
+  padding: 8px 10px;
+  font-size: 14px;
+  border-radius: 6px;
+  background: var(--bg-tab);
+  color: var(--text-main);
+  border: 1px solid var(--border-tab);
+  cursor: pointer;
+  font-weight: 600;
+  white-space: nowrap;
+  user-select: none;
+  min-width: 42px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  line-height: 1;
+}
+.home-btn:hover { background: var(--bg-row-hover); }
+
 /* ===== Бургер-меню (мобильное) ===== */
 .burger-btn {
   display: none; /* На десктопе скрыт */
@@ -365,9 +387,9 @@ tr:hover td{background:var(--bg-row-hover)}
 })();
 </script>
 </head><body>
-  <a href="index.html" style="position:fixed;top:12px;left:12px;padding:6px 10px;background:rgba(255,255,255,0.9);color:#333;border:1px solid #ccc;border-radius:6px;font-size:13px;font-weight:600;text-decoration:none;z-index:10000;box-shadow:0 2px 4px rgba(0,0,0,0.1);">← на главную</a>
   <div class="search-bar">
   <div style="display:flex;align-items:center;gap:8px;padding:10px;">
+  <a href="index.html" class="home-btn" title="На главную">🏠</a>
   <button class="burger-btn" onclick="openMenu()" title="Меню">☰</button>
   <input type="text" id="searchInput" placeholder="Поиск..." onkeyup="jumpSearch(event)">
   <button onclick="jumpSearch({key:'Enter'})" style="padding:8px 14px;font-size:13px;border-radius:6px;background:var(--accent);color:white;border:none;cursor:pointer;font-weight:600;white-space:nowrap;">Найти</button>
