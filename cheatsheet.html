@@ -1,0 +1,2607 @@
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8"><style>
+/* ===== ТЕМЫ через CSS-переменные ===== */
+:root {
+  --bg-body: #f0f2f5;
+  --bg-panel: #fff;
+  --bg-tab: #eee;
+  --bg-tab-active: #fff;
+  --bg-th: #f8f9fa;
+  --bg-rule-box: #fdfdfe;
+  --bg-row-hover: #f9fdff;
+  --bg-warning: #fff5f5;
+  --bg-highlight: #ffeaa7;
+  --text-main: #333;
+  --text-muted: #555;
+  --text-th: #7f8c8d;
+  --text-title: #2c3e50;
+  --text-tab-active: #000;
+  --border-soft: #eee;
+  --border-row: #f1f1f1;
+  --border-tab: #ccc;
+  --border-input: #ccc;
+  --accent: #3498db;
+  --accent-dark: #2c80b4;
+  --warning-border: #e74c3c;
+  --shadow: 0 2px 5px rgba(0,0,0,0.05);
+  --shadow-bar: 0 4px 12px rgba(0,0,0,0.2);
+  --badge-m-bg: #d1e9ff; --badge-m-fg: #0056b3;
+  --badge-f-bg: #ffd1dc; --badge-f-fg: #a11;
+  --badge-n-bg: #d1ffd1; --badge-n-fg: #006400;
+  --badge-pl-bg: #fff3cd; --badge-pl-fg: #856404;
+  /* Акценты для правил/выделений */
+  --accent-blue: #0056b3;
+  --accent-red: #a11;
+  --accent-red-bright: #c0392b;
+  --tip-bg: #fff8e1;
+  --tip-border: #f39c12;
+}
+
+/* Тёмная тема — глубокий чёрный (Telegram-style) */
+.theme-dark {
+  --bg-body: #0e0e10;
+  --bg-panel: #17171a;
+  --bg-tab: #1f1f23;
+  --bg-tab-active: #17171a;
+  --bg-th: #1a1a1d;
+  --bg-rule-box: #1c1c20;
+  --bg-row-hover: #202028;
+  --bg-warning: #2a1818;
+  --bg-highlight: #5a4a1f;
+  --text-main: #e6e6e8;
+  --text-muted: #b8b8bd;
+  --text-th: #a0a0a8;
+  --text-title: #cfd6e0;
+  --text-tab-active: #fff;
+  --border-soft: #2a2a2e;
+  --border-row: #232327;
+  --border-tab: #333338;
+  --border-input: #333338;
+  --accent: #4ade80;
+  --accent-dark: #22c55e;
+  --warning-border: #ff6b6b;
+  --shadow: 0 2px 5px rgba(0,0,0,0.4);
+  --shadow-bar: 0 4px 12px rgba(0,0,0,0.6);
+  --badge-m-bg: #1a3a5c; --badge-m-fg: #8ec5ff;
+  --badge-f-bg: #4a1a26; --badge-f-fg: #ffa3b8;
+  --badge-n-bg: #1a3a1a; --badge-n-fg: #8eff8e;
+  --badge-pl-bg: #4a3a14; --badge-pl-fg: #ffd966;
+  /* Акценты для правил/выделений (адаптированы под тёмный) */
+  --accent-blue: #8ec5ff;
+  --accent-red: #ffa3b8;
+  --accent-red-bright: #ff8a7a;
+  --tip-bg: #2a2418;
+  --tip-border: #d4a44a;
+}
+
+/* Авто-тема по системе (если пользователь не выбрал явно) */
+@media (prefers-color-scheme: dark) {
+  .theme-auto {
+    --bg-body: #0e0e10;
+    --bg-panel: #17171a;
+    --bg-tab: #1f1f23;
+    --bg-tab-active: #17171a;
+    --bg-th: #1a1a1d;
+    --bg-rule-box: #1c1c20;
+    --bg-row-hover: #202028;
+    --bg-warning: #2a1818;
+    --bg-highlight: #5a4a1f;
+    --text-main: #e6e6e8;
+    --text-muted: #b8b8bd;
+  --text-th: #a0a0a8;
+    --text-title: #cfd6e0;
+    --text-tab-active: #fff;
+    --border-soft: #2a2a2e;
+    --border-row: #232327;
+    --border-tab: #333338;
+    --border-input: #333338;
+    --accent: #4ade80;
+  --accent-dark: #22c55e;
+    --warning-border: #ff6b6b;
+    --shadow: 0 2px 5px rgba(0,0,0,0.4);
+    --shadow-bar: 0 4px 12px rgba(0,0,0,0.6);
+    --badge-m-bg: #1a3a5c; --badge-m-fg: #8ec5ff;
+    --badge-f-bg: #4a1a26; --badge-f-fg: #ffa3b8;
+    --badge-n-bg: #1a3a1a; --badge-n-fg: #8eff8e;
+    --badge-pl-bg: #4a3a14; --badge-pl-fg: #ffd966;
+    --accent-blue: #8ec5ff;
+    --accent-red: #ffa3b8;
+    --accent-red-bright: #ff8a7a;
+    --tip-bg: #2a2418;
+    --tip-border: #d4a44a;
+  }
+}
+
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:sans-serif;font-size:13px;color:var(--text-main);line-height:1.4;background:var(--bg-body)}
+@media (max-width: 768px){
+  .tabs{
+     margin-top: 80px;
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    white-space: nowrap;
+  }
+
+  .tab{
+    flex: 0 0 auto;
+    font-size: 10px;
+    padding: 10px 12px;
+    touch-action: manipulation;
+}
+  }
+
+.tab{padding:10px 12px;border-radius:5px 5px 0 0;cursor:pointer;font-size:11px;font-weight:600;color:var(--text-muted);border:1px solid transparent;background:var(--bg-tab)}
+.tabs {
+  margin-top: 80px;
+}
+.tab.active{background:var(--bg-tab-active);border-color:var(--border-tab);border-bottom-color:var(--bg-tab-active);color:var(--text-tab-active);margin-bottom:-1px}
+.panel{display:none;padding:15px 15px 80px 15px;background:var(--bg-panel);}
+.panel.active{display:block}
+.section{margin-bottom:25px}
+.section-title{font-size:14px;font-weight:bold;color:var(--text-title);margin-bottom:10px;padding-bottom:5px;border-bottom:2px solid var(--accent);display:flex;align-items:center;gap:8px}
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-bottom: 10px;
+  table-layout: fixed;
+}
+
+/* Ширины колонок задаются через классы; добавляются автоматически JS */
+table.noun-table th:nth-child(1), table.noun-table td:nth-child(1) { width: 30%; }
+table.noun-table th:nth-child(2), table.noun-table td:nth-child(2) { width: 14%; text-align: center; white-space: nowrap; }
+table.noun-table th:nth-child(3), table.noun-table td:nth-child(3) { width: 56%; }
+table.vocab-table th:nth-child(1), table.vocab-table td:nth-child(1) { width: 28%; }
+table.vocab-table th:nth-child(2), table.vocab-table td:nth-child(2) { width: 27%; }
+table.vocab-table th:nth-child(3), table.vocab-table td:nth-child(3) { width: 45%; }
+
+/* Бэйджи не должны разрываться, даже в узких ячейках */
+.badge { white-space: nowrap; }
+
+th{background:var(--bg-th);padding:8px;text-align:left;font-size:11px;color:var(--text-th);border-bottom:1px solid var(--border-soft)}
+td{padding:8px;border-bottom:1px solid var(--border-row);vertical-align:top}
+tr:hover td{background:var(--bg-row-hover)}
+.badge{display:inline-block;font-size:10px;padding:2px 5px;border-radius:3px;font-weight:bold;margin-right:5px}
+.m{background:var(--badge-m-bg);color:var(--badge-m-fg)} .f{background:var(--badge-f-bg);color:var(--badge-f-fg)} .n{background:var(--badge-n-bg);color:var(--badge-n-fg)} .pl{background:var(--badge-pl-bg);color:var(--badge-pl-fg)}
+.rule-box{background:var(--bg-rule-box);padding:12px;border-radius:4px;margin-bottom:15px;border-left:4px solid var(--accent);box-shadow:var(--shadow)}
+.warning{background:var(--bg-warning);border-left:4px solid var(--warning-border);padding:10px;margin:10px 0;font-size:12px}
+.grid-2{display:grid;grid-template-columns:1fr 1fr;gap:15px}
+@media(max-width:768px){.grid-2{grid-template-columns:1fr}}
+#searchInput{
+  flex:1;
+  padding:8px;
+  font-size:13px;
+  border-radius:6px;
+  border:1px solid var(--border-input);
+  background:var(--bg-panel);
+  color:var(--text-main);
+}
+@media (max-width: 768px){
+  table{
+    display:table;
+    width: 100%;
+    overflow-x:auto;
+    white-space: normal;
+  }
+
+  td, th{
+    font-size: 11px;
+    padding:6px;
+  }
+}@media (max-width: 768px){
+  .panel{
+    padding:10px;
+  }
+
+  .section-title{
+    font-size:13px;
+  }
+
+  body{
+    font-size:12px;
+  }
+}
+.to-top{
+  width: 100%;
+  padding: 16px;
+  margin-top: 20px;
+  text-align: center;
+  background: var(--accent);
+  color: white;
+  font-weight: 600;
+  font-size: 14px;
+  cursor: pointer;
+  border-radius: 6px;
+  user-select: none;
+  transition: transform 0.2s, opacity 0.2s;
+}
+
+.to-top:active{
+  transform: scale(0.98);
+  background: var(--accent-dark);
+}
+.panel.active::after {
+  content: '';
+  display: block;
+  height: 40px;
+}
+.search-bar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  background: var(--bg-body);
+  z-index: 1000;
+  border-radius: 6px;
+  opacity: 0.95;
+  box-shadow: var(--shadow-bar);
+  transition: transform 0.3s ease;
+}
+
+.conj-table{width:auto;min-width:180px}
+.conj-table td{padding:5px 10px;border-bottom:1px solid var(--border-row)}
+.conj-table td:first-child{color:var(--text-th);font-size:11px;width:80px}
+.conj-table td:last-child{font-weight:600}
+.three-col{display:grid;grid-template-columns:repeat(3,1fr);gap:15px}
+.two-col{display:grid;grid-template-columns:1fr 1fr;gap:15px}
+@media(max-width:768px){.three-col{grid-template-columns:1fr}.two-col{grid-template-columns:1fr}}
+#csb-icon { display: none !important; }
+
+/* Кнопка переключения темы */
+.theme-toggle{
+  padding:8px 10px;
+  font-size:14px;
+  border-radius:6px;
+  background:var(--bg-tab);
+  color:var(--text-main);
+  border:1px solid var(--border-tab);
+  cursor:pointer;
+  font-weight:600;
+  white-space:nowrap;
+  user-select:none;
+  min-width:42px;
+}
+.theme-toggle:hover{background:var(--bg-row-hover)}
+
+/* ===== Бургер-меню (мобильное) ===== */
+.burger-btn {
+  display: none; /* На десктопе скрыт */
+  padding: 8px 10px;
+  font-size: 18px;
+  border-radius: 6px;
+  background: var(--bg-tab);
+  color: var(--text-main);
+  border: 1px solid var(--border-tab);
+  cursor: pointer;
+  font-weight: 600;
+  user-select: none;
+  min-width: 42px;
+  line-height: 1;
+}
+.burger-btn:hover { background: var(--bg-row-hover); }
+
+.menu-backdrop {
+  display: none;
+  position: fixed;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background: rgba(0,0,0,0.5);
+  z-index: 1500;
+  opacity: 0;
+  transition: opacity 0.25s;
+}
+.menu-backdrop.open {
+  display: block;
+  opacity: 1;
+}
+
+.side-menu {
+  position: fixed;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  width: 75%;
+  max-width: 300px;
+  background: var(--bg-panel);
+  z-index: 2000;
+  box-shadow: 4px 0 16px rgba(0,0,0,0.3);
+  transform: translateX(-100%);
+  transition: transform 0.25s ease;
+  display: flex;
+  flex-direction: column;
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+}
+.side-menu.open { transform: translateX(0); }
+
+.side-menu-header {
+  padding: 14px 16px;
+  font-weight: 700;
+  font-size: 14px;
+  color: var(--text-title);
+  border-bottom: 1px solid var(--border-soft);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.side-menu-close {
+  background: none;
+  border: none;
+  font-size: 22px;
+  color: var(--text-muted);
+  cursor: pointer;
+  padding: 0 4px;
+  line-height: 1;
+}
+.side-menu-item {
+  padding: 14px 16px;
+  font-size: 14px;
+  color: var(--text-main);
+  cursor: pointer;
+  border-bottom: 1px solid var(--border-row);
+  user-select: none;
+}
+.side-menu-item:hover, .side-menu-item:active {
+  background: var(--bg-row-hover);
+}
+.side-menu-item.active {
+  background: var(--bg-row-hover);
+  color: var(--accent);
+  font-weight: 600;
+  border-left: 4px solid var(--accent);
+  padding-left: 12px;
+}
+
+@media (max-width: 768px) {
+  .burger-btn { display: block; }
+  .tabs { display: none; }
+  .panel { padding-top: 70px; }
+}
+</style>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<script>
+// Инициализация темы ДО рендера — чтобы не было вспышки светлой темы при загрузке
+(function() {
+  var saved = localStorage.getItem('theme') || 'auto';
+  document.documentElement.classList.add('theme-' + saved);
+})();
+</script>
+</head><body>
+  <a href="index.html" style="position:fixed;top:12px;left:12px;padding:6px 10px;background:rgba(255,255,255,0.9);color:#333;border:1px solid #ccc;border-radius:6px;font-size:13px;font-weight:600;text-decoration:none;z-index:10000;box-shadow:0 2px 4px rgba(0,0,0,0.1);">← на главную</a>
+  <div class="search-bar">
+  <div style="display:flex;align-items:center;gap:8px;padding:10px;">
+  <button class="burger-btn" onclick="openMenu()" title="Меню">☰</button>
+  <input type="text" id="searchInput" placeholder="Поиск..." onkeyup="jumpSearch(event)">
+  <button onclick="jumpSearch({key:'Enter'})" style="padding:8px 14px;font-size:13px;border-radius:6px;background:var(--accent);color:white;border:none;cursor:pointer;font-weight:600;white-space:nowrap;">Найти</button>
+  <span id="searchCount" style="font-size:12px;color:var(--text-muted);white-space:nowrap;"></span>
+  <button class="theme-toggle" id="themeToggle" onclick="cycleTheme()" title="Переключить тему">🌓</button>
+</div>
+</div>
+
+<!-- Backdrop (затемнение фона) -->
+<div class="menu-backdrop" id="menuBackdrop" onclick="closeMenu()"></div>
+
+<!-- Выезжающее меню -->
+<div class="side-menu" id="sideMenu">
+  <div class="side-menu-header">
+    <span>Разделы</span>
+    <button class="side-menu-close" onclick="closeMenu()">×</button>
+  </div>
+  <div class="side-menu-item" onclick="goTo('new')">🆕 Новые</div>
+  <div class="side-menu-item" onclick="goTo('nums')">🔢 Числа</div>
+  <div class="side-menu-item" onclick="goTo('sounds')">🔤 Звуки</div>
+  <div class="side-menu-item" onclick="goTo('verbs')">⚡ Глаголы</div>
+  <div class="side-menu-item" onclick="goTo('unregel')">🔥 Спряжение Unregelmäßig</div>
+  <div class="side-menu-item" onclick="goTo('nouns')">📦 Существительные</div>
+  <div class="side-menu-item" onclick="goTo('adj')">🎨 Прилагательные</div>
+  <div class="side-menu-item" onclick="goTo('adv')">🔄 Наречия</div>
+  <div class="side-menu-item" onclick="goTo('mestoim')">👤 Местоимения</div>
+  <div class="side-menu-item" onclick="goTo('termin')">📋 Термины</div>
+  <div class="side-menu-item" onclick="goTo('rules')">📐 Правила</div>
+  <div class="side-menu-item" onclick="goTo('phrases')">💬 Фразы</div>
+</div>
+  <div class="tabs">
+  <div class="tab active" onclick="show('new')">🆕 Новые</div>
+  <div class="tab" onclick="show('nums')">🔢 Числа</div>
+  <div class="tab" onclick="show('sounds')">🔤 Звуки</div>
+  <div class="tab" onclick="show('verbs')">⚡ Глаголы</div>
+  <div class="tab" onclick="show('unregel')">🔥 Спряжение Unregelmäßig</div>
+  <div class="tab" onclick="show('nouns')">📦 Существительные</div>
+  <div class="tab" onclick="show('adj')">🎨 Прилагательные</div>
+  <div class="tab" onclick="show('adv')">🔄 Наречия</div>
+  <div class="tab" onclick="show('mestoim')">👤 Местоимения</div>
+  <div class="tab" onclick="show('termin')">📋 Термины</div>
+  <div class="tab" onclick="show('rules')">📐 Правила</div>
+  <div class="tab" onclick="show('phrases')">💬 Фразы</div>
+</div>
+
+<!-- ЧИСЛА -->
+<div class="panel" id="tab-nums">
+<div class="section">
+<div class="section-title">Цифры 0–12</div>
+<table>
+<tbody><tr><th>Цифра</th><th>Немецкий</th><th>Произношение</th></tr>
+<tr><td>0</td><td>null</td><td>нуль</td></tr>
+<tr><td>1</td><td>ein / eins</td><td>айн</td></tr>
+<tr><td>2</td><td>zwei</td><td>цвай</td></tr>
+<tr><td>3</td><td>drei</td><td>драй</td></tr>
+<tr><td>4</td><td>vier</td><td>фир</td></tr>
+<tr><td>5</td><td>fünf</td><td>фюнф</td></tr>
+<tr><td>6</td><td>sechs</td><td>зэкс</td></tr>
+<tr><td>7</td><td>sieben</td><td>зибэн</td></tr>
+<tr><td>8</td><td>acht</td><td>ахт</td></tr>
+<tr><td>9</td><td>neun</td><td>нойн</td></tr>
+<tr><td>10</td><td>zehn</td><td>цэн</td></tr>
+<tr><td>11</td><td>elf</td><td>эльф</td></tr>
+<tr><td>12</td><td>zwölf</td><td>цвёльф</td></tr>
+</tbody></table>
+</div>
+<div class="section">
+<div class="section-title">Особые случаи</div>
+<table>
+<tbody><tr><th>Понятие</th><th>Немецкий</th><th>Пример / Примечание</th></tr>
+<tr><td>13–19</td><td>…zehn</td><td>dreizehn, vierzehn…</td></tr>
+<tr><td>Десятки (20, 30…)</td><td>…zig</td><td>zwanzig, dreißig…</td></tr>
+<tr><td>30</td><td>dreißig</td><td>⚠ исключение, не dreißzig</td></tr>
+<tr><td>Сотни</td><td>Hunderte</td><td>einhundert, zweihundert…</td></tr>
+<tr><td>Тысячи</td><td>Tausende</td><td>eintausend…</td></tr>
+<tr><td>Единственное число</td><td>Singular</td><td></td></tr>
+<tr><td>Множественное число</td><td>Plural (Pl)</td><td></td></tr>
+</tbody></table>
+</div>
+<div class="section">
+<div class="section-title">Время</div>
+<table>
+<tbody><tr><th>Немецкий</th><th>Перевод</th><th>Примечание</th></tr>
+<tr><td>viertel</td><td>четверть</td><td>viertel nach zwölf - четверть первого (12:15)</td></tr>
+<tr><td>halb</td><td>половина</td><td>halb drei - половина третьего (2:30)</td></tr>
+<tr><td>vor</td><td>до (во времени)</td><td>viertel vor - без четверти</td></tr>
+<tr><td>nach</td><td>после (во времени)</td><td>viertel nach - четверть</td></tr>
+<tr><td>am</td><td>используется для дней</td><td>am Montag</td></tr>
+<tr><td>um</td><td>используется для времени</td><td>um 5 Uhr</td></tr>
+</tbody></table>
+</div>
+</div>
+
+<!-- ЗВУКИ -->
+<div class="panel" id="tab-sounds">
+<div class="section">
+<div class="section-title">Особые буквосочетания</div>
+<table>
+<tbody><tr><th>Буква / сочетание</th><th>Читается как</th><th>Примечание</th></tr>
+<tr><td>ei, ai</td><td>[ай]</td><td>ein, der Mai</td></tr>
+<tr><td>au</td><td>[ау]</td><td>das Auto</td></tr>
+<tr><td>ie</td><td>[и:]</td><td>sieben</td></tr>
+<tr><td>eu, äu</td><td>[ой]</td><td>neun, heute, die Bäume (Plural)</td></tr>
+<tr><td>ö</td><td>[ьо]</td><td>zwölf, hören</td></tr>
+<tr><td>ü</td><td>[ьу]</td><td>fünf, die Küche</td></tr>
+<tr><td>ä</td><td>[э]</td><td>der Käse</td></tr>
+<tr><td>Sp- (начало слова)</td><td>[шп]</td><td>Sprechen → [Шпрэхэн]</td></tr>
+<tr><td>St- (начало слова)</td><td>[шт]</td><td>Stuhl → [Штуль]</td></tr>
+<tr><td>Sch</td><td>[ш]</td><td>die Schule</td></tr>
+<tr><td>Tsch</td><td>[ч]</td><td>Tschüss!, deutsch</td></tr>
+<tr><td>Ch после a, o, u, au</td><td>[х] - ach-Laut</td><td>machen, doch, Buch, auch</td></tr>
+<tr><td>Ch после e, i, ei, ä, ö, ü</td><td>[хь] - ich-Laut</td><td>ich, nicht, sprechen, Küche</td></tr>
+<tr><td>Ch в начале слова (греч./лат.)</td><td>[к]</td><td>Charakter, Chor, Chaos ⚠ Chemie → [хь]!</td></tr>
+<tr><td>v, f, ph</td><td>[ф]</td><td>der Vater, die Firma, das Alphabet</td></tr>
+<tr><td>v</td><td>[в]</td><td>в заимствованных словах (например, Vase, Video)</td></tr>
+<tr><td>s</td><td>[з]</td><td>В начале слова перед гласной она читается как [з] (Sonne), а в конце или перед согласной - как [с]</td></tr></tbody></table></div>
+
+</div>
+
+<!-- ГЛАГОЛЫ -->
+<div class="panel" id="tab-verbs">
+
+<div class="section">
+<div class="section-title">💡 Базовые / Общие</div>
+<table><tbody>
+<tr><th>Немецкий</th><th>Перевод</th><th>Примечание</th></tr>
+<tr><td>machen</td><td>делать</td><td></td></tr>
+<tr><td>wohnen</td><td>жить, проживать</td><td></td></tr>
+<tr><td>heißen</td><td>зваться, называться</td><td></td></tr>
+<tr><td>finden</td><td>находить</td><td></td></tr>
+<tr><td>bleiben</td><td>оставаться</td><td>Unregelmäßig | Ich bleibe zu Hause — я остаюсь дома</td></tr>
+<tr><td>fehlen</td><td>отсутствовать, не хватать</td><td></td></tr>
+<tr><td>dauern</td><td>длиться</td><td></td></tr>
+<tr><td>setzen</td><td>ставить, сажать</td><td>sich setzen = садиться | Setz dich! — Садись!</td></tr>
+<tr><td>sitzen</td><td>сидеть</td><td></td></tr>
+<tr><td>warten</td><td>ждать</td><td></td></tr>
+<tr><td>waren</td><td>были</td><td>Präteritum от <b>sein</b>: wir/sie/Sie waren | подробнее: вкладка Правила</td></tr>
+</tbody></table>
+</div>
+
+<div class="section">
+<div class="section-title">🎯 Modalverben и условные формы</div>
+<table><tbody>
+<tr><th>Немецкий</th><th>Перевод</th><th>Примечание</th></tr>
+<tr><td>können</td><td>мочь, уметь</td><td>Modalverb, Unregelmäßig — см. вкладку Спряжение</td></tr>
+<tr><td>müssen</td><td>должен, нужно</td><td>Modalverb, Unregelmäßig</td></tr>
+<tr><td>wollen</td><td>хотеть</td><td>Modalverb, Unregelmäßig</td></tr>
+<tr><td>möchten</td><td>хотел бы (вежливо)</td><td>Modalverb, вежливая форма</td></tr>
+<tr><td>mögen</td><td>нравиться, любить</td><td>Modalverb</td></tr>
+<tr><td>dürfen</td><td>иметь право / разрешено</td><td>Modalverb | Ich darf hier nicht rauchen.</td></tr>
+<tr><td>hätte gern</td><td>хотел бы (вежливо)</td><td>⚠ готовая форма, не инфинитив: haben → hätte</td></tr>
+<tr><td>würde + Infinitiv</td><td>бы / условное наклонение</td><td>⚠ готовая конструкция: werden → würde / würdest / würden</td></tr>
+<tr><td>sollen</td><td>быть должным (кому-то/по чужой воле)</td><td>Modalverb | sollen — обязательство ИЗВНЕ (так сказали, так положено) | ≠ müssen (обязательство ИЗНУТРИ) | Du sollst nicht lügen — Не лги (тебе говорят)</td></tr>
+</tbody></table>
+</div>
+
+<div class="section">
+<div class="section-title">🚌 Движение / транспорт</div>
+<table><tbody>
+<tr><th>Немецкий</th><th>Перевод</th><th>Примечание</th></tr>
+<tr><td>gehen</td><td>идти, ходить</td><td></td></tr>
+<tr><td>kommen</td><td>приходить, приезжать</td><td></td></tr>
+<tr><td>fahren</td><td>ехать (на транспорте)</td><td></td></tr>
+<tr><td>fliegen</td><td>летать</td><td>Unregelmäßig в Perfekt: flog / geflogen</td></tr>
+<tr><td>schwimmen</td><td>плавать</td><td>Unregelmäßig в Perfekt: schwamm / geschwommen</td></tr>
+<tr><td>reisen</td><td>путешествовать</td><td></td></tr>
+<tr><td>starten</td><td>взлетать / начинать</td><td></td></tr>
+<tr><td>landen</td><td>приземляться</td><td></td></tr>
+<tr><td>Fahrrad fahren</td><td>ехать на велосипеде</td><td></td></tr>
+<tr><td>spazieren gehen</td><td>гулять, идти на прогулку</td><td>отделяемая: gehen | Ich gehe spazieren.</td></tr>
+<tr><td>Gassi gehen</td><td>выгуливать собаку</td><td>разговорное | mit dem Hund Gassi gehen</td></tr>
+<tr><td>joggen</td><td>бегать (трусцой)</td><td>Ich gehe joggen — я хожу на пробежку</td></tr>
+<tr><td>abholen</td><td>забирать (кого-то/что-то)</td><td>отделяемая: ab- | Ich hole dich ab - Я тебя заберу</td></tr>
+<tr><td>bringen</td><td>приносить (однонаправленно)</td><td>A→B: из точки A в точку B, сам не возвращается | Kannst du mir das Buch bringen?</td></tr>
+<tr><td>holen</td><td>сходить и принести</td><td>A→B→A: уходишь, берёшь и возвращаешься | Ich hole dir Wasser - схожу, принесу воды</td></tr>
+</tbody></table>
+</div>
+
+<div class="section">
+<div class="section-title">🍳 Еда / готовка</div>
+<table><tbody>
+<tr><th>Немецкий</th><th>Перевод</th><th>Примечание</th></tr>
+<tr><td>essen</td><td>есть, кушать</td><td>Unregelmäßig</td></tr>
+<tr><td>trinken</td><td>пить</td><td></td></tr>
+<tr><td>backen</td><td>печь</td><td></td></tr>
+<tr><td>braten</td><td>жарить</td><td></td></tr>
+<tr><td>schmecken</td><td>быть вкусным</td><td></td></tr>
+<tr><td>probieren</td><td>пробовать</td><td></td></tr>
+</tbody></table>
+</div>
+
+<div class="section">
+<div class="section-title">🏠 Дом / быт / покупки</div>
+<table><tbody>
+<tr><th>Немецкий</th><th>Перевод</th><th>Примечание</th></tr>
+<tr><td>hinzufügen</td><td>добавлять</td><td>отделяемая: hinzu- | hin (туда) + zu (к) + fügen (присоединять) | Partizip II: hinzugefügt</td></tr>
+<tr><td>einsortieren</td><td>рассортировать по местам</td><td>отделяемая: ein- (внутрь) | sortieren = сортировать | Partizip II: einsortiert</td></tr>
+<tr><td>aufstehen</td><td>вставать</td><td>отделяемая: auf-</td></tr>
+<tr><td>aufräumen</td><td>убираться</td><td>отделяемая: auf-</td></tr>
+<tr><td>aufmachen</td><td>открывать</td><td>отделяемая: auf-</td></tr>
+<tr><td>aufhängen</td><td>вешать</td><td>отделяемая: auf-</td></tr>
+<tr><td>öffnen</td><td>открывать</td><td></td></tr>
+<tr><td>schließen</td><td>закрывать</td><td></td></tr>
+<tr><td>putzen</td><td>чистить, убирать</td><td></td></tr>
+<tr><td>staubsaugen</td><td>пылесосить</td><td></td></tr>
+<tr><td>decken</td><td>накрывать (стол)</td><td></td></tr>
+<tr><td>einkaufen</td><td>ходить по магазинам</td><td>отделяемая: ein-</td></tr>
+<tr><td>kaufen</td><td>покупать</td><td></td></tr>
+<tr><td>bestellen</td><td>заказывать</td><td></td></tr>
+<tr><td>bezahlen</td><td>оплачивать</td><td></td></tr>
+<tr><td>bekommen</td><td>получать</td><td></td></tr>
+<tr><td>kriegen</td><td>получать</td><td>разговорное = bekommen</td></tr>
+<tr><td>nehmen</td><td>брать</td><td>Unregelmäßig: nimmst / nimmt</td></tr>
+<tr><td>benutzen</td><td>использовать, пользоваться</td><td>Den Aufzug benutzen — пользоваться лифтом</td></tr>
+<tr><td>abstellen</td><td>ставить / выключать</td><td>отделяемая: ab- | das Auto abstellen — припарковать | das Radio abstellen — выключить</td></tr>
+<tr><td>rauchen</td><td>курить</td><td>das Rauchen ist verboten — курение запрещено</td></tr>
+<tr><td>anfangen</td><td>начинать</td><td>отделяемая: an-</td></tr>
+<tr><td>vorbereiten</td><td>подготавливать</td><td>отделяемая: vor-</td></tr>
+<tr><td>schlafen</td><td>спать</td><td>Unregelmäßig</td></tr>
+</tbody></table>
+</div>
+
+<div class="section">
+<div class="section-title">💬 Общение / эмоции</div>
+<table><tbody>
+<tr><th>Немецкий</th><th>Перевод</th><th>Примечание</th></tr>
+<tr><td>passen</td><td>подходить</td><td>Das passt! — Подходит! / Норм! | прил.: passend — подходящий</td></tr>
+<tr><td>sprechen</td><td>говорить</td><td>Unregelmäßig</td></tr>
+<tr><td>fragen</td><td>спрашивать</td><td></td></tr>
+<tr><td>buchstabieren</td><td>произносить по буквам</td><td></td></tr>
+<tr><td>bedeuten</td><td>означать</td><td></td></tr>
+<tr><td>duzen</td><td>обращаться на "ты"</td><td></td></tr>
+<tr><td>wissen</td><td>знать (факт/информацию)</td><td>≠ kennen! Unregelmäßig: ich weiß / er weiß / wir wissen</td></tr>
+<tr><td>kennen</td><td>знать (человека)</td><td>≠ wissen</td></tr>
+<tr><td>denken</td><td>думать</td><td></td></tr>
+<tr><td>lieben</td><td>любить</td><td></td></tr>
+<tr><td>küssen</td><td>целовать</td><td></td></tr>
+<tr><td>kennenlernen</td><td>познакомиться</td><td>отделяемая: kennen- | Ich lerne sie kennen</td></tr>
+<tr><td>sich vorstellen</td><td>представляться</td><td>возвратный + отделяемая vor- | Ich stelle mich vor</td></tr>
+<tr><td>sich wundern</td><td>удивляться</td><td>возвратный | Ich wundere mich — я удивляюсь | über + Akk: Ich wundere mich über das Wetter.</td></tr>
+<tr><td>treffen</td><td>встречать / встречаться</td><td>Unregelmäßig</td></tr>
+<tr><td>einladen</td><td>приглашать</td><td>отделяемая: ein-</td></tr>
+<tr><td>schicken</td><td>отправлять</td><td>schickt - форма er/sie/es</td></tr>
+<tr><td>vermissen</td><td>скучать, чувствовать отсутствие</td><td>об эмоции — когда не хватает человека или вещи | Ich vermisse dich — я скучаю по тебе | ≠ verlieren</td></tr>
+<tr><td>verlieren</td><td>терять, потерять / проиграть</td><td>о предмете или игре | Ich habe meinen Schlüssel verloren. | ≠ vermissen</td></tr>
+<tr><td>grenzen</td><td>граничить</td><td>от <b>die Grenze</b> | grenzen an + Akk — граничить с | Deutschland grenzt an Polen</td></tr>
+<tr><td>verabreden</td><td>договариваться (о встрече)</td><td>обычно с кем-то — почти всегда возвратное: <b>sich verabreden</b></td></tr>
+<tr><td>sich verabreden</td><td>условиться о встрече</td><td>возвратный | Ich verabrede mich mit Anna — Договариваюсь о встрече с Анной | sich + mit + Dat</td></tr>
+</tbody></table>
+</div>
+
+<div class="section">
+<div class="section-title">📚 Учёба / работа</div>
+<table><tbody>
+<tr><th>Немецкий</th><th>Перевод</th><th>Примечание</th></tr>
+<tr><td>arbeiten</td><td>работать</td><td></td></tr>
+<tr><td>am Computer arbeiten</td><td>работать за компьютером</td><td></td></tr>
+<tr><td>schreiben</td><td>писать</td><td></td></tr>
+<tr><td>lesen</td><td>читать</td><td>Unregelmäßig (e→ie) | Ich lese die Zeitung — я читаю газету</td></tr>
+<tr><td>hören</td><td>слушать</td><td></td></tr>
+<tr><td>wiederholen</td><td>повторять</td><td></td></tr>
+<tr><td>verdienen</td><td>зарабатывать</td><td>Ich verdiene 2000 Euro im Monat.</td></tr>
+<tr><td>besuchen</td><td>посещать</td><td></td></tr>
+<tr><td>einen Termin ausmachen</td><td>договориться о встрече</td><td>= einen Termin vereinbaren</td></tr>
+</tbody></table>
+</div>
+
+<div class="section">
+<div class="section-title">🎮 Досуг / хобби</div>
+<table><tbody>
+<tr><th>Немецкий</th><th>Перевод</th><th>Примечание</th></tr>
+<tr><td>spielen</td><td>играть</td><td></td></tr>
+<tr><td>zocken</td><td>играть (в игры)</td><td>разговорное</td></tr>
+<tr><td>malen</td><td>рисовать</td><td>живопись (краски) | ≠ zeichnen</td></tr>
+<tr><td>zeichnen</td><td>рисовать, чертить</td><td>≠ malen (malen = живопись, zeichnen = карандаш/линии)</td></tr>
+<tr><td>singen</td><td>петь</td><td></td></tr>
+<tr><td>tanzen</td><td>танцевать</td><td></td></tr>
+<tr><td>fotografieren</td><td>фотографировать</td><td></td></tr>
+<tr><td>tätowieren</td><td>делать татуировку</td><td></td></tr>
+<tr><td>sehen</td><td>смотреть, видеть</td><td>Unregelmäßig (e→ie) | Ich sehe fern — смотрю телевизор</td></tr>
+<tr><td>gucken</td><td>смотреть, глядеть</td><td>разговорное, чаще на севере Германии</td></tr>
+<tr><td>schauen</td><td>смотреть, глядеть</td><td>нейтральное, чаще на юге / в Австрии</td></tr>
+<tr><td>surfen</td><td>сёрфить</td><td>два значения: im Internet surfen — сидеть в интернете | Wellenreiten / surfen — заниматься сёрфингом (спорт)</td></tr>
+<tr><td>reiten</td><td>ездить верхом</td><td></td></tr>
+<tr><td>organisieren</td><td>организовывать</td><td></td></tr>
+<tr><td>zoomen</td><td>звонить по видео (зумить)</td><td></td></tr>
+<tr><td>Sport treiben</td><td>заниматься спортом</td><td>устойчивое выражение | Ich treibe Sport — я занимаюсь спортом</td></tr>
+<tr><td>Partys feiern</td><td>отмечать вечеринки</td><td></td></tr>
+<tr><td>Shoppen</td><td>шопинг</td><td></td></tr>
+<tr><td>Gitarre spielen</td><td>играть на гитаре</td><td>auch: Klavier/Geige spielen</td></tr>
+<tr><td>werfen</td><td>бросать, кидать</td><td>Unregelmäßig (e→i): du wirfst, er wirft</td></tr>
+<tr><td>fangen</td><td>ловить, поймать</td><td>Unregelmäßig (a→ä): du fängst, er fängt | ⚠ не путать с anfangen (начинать)</td></tr>
+<tr><td>brausen</td><td>шуметь / мчаться / принимать душ</td><td>3 значения: 1) Wind braust — ветер шумит | 2) Auto braust — машина мчится | 3) sich brausen — принимать душ (= sich duschen)</td></tr>
+</tbody></table>
+</div>
+
+<div class="section">
+<div class="section-title">🌧 Безличные (погода и пр.)</div>
+<table><tbody>
+<tr><th>Немецкий</th><th>Перевод</th><th>Примечание</th></tr>
+<tr><td>es hagelt</td><td>идёт град</td><td>безличный глагол | только с es | Es hagelt stark — идёт сильный град</td></tr>
+</tbody></table>
+</div>
+
+</div>
+
+<!-- СПРЯЖЕНИЕ UNREGELMÄSSIG -->
+<div class="panel" id="tab-unregel">
+
+<div class="section">
+<div class="section-title">Спряжение неправильных глаголов</div>
+<div class="three-col">
+
+<div class="rule-box">
+<h3>sein - быть</h3>
+<table class="conj-table">
+<tbody><tr><td>ich</td><td>bin</td></tr>
+<tr><td>du</td><td>bist</td></tr>
+<tr><td>er/sie/es</td><td>ist</td></tr>
+<tr><td>wir</td><td>sind</td></tr>
+<tr><td>ihr</td><td>seid</td></tr>
+<tr><td>sie/Sie</td><td>sind</td></tr>
+</tbody></table>
+</div>
+
+<div class="rule-box">
+<h3>haben - иметь</h3>
+<table class="conj-table">
+<tbody><tr><td>ich</td><td>habe</td></tr>
+<tr><td>du</td><td>hast</td></tr>
+<tr><td>er/sie/es</td><td>hat</td></tr>
+<tr><td>wir</td><td>haben</td></tr>
+<tr><td>ihr</td><td>habt</td></tr>
+<tr><td>sie/Sie</td><td>haben</td></tr>
+</tbody></table>
+</div>
+
+<div class="rule-box">
+<h3>können - мочь, уметь <span style="font-weight:400;font-size:12px;color:var(--text-muted)">(Modalverb)</span></h3>
+<table class="conj-table">
+<tbody><tr><td>ich</td><td>kann</td></tr>
+<tr><td>du</td><td>kannst</td></tr>
+<tr><td>er/sie/es</td><td>kann</td></tr>
+<tr><td>wir</td><td>können</td></tr>
+<tr><td>ihr</td><td>könnt</td></tr>
+<tr><td>sie/Sie</td><td>können</td></tr>
+</tbody></table>
+</div>
+
+<div class="rule-box">
+<h3>müssen - должен, нужно <span style="font-weight:400;font-size:12px;color:var(--text-muted)">(Modalverb)</span></h3>
+<table class="conj-table">
+<tbody><tr><td>ich</td><td>muss</td></tr>
+<tr><td>du</td><td>musst</td></tr>
+<tr><td>er/sie/es</td><td>muss</td></tr>
+<tr><td>wir</td><td>müssen</td></tr>
+<tr><td>ihr</td><td>müsst</td></tr>
+<tr><td>sie/Sie</td><td>müssen</td></tr>
+</tbody></table>
+</div>
+
+<div class="rule-box">
+<h3>wollen - хотеть <span style="font-weight:400;font-size:12px;color:var(--text-muted)">(Modalverb)</span></h3>
+<table class="conj-table">
+<tbody><tr><td>ich</td><td>will</td></tr>
+<tr><td>du</td><td>willst</td></tr>
+<tr><td>er/sie/es</td><td>will</td></tr>
+<tr><td>wir</td><td>wollen</td></tr>
+<tr><td>ihr</td><td>wollt</td></tr>
+<tr><td>sie/Sie</td><td>wollen</td></tr>
+</tbody></table>
+<p style="font-size:12px;margin-top:6px">⚠ ich/er одинаковые (will) | Infinitiv в конец → Ich <b>will</b> Deutsch <b>lernen</b>.</p>
+</div>
+
+<div class="rule-box">
+<h3>möchten - хотел бы <span style="font-weight:400;font-size:12px;color:var(--text-muted)">(вежливая форма)</span></h3>
+<table class="conj-table">
+<tbody><tr><td>ich</td><td>möchte</td></tr>
+<tr><td>du</td><td>möchtest</td></tr>
+<tr><td>er/sie/es</td><td>möchte</td></tr>
+<tr><td>wir</td><td>möchten</td></tr>
+<tr><td>ihr</td><td>möchtet</td></tr>
+<tr><td>sie/Sie</td><td>möchten</td></tr>
+</tbody></table>
+</div>
+
+<div class="rule-box">
+<h3>mögen - нравиться, любить <span style="font-weight:400;font-size:12px;color:var(--text-muted)">(Modalverb)</span></h3>
+<table class="conj-table">
+<tbody><tr><td>ich</td><td>mag</td></tr>
+<tr><td>du</td><td>magst</td></tr>
+<tr><td>er/sie/es</td><td>mag</td></tr>
+<tr><td>wir</td><td>mögen</td></tr>
+<tr><td>ihr</td><td>mögt</td></tr>
+<tr><td>sie/Sie</td><td>mögen</td></tr>
+</tbody></table>
+</div>
+
+<div class="rule-box">
+<h3>dürfen - иметь право <span style="font-weight:400;font-size:12px;color:var(--text-muted)">(Modalverb)</span></h3>
+<table class="conj-table">
+<tbody>
+<tr><td>ich</td><td>darf</td></tr>
+<tr><td>du</td><td>darfst</td></tr>
+<tr><td>er/sie/es/man</td><td>darf</td></tr>
+<tr><td>wir</td><td>dürfen</td></tr>
+<tr><td>ihr</td><td>dürft</td></tr>
+<tr><td>sie/Sie</td><td>dürfen</td></tr>
+</tbody>
+</table>
+<p style="font-size:12px;margin-top:6px">⚠ ich/er одинаковые (darf) | Infinitiv в конец → Ich <b>darf</b> hier nicht <b>rauchen</b>.</p>
+</div>
+
+<div class="rule-box">
+<h3>nehmen - брать</h3>
+<table class="conj-table">
+<tbody><tr><td>ich</td><td>nehme</td></tr>
+<tr><td>du</td><td>nimmst</td></tr>
+<tr><td>er/sie/es</td><td>nimmt</td></tr>
+<tr><td>wir</td><td>nehmen</td></tr>
+<tr><td>ihr</td><td>nehmt</td></tr>
+<tr><td>sie/Sie</td><td>nehmen</td></tr>
+</tbody></table>
+</div>
+
+<div class="rule-box">
+<h3>sprechen - говорить <span style="font-weight:400;font-size:12px;color:var(--text-muted)">(e→i в du/er)</span></h3>
+<table class="conj-table">
+<tbody><tr><td>ich</td><td>spreche</td></tr>
+<tr><td>du</td><td>sprichst</td></tr>
+<tr><td>er/sie/es</td><td>spricht</td></tr>
+<tr><td>wir</td><td>sprechen</td></tr>
+<tr><td>ihr</td><td>sprecht</td></tr>
+<tr><td>sie/Sie</td><td>sprechen</td></tr>
+</tbody></table>
+</div>
+
+<div class="rule-box">
+<h3>schlafen - спать <span style="font-weight:400;font-size:12px;color:var(--text-muted)">(a→ä в du/er)</span></h3>
+<table class="conj-table">
+<tbody>
+<tr><td>ich</td><td>schlafe</td></tr>
+<tr><td>du</td><td>schläfst</td></tr>
+<tr><td>er/sie/es</td><td>schläft</td></tr>
+<tr><td>wir</td><td>schlafen</td></tr>
+<tr><td>ihr</td><td>schlaft</td></tr>
+<tr><td>sie/Sie</td><td>schlafen</td></tr>
+</tbody>
+</table>
+</div>
+
+<div class="rule-box">
+<h3>essen - есть, кушать <span style="font-weight:400;font-size:12px;color:var(--text-muted)">(e→i в du/er)</span></h3>
+<table class="conj-table">
+<tbody>
+<tr><td>ich</td><td>esse</td></tr>
+<tr><td>du</td><td>isst</td></tr>
+<tr><td>er/sie/es</td><td>isst</td></tr>
+<tr><td>wir</td><td>essen</td></tr>
+<tr><td>ihr</td><td>esst</td></tr>
+<tr><td>sie/Sie</td><td>essen</td></tr>
+</tbody>
+</table>
+</div>
+
+<div class="rule-box">
+<h3>sehen - смотреть / видеть <span style="font-weight:400;font-size:12px;color:var(--text-muted)">(e→ie в du/er)</span></h3>
+<table class="conj-table">
+<tbody>
+<tr><td>ich</td><td>sehe</td></tr>
+<tr><td>du</td><td>siehst</td></tr>
+<tr><td>er/sie/es</td><td>sieht</td></tr>
+<tr><td>wir</td><td>sehen</td></tr>
+<tr><td>ihr</td><td>seht</td></tr>
+<tr><td>sie/Sie</td><td>sehen</td></tr>
+</tbody>
+</table>
+<p style="font-size:12px;margin-top:6px">Präteritum: <b>sah</b> | Partizip II: <b>gesehen</b> (с haben)</p>
+</div>
+
+<div class="rule-box">
+<h3>lesen - читать <span style="font-weight:400;font-size:12px;color:var(--text-muted)">(e→ie в du/er)</span></h3>
+<table class="conj-table">
+<tbody>
+<tr><td>ich</td><td>lese</td></tr>
+<tr><td>du</td><td>liest</td></tr>
+<tr><td>er/sie/es</td><td>liest</td></tr>
+<tr><td>wir</td><td>lesen</td></tr>
+<tr><td>ihr</td><td>lest</td></tr>
+<tr><td>sie/Sie</td><td>lesen</td></tr>
+</tbody>
+</table>
+<p style="font-size:12px;margin-top:6px">Präteritum: <b>las</b> | Partizip II: <b>gelesen</b> (с haben)</p>
+</div>
+
+<div class="rule-box">
+<h3>werfen - бросать <span style="font-weight:400;font-size:12px;color:var(--text-muted)">(e→i в du/er)</span></h3>
+<table class="conj-table">
+<tbody>
+<tr><td>ich</td><td>werfe</td></tr>
+<tr><td>du</td><td>wirfst</td></tr>
+<tr><td>er/sie/es</td><td>wirft</td></tr>
+<tr><td>wir</td><td>werfen</td></tr>
+<tr><td>ihr</td><td>werft</td></tr>
+<tr><td>sie/Sie</td><td>werfen</td></tr>
+</tbody>
+</table>
+<p style="font-size:12px;margin-top:6px">Präteritum: <b>warf</b> | Partizip II: <b>geworfen</b> (с haben)</p>
+</div>
+
+<div class="rule-box">
+<h3>fangen - ловить <span style="font-weight:400;font-size:12px;color:var(--text-muted)">(a→ä в du/er)</span></h3>
+<table class="conj-table">
+<tbody>
+<tr><td>ich</td><td>fange</td></tr>
+<tr><td>du</td><td>fängst</td></tr>
+<tr><td>er/sie/es</td><td>fängt</td></tr>
+<tr><td>wir</td><td>fangen</td></tr>
+<tr><td>ihr</td><td>fangt</td></tr>
+<tr><td>sie/Sie</td><td>fangen</td></tr>
+</tbody>
+</table>
+<p style="font-size:12px;margin-top:6px">Präteritum: <b>fing</b> | Partizip II: <b>gefangen</b> (с haben)</p>
+</div>
+
+<div class="rule-box">
+<h3>treffen - встречать <span style="font-weight:400;font-size:12px;color:var(--text-muted)">(e→i в du/er)</span></h3>
+<table class="conj-table">
+<tbody>
+<tr><td>ich</td><td>treffe</td></tr>
+<tr><td>du</td><td>triffst</td></tr>
+<tr><td>er/sie/es</td><td>trifft</td></tr>
+<tr><td>wir</td><td>treffen</td></tr>
+<tr><td>ihr</td><td>trefft</td></tr>
+<tr><td>sie/Sie</td><td>treffen</td></tr>
+</tbody>
+</table>
+</div>
+
+<div class="rule-box">
+<h3>fliegen - летать <span style="font-weight:400;font-size:12px;color:var(--text-muted)">(Perfekt: flog / geflogen)</span></h3>
+<table class="conj-table">
+<tbody>
+<tr><td>ich</td><td>fliege</td></tr>
+<tr><td>du</td><td>fliegst</td></tr>
+<tr><td>er/sie/es</td><td>fliegt</td></tr>
+<tr><td>wir</td><td>fliegen</td></tr>
+<tr><td>ihr</td><td>fliegt</td></tr>
+<tr><td>sie/Sie</td><td>fliegen</td></tr>
+</tbody>
+</table>
+</div>
+
+<div class="rule-box">
+<h3>schwimmen - плавать <span style="font-weight:400;font-size:12px;color:var(--text-muted)">(Perfekt: schwamm / geschwommen)</span></h3>
+<table class="conj-table">
+<tbody>
+<tr><td>ich</td><td>schwimme</td></tr>
+<tr><td>du</td><td>schwimmst</td></tr>
+<tr><td>er/sie/es</td><td>schwimmt</td></tr>
+<tr><td>wir</td><td>schwimmen</td></tr>
+<tr><td>ihr</td><td>schwimmt</td></tr>
+<tr><td>sie/Sie</td><td>schwimmen</td></tr>
+</tbody>
+</table>
+</div>
+
+<div class="rule-box">
+<h3>bleiben - оставаться <span style="font-weight:400;font-size:12px;color:var(--text-muted)">(ei→ie в Partizip II)</span></h3>
+<table class="conj-table">
+<tbody>
+<tr><td>ich</td><td>bleibe</td></tr>
+<tr><td>du</td><td>bleibst</td></tr>
+<tr><td>er/sie/es</td><td>bleibt</td></tr>
+<tr><td>wir</td><td>bleiben</td></tr>
+<tr><td>ihr</td><td>bleibt</td></tr>
+<tr><td>sie/Sie</td><td>bleiben</td></tr>
+</tbody>
+</table>
+<p style="font-size:12px;margin-top:6px">Präteritum: <b>blieb</b> | Partizip II: <b>geblieben</b> (с sein)</p>
+</div>
+
+<div class="rule-box">
+<h3>verlieren - терять <span style="font-weight:400;font-size:12px;color:var(--text-muted)">(ie→o в Präteritum)</span></h3>
+<table class="conj-table">
+<tbody>
+<tr><td>ich</td><td>verliere</td></tr>
+<tr><td>du</td><td>verlierst</td></tr>
+<tr><td>er/sie/es</td><td>verliert</td></tr>
+<tr><td>wir</td><td>verlieren</td></tr>
+<tr><td>ihr</td><td>verliert</td></tr>
+<tr><td>sie/Sie</td><td>verlieren</td></tr>
+</tbody>
+</table>
+<p style="font-size:12px;margin-top:6px">Präteritum: <b>verlor</b> | Partizip II: <b>verloren</b> (с haben)</p>
+</div>
+
+</div>
+</div>
+
+</div>
+
+<!-- СУЩЕСТВИТЕЛЬНЫЕ -->
+<div class="panel" id="tab-nouns">
+
+<div class="section">
+<div class="section-title">👤 Личные данные</div>
+<table>
+<tbody>
+<tr><th>Немецкий</th><th>Артикль</th><th>Перевод</th></tr>
+<tr><td>der Vorname</td><td><span class="badge m">m</span></td><td>имя</td></tr>
+<tr><td>der Nachname / Familienname</td><td><span class="badge m">m</span></td><td>фамилия</td></tr>
+<tr><td>die Postleitzahl</td><td><span class="badge f">f</span></td><td>почтовый индекс | сокр. PLZ, напр. 10115</td></tr>
+<tr><td>die Straße</td><td><span class="badge f">f</span></td><td>улица</td></tr>
+<tr><td>die Hausnummer</td><td><span class="badge f">f</span></td><td>номер дома</td></tr>
+<tr><td>der Ort</td><td><span class="badge m">m</span></td><td>город / место</td></tr>
+<tr><td>die Adresse</td><td><span class="badge f">f</span></td><td>адрес</td></tr>
+<tr><td>das Telefon / die Handynummer</td><td><span class="badge n">n</span></td><td>телефон / номер телефона</td></tr>
+<tr><td>die Muttersprache</td><td><span class="badge f">f</span></td><td>родной язык</td></tr>
+<tr><td>der Beruf</td><td><span class="badge m">m</span></td><td>профессия</td></tr>
+<tr><td>das Alter</td><td><span class="badge n">n</span></td><td>возраст</td></tr>
+<tr><td>die Augenfarbe</td><td><span class="badge f">f</span></td><td>цвет глаз</td></tr>
+<tr><td>die Lieblingsfarbe</td><td><span class="badge f">f</span></td><td>любимый цвет</td></tr>
+<tr><td>das Lieblingsessen</td><td><span class="badge n">n</span></td><td>любимая еда</td></tr>
+<tr><td>die Lieblingsstadt</td><td><span class="badge f">f</span></td><td>любимый город</td></tr>
+<tr><td>der Familienstand</td><td><span class="badge m">m</span></td><td>семейное положение</td></tr>
+<tr><td>der Kuss</td><td><span class="badge m">m</span></td><td>поцелуй</td></tr>
+</tbody></table>
+</div>
+
+<div class="section">
+<div class="section-title">👨‍👩‍👧 Семья</div>
+<table><tbody>
+<tr><th>Немецкий</th><th>Артикль</th><th>Перевод / Примечание</th></tr>
+<tr><td>die Familie</td><td><span class="badge f">f</span></td><td>семья</td></tr>
+<tr><td>die Eltern</td><td><span class="badge pl">Pl</span></td><td>родители</td></tr>
+<tr><td>der Vater</td><td><span class="badge m">m</span></td><td>отец | Pl: die Väter</td></tr>
+<tr><td>die Mutter</td><td><span class="badge f">f</span></td><td>мать | Pl: die Mütter</td></tr>
+<tr><td>der Bruder</td><td><span class="badge m">m</span></td><td>брат | Pl: die Brüder</td></tr>
+<tr><td>die Schwester</td><td><span class="badge f">f</span></td><td>сестра | Pl: die Schwestern</td></tr>
+<tr><td>die Geschwister</td><td><span class="badge pl">Pl</span></td><td>братья и сёстры</td></tr>
+<tr><td>der Sohn</td><td><span class="badge m">m</span></td><td>сын | Pl: die Söhne</td></tr>
+<tr><td>die Tochter</td><td><span class="badge f">f</span></td><td>дочь | Pl: die Töchter</td></tr>
+<tr><td>das Kind</td><td><span class="badge n">n</span></td><td>ребёнок | Pl: die Kinder</td></tr>
+<tr><td>der Onkel</td><td><span class="badge m">m</span></td><td>дядя | Pl: die Onkel</td></tr>
+<tr><td>die Tante</td><td><span class="badge f">f</span></td><td>тётя | Pl: die Tanten</td></tr>
+<tr><td>der Großvater</td><td><span class="badge m">m</span></td><td>дедушка</td></tr>
+<tr><td>die Großmutter</td><td><span class="badge f">f</span></td><td>бабушка</td></tr>
+<tr><td>die Oma</td><td><span class="badge f">f</span></td><td>бабушка (разг.) | Pl: die Omas</td></tr>
+<tr><td>die Großeltern</td><td><span class="badge pl">Pl</span></td><td>бабушка и дедушка</td></tr>
+<tr><td>der Enkel</td><td><span class="badge m">m</span></td><td>внук | Pl: die Enkel</td></tr>
+<tr><td>die Enkelin</td><td><span class="badge f">f</span></td><td>внучка | Pl: die Enkelinnen</td></tr>
+<tr><td>der Ehemann</td><td><span class="badge m">m</span></td><td>муж | Pl: die Ehemänner</td></tr>
+<tr><td>die Ehefrau</td><td><span class="badge f">f</span></td><td>жена | Pl: die Ehefrauen</td></tr>
+<tr><td>der Mensch</td><td><span class="badge m">m</span></td><td>человек</td></tr>
+<tr><td>der Freund</td><td><span class="badge m">m</span></td><td>друг / парень (партнёр) | ⚠ Das ist mein Freund = это мой парень; Das ist ein Freund von mir = просто друг</td></tr>
+</tbody></table>
+</div>
+
+<div class="section">
+<div class="section-title">💼 Профессии</div>
+<table>
+<tbody>
+<tr><th>Немецкий</th><th>Артикль</th><th>Перевод</th></tr>
+<tr><td>der Elektriker / die Elektrikerin</td><td><span class="badge m">m</span> / <span class="badge f">f</span></td><td>электрик</td></tr>
+<tr><td>der Student / die Studentin</td><td><span class="badge m">m</span> / <span class="badge f">f</span></td><td>студент / студентка</td></tr>
+<tr><td>der Architekt / die Architektin</td><td><span class="badge m">m</span> / <span class="badge f">f</span></td><td>архитектор</td></tr>
+<tr><td>der Schlachter</td><td><span class="badge m">m</span></td><td>мясник</td></tr>
+<tr><td>der Imker</td><td><span class="badge m">m</span></td><td>пчеловод</td></tr>
+<tr><td>der Tänzer / die Tänzerin</td><td><span class="badge m">m</span> / <span class="badge f">f</span></td><td>танцор / танцовщица</td></tr>
+<tr><td>der Kellner / die Bedienung</td><td><span class="badge m">m</span> / <span class="badge f">f</span></td><td>официант / обслуживание</td></tr>
+<tr><td>die Erzieherin</td><td><span class="badge f">f</span></td><td>воспитательница (в садике)</td></tr>
+<tr><td>der Chef / die Chefin</td><td><span class="badge m">m</span> / <span class="badge f">f</span></td><td>начальник / шеф</td></tr>
+</tbody></table>
+</div>
+
+<div class="section">
+<div class="section-title">📅 Дни / Месяцы / Даты</div>
+<table><tbody>
+<tr><th>Немецкий</th><th>Артикль</th><th>Перевод / Примечание</th></tr>
+<tr><td>der Montag</td><td><span class="badge m">m</span></td><td>понедельник | am Montag — в понедельник</td></tr>
+<tr><td>der Dienstag</td><td><span class="badge m">m</span></td><td>вторник | am Dienstag</td></tr>
+<tr><td>der Mittwoch</td><td><span class="badge m">m</span></td><td>среда | am Mittwoch</td></tr>
+<tr><td>der Donnerstag</td><td><span class="badge m">m</span></td><td>четверг | am Donnerstag</td></tr>
+<tr><td>der Freitag</td><td><span class="badge m">m</span></td><td>пятница | am Freitag</td></tr>
+<tr><td>der Samstag</td><td><span class="badge m">m</span></td><td>суббота | am Samstag</td></tr>
+<tr><td>der Sonntag</td><td><span class="badge m">m</span></td><td>воскресенье | am Sonntag</td></tr>
+<tr><td>der Mai</td><td><span class="badge m">m</span></td><td>май | im Mai — в мае</td></tr>
+<tr><td>der Termin</td><td><span class="badge m">m</span></td><td>встреча / запись | einen Termin ausmachen</td></tr>
+<tr><td>der Geburtstag</td><td><span class="badge m">m</span></td><td>день рождения | Alles Gute zum Geburtstag!</td></tr>
+<tr><td>die Hochzeit</td><td><span class="badge f">f</span></td><td>свадьба</td></tr>
+<tr><td>die Woche</td><td><span class="badge f">f</span></td><td>неделя | Pl: die Wochen | diese Woche — на этой неделе | nächste Woche — на следующей</td></tr>
+</tbody></table>
+</div>
+
+<div class="section">
+<div class="section-title">📺 ТВ / Медиа</div>
+<table><tbody>
+<tr><th>Немецкий</th><th>Артикль</th><th>Перевод / Примечание</th></tr>
+<tr><td>der Film</td><td><span class="badge m">m</span></td><td>фильм</td></tr>
+<tr><td>der Zeichentrickfilm</td><td><span class="badge m">m</span></td><td>рисованный мультфильм | Zeichnen + Trick + Film</td></tr>
+<tr><td>der Puppentrickfilm</td><td><span class="badge m">m</span></td><td>кукольный мультфильм | Puppe = кукла</td></tr>
+<tr><td>die Zeitung</td><td><span class="badge f">f</span></td><td>газета | Pl: die Zeitungen | Zeitung lesen — читать газету</td></tr>
+<tr><td>der Fernsehabend</td><td><span class="badge m">m</span></td><td>вечер у телевизора | Fernseh + Abend</td></tr>
+</tbody></table>
+</div>
+
+<div class="section">
+<div class="section-title">🎵 Музыка / Хобби</div>
+<table><tbody>
+<tr><th>Немецкий</th><th>Артикль</th><th>Перевод / Примечание</th></tr>
+<tr><td>die Musik</td><td><span class="badge f">f</span></td><td>музыка</td></tr>
+<tr><td>die Musikanlage</td><td><span class="badge f">f</span></td><td>музыкальный центр</td></tr>
+<tr><td>die Band</td><td><span class="badge f">f</span></td><td>группа (муз.)</td></tr>
+<tr><td>der Verein</td><td><span class="badge m">m</span></td><td>клуб / объединение</td></tr>
+<tr><td>der Fußballverein</td><td><span class="badge m">m</span></td><td>футбольный клуб</td></tr>
+<tr><td>die Disco</td><td><span class="badge f">f</span></td><td>дискотека</td></tr>
+<tr><td>die gemeinsamen Aktivitäten</td><td><span class="badge pl">Pl</span></td><td>совместные занятия</td></tr>
+</tbody></table>
+</div>
+
+<div class="section">
+<div class="section-title">🍷 Заведения / Жильё / Поездки</div>
+<table><tbody>
+<tr><th>Немецкий</th><th>Артикль</th><th>Перевод / Примечание</th></tr>
+<tr><td>die Kneipe</td><td><span class="badge f">f</span></td><td>пивная / бар / паб | разговорное</td></tr>
+<tr><td>die Sportkneipe</td><td><span class="badge f">f</span></td><td>спорт-бар (где смотрят матчи) | Sport + Kneipe</td></tr>
+<tr><td>der Reiseführer</td><td><span class="badge m">m</span></td><td>путеводитель / экскурсовод | Reise + Führer</td></tr>
+<tr><td>der Eintritt</td><td><span class="badge m">m</span></td><td>вход / входная плата | Eintritt frei — вход бесплатный</td></tr>
+<tr><td>der Rabatt</td><td><span class="badge m">m</span></td><td>скидка | 10% Rabatt — скидка 10%</td></tr>
+<tr><td>der/die Jugendliche</td><td><span class="badge m">m</span> / <span class="badge f">f</span></td><td>подросток / молодой человек | Pl: die Jugendlichen | склоняется как прилагательное</td></tr>
+</tbody></table>
+</div>
+
+<div class="section">
+<div class="section-title">🐾 Животные / Природа</div>
+<table><tbody>
+<tr><th>Немецкий</th><th>Артикль</th><th>Перевод / Примечание</th></tr>
+<tr><td>der Hund</td><td><span class="badge m">m</span></td><td>собака | Pl: die Hunde</td></tr>
+<tr><td>die Katze</td><td><span class="badge f">f</span></td><td>кошка | Pl: die Katzen</td></tr>
+<tr><td>die Maus</td><td><span class="badge f">f</span></td><td>мышь | Pl: die Mäuse</td></tr>
+<tr><td>der Baum</td><td><span class="badge m">m</span></td><td>дерево | Pl: die Bäume</td></tr>
+<tr><td>der Sommer</td><td><span class="badge m">m</span></td><td>лето | im Sommer — летом</td></tr>
+<tr><td>das Meer</td><td><span class="badge n">n</span></td><td>море | ans Meer fahren — поехать к морю</td></tr>
+<tr><td>die Natur</td><td><span class="badge f">f</span></td><td>природа</td></tr>
+</tbody></table>
+</div>
+
+<div class="section">
+<div class="section-title">✏️ Письмо / Текст</div>
+<table><tbody>
+<tr><th>Немецкий</th><th>Артикль</th><th>Перевод / Примечание</th></tr>
+<tr><td>der Satz</td><td><span class="badge m">m</span></td><td>предложение | Pl: die Sätze</td></tr>
+<tr><td>das Wort</td><td><span class="badge n">n</span></td><td>слово | Pl: die Wörter</td></tr>
+<tr><td>der Satzanfang</td><td><span class="badge m">m</span></td><td>начало предложения | с заглавной буквы</td></tr>
+<tr><td>das Zeichen</td><td><span class="badge n">n</span></td><td>знак</td></tr>
+<tr><td>das Fragezeichen</td><td><span class="badge n">n</span></td><td>вопросительный знак ?</td></tr>
+<tr><td>das Komma</td><td><span class="badge n">n</span></td><td>запятая ,</td></tr>
+<tr><td>der Tipp</td><td><span class="badge m">m</span></td><td>совет / подсказка</td></tr>
+<tr><td>LG (Liebe Grüße)</td><td></td><td>с любовью / с приветом | конец письма/сообщения</td></tr>
+</tbody></table>
+</div>
+
+<div class="section">
+<div class="section-title">📱 Техника / Гаджеты</div>
+<table>
+<tbody>
+<tr><th>Немецкий</th><th>Артикль</th><th>Перевод</th></tr>
+<tr><td>das Handy</td><td><span class="badge n">n</span></td><td>мобильный телефон</td></tr>
+<tr><td>das Tablet</td><td><span class="badge n">n</span></td><td>планшет</td></tr>
+<tr><td>der Laptop</td><td><span class="badge m">m</span></td><td>ноутбук</td></tr>
+<tr><td>der Kopfhörer</td><td><span class="badge m">m</span></td><td>наушники</td></tr>
+<tr><td>das Kabel</td><td><span class="badge n">n</span></td><td>кабель</td></tr>
+<tr><td>die Fernbedienung</td><td><span class="badge f">f</span></td><td>пульт</td></tr>
+<tr><td>der Beamer</td><td><span class="badge m">m</span></td><td>проектор</td></tr>
+<tr><td>die Gitarre</td><td><span class="badge f">f</span></td><td>гитара</td></tr>
+</tbody></table>
+</div>
+
+<div class="section">
+<div class="section-title">🚗 Транспорт</div>
+<table>
+<tbody>
+<tr><th>Немецкий</th><th>Артикль</th><th>Перевод</th></tr>
+<tr><td>das Auto</td><td><span class="badge n">n</span></td><td>автомобиль</td></tr>
+<tr><td>das Fahrrad</td><td><span class="badge n">n</span></td><td>велосипед</td></tr>
+<tr><td>das Motorrad</td><td><span class="badge n">n</span></td><td>мотоцикл</td></tr>
+<tr><td>der Flughafen</td><td><span class="badge m">m</span></td><td>аэропорт</td></tr>
+<tr><td>der Rollstuhl</td><td><span class="badge m">m</span></td><td>инвалидное кресло</td></tr>
+<tr><td>der Bus</td><td><span class="badge m">m</span></td><td>автобус | mit dem Bus fahren</td></tr>
+<tr><td>die U-Bahn</td><td><span class="badge f">f</span></td><td>метро</td></tr>
+<tr><td>die S-Bahn</td><td><span class="badge f">f</span></td><td>городская электричка</td></tr>
+<tr><td>das Benzin</td><td><span class="badge n">n</span></td><td>бензин</td></tr>
+<tr><td>der Fahrgast</td><td><span class="badge m">m</span></td><td>пассажир (общ. транспорт) | Fahr + Gast | Pl: die Fahrgäste — пассажиры</td></tr>
+</tbody></table>
+</div>
+
+<div class="section">
+<div class="section-title">🏠 Дом / Уборка</div>
+<table>
+<tbody>
+<tr><th>Немецкий</th><th>Артикль</th><th>Перевод</th></tr>
+<tr><td>der Wasserkocher</td><td><span class="badge m">m</span></td><td>электрический чайник | Der Wasserkocher ist kaputt</td></tr>
+<tr><td>der Wecker</td><td><span class="badge m">m</span></td><td>будильник</td></tr>
+<tr><td>der Spiegel</td><td><span class="badge m">m</span></td><td>зеркало</td></tr>
+<tr><td>der Eimer</td><td><span class="badge m">m</span></td><td>ведро</td></tr>
+<tr><td>der Bodenwischer</td><td><span class="badge m">m</span></td><td>швабра</td></tr>
+<tr><td>das Schloss</td><td><span class="badge n">n</span></td><td>замок</td></tr>
+<tr><td>der Schlüssel</td><td><span class="badge m">m</span></td><td>ключ</td></tr>
+<tr><td>die Freizeit</td><td><span class="badge f">f</span></td><td>свободное время, досуг</td></tr>
+<tr><td>die Dehnung</td><td><span class="badge f">f</span></td><td>стретчинг / растяжка</td></tr>
+<tr><td>das Dach</td><td><span class="badge n">n</span></td><td>крыша | произносится [дах] | Pl: die Dächer | ein Dach über dem Kopf — крыша над головой</td></tr>
+</tbody></table>
+</div>
+
+<div class="section">
+<div class="section-title">🛏 das Schlafzimmer</div>
+<table><tbody>
+<tr><th>Немецкий</th><th>Артикль</th><th>Перевод / Примечание</th></tr>
+<tr><td>das Bett</td><td><span class="badge n">n</span></td><td>кровать</td></tr>
+<tr><td>der Schrank</td><td><span class="badge m">m</span></td><td>шкаф</td></tr>
+<tr><td>das Kissen</td><td><span class="badge n">n</span></td><td>подушка</td></tr>
+<tr><td>der Nachttisch</td><td><span class="badge m">m</span></td><td>тумбочка</td></tr>
+<tr><td>das Bild</td><td><span class="badge n">n</span></td><td>картина / фото</td></tr>
+<tr><td>das Regal</td><td><span class="badge n">n</span></td><td>полка / стеллаж</td></tr>
+<tr><td>der Blumentopf</td><td><span class="badge m">m</span></td><td>цветочный горшок</td></tr>
+<tr><td>die Heizung</td><td><span class="badge f">f</span></td><td>батарея / отопление</td></tr>
+<tr><td>die Pflanze</td><td><span class="badge f">f</span></td><td>растение</td></tr>
+<tr><td>der Boden</td><td><span class="badge m">m</span></td><td>пол</td></tr>
+</tbody></table>
+</div>
+
+<div class="section">
+<div class="section-title">🖥 das Arbeitszimmer</div>
+<table><tbody>
+<tr><th>Немецкий</th><th>Артикль</th><th>Перевод / Примечание</th></tr>
+<tr><td>der Bildschirm</td><td><span class="badge m">m</span></td><td>экран</td></tr>
+<tr><td>der Monitor</td><td><span class="badge m">m</span></td><td>монитор</td></tr>
+<tr><td>die Tischlampe</td><td><span class="badge f">f</span></td><td>настольная лампа</td></tr>
+<tr><td>der Drucker</td><td><span class="badge m">m</span></td><td>принтер</td></tr>
+<tr><td>der Computer</td><td><span class="badge m">m</span></td><td>компьютер</td></tr>
+<tr><td>der Rechner</td><td><span class="badge m">m</span></td><td>компьютер / ПК | разг. = Computer</td></tr>
+<tr><td>der Schreibtisch</td><td><span class="badge m">m</span></td><td>письменный стол</td></tr>
+<tr><td>der Schreibtischstuhl</td><td><span class="badge m">m</span></td><td>рабочий стул</td></tr>
+<tr><td>der Korb</td><td><span class="badge m">m</span></td><td>корзина</td></tr>
+<tr><td>die Blume</td><td><span class="badge f">f</span></td><td>цветок (срезанный) | ↔ die Pflanze (с корнями)</td></tr>
+<tr><td>die Tastatur</td><td><span class="badge f">f</span></td><td>клавиатура</td></tr>
+<tr><td>das Dokument</td><td><span class="badge n">n</span></td><td>документ</td></tr>
+<tr><td>der Teppich</td><td><span class="badge m">m</span></td><td>ковёр</td></tr>
+<tr><td>die Kamera</td><td><span class="badge f">f</span></td><td>камера / фотоаппарат</td></tr>
+</tbody></table>
+</div>
+
+<div class="section">
+<div class="section-title">🗃 der Keller</div>
+<table><tbody>
+<tr><th>Немецкий</th><th>Артикль</th><th>Перевод / Примечание</th></tr>
+<tr><td>die Waschmaschine</td><td><span class="badge f">f</span></td><td>стиральная машина</td></tr>
+<tr><td>der Wäschetrockner</td><td><span class="badge m">m</span></td><td>сушильная машина</td></tr>
+<tr><td>das Waschmittel</td><td><span class="badge n">n</span></td><td>стиральный порошок / средство</td></tr>
+<tr><td>der Wasserschlauch</td><td><span class="badge m">m</span></td><td>водяной шланг</td></tr>
+<tr><td>die Wäsche</td><td><span class="badge f">f</span></td><td>бельё / стирка</td></tr>
+<tr><td>das Handtuch</td><td><span class="badge n">n</span></td><td>полотенце</td></tr>
+</tbody></table>
+</div>
+
+<div class="section">
+<div class="section-title">🛋 das Wohnzimmer</div>
+<table><tbody>
+<tr><th>Немецкий</th><th>Артикль</th><th>Перевод / Примечание</th></tr>
+<tr><td>das Sofa</td><td><span class="badge n">n</span></td><td>диван</td></tr>
+<tr><td>der Sessel</td><td><span class="badge m">m</span></td><td>кресло</td></tr>
+<tr><td>der Fernseher</td><td><span class="badge m">m</span></td><td>телевизор</td></tr>
+<tr><td>die Karaffe</td><td><span class="badge f">f</span></td><td>графин / кувшин | красивый кувшин, обычно для воды/вина</td></tr>
+</tbody></table>
+</div>
+
+<div class="section">
+<div class="section-title">🚿 das Bad</div>
+<table><tbody>
+<tr><th>Немецкий</th><th>Артикль</th><th>Перевод / Примечание</th></tr>
+<tr><td>die Dusche</td><td><span class="badge f">f</span></td><td>душ</td></tr>
+<tr><td>die Toilette</td><td><span class="badge f">f</span></td><td>туалет</td></tr>
+<tr><td>das Waschbecken</td><td><span class="badge n">n</span></td><td>раковина</td></tr>
+<tr><td>die Badewanne</td><td><span class="badge f">f</span></td><td>ванна</td></tr>
+<tr><td>der Wasserhahn</td><td><span class="badge m">m</span></td><td>кран</td></tr>
+<tr><td>die Seife</td><td><span class="badge f">f</span></td><td>мыло</td></tr>
+<tr><td>die Zahnbürste</td><td><span class="badge f">f</span></td><td>зубная щётка</td></tr>
+</tbody></table>
+</div>
+
+<div class="section">
+<div class="section-title">🧸 das Kinderzimmer</div>
+<table><tbody>
+<tr><th>Немецкий</th><th>Артикль</th><th>Перевод / Примечание</th></tr>
+<tr><td>die Kommode</td><td><span class="badge f">f</span></td><td>комод</td></tr>
+<tr><td>das Chaos</td><td><span class="badge n">n</span></td><td>беспорядок | ⚠ das, не der!</td></tr>
+<tr><td>die Jalousie</td><td><span class="badge f">f</span></td><td>жалюзи</td></tr>
+<tr><td>der Rollladen</td><td><span class="badge m">m</span></td><td>рольставни / ролета</td></tr>
+</tbody></table>
+</div>
+
+<div class="section">
+<div class="section-title">🌿 der Balkon</div>
+<table><tbody>
+<tr><th>Немецкий</th><th>Артикль</th><th>Перевод / Примечание</th></tr>
+<tr><td>der Sonnenschirm</td><td><span class="badge m">m</span></td><td>зонт от солнца</td></tr>
+</tbody></table>
+</div>
+
+<div class="section">
+<div class="section-title">🚪 der Flur</div>
+<table><tbody>
+<tr><th>Немецкий</th><th>Артикль</th><th>Перевод / Примечание</th></tr>
+<tr><td>die Garderobe</td><td><span class="badge f">f</span></td><td>вешалка / гардероб</td></tr>
+<tr><td>der Schuh</td><td><span class="badge m">m</span></td><td>ботинок / туфля | Pl: die Schuhe</td></tr>
+</tbody></table>
+</div>
+
+<div class="section">
+<div class="section-title">🍳 die Küche</div>
+<table><tbody>
+<tr><th>Немецкий</th><th>Артикль</th><th>Перевод / Примечание</th></tr>
+<tr><td>der Kühlschrank</td><td><span class="badge m">m</span></td><td>холодильник</td></tr>
+<tr><td>die Spüle</td><td><span class="badge f">f</span></td><td>кухонная мойка</td></tr>
+<tr><td>die Spülmaschine</td><td><span class="badge f">f</span></td><td>посудомоечная машина</td></tr>
+<tr><td>der Herd</td><td><span class="badge m">m</span></td><td>плита</td></tr>
+<tr><td>die Arbeitsplatte</td><td><span class="badge f">f</span></td><td>столешница</td></tr>
+<tr><td>die Kaffeemaschine</td><td><span class="badge f">f</span></td><td>кофемашина</td></tr>
+<tr><td>der Backofen</td><td><span class="badge m">m</span></td><td>духовка</td></tr>
+<tr><td>die Pfanne</td><td><span class="badge f">f</span></td><td>сковорода</td></tr>
+<tr><td>das Kochbuch</td><td><span class="badge n">n</span></td><td>кулинарная книга</td></tr>
+</tbody></table>
+</div>
+
+<div class="section">
+<div class="section-title">🍽️ Кухня / Посуда</div>
+<table>
+<tbody>
+<tr><th>Немецкий</th><th>Артикль</th><th>Перевод</th></tr>
+<tr><td>die Kanne</td><td><span class="badge f">f</span></td><td>кувшин / графин | общее слово: Teekanne, Kaffeekanne</td></tr>
+<tr><td>die Teekanne</td><td><span class="badge f">f</span></td><td>заварочный чайник | Die Teekanne steht auf dem Tisch</td></tr>
+<tr><td>die Kaffeekanne</td><td><span class="badge f">f</span></td><td>кофейник</td></tr>
+<tr><td>der Teller</td><td><span class="badge m">m</span></td><td>тарелка</td></tr>
+<tr><td>die Gabel</td><td><span class="badge f">f</span></td><td>вилка</td></tr>
+<tr><td>der Löffel</td><td><span class="badge m">m</span></td><td>ложка</td></tr>
+<tr><td>das Messer</td><td><span class="badge n">n</span></td><td>нож</td></tr>
+<tr><td>die Serviette</td><td><span class="badge f">f</span></td><td>салфетка</td></tr>
+<tr><td>das Glas</td><td><span class="badge n">n</span></td><td>стеклянный стакан</td></tr>
+<tr><td>das Glas (Einmachglas)</td><td><span class="badge n">n</span></td><td>банка (для хранения)</td></tr>
+<tr><td>die Tasse</td><td><span class="badge f">f</span></td><td>чашка</td></tr>
+<tr><td>der Becher</td><td><span class="badge m">m</span></td><td>стакан / кружка</td></tr>
+</tbody></table>
+</div>
+
+<div class="section">
+<div class="section-title">🛒 Магазин / Продукты</div>
+<table>
+<tbody>
+<tr><th>Немецкий</th><th>Артикль</th><th>Перевод</th></tr>
+<tr><td>der Supermarkt / der Laden</td><td><span class="badge m">m</span></td><td>магазин</td></tr>
+<tr><td>die Lebensmittel</td><td><span class="badge pl">Pl</span></td><td>продукты</td></tr>
+<tr><td>die Mengen</td><td><span class="badge pl">Pl</span></td><td>количества / объёмы</td></tr>
+<tr><td>die Verpackung</td><td><span class="badge f">f</span></td><td>упаковка</td></tr>
+<tr><td>der Kasten</td><td><span class="badge m">m</span></td><td>ящик</td></tr>
+<tr><td>die Flasche</td><td><span class="badge f">f</span></td><td>бутылка</td></tr>
+<tr><td>die Packung</td><td><span class="badge f">f</span></td><td>пачка</td></tr>
+<tr><td>die Dose</td><td><span class="badge f">f</span></td><td>консервная банка</td></tr>
+<tr><td>der Liter</td><td><span class="badge m">m</span></td><td>литр</td></tr>
+<tr><td>das Pfund</td><td><span class="badge n">n</span></td><td>фунт (500 г)</td></tr>
+<tr><td>das Kilo</td><td><span class="badge n">n</span></td><td>килограмм</td></tr>
+<tr><td>das Pfand</td><td><span class="badge n">n</span></td><td>залог за тару</td></tr>
+<tr><td>der Müll</td><td><span class="badge m">m</span></td><td>мусор</td></tr>
+<tr><td>die Abteilung</td><td><span class="badge f">f</span></td><td>отдел</td></tr>
+<tr><td>die Fleischabteilung</td><td><span class="badge f">f</span></td><td>мясной отдел</td></tr>
+<tr><td>die Rechnung</td><td><span class="badge f">f</span></td><td>счёт</td></tr>
+<tr><td>die Speisekarte</td><td><span class="badge f">f</span></td><td>меню</td></tr>
+<tr><td>die Getränke</td><td><span class="badge pl">Pl</span></td><td>напитки</td></tr>
+<tr><td>die Speisen</td><td><span class="badge pl">Pl</span></td><td>блюда</td></tr>
+</tbody></table>
+</div>
+
+<div class="section">
+<div class="section-title">🥗 Еда и напитки</div>
+<table>
+<tbody>
+<tr><th>Немецкий</th><th>Артикль</th><th>Перевод</th></tr>
+<tr><td>das Frühstück</td><td><span class="badge n">n</span></td><td>завтрак | beim Frühstück — за завтраком</td></tr>
+<tr><td>das Mittagessen</td><td><span class="badge n">n</span></td><td>обед</td></tr>
+<tr><td>das Croissant</td><td><span class="badge n">n</span></td><td>круассан</td></tr>
+<tr><td>das Pausenbrot</td><td><span class="badge n">n</span></td><td>бутерброд на перекус</td></tr>
+<tr><td>der Nachtisch</td><td><span class="badge m">m</span></td><td>десерт</td></tr>
+<tr><td>der Fisch</td><td><span class="badge m">m</span></td><td>рыба</td></tr>
+<tr><td>das Brot</td><td><span class="badge n">n</span></td><td>хлеб</td></tr>
+<tr><td>das Brötchen</td><td><span class="badge n">n</span></td><td>булочка</td></tr>
+<tr><td>das Fleisch</td><td><span class="badge n">n</span></td><td>мясо</td></tr>
+<tr><td>die Wurst</td><td><span class="badge f">f</span></td><td>колбаса</td></tr>
+<tr><td>der Käse</td><td><span class="badge m">m</span></td><td>сыр</td></tr>
+<tr><td>der Reis</td><td><span class="badge m">m</span></td><td>рис</td></tr>
+<tr><td>die Spaghetti</td><td><span class="badge pl">Pl</span></td><td>спагетти</td></tr>
+<tr><td>das Olivenöl</td><td><span class="badge n">n</span></td><td>оливковое масло</td></tr>
+<tr><td>das Müsli</td><td><span class="badge n">n</span></td><td>мюсли</td></tr>
+<tr><td>die Milch</td><td><span class="badge f">f</span></td><td>молоко</td></tr>
+<tr><td>das Ei</td><td><span class="badge n">n</span></td><td>яйцо</td></tr>
+<tr><td>der Pfeffer</td><td><span class="badge m">m</span></td><td>перец</td></tr>
+<tr><td>der Knoblauch</td><td><span class="badge m">m</span></td><td>чеснок</td></tr>
+<tr><td>das Obst</td><td><span class="badge n">n</span></td><td>фрукты (обобщ.)</td></tr>
+<tr><td>das Gemüse</td><td><span class="badge n">n</span></td><td>овощи (обобщ.)</td></tr>
+<tr><td>die Tomate</td><td><span class="badge f">f</span></td><td>помидор</td></tr>
+<tr><td>die Zwiebel</td><td><span class="badge f">f</span></td><td>лук</td></tr>
+<tr><td>die Karotte</td><td><span class="badge f">f</span></td><td>морковь</td></tr>
+<tr><td>der Salat</td><td><span class="badge m">m</span></td><td>салат / салатный лист</td></tr>
+<tr><td>die Kartoffel</td><td><span class="badge f">f</span></td><td>картофель</td></tr>
+<tr><td>die Paprika</td><td><span class="badge f">f</span></td><td>перец болгарский</td></tr>
+<tr><td>der Pilz</td><td><span class="badge m">m</span></td><td>гриб</td></tr>
+<tr><td>die Banane</td><td><span class="badge f">f</span></td><td>банан</td></tr>
+<tr><td>die Orange</td><td><span class="badge f">f</span></td><td>апельсин</td></tr>
+<tr><td>der Apfel</td><td><span class="badge m">m</span></td><td>яблоко</td></tr>
+<tr><td>die Kiwi</td><td><span class="badge f">f</span></td><td>киви</td></tr>
+<tr><td>der Saft</td><td><span class="badge m">m</span></td><td>сок</td></tr>
+<tr><td>das Wasser</td><td><span class="badge n">n</span></td><td>вода</td></tr>
+<tr><td>der Tee</td><td><span class="badge m">m</span></td><td>чай</td></tr>
+<tr><td>der Kaffee</td><td><span class="badge m">m</span></td><td>кофе</td></tr>
+<tr><td>der Espresso</td><td><span class="badge m">m</span></td><td>эспрессо</td></tr>
+<tr><td>der Cappuccino</td><td><span class="badge m">m</span></td><td>капучино</td></tr>
+<tr><td>die Cola</td><td><span class="badge f">f</span></td><td>кола</td></tr>
+<tr><td>die Limo</td><td><span class="badge f">f</span></td><td>лимонад</td></tr>
+<tr><td>das Eis</td><td><span class="badge n">n</span></td><td>мороженое / лёд</td></tr>
+<tr><td>der Kuchen</td><td><span class="badge m">m</span></td><td>пирог, торт</td></tr>
+<tr><td>die Brezel</td><td><span class="badge f">f</span></td><td>крендель-брецель</td></tr>
+</tbody></table>
+</div>
+
+<div class="section">
+<div class="section-title">🏙️ Помещения / Город</div>
+<table>
+<tbody>
+<tr><th>Немецкий</th><th>Артикль</th><th>Перевод</th></tr>
+<tr><td>der Aufzug</td><td><span class="badge m">m</span></td><td>лифт | Pl: die Aufzüge | = der Fahrstuhl (разговорное)</td></tr>
+<tr><td>der Fahrstuhl</td><td><span class="badge m">m</span></td><td>лифт (разговорное) | = der Aufzug (официальное)</td></tr>
+<tr><td>die Hauptstadt</td><td><span class="badge f">f</span></td><td>столица | Berlin ist die Hauptstadt Deutschlands.</td></tr>
+<tr><td>die WG (die Wohngemeinschaft)</td><td><span class="badge f">f</span></td><td>совместная квартира | Wohn + Gemeinschaft = жильё + сообщество | Ich wohne in einer WG.</td></tr>
+<tr><td>die Nähe</td><td><span class="badge f">f</span></td><td>близость | in der Nähe — поблизости, рядом | in der Nähe vom Bahnhof — рядом с вокзалом</td></tr>
+<tr><td>der Hof</td><td><span class="badge m">m</span></td><td>двор | Pl: die Höfe | im Hof — во дворе</td></tr>
+<tr><td>das Zimmer</td><td><span class="badge n">n</span></td><td>комната | Pl: die Zimmer | ≠ die Wohnung (вся квартира)</td></tr>
+<tr><td>die Miete</td><td><span class="badge f">f</span></td><td>арендная плата | Miete zahlen — платить аренду</td></tr>
+<tr><td>die Fläche / die Wohnfläche</td><td><span class="badge f">f</span></td><td>площадь / жилая площадь | в объявлениях: Wohnfläche: 60 m²</td></tr>
+<tr><td>die Etage</td><td><span class="badge f">f</span></td><td>этаж | = der Stock | die 1. Etage = der 1. Stock</td></tr>
+<tr><td>der Garten</td><td><span class="badge m">m</span></td><td>сад / двор | Pl: die Gärten</td></tr>
+<tr><td>die Terrasse</td><td><span class="badge f">f</span></td><td>терраса | открытая площадка у дома</td></tr>
+<tr><td>die Garage</td><td><span class="badge f">f</span></td><td>гараж</td></tr>
+<tr><td>der Keller</td><td><span class="badge m">m</span></td><td>подвал | = das Untergeschoss (официально)</td></tr>
+<tr><td>die Kaution</td><td><span class="badge f">f</span></td><td>залог за квартиру | обычно 1–3 месяца аренды</td></tr>
+<tr><td>die Erlaubnis</td><td><span class="badge f">f</span></td><td>разрешение | ↔ das Verbot</td></tr>
+<tr><td>das Verbot</td><td><span class="badge n">n</span></td><td>запрет | ↔ die Erlaubnis</td></tr>
+<tr><td>das Dachgeschoss</td><td><span class="badge n">n</span></td><td>мансарда / верхний этаж (ganz oben)</td></tr>
+<tr><td>der N. Stock</td><td><span class="badge m">m</span></td><td>der 1. / 2. / 3. Stock - этажи над землёй | das Erdgeschoss = 0, der 1. Stock = 1 этаж выше земли, der 2. Stock = 2 этажа выше земли и т.д.</td></tr>
+<tr><td>das Erdgeschoss</td><td><span class="badge n">n</span></td><td>первый этаж / партер | ⚠ = наземный этаж, не 1. Stock!</td></tr>
+<tr><td>das Untergeschoss</td><td><span class="badge n">n</span></td><td>подвал / цокольный этаж (Keller)</td></tr>
+<tr><td>das Schlafzimmer</td><td><span class="badge n">n</span></td><td>спальня | Das Schlafzimmer ist rechts | Schlafen + Zimmer</td></tr>
+<tr><td>der Arbeitsplatz</td><td><span class="badge m">m</span></td><td>рабочее место</td></tr>
+<tr><td>die Werkstatt</td><td><span class="badge f">f</span></td><td>мастерская</td></tr>
+<tr><td>die Wohnung</td><td><span class="badge f">f</span></td><td>квартира</td></tr>
+<tr><td>die Küche</td><td><span class="badge f">f</span></td><td>кухня</td></tr>
+<tr><td>das Büro</td><td><span class="badge n">n</span></td><td>офис</td></tr>
+<tr><td>die Firma</td><td><span class="badge f">f</span></td><td>фирма</td></tr>
+<tr><td>die Schule</td><td><span class="badge f">f</span></td><td>школа</td></tr>
+<tr><td>der Bahnhof</td><td><span class="badge m">m</span></td><td>вокзал</td></tr>
+<tr><td>das Rathaus</td><td><span class="badge n">n</span></td><td>ратуша</td></tr>
+<tr><td>der Hafen</td><td><span class="badge m">m</span></td><td>порт</td></tr>
+<tr><td>der Marktplatz</td><td><span class="badge m">m</span></td><td>рыночная площадь</td></tr>
+<tr><td>die Brücke</td><td><span class="badge f">f</span></td><td>мост</td></tr>
+<tr><td>der Turm</td><td><span class="badge m">m</span></td><td>башня</td></tr>
+<tr><td>der Parkplatz</td><td><span class="badge m">m</span></td><td>парковка</td></tr>
+<tr><td>das Kino</td><td><span class="badge n">n</span></td><td>кинотеатр | ins Kino gehen</td></tr>
+<tr><td>das Homeoffice</td><td><span class="badge n">n</span></td><td>удалённая работа | im Homeoffice sein</td></tr>
+<tr><td>der Eingang</td><td><span class="badge m">m</span></td><td>вход | ein + Gang (проход) | Pl: die Eingänge | ↔ der Ausgang</td></tr>
+<tr><td>der Ausgang</td><td><span class="badge m">m</span></td><td>выход | aus + Gang (проход) | Pl: die Ausgänge | ↔ der Eingang</td></tr>
+</tbody></table>
+</div>
+
+<div class="section">
+<div class="section-title">👜 Одежда / Аксессуары</div>
+<table>
+<tbody>
+<tr><th>Немецкий</th><th>Артикль</th><th>Перевод</th></tr>
+<tr><td>die Kleidung</td><td><span class="badge f">f</span></td><td>одежда (общее слово)</td></tr>
+<tr><td>die Jacke</td><td><span class="badge f">f</span></td><td>куртка</td></tr>
+<tr><td>die Brille</td><td><span class="badge f">f</span></td><td>очки</td></tr>
+<tr><td>der Rucksack</td><td><span class="badge m">m</span></td><td>рюкзак</td></tr>
+<tr><td>die Tasche</td><td><span class="badge f">f</span></td><td>сумка</td></tr>
+<tr><td>der Koffer</td><td><span class="badge m">m</span></td><td>чемодан</td></tr>
+<tr><td>das Geld</td><td><span class="badge n">n</span></td><td>деньги</td></tr>
+<tr><td>der Radiergummi</td><td><span class="badge m">m</span></td><td>ластик</td></tr>
+</tbody></table>
+</div>
+
+<div class="section">
+<div class="section-title">📚 Канцелярия / Учёба</div>
+<table>
+<tbody>
+<tr><th>Немецкий</th><th>Артикль</th><th>Перевод</th></tr>
+<tr><td>die Prüfung</td><td><span class="badge f">f</span></td><td>экзамен, тест | Ich habe morgen eine Prüfung</td></tr>
+<tr><td>der Elternabend</td><td><span class="badge m">m</span></td><td>родительское собрание</td></tr>
+<tr><td>der Schüler</td><td><span class="badge m">m</span></td><td>ученик</td></tr>
+<tr><td>der Kindergarten</td><td><span class="badge m">m</span></td><td>детский сад</td></tr>
+<tr><td>das Heft</td><td><span class="badge n">n</span></td><td>тетрадь</td></tr>
+<tr><td>das Notizbuch</td><td><span class="badge n">n</span></td><td>блокнот</td></tr>
+<tr><td>das Buch</td><td><span class="badge n">n</span></td><td>книга</td></tr>
+<tr><td>der Stift / der Kuli</td><td><span class="badge m">m</span></td><td>ручка</td></tr>
+<tr><td>der Bleistift</td><td><span class="badge m">m</span></td><td>карандаш</td></tr>
+<tr><td>der Spitzer</td><td><span class="badge m">m</span></td><td>точилка для карандашей</td></tr>
+<tr><td>das Federmäppchen</td><td><span class="badge n">n</span></td><td>пенал</td></tr>
+<tr><td>das Lineal</td><td><span class="badge n">n</span></td><td>линейка</td></tr>
+<tr><td>die Schere</td><td><span class="badge f">f</span></td><td>ножницы</td></tr>
+<tr><td>der Stuhl</td><td><span class="badge m">m</span></td><td>стул</td></tr>
+<tr><td>der Tisch</td><td><span class="badge m">m</span></td><td>стол</td></tr>
+<tr><td>die Lampe</td><td><span class="badge f">f</span></td><td>лампа</td></tr>
+<tr><td>das Fenster</td><td><span class="badge n">n</span></td><td>окно</td></tr>
+<tr><td>die Tür</td><td><span class="badge f">f</span></td><td>дверь</td></tr>
+<tr><td>die Tafel</td><td><span class="badge f">f</span></td><td>доска</td></tr>
+<tr><td>das Whiteboard</td><td><span class="badge n">n</span></td><td>белая пластиковая доска</td></tr>
+<tr><td>der Monitor / der Bildschirm / der Schirm</td><td><span class="badge m">m</span></td><td>монитор / экран</td></tr>
+<tr><td>die Maus</td><td><span class="badge f">f</span></td><td>мышь (комп.)</td></tr>
+<tr><td>der Ball</td><td><span class="badge m">m</span></td><td>мяч</td></tr>
+<tr><td>der Unterricht</td><td><span class="badge m">m</span></td><td>урок / занятие | Ich habe Unterricht</td></tr>
+<tr><td>die Hausaufgabe</td><td><span class="badge f">f</span></td><td>домашнее задание | Pl: die Hausaufgaben</td></tr>
+<tr><td>der Lehrplan</td><td><span class="badge m">m</span></td><td>учебный план</td></tr>
+<tr><td>das Kursfest</td><td><span class="badge n">n</span></td><td>праздник курса</td></tr>
+<tr><td>die Stunde</td><td><span class="badge f">f</span></td><td>час / урок</td></tr>
+<tr><td>die Einweisung</td><td><span class="badge f">f</span></td><td>инструктаж</td></tr>
+<tr><td>die Zusatzbelehrung</td><td><span class="badge f">f</span></td><td>дополнительный инструктаж</td></tr>
+<tr><td>die Fehlzeiten</td><td><span class="badge pl">Pl</span></td><td>пропуски (отсутствие)</td></tr>
+</tbody></table>
+</div>
+
+<div class="section">
+<div class="section-title">💬 Общение / Документы</div>
+<table>
+<tbody>
+<tr><th>Немецкий</th><th>Артикль</th><th>Перевод</th></tr>
+<tr><td>der Anhang</td><td><span class="badge m">m</span></td><td>вложение / приложение | an + hängen (висеть) | im Anhang — во вложении</td></tr>
+<tr><td>die Nutzung</td><td><span class="badge f">f</span></td><td>использование | от <b>nutzen</b> (= benutzen без приставки) | -ung всегда die | Offline-Nutzung</td></tr>
+<tr><td>der Zugriff</td><td><span class="badge m">m</span></td><td>доступ | zu (к) + Griff (хватка) | Zugriff auf das Internet — доступ к интернету</td></tr>
+<tr><td>der Besitzer / die Besitzerin</td><td><span class="badge m">m</span> / <span class="badge f">f</span></td><td>владелец / владелица</td></tr>
+<tr><td>die Beziehungen</td><td><span class="badge pl">Pl</span></td><td>связи, знакомства | разг. "Vitamin B" — полезные связи / блат</td></tr>
+<tr><td>das Glück</td><td><span class="badge n">n</span></td><td>счастье, удача | Viel Glück! — Удачи! | kein Plural</td></tr>
+<tr><td>der Spaß</td><td><span class="badge m">m</span></td><td>веселье, удовольствие | Viel Spaß! | Es macht Spaß</td></tr>
+<tr><td>der Urlaub</td><td><span class="badge m">m</span></td><td>отпуск, каникулы | Ich bin im Urlaub</td></tr>
+<tr><td>die Leitung</td><td><span class="badge f">f</span></td><td>руководство; линия, связь | die Internetleitung</td></tr>
+<tr><td>der Arztbesuch</td><td><span class="badge m">m</span></td><td>визит к врачу | Ich habe einen Arztbesuch</td></tr>
+<tr><td>die Alternative</td><td><span class="badge f">f</span></td><td>альтернатива</td></tr>
+<tr><td>die Chance</td><td><span class="badge f">f</span></td><td>шанс</td></tr>
+<tr><td>der Schatz</td><td><span class="badge m">m</span></td><td>сокровище; дорогой (обращение)</td></tr>
+<tr><td>die Verbindung</td><td><span class="badge f">f</span></td><td>связь, соединение</td></tr>
+<tr><td>das Gespräch</td><td><span class="badge n">n</span></td><td>разговор</td></tr>
+<tr><td>die Videokonferenz</td><td><span class="badge f">f</span></td><td>видеоконференция</td></tr>
+<tr><td>die Anmeldung</td><td><span class="badge f">f</span></td><td>регистрация</td></tr>
+<tr><td>die Begrüßung</td><td><span class="badge f">f</span></td><td>приветствие</td></tr>
+<tr><td>die Verabschiedung</td><td><span class="badge f">f</span></td><td>прощание</td></tr>
+<tr><td>die Antwort</td><td><span class="badge f">f</span></td><td>ответ</td></tr>
+<tr><td>die Nachrichten</td><td><span class="badge pl">Pl</span></td><td>новости / сообщения</td></tr>
+<tr><td>das Rauchverbot</td><td><span class="badge n">n</span></td><td>запрет на курение</td></tr>
+<tr><td>das Rauchen</td><td><span class="badge n">n</span></td><td>курение</td></tr>
+<tr><td>der Notfall</td><td><span class="badge m">m</span></td><td>чрезвычайная ситуация</td></tr>
+<tr><td>das Feuer</td><td><span class="badge n">n</span></td><td>пожар / огонь</td></tr>
+<tr><td>die Formalität</td><td><span class="badge f">f</span></td><td>формальность</td></tr>
+<tr><td>das Formular</td><td><span class="badge n">n</span></td><td>бланк</td></tr>
+<tr><td>die Integration</td><td><span class="badge f">f</span></td><td>интеграция</td></tr>
+<tr><td>der Kollege</td><td><span class="badge m">m</span></td><td>коллега (м) | f: die Kollegin</td></tr>
+<tr><td>der Nachbar</td><td><span class="badge m">m</span></td><td>сосед | f: die Nachbarin</td></tr>
+</tbody></table>
+</div>
+
+<div class="section">
+<div class="section-title">🌅 Время суток</div>
+<table><tbody>
+<tr><th>Немецкий</th><th>Артикль</th><th>Время / Перевод</th></tr>
+<tr><td>der Morgen</td><td><span class="badge m">m</span></td><td>утро | 05:00 – 09:00 | ⚠ Morgen с заглавной = утро, morgen со строчной = завтра</td></tr>
+<tr><td>der Vormittag</td><td><span class="badge m">m</span></td><td>первая половина дня | 10:00 – 12:00 | vor + Mittag = «до полудня»</td></tr>
+<tr><td>der Mittag</td><td><span class="badge m">m</span></td><td>полдень | 12:00 – 14:00</td></tr>
+<tr><td>der Nachmittag</td><td><span class="badge m">m</span></td><td>вторая половина дня | 14:00 – 18:00 | nach + Mittag = «после полудня»</td></tr>
+<tr><td>der Abend</td><td><span class="badge m">m</span></td><td>вечер | 18:00 – 22:00</td></tr>
+<tr><td>die Nacht</td><td><span class="badge f">f</span></td><td>ночь | 22:00 – 05:00 | ⚠ единственное среди частей суток женского рода</td></tr>
+</tbody></table>
+</div>
+
+<div class="section">
+<div class="section-title">⏰ Время (часы)</div>
+<table>
+<tbody>
+<tr><th>Немецкий</th><th>Артикль</th><th>Перевод</th></tr>
+<tr><td>die Dauer</td><td><span class="badge f">f</span></td><td>длительность | от <b>dauern</b> (длиться) | прил.: dauerhaft — постоянный, долговременный</td></tr>
+<tr><td>die Zeit</td><td><span class="badge f">f</span></td><td>время | Ich habe Zeit / keine Zeit</td></tr>
+<tr><td>die Uhr</td><td><span class="badge f">f</span></td><td>часы (в общем)</td></tr>
+<tr><td>die Wanduhr</td><td><span class="badge f">f</span></td><td>настенные часы</td></tr>
+<tr><td>die Armbanduhr</td><td><span class="badge f">f</span></td><td>наручные часы</td></tr>
+<tr><td>der Zeiger</td><td><span class="badge m">m</span></td><td>стрелка (часов)</td></tr>
+<tr><td>der Minutenzeiger</td><td><span class="badge m">m</span></td><td>минутная стрелка</td></tr>
+<tr><td>der Stundenzeiger</td><td><span class="badge m">m</span></td><td>часовая стрелка</td></tr>
+</tbody></table>
+</div>
+
+<div class="section">
+<div class="section-title">📦 Разное</div>
+<table><tbody>
+<tr><th>Немецкий</th><th>Артикль</th><th>Перевод / Примечание</th></tr>
+<tr><td>das Leben</td><td><span class="badge n">n</span></td><td>жизнь</td></tr>
+<tr><td>die Arbeit</td><td><span class="badge f">f</span></td><td>работа | bei der Arbeit — на работе</td></tr>
+<tr><td>die Hilfe</td><td><span class="badge f">f</span></td><td>помощь | Hilfe! — Помогите!</td></tr>
+<tr><td>das Ziel</td><td><span class="badge n">n</span></td><td>цель</td></tr>
+<tr><td>die Bedienung / der Service</td><td><span class="badge f">f</span></td><td>обслуживание / сервис</td></tr>
+<tr><td>die Decke</td><td><span class="badge f">f</span></td><td>потолок / одеяло | два значения — контекст важен</td></tr>
+<tr><td>die Steuer</td><td><span class="badge f">f</span></td><td>налог | Pl: die Steuern</td></tr>
+<tr><td>das Wetter</td><td><span class="badge n">n</span></td><td>погода</td></tr>
+<tr><td>die Laune</td><td><span class="badge f">f</span></td><td>настроение | gute/schlechte Laune — хорошее/плохое настроение</td></tr>
+<tr><td>der Stress</td><td><span class="badge m">m</span></td><td>стресс | Ich habe Stress</td></tr>
+<tr><td>das Problem</td><td><span class="badge n">n</span></td><td>проблема</td></tr>
+<tr><td>der Gast</td><td><span class="badge m">m</span></td><td>гость</td></tr>
+<tr><td>die Grenze</td><td><span class="badge f">f</span></td><td>граница / предел | произносится [грэнцэ] | Pl: die Grenzen | глагол: grenzen — граничить</td></tr>
+</tbody></table>
+</div>
+
+</div>
+
+<!-- ПРИЛАГАТЕЛЬНЫЕ -->
+<div class="panel" id="tab-adj">
+
+<div class="section">
+<div class="section-title">🎨 Цвета</div>
+<table><tbody>
+<tr><th>Немецкий</th><th>Перевод</th><th>Примечание</th></tr>
+<tr><td>rot</td><td>красный</td><td></td></tr>
+<tr><td>schwarz</td><td>чёрный</td><td></td></tr>
+<tr><td>weiß</td><td>белый</td><td></td></tr>
+<tr><td>grau</td><td>серый</td><td></td></tr>
+<tr><td>braun</td><td>коричневый / карий</td><td>braun о глазах = карий</td></tr>
+<tr><td>rosa</td><td>розовый</td><td></td></tr>
+<tr><td>gelb</td><td>жёлтый</td><td></td></tr>
+<tr><td>orange</td><td>оранжевый</td><td></td></tr>
+<tr><td>lila</td><td>фиолетовый / сиреневый</td><td></td></tr>
+<tr><td>grün</td><td>зелёный</td><td></td></tr>
+<tr><td>blau</td><td>синий / голубой</td><td></td></tr>
+<tr><td>grünblau</td><td>сине-зелёный</td><td></td></tr>
+</tbody></table>
+</div>
+
+<div class="section">
+<div class="section-title">🌡 Описание предметов / характеристики</div>
+<table><tbody>
+<tr><th>Немецкий</th><th>Перевод</th><th>Примечание</th></tr>
+<tr><td>passend</td><td>подходящий</td><td>от passen (подходить) | passende Schuhe — подходящие туфли</td></tr>
+<tr><td>dauerhaft</td><td>постоянный, долговременный</td><td>от Dauer (длительность) | -haft = «обладающий свойством» | dauerhafte Lösung — постоянное решение</td></tr>
+<tr><td>groß</td><td>большой</td><td>↔ klein</td></tr>
+<tr><td>klein</td><td>маленький</td><td>↔ groß</td></tr>
+<tr><td>alt</td><td>старый</td><td>↔ neu | также: пожилой (о людях)</td></tr>
+<tr><td>neu</td><td>новый</td><td>↔ alt</td></tr>
+<tr><td>hell</td><td>светлый, яркий</td><td>↔ dunkel | helle Wohnung — светлая квартира</td></tr>
+<tr><td>dunkel</td><td>тёмный</td><td>↔ hell</td></tr>
+<tr><td>kalt</td><td>холодный / холодно</td><td>↔ warm / heiß</td></tr>
+<tr><td>laut</td><td>громкий, шумный</td><td>↔ ruhig</td></tr>
+<tr><td>ruhig</td><td>спокойный, тихий</td><td>↔ laut</td></tr>
+<tr><td>hoch</td><td>высокий</td><td>↔ niedrig | ⚠ в сравнении: höher (выше) | hohe Decke — высокий потолок</td></tr>
+<tr><td>scharf</td><td>острый (о еде) / резкий</td><td>↔ mild | Das Essen ist zu scharf.</td></tr>
+<tr><td>süß</td><td>сладкий / милый</td><td>в разговорном - "милый, cute"</td></tr>
+<tr><td>leicht</td><td>лёгкий</td><td>↔ schwer; также: простой</td></tr>
+<tr><td>schwer</td><td>тяжёлый</td><td>↔ leicht; также: сложный</td></tr>
+<tr><td>modern</td><td>современный</td><td>↔ unmodern</td></tr>
+<tr><td>unmodern</td><td>немодный, устаревший</td><td>↔ modern</td></tr>
+<tr><td>offen</td><td>открытый</td><td>↔ geschlossen (закрытый)</td></tr>
+<tr><td>geöffnet</td><td>открытый</td><td>Partizip II от öffnen</td></tr>
+<tr><td>geschlossen</td><td>закрытый</td><td>Partizip II от schließen</td></tr>
+<tr><td>frei</td><td>свободный</td><td>↔ besetzt</td></tr>
+<tr><td>besetzt</td><td>занятый</td><td>↔ frei</td></tr>
+<tr><td>kaputt</td><td>сломанный</td><td>Der Wasserkocher ist kaputt</td></tr>
+<tr><td>schön</td><td>красивый, прекрасный</td><td>⚠ ≠ schon! Das Wetter ist schön</td></tr>
+</tbody></table>
+</div>
+
+<div class="section">
+<div class="section-title">😊 Люди / эмоции / состояние</div>
+<table><tbody>
+<tr><th>Немецкий</th><th>Перевод</th><th>Примечание</th></tr>
+<tr><td>lustig</td><td>смешной, весёлый</td><td>Das ist lustig!</td></tr>
+<tr><td>stressig</td><td>стрессовый</td><td>Der Tag war stressig</td></tr>
+<tr><td>freundlich</td><td>дружелюбный, вежливый</td><td>Er ist sehr freundlich</td></tr>
+<tr><td>nervös</td><td>нервный, взволнованный</td><td>Ich bin nervös</td></tr>
+<tr><td>fit</td><td>в форме, бодрый</td><td>↔ müde</td></tr>
+<tr><td>allein</td><td>один, в одиночестве</td><td>Ich lebe allein — я живу один | ≠ zusammen</td></tr>
+<tr><td>anstrengend</td><td>утомительный, напряжённый</td><td>Der Tag war sehr anstrengend</td></tr>
+<tr><td>einfach</td><td>простой, лёгкий</td><td>↔ schwer / schwierig</td></tr>
+<tr><td>langweilig</td><td>скучный</td><td>↔ interessant</td></tr>
+<tr><td>schrecklich</td><td>ужасный, страшный</td><td>Das ist schrecklich</td></tr>
+<tr><td>krank</td><td>больной</td><td>Ich bin krank ↔ gesund</td></tr>
+<tr><td>gesund</td><td>здоровый</td><td>Bleib gesund! ↔ krank</td></tr>
+<tr><td>möglich</td><td>возможный</td><td>Ist das möglich?</td></tr>
+<tr><td>notwendig</td><td>необходимый</td><td>Das ist notwendig</td></tr>
+<tr><td>wichtig</td><td>важный</td><td></td></tr>
+<tr><td>pünktlich</td><td>пунктуальный, вовремя</td><td>Der Zug kommt pünktlich</td></tr>
+<tr><td>beruflich</td><td>по работе, профессиональный</td><td>Ich reise beruflich | Beruf = профессия</td></tr>
+<tr><td>ähnlich</td><td>похожий</td><td></td></tr>
+<tr><td>gelernt</td><td>выученный</td><td>Ich habe viel gelernt</td></tr>
+<tr><td>fertig</td><td>готовый, законченный</td><td>Ich bin fertig — я закончил</td></tr>
+<tr><td>schade</td><td>жаль</td><td>Das ist schade! — Жаль! / Очень жаль! | Schade, dass... — Жаль, что...</td></tr>
+</tbody></table>
+</div>
+
+<div class="section">
+<div class="section-title">💰 Цена / вкус / похвала</div>
+<table><tbody>
+<tr><th>Немецкий</th><th>Перевод</th><th>Примечание</th></tr>
+<tr><td>teuer</td><td>дорогой</td><td>↔ billig / günstig</td></tr>
+<tr><td>billig</td><td>дешёвый</td><td>может означать «некачественный»</td></tr>
+<tr><td>günstig</td><td>выгодный, недорогой</td><td>нейтральнее чем billig</td></tr>
+<tr><td>preiswert</td><td>недорогой (цена/качество)</td><td></td></tr>
+<tr><td>lecker</td><td>вкусный</td><td></td></tr>
+<tr><td>köstlich</td><td>восхитительно вкусный</td><td>сильнее чем lecker</td></tr>
+<tr><td>fantastisch</td><td>фантастически</td><td></td></tr>
+<tr><td>super</td><td>супер</td><td></td></tr>
+<tr><td>spitze</td><td>отлично, супер</td><td>разговорное</td></tr>
+<tr><td>prima</td><td>отлично</td><td></td></tr>
+<tr><td>toll</td><td>здорово</td><td></td></tr>
+</tbody></table>
+</div>
+
+<div class="section">
+<div class="section-title">💍 Семейный статус</div>
+<table><tbody>
+<tr><th>Немецкий</th><th>Перевод</th><th>Транскрипция</th></tr>
+<tr><td>verheiratet</td><td>женат / замужем</td><td>[фэр-хай-ра-тэт]</td></tr>
+<tr><td>geschieden</td><td>разведён / разведена</td><td>[гэ-ши-дэн]</td></tr>
+<tr><td>verliebt</td><td>влюблён / влюблена</td><td>[фэр-либт]</td></tr>
+<tr><td>Single</td><td>одинок / не в отношениях</td><td>[зингл]</td></tr>
+</tbody></table>
+</div>
+
+</div>
+
+<!-- НАРЕЧИЯ -->
+<div class="panel" id="tab-adv">
+
+<div class="section">
+<div class="section-title">⏰ Время / частота</div>
+<table><tbody>
+<tr><th>Немецкий</th><th>Перевод</th><th>Примечание</th></tr>
+<tr><td>jetzt</td><td>сейчас</td><td>в данный момент</td></tr>
+<tr><td>heute</td><td>сегодня</td><td>↔ gestern / morgen</td></tr>
+<tr><td>gestern</td><td>вчера</td><td>Gestern war es kalt — Вчера было холодно</td></tr>
+<tr><td>morgen</td><td>завтра</td><td>⚠ ≠ der <b>Morgen</b> (m, утро)! morgen со строчной = завтра, Morgen с заглавной = утро</td></tr>
+<tr><td>früh</td><td>рано</td><td>Ich stehe früh auf</td></tr>
+<tr><td>später</td><td>позже</td><td>Bis später!</td></tr>
+<tr><td>gleich</td><td>сейчас, тут же</td><td>Bis gleich!</td></tr>
+<tr><td>zuerst</td><td>сначала, прежде всего</td><td>Zuerst esse ich, dann arbeite ich</td></tr>
+<tr><td>dann</td><td>затем, потом</td><td></td></tr>
+<tr><td>endlich</td><td>наконец-то</td><td>Endlich! / Wir sind endlich da</td></tr>
+<tr><td>schon</td><td>уже</td><td>⚠ ≠ schön! Ich bin schon da — Я уже здесь</td></tr>
+<tr><td>immer</td><td>всегда</td><td>шкала: immer → oft → manchmal → selten → nie</td></tr>
+<tr><td>oft</td><td>часто</td><td></td></tr>
+<tr><td>manchmal</td><td>иногда</td><td></td></tr>
+<tr><td>selten</td><td>редко</td><td></td></tr>
+<tr><td>nie</td><td>никогда</td><td></td></tr>
+<tr><td>jeden Tag</td><td>каждый день</td><td>Akkusativ</td></tr>
+<tr><td>am Wochenende</td><td>в выходные</td><td>am = an + dem (Dativ)</td></tr>
+<tr><td>an Werktagen</td><td>в рабочие дни</td><td></td></tr>
+<tr><td>an Wochenendtagen</td><td>в выходные дни</td><td></td></tr>
+<tr><td>nächst- / nächste</td><td>следующий / ближайший</td><td>превосходная степень от <b>nah</b> (близкий) | склоняется: nächste Woche (f) | nächsten Montag (m, Akk) | im nächsten Jahr (Dat) | см. правило «Склонение прилагательных»</td></tr>
+</tbody></table>
+</div>
+
+<div class="section">
+<div class="section-title">📍 Место / направление</div>
+<table><tbody>
+<tr><th>Немецкий</th><th>Перевод</th><th>Примечание</th></tr>
+<tr><td>da</td><td>здесь / там / дома</td><td></td></tr>
+<tr><td>nicht da</td><td>отсутствует / не дома</td><td></td></tr>
+<tr><td>links</td><td>налево</td><td></td></tr>
+<tr><td>rechts</td><td>направо</td><td></td></tr>
+<tr><td>oben</td><td>вверху</td><td></td></tr>
+<tr><td>unten</td><td>внизу</td><td></td></tr>
+<tr><td>vor</td><td>перед</td><td>Das Fahrrad steht vor der Tür — велосипед стоит перед дверью</td></tr>
+<tr><td>unterwegs</td><td>в пути</td><td></td></tr>
+</tbody></table>
+</div>
+
+<div class="section">
+<div class="section-title">📊 Степень / количество</div>
+<table><tbody>
+<tr><th>Немецкий</th><th>Перевод</th><th>Примечание</th></tr>
+<tr><td>sehr</td><td>очень</td><td>усилитель: sehr gut, sehr lecker</td></tr>
+<tr><td>ein bisschen</td><td>немного</td><td></td></tr>
+<tr><td>wenig</td><td>мало</td><td>↔ viel</td></tr>
+<tr><td>mehr</td><td>больше, ещё</td><td></td></tr>
+<tr><td>nicht mehr</td><td>больше не, уже не</td><td>Ich bin nicht mehr müde — я больше не устал</td></tr>
+<tr><td>zu</td><td>слишком</td><td>zu scharf — слишком острый | zu laut — слишком громко</td></tr>
+<tr><td>nur</td><td>только</td><td>Das kostet nur 5 Euro</td></tr>
+<tr><td>besonders</td><td>особенно</td><td></td></tr>
+<tr><td>beide / beiden</td><td>оба / обоих</td><td>зависит от падежа</td></tr>
+<tr><td>pro</td><td>за / на (каждого)</td><td>pro Person — на человека | 10 € pro Stunde — 10 € в час</td></tr>
+<tr><td>leichter</td><td>легче</td><td>сравн. степень от leicht</td></tr>
+</tbody></table>
+</div>
+
+<div class="section">
+<div class="section-title">🤝 Согласие / реакции</div>
+<table><tbody>
+<tr><th>Немецкий</th><th>Перевод</th><th>Примечание</th></tr>
+<tr><td>gleichfalls</td><td>взаимно, также</td><td>Danke gleichfalls! — ответ на пожелание</td></tr>
+<tr><td>ebenfalls</td><td>также, тоже</td><td>= gleichfalls, чуть формальнее</td></tr>
+<tr><td>ebenso</td><td>точно так же</td><td></td></tr>
+<tr><td>stimmt</td><td>верно, правильно</td><td>форма глагола stimmen, используется как "точно!"</td></tr>
+<tr><td>egal</td><td>всё равно, неважно</td><td>Das ist mir egal</td></tr>
+</tbody></table>
+</div>
+
+<div class="section">
+<div class="section-title">👍 Самочувствие / оценка</div>
+<table><tbody>
+<tr><th>Немецкий</th><th>Перевод</th><th>Примечание</th></tr>
+<tr><td>gut</td><td>хорошо</td><td></td></tr>
+<tr><td>nicht gut</td><td>нехорошо</td><td></td></tr>
+<tr><td>schlecht</td><td>плохо</td><td>↔ gut</td></tr>
+</tbody></table>
+</div>
+
+<div class="section">
+<div class="section-title">🎯 Прочие наречия / частицы</div>
+<table><tbody>
+<tr><th>Немецкий</th><th>Перевод</th><th>Примечание</th></tr>
+<tr><td>dabei</td><td>при этом / рядом / при деле</td><td>Ich bin dabei — я участвую / я здесь | Er schläft dabei — он при этом спит</td></tr>
+<tr><td>leider</td><td>к сожалению</td><td>Leider kann ich nicht kommen</td></tr>
+<tr><td>vielleicht</td><td>может быть</td><td></td></tr>
+<tr><td>gerne</td><td>охотно, с удовольствием</td><td>Ich mache das gerne</td></tr>
+<tr><td>langsam</td><td>медленно</td><td>↔ schnell</td></tr>
+<tr><td>aber</td><td>но, однако</td><td>союз | Ich lerne Deutsch, aber es ist schwer.</td></tr>
+<tr><td>vom</td><td>от / из</td><td>von + dem = vom (Dativ)</td></tr>
+<tr><td>doch</td><td>же / ведь / всё-таки</td><td>усилительная частица</td></tr>
+<tr><td>Halt</td><td>типа / ну / просто</td><td>Das ist halt so — Ну, это типа так</td></tr>
+</tbody></table>
+</div>
+
+</div>
+
+<!-- МЕСТОИМЕНИЯ -->
+<div class="panel" id="tab-mestoim">
+
+<div class="section">
+<div class="section-title">Личные местоимения (Nominativ)</div>
+<table>
+<tbody><tr><th>Местоимение</th><th>Перевод</th><th>Примечание</th></tr>
+<tr><td>ich</td><td>я</td><td></td></tr>
+<tr><td>du</td><td>ты</td><td>неформально (duzen)</td></tr>
+<tr><td>er</td><td>он</td><td></td></tr>
+<tr><td>sie</td><td>она</td><td></td></tr>
+<tr><td>man</td><td>безличное местоимение</td><td>= "один / люди / принято" без конкретного лица | Man darf hier nicht rauchen. | всегда с глаголом в 3-м лице ед.ч.</td></tr>
+<tr><td>es</td><td>оно</td><td></td></tr>
+<tr><td>wir</td><td>мы</td><td></td></tr>
+<tr><td>ihr</td><td>вы (группа)</td><td></td></tr>
+<tr><td>sie (Pl)</td><td>они</td><td></td></tr>
+<tr><td>Sie</td><td>Вы</td><td>формально, всегда с заглавной</td></tr>
+</tbody></table>
+</div>
+
+<div class="rule-box">
+<h3>Personalpronomen - три падежа</h3>
+<table>
+<tbody>
+<tr><th>Nominativ (Wer?)</th><th>Akkusativ (Wen?)</th><th>Dativ (Wem?)</th></tr>
+<tr><td>ich</td><td>mich</td><td>mir</td></tr>
+<tr><td>du</td><td>dich</td><td>dir</td></tr>
+<tr><td>er</td><td>ihn</td><td>ihm</td></tr>
+<tr><td>es</td><td>es</td><td>ihm</td></tr>
+<tr><td>sie (она)</td><td>sie</td><td>ihr</td></tr>
+<tr><td>wir</td><td>uns</td><td>uns</td></tr>
+<tr><td>ihr (вы, группа)</td><td>euch</td><td>euch</td></tr>
+<tr><td>sie (они)</td><td>sie</td><td>ihnen</td></tr>
+<tr><td>Sie (вежл.)</td><td>Sie</td><td>Ihnen</td></tr>
+</tbody>
+</table>
+<p style="font-size:12px;margin-top:6px">⚠ es в Dativ — <b>ihm</b>, не ihr | <b>ihr</b> = «ей» (Dativ от sie-она) и «вы» (группа, Nominativ) — два разных значения!</p>
+</div>
+
+<div class="rule-box">
+<h3>Reflexivpronomen - возвратные местоимения <span style="font-weight:400;font-size:12px;color:var(--text-muted)">(себя / себе)</span></h3>
+<table>
+<tbody>
+<tr><th>Лицо</th><th>Akkusativ</th><th>Dativ</th></tr>
+<tr><td>ich</td><td>mich</td><td>mir</td></tr>
+<tr><td>du</td><td>dich</td><td>dir</td></tr>
+<tr><td>er/sie/es</td><td>sich</td><td>sich</td></tr>
+<tr><td>wir</td><td>uns</td><td>uns</td></tr>
+<tr><td>ihr</td><td>euch</td><td>euch</td></tr>
+<tr><td>sie/Sie</td><td>sich</td><td>sich</td></tr>
+</tbody>
+</table>
+<p style="font-size:12px;margin-top:6px">💡 ich/du/wir/ihr — совпадают с Personalpronomen | <b>er/sie/es</b> и <b>sie/Sie</b> → всегда <b>sich</b><br>
+Akk vs Dat: <b>Ich wasche mich</b> (я моюсь — себя, Akk) | <b>Ich wasche mir die Hände</b> (я мою себе руки — кому? мне, Dat)</p>
+</div>
+
+<div class="section">
+<div class="section-title">Притяжательные местоимения</div>
+<table>
+<tbody><tr><th>Лицо</th><th>m (der) / n (das)</th><th>f (die) / Pl</th></tr>
+<tr><td>ich</td><td>mein</td><td>meine</td></tr>
+<tr><td>du</td><td>dein</td><td>deine</td></tr>
+<tr><td>er / es</td><td>sein</td><td>seine</td></tr>
+<tr><td>sie</td><td>ihr</td><td>ihre</td></tr>
+<tr><td>wir</td><td>unser</td><td>unsere</td></tr>
+<tr><td>ihr</td><td>euer</td><td>eure</td></tr>
+<tr><td>sie (Pl) / Sie</td><td>ihr / Ihr</td><td>ihre / Ihre</td></tr>
+</tbody></table>
+<p class="note" style="margin-top:8px">⚠ Во множественном числе ein/eine/einen не ставится! kein используется с окончаниями → keine,keinen...</p>
+</div>
+
+<div class="section">
+<div class="section-title">Отрицательные местоимения / частицы</div>
+<table>
+<tbody><tr><th>Немецкий</th><th>Когда используется</th><th>Пример</th></tr>
+<tr><td>keine / keinen</td><td>отрицание предмета (существительного)</td><td>Ich habe keinen Hund</td></tr>
+<tr><td>nicht</td><td>отрицание действия или прилагательного</td><td>Ich arbeite nicht</td></tr>
+<tr><td>niemand</td><td>никто</td><td></td></tr>
+</tbody></table>
+</div>
+
+</div>
+
+<!-- Термины -->
+<div class="panel" id="tab-termin">
+<div class="section">
+<div class="section-title">Грамматические термины</div>
+<table>
+<tbody><tr><th>Немецкий</th><th>Перевод</th><th>Примечание</th></tr>
+<tr><td>der Aussagesatz</td><td>утвердительное предложение</td><td>Subj. + Verb + ... | Ich lerne Deutsch.</td></tr>
+<tr><td>der Fragesatz</td><td>вопросительное предложение</td><td>W-Frage: W-Wort + Verb | Ja/Nein: Verb + Subj.</td></tr>
+<tr><td>das Präteritum</td><td>простое прошедшее время</td><td>war, hatte — чаще письмен. речь и sein/haben/Modalverben</td></tr>
+<tr><td>das Präsens</td><td>настоящее время</td><td>основная разговорная форма</td></tr>
+<tr><td>das Subjekt</td><td>подлежащее</td><td>отвечает на Wer? / Was? (Nominativ)</td></tr>
+<tr><td>das Objekt</td><td>дополнение</td><td>Akkusativ или Dativ</td></tr>
+<tr><td>der Nominativ</td><td>именительный падеж</td><td>Wer? Was?</td></tr>
+<tr><td>der Akkusativ</td><td>винительный падеж</td><td>Wen? Was?</td></tr>
+<tr><td>der Dativ</td><td>дательный падеж</td><td>Wem?</td></tr>
+<tr><td>der Singular</td><td>единственное число</td><td>сокр. Sg</td></tr>
+<tr><td>der Plural</td><td>множественное число</td><td>сокр. Pl</td></tr>
+<tr><td>das Verb / die Verben</td><td>глагол / глаголы</td><td></td></tr>
+<tr><td>regelmäßig</td><td>правильный (глагол)</td><td>machen, kaufen...</td></tr>
+<tr><td>unregelmäßig</td><td>неправильный (глагол)</td><td>sein, haben, fahren...</td></tr>
+<tr><td>unbestimmt</td><td>неопределённый</td><td>неопределённый артикль (ein/eine)</td></tr>
+<tr><td>das Partizip II</td><td>причастие прошедшего времени</td><td>gemacht, geöffnet...</td></tr>
+<tr><td>die W-Fragen</td><td>вопросительные слова</td><td>Wer? Was? Wo? Wann?...</td></tr>
+<tr><td>die trennbaren Verben</td><td>глаголы с отделяемой приставкой</td><td>aufstehen, einladen...</td></tr>
+</tbody></table>
+</div>
+<div class="section">
+<div class="section-title">Предлоги с падежами</div>
+<table>
+<tbody><tr><th>Предлог</th><th>Падеж</th><th>Значение</th><th>Пример</th></tr>
+<tr><td>mit</td><td>Dativ</td><td>с (вместе)</td><td>mit dem Freund</td></tr>
+<tr><td>bei</td><td>Dativ</td><td>у / около (неодуш.)</td><td>bei der Arbeit</td></tr>
+<tr><td>beim</td><td>Dativ</td><td>bei + dem; у, при, во время</td><td>beim Friseur, beim Kochen, beim Frühstück</td></tr>
+<tr><td>am</td><td>Dativ</td><td>для дней</td><td>am Montag</td></tr>
+<tr><td>um</td><td>-</td><td>для времени</td><td>um 9 Uhr</td></tr>
+<tr><td>vor</td><td>Dativ/Akk</td><td>перед</td><td>Das Fahrrad steht vor der Tür</td></tr>
+<tr><td>von … bis (zum)</td><td>-</td><td>от … до</td><td>von 9 bis 17 Uhr</td></tr>
+</tbody></table>
+</div>
+<div class="section">
+<div class="section-title">W-Fragen (вопросительные слова)</div>
+<table>
+<tbody><tr><th>Слово</th><th>Перевод</th><th>Примечание</th></tr>
+<tr><td>Wer?</td><td>Кто?</td><td>Wer ist das? — Кто это?</td></tr>
+<tr><td>Was?</td><td>Что?</td><td>Was machst du? — Что ты делаешь?</td></tr>
+<tr><td>Wo?</td><td>Где?</td><td>статика (место)</td></tr>
+<tr><td>Woher?</td><td>Откуда?</td><td>Woher kommst du?</td></tr>
+<tr><td>Wohin?</td><td>Куда?</td><td>движение (направление)</td></tr>
+<tr><td>Wann?</td><td>Когда?</td><td>Wann beginnt der Kurs?</td></tr>
+<tr><td>Warum?</td><td>Почему?</td><td></td></tr>
+<tr><td>Wie?</td><td>Как?</td><td>Wie heißen Sie?</td></tr>
+<tr><td>Wie viel?</td><td>Сколько?</td><td>Wie viel kostet das?</td></tr>
+</tbody></table>
+<p class="note" style="margin-top:8px">Порядок слов: W-Frage + Verb + Subjekt</p>
+</div>
+</div>
+
+<!-- ПРАВИЛА -->
+<div class="panel" id="tab-rules">
+
+<div class="rule-box">
+<p style="font-weight:600;margin-bottom:8px">Possessivartikel — окончания притяжательных артиклей</p>
+<table style="margin-bottom:10px">
+<tr><th>Род</th><th>Артикль</th><th>Окончание</th><th>Пример (mein)</th></tr>
+<tr><td><b>m (der)</b></td><td>der</td><td>— (нет)</td><td>Das ist <b>mein</b> Kuli.</td></tr>
+<tr><td><b>n (das)</b></td><td>das</td><td>— (нет)</td><td>Das ist <b>mein</b> Buch.</td></tr>
+<tr><td><b>f (die)</b></td><td>die</td><td>+<b>e</b></td><td>Das ist <b>mein<span style="color:var(--accent-red-bright)">e</span></b> Wohnung.</td></tr>
+<tr><td><b>Pl (die)</b></td><td>die</td><td>+<b>e</b></td><td>Das sind <b>mein<span style="color:var(--accent-red-bright)">e</span></b> Eltern.</td></tr>
+</table>
+<p style="font-size:12px">💡 f и Pl → +<b>e</b> | m и n → без окончания. Работает для всех: mein/dein/sein/ihr/unser/euer/Ihr.</p>
+</div>
+
+<div class="section">
+<div class="section-title">📐 Verbot — запрет (man darf nicht / kein)</div>
+<div class="rule-box">
+<p style="font-weight:600;margin-bottom:8px">Конструкция запрета через <b>man</b> (= "нельзя" / "не разрешается"):</p>
+<table style="margin-bottom:10px">
+<tr><th>Структура</th><th>Пример</th><th>Перевод</th></tr>
+<tr><td>Man darf nicht + Verb</td><td>Man darf nicht grillen.</td><td>Здесь нельзя жарить на гриле.</td></tr>
+<tr><td>Man darf kein + Nomen</td><td>Man darf keine Haustiere haben.</td><td>Нельзя держать домашних животных.</td></tr>
+</table>
+<p style="font-size:12px">💡 <b>nicht</b> — отрицает действие | <b>kein/keine</b> — отрицает существительное<br>💡 <b>man</b> — безличное местоимение (= "нельзя / не разрешается" — без конкретного лица)</p>
+</div>
+</div>
+
+<div class="section">
+<div class="section-title">sein vs haben — когда что использовать</div>
+<div class="rule-box">
+<table style="margin-bottom:10px">
+<tr><th>Глагол</th><th>Используется с</th><th>Пример</th></tr>
+<tr><td><b>sein</b></td><td>прилагательные, профессии, национальности</td><td>Ich <b>bin</b> Arzt. / Er <b>ist</b> müde.</td></tr>
+<tr><td><b>haben</b></td><td>существительные (что-то у тебя есть)</td><td>Ich <b>habe</b> Hunger. / Er <b>hat</b> Zeit.</td></tr>
+</table>
+<p style="font-size:12px;margin-top:8px">💡 Проверка: «я <b>являюсь</b>...?» → sein &nbsp;|&nbsp; «у меня <b>есть</b>...?» → haben</p>
+</div>
+</div>
+
+<div class="section">
+<div class="section-title">Präteritum von sein und haben</div>
+<div class="rule-box">
+<div class="two-col">
+<div>
+<p style="font-weight:600;margin-bottom:6px">sein — быть</p>
+<table class="conj-table"><tbody>
+<tr><td>ich</td><td>war</td></tr><tr><td>du</td><td>warst</td></tr>
+<tr><td>er/sie/es</td><td>war</td></tr><tr><td>wir</td><td>waren</td></tr>
+<tr><td>ihr</td><td>wart</td></tr><tr><td>sie/Sie</td><td>waren</td></tr>
+</tbody></table>
+</div>
+<div>
+<p style="font-weight:600;margin-bottom:6px">haben — иметь</p>
+<table class="conj-table"><tbody>
+<tr><td>ich</td><td>hatte</td></tr><tr><td>du</td><td>hattest</td></tr>
+<tr><td>er/sie/es</td><td>hatte</td></tr><tr><td>wir</td><td>hatten</td></tr>
+<tr><td>ihr</td><td>hattet</td></tr><tr><td>sie/Sie</td><td>hatten</td></tr>
+</tbody></table>
+</div>
+</div>
+<p style="font-size:12px;margin-top:10px">💡 Wie war das Treffen? — Das Treffen <b>war</b> toll! / Wir <b>hatten</b> viel Spaß!</p>
+</div>
+</div>
+
+<div class="section">
+<div class="section-title">wissen vs kennen — в чём разница?</div>
+<div class="rule-box">
+<table style="margin-bottom:10px">
+<tr><th>Глагол</th><th>Когда используется</th><th>Пример</th></tr>
+<tr><td><b>wissen</b></td><td>знать факт / информацию</td><td>Ich weiß, wo er wohnt.</td></tr>
+<tr><td><b>kennen</b></td><td>знать человека / быть знакомым</td><td>Ich kenne ihn gut.</td></tr>
+</table>
+<p style="font-size:12px;font-weight:600;margin-bottom:8px">Спряжение wissen (неправильный!):</p>
+<div class="two-col">
+<table class="conj-table">
+<tr><td>ich</td><td>weiß</td></tr><tr><td>er/sie/es</td><td>weiß</td></tr><tr><td>ihr</td><td>wisst</td></tr>
+</table>
+<table class="conj-table">
+<tr><td>du</td><td>weißt</td></tr><tr><td>wir</td><td>wissen</td></tr><tr><td>sie/Sie</td><td>wissen</td></tr>
+</table>
+</div>
+</div>
+</div>
+
+<div class="section">
+<div class="section-title">sich — возвратное местоимение</div>
+<div class="rule-box">
+<p style="font-size:13px;margin-bottom:10px"><b>sich</b> = себя / себе. Используется в возвратных глаголах, когда действие направлено на самого субъекта.</p>
+<table>
+<tr><th>Лицо</th><th>Возвратное</th><th>Пример (sich vorstellen)</th></tr>
+<tr><td>ich</td><td>mich</td><td>Ich stelle <b>mich</b> vor</td></tr>
+<tr><td>du</td><td>dich</td><td>Du stellst <b>dich</b> vor</td></tr>
+<tr><td>er / sie / es</td><td><b>sich</b></td><td>Er stellt <b>sich</b> vor</td></tr>
+<tr><td>wir</td><td>uns</td><td>Wir stellen <b>uns</b> vor</td></tr>
+<tr><td>ihr</td><td>euch</td><td>Ihr stellt <b>euch</b> vor</td></tr>
+<tr><td>sie / Sie</td><td><b>sich</b></td><td>Sie stellen <b>sich</b> vor</td></tr>
+</table>
+</div>
+</div>
+
+<div class="section">
+<div class="section-title">Modalverben (модальные глаголы) в немецком языке</div>
+
+<div class="rule-box">
+<p style="font-size:13px">
+В предложениях с <b>модальным глаголом (Modalverb)</b> и <b>смысловым глаголом (Infinitiv)</b> используется особый порядок слов:
+</p>
+
+<table style="margin-top:10px">
+<tr>
+<th>Элемент</th>
+<th>Позиция в предложении</th>
+<th>Пример</th>
+</tr>
+
+<tr>
+<td>Modalverb (спрягаемый глагол)</td>
+<td>2-я позиция</td>
+<td>Ich <b>kann</b> ...</td>
+</tr>
+
+<tr>
+<td>Infinitiv (основной глагол)</td>
+<td>В конце предложения</td>
+<td>... den Raum <b>vorbereiten</b>.</td>
+</tr>
+</table>
+
+<p style="font-size:13px; margin-top:10px">
+👉 <b>Разделяемые глаголы (trennbare Verben)</b> в предложениях с Modalverb + Infinitiv <b>не разделяются</b> и остаются в конце предложения целиком.
+</p>
+
+<p style="font-size:13px; margin-top:10px">
+<b>Пример:</b> Ich kann am Freitag den Raum <b><span style="color:var(--accent-red)">vor</span><span style="color:var(--accent-blue)">bereiten</span></b>.
+</p>
+</div>
+</div>
+
+<div class="section">
+<div class="section-title">Склонение правильных глаголов (regelmäßig)</div>
+<div class="rule-box">
+<table class="conj-table">
+<tbody>
+<tr><th>Лицо</th><th>Окончание</th><th>Пример (machen)</th></tr>
+<tr><td>ich</td><td>+e</td><td>ich mache</td></tr>
+<tr><td>du</td><td>+st</td><td>du machst</td></tr>
+<tr><td>er / sie / es</td><td>+t</td><td>er macht</td></tr>
+<tr><td>wir</td><td>+en</td><td>wir machen</td></tr>
+<tr><td>ihr</td><td>+t</td><td>ihr macht</td></tr>
+<tr><td>sie (Pl) / Sie</td><td>+en</td><td>sie machen</td></tr>
+</tbody>
+</table>
+</div>
+</div>
+
+<div class="section">
+<div class="section-title">Падежи</div>
+<div class="two-col">
+<div class="rule-box">
+<h3>Nominativ - Wer? Was? (кто? что?)</h3>
+<p style="font-size:13px;margin-bottom:8px">Подлежащее. Кто/что совершает действие.</p>
+<table><tbody><tr><th></th><th>m</th><th>f</th><th>n</th><th>Pl</th></tr>
+<tr><td>опр.</td><td>der</td><td>die</td><td>das</td><td>die</td></tr>
+<tr><td>неопр.</td><td>ein</td><td>eine</td><td>ein</td><td>-</td></tr></tbody></table>
+</div>
+<div class="rule-box">
+<h3>Akkusativ - Wen? Was? (кого? что?)</h3>
+<p style="font-size:13px;margin-bottom:8px">Прямое дополнение. Меняется только m: der→den, ein→einen.</p>
+<table><tbody><tr><th></th><th>m</th><th>f</th><th>n</th><th>Pl</th></tr>
+<tr><td>опр.</td><td>den</td><td>die</td><td>das</td><td>die</td></tr>
+<tr><td>неопр.</td><td>einen</td><td>eine</td><td>ein</td><td>-</td></tr></tbody></table>
+</div>
+<div class="rule-box">
+<h3>Dativ - Wem? (кому?)</h3>
+<p style="font-size:13px;margin-bottom:8px">Используется с предлогами mit, bei, beim и др.</p>
+<table><tbody><tr><th></th><th>m</th><th>f</th><th>n</th><th>Pl</th></tr>
+<tr><td>опр.</td><td>dem</td><td>der</td><td>dem</td><td>den</td></tr>
+<tr><td>неопр.</td><td>einem</td><td>einer</td><td>einem</td><td>-</td></tr></tbody></table>
+</div>
+</div>
+</div>
+
+<div class="section">
+<div class="section-title">Правило артикля</div>
+<div class="rule-box">
+<p style="font-size:13px">Если используется артикль (der/die/das/den...) - речь идёт конкретно про это существительное. Если не используется - речь об обобщённом.</p>
+<table style="margin-top:10px">
+<tr><th>Немецкий</th><th>Перевод</th></tr>
+<tr><td>Mögen Sie Fisch?</td><td>Вам нравится рыба? (вообще)</td></tr>
+<tr><td>Mögen Sie den Fisch?</td><td>Вам нравится эта рыба? (конкретная)</td></tr>
+</table>
+</div>
+</div>
+
+<div class="section">
+<div class="section-title">Притяжательные артикли sein / ihr</div>
+<div class="rule-box">
+<p style="font-size:12px;margin-bottom:10px">sein = его (er), ihr = её (sie). Окончания как у mein/meine.</p>
+<table>
+<tr><th>Существительное</th><th>ich</th><th>er (sein)</th><th>sie (ihr)</th></tr>
+<tr><td>der Beruf (m)</td><td>mein Beruf</td><td style="color:var(--accent-blue)">sein Beruf</td><td style="color:var(--accent-red)">ihr Beruf</td></tr>
+<tr><td>das Alter (n)</td><td>mein Alter</td><td style="color:var(--accent-blue)">sein Alter</td><td style="color:var(--accent-red)">ihr Alter</td></tr>
+<tr><td>die Augenfarbe (f)</td><td>meine Augenfarbe</td><td style="color:var(--accent-blue)">seine Augenfarbe</td><td style="color:var(--accent-red)">ihre Augenfarbe</td></tr>
+<tr><td>die Hobbys (Pl)</td><td>meine Hobbys</td><td style="color:var(--accent-blue)">seine Hobbys</td><td style="color:var(--accent-red)">ihre Hobbys</td></tr>
+</table>
+<div style="background:var(--tip-bg);border-left:4px solid var(--tip-border);padding:10px;margin-top:10px;border-radius:4px;font-weight:600;font-size:13px;">
+⚡ m/n → mein/sein/ihr &nbsp;|&nbsp; f/Pl → meine/seine/ihre
+</div>
+</div>
+<div class="section-title" style="margin-top:15px;border:none;font-size:12px;color:var(--text-muted);">Примеры:</div>
+<table>
+<tr><th>Немецкий</th><th>Перевод</th></tr>
+<tr><td><strong>sein Beruf:</strong> Elektriker</td><td>его профессия: электрик</td></tr>
+<tr><td><strong>ihre Augenfarbe:</strong> braun</td><td>цвет её глаз: карий</td></tr>
+<tr><td><strong>seine Hobbys:</strong> Computer und Natur</td><td>его хобби: компьютер и природа</td></tr>
+<tr><td><strong>ihr Beruf:</strong> Architektin</td><td>её профессия: архитектор</td></tr>
+</table>
+</div>
+
+<div class="section">
+<div class="section-title">Partizip II (причастие прошедшего времени)</div>
+<div class="rule-box">
+<h3>Partizip II: правило приставки ge-</h3>
+<table>
+<tbody><tr><th>Инфинитив</th><th>Partizip II</th><th>Перевод</th></tr>
+<tr><td>öffnen</td><td>geöffnet</td><td>открытый</td></tr>
+<tr><td>schließen</td><td>geschlossen</td><td>закрытый</td></tr>
+<tr><td>machen</td><td>gemacht</td><td>сделанный</td></tr>
+</tbody></table>
+<div class="warning" style="margin-top:10px">⚠ <b>ge- НЕ добавляется в двух случаях:</b><br>
+1. Глаголы с неотделяемой приставкой (be-, er-, ver-, ent-, zer-): <b>besuchen → besucht</b>, verstehen → verstanden<br>
+2. Глаголы на <b>-ieren</b>: organisieren → <b>organisiert</b>, fotografieren → fotografiert
+</div>
+</div>
+</div>
+
+<div class="section">
+<div class="section-title">Отделяемые приставки</div>
+<table>
+<tbody><tr><th>Приставка</th><th>Значение</th></tr>
+<tr><td>auf-</td><td>вверх / открыто</td></tr>
+<tr><td>an-</td><td>на / у</td></tr>
+<tr><td>ein-</td><td>в / внутрь</td></tr>
+<tr><td>aus-</td><td>снаружи / выключено</td></tr>
+<tr><td>mit-</td><td>с (вместе)</td></tr>
+<tr><td>vor-</td><td>перед / от</td></tr>
+<tr><td>ab-</td><td>от / закрыто</td></tr>
+<tr><td>zu-</td><td>к / навстречу</td></tr>
+<tr><td>fern-</td><td>вдали / удалённый</td></tr>
+<tr><td>weg-</td><td>прочь</td></tr>
+<tr><td>zurück-</td><td>назад / обратно</td></tr>
+</tbody></table>
+</div>
+
+<div class="section">
+<div class="section-title">[Verb] + gern = хобби / любимое занятие</div>
+<div class="rule-box">
+<p style="font-size:12px;margin-bottom:8px">Глагол меняется по лицу, gern остаётся неизменным</p>
+<table>
+<tbody>
+<tr><th>Пример</th><th>Перевод</th></tr>
+<tr><td>Er kocht gern</td><td>Он любит готовить</td></tr>
+<tr><td>Sie malt gern</td><td>Она любит рисовать</td></tr>
+<tr><td>Ich singe gern</td><td>Я люблю петь</td></tr>
+</tbody>
+</table>
+</div>
+</div>
+
+<div class="section">
+<div class="section-title">Wohin? — направление + Präposition <b>in</b> + Akkusativ</div>
+<div class="rule-box">
+<p style="font-size:13px;margin-bottom:10px"><b>Wohin?</b> (куда?) — вопрос о направлении движения. Используется <b>in + Akkusativ</b>.</p>
+<table>
+<tr><th>Артикль</th><th>+ in</th><th>Пример</th></tr>
+<tr><td>der (m)</td><td>in <b>den</b></td><td>Ich gehe <b>in den Park</b> — иду в парк</td></tr>
+<tr><td>das (n)</td><td>in <b>das</b> = <b>ins</b></td><td>Ich gehe <b>ins Kino</b> — иду в кино</td></tr>
+<tr><td>die (f)</td><td>in <b>die</b></td><td>Ich gehe <b>in die Kneipe</b> — иду в паб</td></tr>
+</table>
+<p style="font-size:12px;margin-top:8px">💡 <b>in + das = ins</b> (слитная форма) | <b>in + dem = im</b> (для Wo? — где?)<br>
+⚠ Различай: <b>Wohin?</b> → Akkusativ (in den, ins, in die) | <b>Wo?</b> → Dativ (im, im, in der)</p>
+</div>
+</div>
+
+<div class="section">
+<div class="section-title">sollen vs müssen — два «должен»</div>
+<div class="rule-box">
+<table>
+<tr><th></th><th>sollen</th><th>müssen</th></tr>
+<tr><td>Источник</td><td>внешний — кто-то сказал / так положено</td><td>внутренний / объективный — сам так решил или иначе нельзя</td></tr>
+<tr><td>Пример</td><td>Du <b>sollst</b> nicht rauchen<br>(тебе говорят, что нельзя)</td><td>Ich <b>muss</b> schlafen<br>(сам устал, надо)</td></tr>
+<tr><td>Ещё</td><td>Ich <b>soll</b> Milch kaufen<br>(мама попросила)</td><td>Ich <b>muss</b> Milch kaufen<br>(дома кончилось)</td></tr>
+</table>
+<p style="font-size:12px;margin-top:8px">💡 Грубо: <b>sollen</b> — «надо для кого-то» | <b>müssen</b> — «надо мне / по сути»</p>
+</div>
+</div>
+
+<div class="section">
+<div class="section-title">Склонение прилагательных перед существительным</div>
+<div class="rule-box">
+<p style="font-size:13px;margin-bottom:10px">Прилагательное в словаре стоит <b>без окончания</b> (groß, schön, nächst, gut). Но <b>перед существительным</b> оно ВСЕГДА получает окончание — зависит от рода, числа и падежа.</p>
+
+<p style="font-size:13px;font-weight:600;margin:10px 0 6px">📍 Две позиции прилагательного:</p>
+<table style="margin-bottom:12px">
+<tr><th>Позиция</th><th>Окончание</th><th>Пример</th></tr>
+<tr><td>После sein / werden / bleiben</td><td>❌ нет окончания</td><td>Das Haus ist <b>groß</b> | Er bleibt <b>gesund</b></td></tr>
+<tr><td>Перед существительным</td><td>✅ есть окончание</td><td>ein <b>großes</b> Haus | der <b>gesunde</b> Mann</td></tr>
+</table>
+
+<p style="font-size:13px;font-weight:600;margin:10px 0 6px">📍 Окончания после <b>определённого артикля</b> (der/die/das):</p>
+<table style="margin-bottom:12px">
+<tr><th>Падеж</th><th>m (der)</th><th>f (die)</th><th>n (das)</th><th>Pl (die)</th></tr>
+<tr><td>Nom</td><td>-e</td><td>-e</td><td>-e</td><td>-en</td></tr>
+<tr><td>Akk</td><td><b>-en</b></td><td>-e</td><td>-e</td><td>-en</td></tr>
+<tr><td>Dat</td><td>-en</td><td>-en</td><td>-en</td><td>-en</td></tr>
+</table>
+
+<p style="font-size:13px;font-weight:600;margin:10px 0 6px">📍 Примеры с <b>nächst</b> (следующий):</p>
+<table style="margin-bottom:8px">
+<tr><th>Падеж / Род</th><th>Форма</th><th>Перевод</th></tr>
+<tr><td>f, Nom/Akk</td><td>nächst<b>e</b> Woche</td><td>следующая неделя / на следующей неделе</td></tr>
+<tr><td>m, Akk</td><td>nächst<b>en</b> Montag</td><td>в следующий понедельник</td></tr>
+<tr><td>n, Nom/Akk</td><td>nächst<b>es</b> Jahr</td><td>следующий год</td></tr>
+<tr><td>Dat (любой род)</td><td>im nächst<b>en</b> Jahr</td><td>в следующем году</td></tr>
+</table>
+<p style="font-size:12px;margin-top:8px">💡 Простое правило: <b>в Dativ всегда -en</b> | в Akk у m-рода тоже <b>-en</b> | остальное обычно <b>-e</b><br>
+⚠ Без артикля (неопределённый/нулевой) — окончания немного другие. Это уровень A2+, пока запомни базовый случай.</p>
+</div>
+</div>
+
+</div>
+
+<!-- ФРАЗЫ -->
+<div class="panel" id="tab-phrases">
+<div class="section">
+<div class="section-title">Разное</div>
+<table>
+<tbody><tr><th>Немецкий</th><th>Перевод</th><th>Примечание</th></tr>
+<tr><td>auf dem Land</td><td>за городом / в деревне</td><td>↔ in der Stadt | Wir wohnen auf dem Land.</td></tr>
+<tr><td>in der Stadt</td><td>в городе</td><td>↔ auf dem Land | Ich wohne in der Stadt.</td></tr>
+</tbody></table>
+</div>
+
+<div class="section">
+<div class="section-title">Приветствия / Прощания</div>
+<table>
+<tbody><tr><th>Немецкий</th><th>Перевод</th><th>Примечание</th></tr>
+<tr><td>Freut mich!</td><td>Очень приятно!</td><td>ответ на знакомство | = Rад(а) познакомиться</td></tr>
+<tr><td>Können wir "du" sagen?</td><td>Можем перейти на «ты»?</td><td>Ответ: Ja, gerne! / Natürlich!</td></tr>
+<tr><td>Viel Spaß!</td><td>Повеселись! / Приятного!</td><td>перед событием | Ответ: Danke, gleichfalls!</td></tr>
+<tr><td>Viel Glück!</td><td>Удачи!</td><td>перед экзаменом, важным делом</td></tr>
+<tr><td>Leider nicht.</td><td>К сожалению, нет.</td><td>вежливый отказ</td></tr>
+<tr><td>tut mir leid</td><td>мне жаль</td><td>Tut mir leid, ich komme zu spät</td></tr>
+<tr><td>Guten Morgen</td><td>Доброе утро</td><td>до полудня</td></tr>
+<tr><td>Guten Tag</td><td>Добрый день</td><td>с полудня до ~18:00</td></tr>
+<tr><td>Guten Abend</td><td>Добрый вечер</td><td>с ~18:00</td></tr>
+<tr><td>Auf Wiedersehen</td><td>До свидания</td><td>формально</td></tr>
+<tr><td>Gesundheit!</td><td>Будьте здоровы!</td><td>говорят после чихания</td></tr>
+</tbody></table>
+</div>
+<div class="section">
+<div class="section-title">Вопросы / Просьбы</div>
+<table>
+<tbody><tr><th>Немецкий</th><th>Перевод</th><th>Примечание</th></tr>
+<tr><td>Wie bitte?</td><td>Что? Простите?</td><td>когда не расслышал</td></tr>
+<tr><td>Wiederholen Sie bitte</td><td>Повторите пожалуйста</td><td>формально (Sie)</td></tr>
+<tr><td>Was bedeutet das?</td><td>Что это означает?</td><td></td></tr>
+<tr><td>Das bedeutet viel!</td><td>Это значит многое!</td><td></td></tr>
+<tr><td>Was machen Sie?</td><td>Чем вы занимаетесь?</td><td>формально</td></tr>
+<tr><td>Was essen Sie gern?</td><td>Что вы любите есть?</td><td>формально</td></tr>
+<tr><td>Woher kommst du?</td><td>Откуда ты?</td><td>неформально</td></tr>
+<tr><td>Möchtest du …?</td><td>Хочешь …?</td><td>неформально</td></tr>
+<tr><td>Zahlen bitte</td><td>Счёт пожалуйста</td><td>= Die Rechnung, bitte</td></tr>
+<tr><td>Sonst noch etwas?</td><td>Что-нибудь ещё?</td><td>спрашивает официант/продавец</td></tr>
+<tr><td>Es gibt …</td><td>Есть … / Имеется …</td><td>Es gibt keinen Tisch frei</td></tr>
+<tr><td>einen Termin vereinbaren / ausmachen</td><td>записаться / договориться о встрече</td><td></td></tr>
+</tbody></table>
+</div>
+<div class="section">
+<div class="section-title">Самочувствие</div>
+<table>
+<tbody><tr><th>Немецкий</th><th>Перевод</th><th>Примечание</th></tr>
+<tr><td>Wie geht es Ihnen?</td><td>Как вы себя чувствуете?</td><td>формально (Sie)</td></tr>
+<tr><td>Wie geht es dir?</td><td>Как ты?</td><td>неформально</td></tr>
+<tr><td>Mir geht es gut / super / toll</td><td>Мне хорошо / отлично</td><td></td></tr>
+<tr><td>Mir geht es nicht gut / schlecht</td><td>Мне нехорошо / плохо</td><td></td></tr>
+<tr><td>Ich habe Hunger</td><td>Я голоден</td><td>haben + Hunger (не sein!)</td></tr>
+<tr><td>Ich habe Durst</td><td>Я хочу пить</td><td>haben + Durst</td></tr>
+</tbody></table>
+</div>
+<div class="section">
+<div class="section-title">В ресторане</div>
+<table>
+<tbody><tr><th>Немецкий</th><th>Перевод</th><th>Примечание</th></tr>
+<tr><td>Frei / Besetzt</td><td>Свободно / Занято</td><td>о столике</td></tr>
+<tr><td>Einen Augenblick, bitte</td><td>Одну минуту</td><td>говорит официант</td></tr>
+<tr><td>Gerne!</td><td>С удовольствием!</td><td>ответ на просьбу</td></tr>
+<tr><td>Ich hätte gern …</td><td>Я бы хотел …</td><td>вежливый заказ (Konjunktiv II)</td></tr>
+<tr><td>Die Rechnung, bitte</td><td>Счёт, пожалуйста</td><td>= Zahlen bitte</td></tr>
+<tr><td>Das schmeckt lecker!</td><td>Это очень вкусно!</td><td></td></tr>
+</tbody></table>
+</div>
+<div class="section">
+<div class="section-title">Учебные команды</div>
+<table>
+<tbody><tr><th>Немецкий</th><th>Перевод</th><th>Примечание</th></tr>
+<tr><td>Hören</td><td>слушайте</td><td>Infinitiv в роли команды</td></tr>
+<tr><td>Sprechen</td><td>говорите</td><td></td></tr>
+<tr><td>Schreiben</td><td>пишите</td><td></td></tr>
+<tr><td>Lesen</td><td>читайте</td><td></td></tr>
+<tr><td>Fragen</td><td>спрашивайте</td><td></td></tr>
+<tr><td>Antworten</td><td>отвечайте</td><td></td></tr>
+<tr><td>Ordnen</td><td>упорядочьте</td><td></td></tr>
+<tr><td>Ergänzen</td><td>дополните</td><td></td></tr>
+<tr><td>Buchstabieren</td><td>произносите по буквам</td><td></td></tr>
+<tr><td>Wiederholen</td><td>повторяйте</td><td></td></tr>
+<tr><td>Betrachten</td><td>рассматривайте</td><td></td></tr>
+<tr><td>Benennen</td><td>называйте</td><td></td></tr>
+</tbody></table>
+</div>
+<div class="section">
+<div class="section-title">Slang / Разговорный</div>
+<table>
+<tbody><tr><th>Немецкий</th><th>Перевод</th><th>Примечание</th></tr>
+<tr><td>dann kein</td><td>тогда никакого</td><td>разговорное</td></tr>
+<tr><td>der Quatsch</td><td>чепуха / бред</td><td>Das ist halt Quatsch! - Ну это же просто бред!</td></tr>
+</tbody></table>
+</div>
+
+</div>
+
+<!-- НОВЫЕ СЛОВА (буфер — живёт до следующей обновы) -->
+<div class="panel active" id="tab-new">
+<div class="section">
+<div class="section-title">📦 Существительные</div>
+<table><tbody>
+<tr><th>Немецкий</th><th>Артикль</th><th>Перевод / Примечание</th></tr>
+<tr><td>der Anrufbeantworter</td><td><span class="badge m">m</span></td><td>автоответчик | Anruf (звонок) + beantworten (отвечать) | разговорно: AB</td></tr>
+<tr><td>die Kantine</td><td><span class="badge f">f</span></td><td>столовая (на работе/в школе) | Pl: die Kantinen | in der Kantine essen</td></tr>
+<tr><td>die Anrede</td><td><span class="badge f">f</span></td><td>обращение (в письме/речи) | an + Rede (речь) | Sehr geehrte Damen und Herren — формальная Anrede</td></tr>
+<tr><td>der Gruß</td><td><span class="badge m">m</span></td><td>приветствие / поклон | Pl: die Grüße | Liebe Grüße (LG) — с приветом, в конце письма | Viele Grüße — много приветов</td></tr>
+<tr><td>der Teilnehmer</td><td><span class="badge m">m</span></td><td>участник | <b>teil</b> (часть) + <b>Nehmer</b> (берущий, от nehmen — брать) | f: die Teilnehmerin | Pl: die Teilnehmer</td></tr>
+<tr><td>der Mitarbeiter</td><td><span class="badge m">m</span></td><td>сотрудник | <b>mit</b> (с) + <b>Arbeiter</b> (работник, от arbeiten) = «совместный работник» | f: die Mitarbeiterin | Pl: die Mitarbeiter</td></tr>
+<tr><td>das Angebot</td><td><span class="badge n">n</span></td><td>предложение (товар/услуга) / акция | от <b>anbieten</b> (предлагать) | Pl: die Angebote | im Angebot — по акции</td></tr>
+<tr><td>die Sache</td><td><span class="badge f">f</span></td><td>вещь / дело | Pl: die Sachen | meine Sachen — мои вещи | Das ist meine Sache — это моё дело</td></tr>
+<tr><td>die Kunst</td><td><span class="badge f">f</span></td><td>искусство | Pl: die Künste | <b>Künstler</b> — художник/артист | <b>künstlich</b> — искусственный</td></tr>
+<tr><td>die Ausstellung</td><td><span class="badge f">f</span></td><td>выставка | от <b>ausstellen</b> (выставлять) | aus (наружу) + stellen (ставить) | -ung всегда die</td></tr>
+<tr><td>die Sonderausstellung</td><td><span class="badge f">f</span></td><td>спец-выставка / временная выставка | <b>Sonder-</b> (особый / специальный) + <b>Ausstellung</b> (выставка)</td></tr>
+</tbody></table>
+</div>
+<div class="section">
+<div class="section-title">⚡ Глаголы</div>
+<table><tbody>
+<tr><th>Немецкий</th><th>Перевод</th><th>Примечание</th></tr>
+<tr><td>kreuzen</td><td>отметить крестиком / пересекать</td><td>от <b>das Kreuz</b> (крест) | <b>ankreuzen</b> — отметить крестиком в тесте/анкете (отделяемая: an-)</td></tr>
+<tr><td>teilnehmen</td><td>участвовать</td><td>отделяемая: teil- | <b>teil</b> (часть) + <b>nehmen</b> (брать) — буквально «брать часть» | teilnehmen <b>an</b> + Dat | Ich nehme an dem Kurs teil</td></tr>
+<tr><td>laden</td><td>1) грузить, заряжать 2) приглашать</td><td>Unregelmäßig (a→ä): du lädst, er lädt | das Handy laden — зарядить телефон | jdn zum Essen laden — пригласить кого-то на ужин | приставочные: <b>einladen</b> (приглашать), <b>aufladen</b> (заряжать), <b>herunterladen</b> (скачивать)</td></tr>
+</tbody></table>
+</div>
+<div class="section">
+<div class="section-title">🎨 Прилагательные / Наречия</div>
+<table><tbody>
+<tr><th>Немецкий</th><th>Перевод</th><th>Примечание</th></tr>
+<tr><td>herzlich</td><td>сердечный / искренний / тёплый</td><td>от <b>das Herz</b> (сердце) + <b>-lich</b> | herzlich willkommen — добро пожаловать (букв. «сердечно приветствуем») | herzliche Grüße — сердечный привет</td></tr>
+<tr><td>willkommen</td><td>добро пожаловать / желанный</td><td>Willkommen in Berlin! | Herzlich willkommen! — стандартное приветствие | jemanden willkommen heißen — приветствовать кого-то</td></tr>
+<tr><td>täglich</td><td>ежедневный / ежедневно</td><td>от <b>Tag</b> (день) + <b>-lich</b> | täglich geöffnet — открыто ежедневно | dreimal täglich — три раза в день</td></tr>
+<tr><td>direkt</td><td>прямой / прямо / напрямую</td><td>direkt aus Frankfurt — прямо из Франкфурта (⚠ aus, не von — для городов) | direkt vor dem Haus — прямо перед домом</td></tr>
+</tbody></table>
+</div>
+<div class="section">
+<div class="section-title">📐 Правила</div>
+<div class="rule-box">
+<h3>Суффикс <b>-lich</b> — образование прилагательных</h3>
+<p style="font-size:13px;margin-bottom:10px">Суффикс <b>-lich</b> превращает существительное в прилагательное со значением «относящийся к / похожий на». Похож на русский суффикс «-ный».</p>
+<table>
+<tr><th>Существительное</th><th>+ -lich</th><th>Перевод</th></tr>
+<tr><td>das Herz (сердце)</td><td>herz<b>lich</b></td><td>сердечный</td></tr>
+<tr><td>der Tag (день)</td><td>täg<b>lich</b></td><td>ежедневный</td></tr>
+<tr><td>der Freund (друг)</td><td>freund<b>lich</b></td><td>дружелюбный</td></tr>
+<tr><td>der Mensch (человек)</td><td>mensch<b>lich</b></td><td>человеческий</td></tr>
+<tr><td>der Monat (месяц)</td><td>monat<b>lich</b></td><td>ежемесячный</td></tr>
+<tr><td>der Beruf (профессия)</td><td>beruf<b>lich</b></td><td>профессиональный</td></tr>
+</table>
+<p style="font-size:12px;margin-top:8px">💡 Часто корневая гласная меняется на умлаут: Tag → t<b>ä</b>glich, Nacht → n<b>ä</b>chtlich</p>
+</div>
+</div>
+</div>
+
+<script>
+// ===== Переключение темы =====
+function applyTheme(theme) {
+  var html = document.documentElement;
+  html.classList.remove('theme-auto', 'theme-dark', 'theme-light');
+  html.classList.add('theme-' + theme);
+  localStorage.setItem('theme', theme);
+  var btn = document.getElementById('themeToggle');
+  if (btn) {
+    btn.textContent = theme === 'auto' ? '🌓' : (theme === 'dark' ? '🌙' : '☀️');
+    btn.title = 'Тема: ' + (theme === 'auto' ? 'авто (по системе)' : (theme === 'dark' ? 'тёмная' : 'светлая'));
+  }
+  // Форсируем repaint видимой панели — обходит баг ленивого рендера CSS-переменных
+  var activePanel = document.querySelector('.panel.active');
+  if (activePanel) {
+    activePanel.style.display = 'none';
+    void activePanel.offsetHeight; // чтение свойства = принудительный reflow
+    activePanel.style.display = '';
+  }
+}
+function cycleTheme() {
+  var current = localStorage.getItem('theme') || 'auto';
+  var next = current === 'auto' ? 'light' : (current === 'light' ? 'dark' : 'auto');
+  applyTheme(next);
+}
+// При загрузке: подтянуть сохранённое и обновить иконку
+applyTheme(localStorage.getItem('theme') || 'auto');
+
+// ===== Бургер-меню =====
+function openMenu() {
+  document.getElementById('sideMenu').classList.add('open');
+  document.getElementById('menuBackdrop').classList.add('open');
+  document.body.style.overflow = 'hidden';
+  syncMenuActive();
+}
+function closeMenu() {
+  document.getElementById('sideMenu').classList.remove('open');
+  document.getElementById('menuBackdrop').classList.remove('open');
+  document.body.style.overflow = '';
+}
+function goTo(id) {
+  show(id);
+  closeMenu();
+}
+function syncMenuActive() {
+  var active = document.querySelector('.panel.active');
+  if (!active) return;
+  var id = active.id.replace('tab-', '');
+  document.querySelectorAll('.side-menu-item').forEach(function(el) {
+    el.classList.toggle('active',
+      (el.getAttribute('onclick') || '').includes("'" + id + "'"));
+  });
+}
+document.addEventListener('keydown', function(e) {
+  if (e.key === 'Escape') closeMenu();
+});
+
+// Автомаркировка таблиц: с бэйджем → noun-table, иначе 3-колоночная → vocab-table
+document.querySelectorAll('table').forEach(t => {
+  if (t.classList.contains('conj-table')) return;
+  const firstRow = t.rows[0];
+  if (!firstRow) return;
+  if (t.querySelector('.badge')) {
+    t.classList.add('noun-table');
+  } else if (firstRow.cells.length === 3) {
+    t.classList.add('vocab-table');
+  }
+});
+
+let searchResults = [];
+let currentIndex = -1;
+function show(id){
+  document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
+  document.querySelectorAll('.panel').forEach(p=>p.classList.remove('active'));
+
+  document.getElementById('tab-'+id).classList.add('active');
+
+  document.querySelectorAll('.tab').forEach(tab => {
+    if (tab.getAttribute('onclick')?.includes(id)) {
+      tab.classList.add('active');
+    }
+  });
+}
+
+function jumpSearch(e) {
+  const input = document.getElementById('searchInput');
+  const query = input.value.toLowerCase().trim();
+
+  // если пусто - сброс
+  if (!query) {
+    searchResults = [];
+    currentIndex = -1;
+    document.getElementById('searchCount').innerText = '';
+    return;
+  }
+
+  // если это НЕ Enter - просто ищем заново
+  if (!e || e.key !== "Enter") {
+    searchResults = [];
+    currentIndex = -1;
+
+    const rows = document.querySelectorAll("td, .section-title, h1, h2, h3, h4, .rule-box");
+
+    rows.forEach(row => {
+      const text = (row.textContent || '').toLowerCase();
+      if (text.includes(query)) {
+        searchResults.push(row);
+      }
+    });
+
+    if (searchResults.length > 0) {
+      currentIndex = 0;
+      goToResult(currentIndex);
+      document.getElementById('searchCount').innerText = searchResults.length + ' совпадений';
+    } else {
+      document.getElementById('searchCount').innerText = '0 совпадений';
+    }
+
+    return;
+  }
+
+  // если Enter - листаем
+  if (searchResults.length === 0) return;
+
+  if (e.shiftKey) {
+    currentIndex--;
+  } else {
+    currentIndex++;
+  }
+
+  // зацикливание
+  if (currentIndex >= searchResults.length) currentIndex = 0;
+  if (currentIndex < 0) currentIndex = searchResults.length - 1;
+
+  goToResult(currentIndex);
+}
+function goToResult(index) {
+  const row = searchResults[index];
+
+  const panel = row.closest(".panel");
+  if (!panel) return;
+  const panelId = panel.id.replace("tab-", "");
+
+  show(panelId);
+
+  setTimeout(() => {
+    row.scrollIntoView({ behavior: "smooth", block: "center" });
+
+    row.style.background = "var(--bg-highlight)";
+
+    setTimeout(() => {
+      row.style.background = "";
+    }, 1200);
+
+  }, 50);
+}
+</script>
+
+<div class="to-top" onclick="window.scrollTo({top:0, behavior:'smooth'})" style="position:fixed;bottom:20px;left:20px;width:auto;padding:10px 18px;border-radius:50px;opacity:0.85;box-shadow:0 4px 12px rgba(0,0,0,0.2);z-index:999;">
+  ↑ To Top
+</div>
+<div style="text-align:center;font-size:11px;color:var(--text-muted);padding:6px;">
+  Update: 18.05.2026 | v31
+</div>
+
+</body></html>

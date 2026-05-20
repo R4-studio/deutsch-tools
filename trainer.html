@@ -1,0 +1,3098 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Тренажёр — Deutsch Tools</title>
+
+<!-- Init темы ДО рендера, чтобы не было вспышки -->
+<script>
+(function() {
+  var saved = localStorage.getItem('theme') || 'auto';
+  document.documentElement.classList.add('theme-' + saved);
+})();
+</script>
+
+<!-- React + ReactDOM (UMD-сборки) -->
+<script crossorigin src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+<script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+<!-- Babel для трансформации JSX в браузере -->
+<script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+
+<style>
+html, body {
+  margin: 0; padding: 0;
+  background: #f0f2f5;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+}
+.theme-dark body { background: #1a1a1a; }
+@media (prefers-color-scheme: dark) {
+  html:not(.theme-light) body { background: #1a1a1a; }
+}
+#root { min-height: 100vh; }
+
+.back-home {
+  position: fixed;
+  top: 12px; left: 12px;
+  padding: 6px 10px;
+  background: rgba(255,255,255,0.9);
+  color: #333;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  font-size: 13px;
+  font-weight: 600;
+  text-decoration: none;
+  z-index: 10000;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+.theme-dark .back-home,
+html:not(.theme-light) .back-home {
+  background: rgba(40,40,40,0.9);
+  color: #e0e0e0;
+  border-color: #555;
+}
+.back-home:hover { opacity: 0.85; }
+
+.loader {
+  position: fixed;
+  top: 50%; left: 50%;
+  transform: translate(-50%, -50%);
+  color: #888;
+  font-size: 14px;
+}
+</style>
+</head>
+<body>
+
+<a href="index.html" class="back-home">← на главную</a>
+
+<div id="root">
+  <div class="loader">Загрузка тренажёра…</div>
+</div>
+
+<!-- Основной код приложения (JSX, трансформируется Babel'ом в браузере) -->
+<script type="text/babel" data-presets="react">
+const { useState, useEffect } = React;
+
+// ═══════════════════════════════════════════════════════════════
+// ХЕЛПЕРЫ
+// ═══════════════════════════════════════════════════════════════
+function shuffle(arr) {
+  const a = [...arr];
+  for (let i = a.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [a[i], a[j]] = [a[j], a[i]];
+  }
+  return a;
+}
+function normalise(s) {
+  return (s || "")
+    .toLowerCase()
+    .replace(/[.!?,;"„“]/g, "")
+    .replace(/\s+/g, " ")
+    .trim();
+}
+function checkFill(userVal, ans, altAns = []) {
+  const u = normalise(userVal);
+  if (!u) return false;
+  if (u === normalise(ans)) return true;
+  return altAns.some((a) => normalise(a) === u);
+}
+// Сделать MC-вопросы с перетасованными опциями
+function shuffleMC(questions) {
+  return questions.map((q) => {
+    if (q.type !== "mc") return q;
+    const indexed = q.opts.map((o, i) => ({ o, correct: i === q.ans }));
+    const sh = shuffle(indexed);
+    return {
+      ...q,
+      opts: sh.map((x) => x.o),
+      ans: sh.findIndex((x) => x.correct),
+    };
+  });
+}
+// Группировка вопросов по уровню + перемешать внутри уровня
+function arrangeByLevel(questions) {
+  const byLevel = {};
+  questions.forEach((q) => {
+    const l = q.level;
+    if (!byLevel[l]) byLevel[l] = [];
+    byLevel[l].push(q);
+  });
+  return Object.keys(byLevel)
+    .sort((a, b) => +a - +b)
+    .flatMap((l) => shuffle(byLevel[l]));
+}
+
+// ═══════════════════════════════════════════════════════════════
+// ТЕМИЗАЦИЯ — CSS-переменные (взято из шпоры v30)
+// ═══════════════════════════════════════════════════════════════
+const THEME_CSS = `
+:root {
+  --bg-body: #f0f2f5;
+  --bg-panel: #fff;
+  --bg-card: #fff;
+  --bg-tab: #eee;
+  --bg-input: #fff;
+  --bg-rule-box: #fdfdfe;
+  --bg-row-hover: #f9fdff;
+  --bg-warning: #fff5f5;
+  --bg-highlight: #ffeaa7;
+  --bg-soft: #f7f8fa;
+  --text-main: #333;
+  --text-muted: #888;
+  --text-title: #2c3e50;
+  --border-soft: #e0e4ed;
+  --border-input: #ccc;
+  --accent: #3498db;
+  --accent-dark: #2c80b4;
+  --green: #1a7a4a;
+  --green-bg: #d5f0e3;
+  --red: #c0392b;
+  --red-bg: #fde8e8;
+  --badge-m-bg: #d1e9ff; --badge-m-fg: #0056b3;
+  --badge-f-bg: #ffd1dc; --badge-f-fg: #a11;
+  --badge-n-bg: #d1ffd1; --badge-n-fg: #006400;
+  --badge-pl-bg: #fff3cd; --badge-pl-fg: #856404;
+  --shadow: 0 2px 5px rgba(0,0,0,0.05);
+  --shadow-card: 0 2px 12px rgba(0,0,0,0.07);
+}
+.theme-dark {
+  --bg-body: #0e0e10;
+  --bg-panel: #17171a;
+  --bg-card: #17171a;
+  --bg-tab: #1f1f23;
+  --bg-input: #1a1a1d;
+  --bg-rule-box: #1c1c20;
+  --bg-row-hover: #202028;
+  --bg-warning: #2a1818;
+  --bg-highlight: #5a4a1f;
+  --bg-soft: #1a1a1d;
+  --text-main: #e6e6e8;
+  --text-muted: #a0a0a8;
+  --text-title: #cfd6e0;
+  --border-soft: #2a2a2e;
+  --border-input: #333338;
+  --accent: #4ade80;
+  --accent-dark: #22c55e;
+  --green: #4ade80;
+  --green-bg: #1a3a26;
+  --red: #ff8a7a;
+  --red-bg: #3a1818;
+  --badge-m-bg: #1a3a5c; --badge-m-fg: #8ec5ff;
+  --badge-f-bg: #4a1a26; --badge-f-fg: #ffa3b8;
+  --badge-n-bg: #1a3a1a; --badge-n-fg: #8eff8e;
+  --badge-pl-bg: #4a3a14; --badge-pl-fg: #ffd966;
+  --shadow: 0 2px 5px rgba(0,0,0,0.4);
+  --shadow-card: 0 2px 12px rgba(0,0,0,0.4);
+}
+@media (prefers-color-scheme: dark) {
+  .theme-auto {
+    --bg-body: #0e0e10;
+    --bg-panel: #17171a;
+    --bg-card: #17171a;
+    --bg-tab: #1f1f23;
+    --bg-input: #1a1a1d;
+    --bg-rule-box: #1c1c20;
+    --bg-row-hover: #202028;
+    --bg-warning: #2a1818;
+    --bg-highlight: #5a4a1f;
+    --bg-soft: #1a1a1d;
+    --text-main: #e6e6e8;
+    --text-muted: #a0a0a8;
+    --text-title: #cfd6e0;
+    --border-soft: #2a2a2e;
+    --border-input: #333338;
+    --accent: #4ade80;
+    --accent-dark: #22c55e;
+    --green: #4ade80;
+    --green-bg: #1a3a26;
+    --red: #ff8a7a;
+    --red-bg: #3a1818;
+    --badge-m-bg: #1a3a5c; --badge-m-fg: #8ec5ff;
+    --badge-f-bg: #4a1a26; --badge-f-fg: #ffa3b8;
+    --badge-n-bg: #1a3a1a; --badge-n-fg: #8eff8e;
+    --badge-pl-bg: #4a3a14; --badge-pl-fg: #ffd966;
+    --shadow: 0 2px 5px rgba(0,0,0,0.4);
+    --shadow-card: 0 2px 12px rgba(0,0,0,0.4);
+  }
+}
+* { box-sizing: border-box; }
+.flip-card-inner { transition: transform 0.6s; transform-style: preserve-3d; position: relative; width: 100%; height: 100%; }
+.flip-card-inner.flipped { transform: rotateY(180deg); }
+.flip-face { position: absolute; width: 100%; height: 100%; backface-visibility: hidden; -webkit-backface-visibility: hidden; display: flex; align-items: center; justify-content: center; padding: 24px; border-radius: 14px; }
+.flip-face.back { transform: rotateY(180deg); }
+input:focus, button:focus { outline: 2px solid var(--accent); outline-offset: 1px; }
+`;
+
+// ═══════════════════════════════════════════════════════════════
+// ДАННЫЕ
+// ═══════════════════════════════════════════════════════════════
+// Каждый блок имеет:
+//   vocab:     [{ de, ru, note?, gender?, also? }]  — для карточек/изучения + Уровня 1 (mc на перевод)
+//   questions: [{ level, type, ... }]               — Уровни 2-4 (tiles, fill, conj)
+//
+// Поле `also` в vocab блока 'neu' — список блоков, в которые этот item должен
+// автоматически попасть (например, also: ['verbs']).
+// При запуске тематического блока его vocab расширяется такими элементами.
+
+const RAW_BLOCKS = [
+  // ─────────────────────────────────────────────────────────────
+  // 🆕 НОВЫЕ
+  // ─────────────────────────────────────────────────────────────
+  {
+    id: "neu",
+    label: "🆕 Новые",
+    color: "#b03030",
+    desc: "Свежие слова и правила (буфер)",
+    vocab: [
+      // Существительные (v31)
+      { de: "der Anrufbeantworter", ru: "автоответчик", gender: "m", note: "Anruf + beantworten | разг.: AB", also: ["nouns:tech"] },
+      { de: "die Kantine", ru: "столовая (на работе/в школе)", gender: "f", note: "Pl: die Kantinen | in der Kantine essen", also: ["nouns:rooms"] },
+      { de: "die Anrede", ru: "обращение (в письме/речи)", gender: "f", note: "an + Rede | Sehr geehrte Damen und Herren — формальная Anrede", also: ["nouns:writing"] },
+      { de: "der Gruß", ru: "приветствие / поклон", gender: "m", note: "Pl: die Grüße | Liebe Grüße (LG) | Viele Grüße", also: ["nouns:writing"] },
+      { de: "der Teilnehmer", ru: "участник", gender: "m", note: "teil + Nehmer (от nehmen) | f: die Teilnehmerin | Pl: die Teilnehmer", also: ["nouns:office"] },
+      { de: "der Mitarbeiter", ru: "сотрудник", gender: "m", note: "mit + Arbeiter — «совместный работник» | f: die Mitarbeiterin", also: ["nouns:professions"] },
+      { de: "das Angebot", ru: "предложение / акция", gender: "n", note: "от anbieten | Pl: die Angebote | im Angebot — по акции", also: ["nouns:shop"] },
+      { de: "die Sache", ru: "вещь / дело", gender: "f", note: "Pl: die Sachen | meine Sachen | Das ist meine Sache", also: ["nouns:misc"] },
+      { de: "die Kunst", ru: "искусство", gender: "f", note: "Pl: die Künste | Künstler — художник | künstlich — искусственный", also: ["nouns:music"] },
+      { de: "die Ausstellung", ru: "выставка", gender: "f", note: "от ausstellen | aus + stellen | -ung всегда die", also: ["nouns:places"] },
+      { de: "die Sonderausstellung", ru: "спец-выставка / временная выставка", gender: "f", note: "Sonder- (особый) + Ausstellung", also: ["nouns:places"] },
+      // Глаголы (v31)
+      { de: "kreuzen", ru: "отметить крестиком / пересекать", note: "от das Kreuz | ankreuzen — отметить в анкете (отд.: an-)", also: ["verbs:study"] },
+      { de: "teilnehmen", ru: "участвовать", note: "отд.: teil- | teil + nehmen — «брать часть» | teilnehmen an + Dat | Ich nehme an dem Kurs teil", also: ["verbs:study"] },
+      { de: "laden", ru: "1) грузить, заряжать 2) приглашать", note: "Unregel (a→ä): du lädst, er lädt | das Handy laden | приставочные: einladen, aufladen, herunterladen", also: ["verbs:home"] },
+      // Прилагательные / Наречия (v31)
+      { de: "herzlich", ru: "сердечный / искренний / тёплый", note: "Herz + -lich | herzlich willkommen | herzliche Grüße", also: ["adj"] },
+      { de: "willkommen", ru: "добро пожаловать / желанный", note: "Willkommen in Berlin! | Herzlich willkommen! | jdn willkommen heißen", also: ["adj"] },
+      { de: "täglich", ru: "ежедневный / ежедневно", note: "Tag + -lich | täglich geöffnet | dreimal täglich", also: ["adv"] },
+      { de: "direkt", ru: "прямой / прямо / напрямую", note: "direkt aus Frankfurt (⚠ aus, не von — для городов) | direkt vor dem Haus", also: ["adv"] },
+    ],
+    questions: [
+      { level: 2, type: "tiles", q: "Составь:\n«Я участвую в курсе.»",
+        words: ["Ich", "nehme", "an", "dem", "Kurs", "teil."],
+        explain: "teilnehmen — отдел. teil- уходит в конец. teilnehmen an + Dat." },
+      { level: 2, type: "tiles", q: "Составь:\n«Это предложение очень выгодное.»",
+        words: ["Das", "Angebot", "ist", "sehr", "günstig."],
+        explain: "После sein — без окончания. das Angebot (n)." },
+      { level: 2, type: "tiles", q: "Составь:\n«Сердечно приветствуем в Берлине!»",
+        words: ["Herzlich", "willkommen", "in", "Berlin!"],
+        explain: "Стандартная формула приветствия. in + Dat (im/in Berlin)." },
+      { level: 3, type: "fill", q: "Pl от \"der Gruß\"?", hint: "+ Umlaut, +e",
+        ans: "die Grüße", altAns: ["Grüße"],
+        explain: "der Gruß → die Grüße (u→ü, +e)." },
+      { level: 3, type: "fill", q: "Какой артикль? \"___ Kunst\"", hint: "женский род",
+        ans: "die",
+        explain: "die Kunst (f). Pl: die Künste." },
+      { level: 3, type: "fill", q: "Какой артикль? \"___ Angebot\" (предложение)", hint: "средний род",
+        ans: "das",
+        explain: "das Angebot (n). От anbieten." },
+      { level: 3, type: "fill", q: "От какого слова образовано «herzlich»?", hint: "сердце",
+        ans: "Herz", altAns: ["das Herz", "Herz "],
+        explain: "Herz + -lich = herzlich. Суффикс -lich образует прилагательные." },
+      { level: 3, type: "fill", q: "От какого слова «täglich»?", hint: "день",
+        ans: "Tag", altAns: ["der Tag", "Tag "],
+        explain: "Tag + -lich = täglich (с умлаутом)." },
+      { level: 4, type: "conj", q: "Проспрягай «laden» в Präsens:",
+        verb: "laden", tense: "Präsens",
+        pronouns: ["ich", "du", "er/sie/es", "wir", "ihr", "sie/Sie"],
+        ans: ["lade", "lädst", "lädt", "laden", "ladet", "laden"],
+        explain: "Unregelmäßig: a→ä у du и er. ich lade, du lädst, er lädt." },
+    ],
+  },
+
+  // ─────────────────────────────────────────────────────────────
+  // 🔢 ЧИСЛА
+  // ─────────────────────────────────────────────────────────────
+  {
+    id: "nums",
+    label: "🔢 Числа",
+    color: "#16a085",
+    desc: "0–12, десятки, время",
+    vocab: [
+      { de: "null", ru: "0 (нуль)" },
+      { de: "ein / eins", ru: "1 (один)", note: "ein с сущ., eins при счёте" },
+      { de: "zwei", ru: "2 (два)" },
+      { de: "drei", ru: "3 (три)" },
+      { de: "vier", ru: "4 (четыре)" },
+      { de: "fünf", ru: "5 (пять)" },
+      { de: "sechs", ru: "6 (шесть)" },
+      { de: "sieben", ru: "7 (семь)" },
+      { de: "acht", ru: "8 (восемь)" },
+      { de: "neun", ru: "9 (девять)" },
+      { de: "zehn", ru: "10 (десять)" },
+      { de: "elf", ru: "11 (одиннадцать)" },
+      { de: "zwölf", ru: "12 (двенадцать)" },
+      { de: "dreißig", ru: "30 (тридцать)", note: "⚠ исключение, не dreißzig" },
+      { de: "viertel", ru: "четверть", note: "viertel nach zwölf — четверть первого" },
+      { de: "halb", ru: "половина", note: "halb drei — половина третьего (2:30)" },
+      { de: "vor", ru: "до (во времени)", note: "viertel vor — без четверти" },
+      { de: "nach", ru: "после (во времени)", note: "viertel nach — четверть" },
+      { de: "am", ru: "для дней", note: "am Montag" },
+      { de: "um", ru: "для времени", note: "um 5 Uhr" },
+    ],
+    questions: [
+      { level: 1, type: "mc", q: "Как пишется число 30?",
+        opts: ["dreizig", "dreißig", "dreizehn", "drießig"], ans: 1,
+        explain: "30 — dreißig. Через ß, не z." },
+      { level: 1, type: "mc", q: "Что означает «halb drei»?",
+        opts: ["3 часа", "2:30", "3:30", "половина четвёртого"], ans: 1,
+        explain: "halb drei = половина третьего = 2:30. В немецком смотрят на СЛЕДУЮЩИЙ час." },
+      { level: 1, type: "mc", q: "Какой предлог для дней?",
+        opts: ["um", "in", "am", "auf"], ans: 2,
+        explain: "am Montag, am Dienstag... am = an + dem (Dativ)." },
+      { level: 1, type: "mc", q: "Какой предлог для времени (часов)?",
+        opts: ["am", "um", "in", "bei"], ans: 1,
+        explain: "um 5 Uhr — в 5 часов." },
+      { level: 2, type: "tiles", q: "Составь: «В понедельник в 5 часов.»",
+        words: ["Am", "Montag", "um", "5", "Uhr."],
+        explain: "am + день, um + время." },
+      { level: 3, type: "fill", q: "Вставь: \"Es ist ___ drei.\" (2:30)", hint: "половина",
+        ans: "halb",
+        explain: "halb drei = 2:30. На следующий час." },
+      { level: 3, type: "fill", q: "Вставь: \"viertel ___ zwölf\" (12:15)", hint: "после полудня",
+        ans: "nach",
+        explain: "viertel nach zwölf = четверть первого = 12:15." },
+    ],
+  },
+
+  // ─────────────────────────────────────────────────────────────
+  // 🔤 ЗВУКИ
+  // ─────────────────────────────────────────────────────────────
+  {
+    id: "sounds",
+    label: "🔤 Звуки",
+    color: "#9b59b6",
+    desc: "Буквосочетания и произношение",
+    vocab: [
+      { de: "ei, ai", ru: "[ай]", note: "ein, der Mai" },
+      { de: "au", ru: "[ау]", note: "das Auto" },
+      { de: "ie", ru: "[и:]", note: "sieben" },
+      { de: "eu, äu", ru: "[ой]", note: "neun, heute, die Bäume" },
+      { de: "ö", ru: "[ьо]", note: "zwölf, hören" },
+      { de: "ü", ru: "[ьу]", note: "fünf, die Küche" },
+      { de: "ä", ru: "[э]", note: "der Käse" },
+      { de: "Sp- (начало слова)", ru: "[шп]", note: "Sprechen → [Шпрэхэн]" },
+      { de: "St- (начало слова)", ru: "[шт]", note: "Stuhl → [Штуль]" },
+      { de: "Sch", ru: "[ш]", note: "die Schule" },
+      { de: "Tsch", ru: "[ч]", note: "Tschüss!, deutsch" },
+      { de: "Ch (после a, o, u, au)", ru: "[х] — ach-Laut", note: "machen, doch, Buch, auch" },
+      { de: "Ch (после e, i, ei, ä, ö, ü)", ru: "[хь] — ich-Laut", note: "ich, nicht, sprechen, Küche" },
+      { de: "v, f, ph", ru: "[ф]", note: "der Vater, die Firma, das Alphabet" },
+    ],
+    questions: [
+      { level: 1, type: "mc", q: "Как читается «ei» в слове «mein»?",
+        opts: ["[эй]", "[ай]", "[и]", "[е]"], ans: 1,
+        explain: "ei, ai → [ай]. mein = [майн]." },
+      { level: 1, type: "mc", q: "Как читается «ie» в слове «sieben»?",
+        opts: ["[ие]", "[й]", "[и:]", "[ай]"], ans: 2,
+        explain: "ie → [и:] (долгое и). sieben = [зибэн]." },
+      { level: 1, type: "mc", q: "Как читается «eu» в слове «neun»?",
+        opts: ["[еу]", "[э]", "[ой]", "[у]"], ans: 2,
+        explain: "eu, äu → [ой]. neun = [нойн]." },
+      { level: 1, type: "mc", q: "Как читается «sch» в «Schule»?",
+        opts: ["[сч]", "[ш]", "[ск]", "[щ]"], ans: 1,
+        explain: "sch → [ш]. Schule = [шулэ]." },
+      { level: 1, type: "mc", q: "Как читается «ch» в слове «ich»?",
+        opts: ["[х] — ach-Laut", "[к]", "[хь] — ich-Laut", "[ш]"], ans: 2,
+        explain: "ch после e/i/ei/ä/ö/ü → [хь] (ich-Laut). ich = [ихь]." },
+      { level: 1, type: "mc", q: "Как читается «ch» в слове «machen»?",
+        opts: ["[хь]", "[к]", "[х] — ach-Laut", "[ш]"], ans: 2,
+        explain: "ch после a/o/u/au → [х] (ach-Laut). machen = [махэн]." },
+    ],
+  },
+
+  // ─────────────────────────────────────────────────────────────
+  // ⚡ ГЛАГОЛЫ
+  // ─────────────────────────────────────────────────────────────
+  {
+    id: "verbs",
+    label: "⚡ Глаголы",
+    color: "#1a7a4a",
+    desc: "Базовые, modal, движение, быт, общение и др.",
+    subblocks: [
+      {
+        id: "basic",
+        label: "💡 Базовые / Общие",
+        vocab: [
+          { de: "machen", ru: "делать" },
+          { de: "wohnen", ru: "жить, проживать" },
+          { de: "heißen", ru: "зваться, называться" },
+          { de: "finden", ru: "находить" },
+          { de: "bleiben", ru: "оставаться", note: "Unregelmäßig | Ich bleibe zu Hause" },
+          { de: "fehlen", ru: "отсутствовать, не хватать" },
+          { de: "dauern", ru: "длиться" },
+          { de: "setzen", ru: "ставить, сажать", note: "sich setzen = садиться | Setz dich!" },
+          { de: "sitzen", ru: "сидеть" },
+          { de: "warten", ru: "ждать" },
+          { de: "waren", ru: "были (Präteritum от sein)", note: "wir/sie/Sie waren" },
+        ],
+        questions: [
+          { level: 2, type: "tiles", q: "Составь: «Ты любишь готовить?»",
+            words: ["Kochst", "du", "gern?"],
+            explain: "Verb + gern = «любить (делать)». Ja/Nein-Frage: Verb на 1-й позиции." },
+          { level: 3, type: "fill", q: "Präteritum от «sein» для «ich»?", hint: "был",
+            ans: "war",
+            explain: "ich war (Präteritum)." },
+        ],
+      },
+      {
+        id: "modal",
+        label: "🎯 Modalverben",
+        color: "#d35400",
+        vocab: [
+          { de: "können", ru: "мочь, уметь", note: "Modalverb, Unregelmäßig | ich kann" },
+          { de: "müssen", ru: "должен, нужно (внутр.)", note: "Modalverb | ich muss | ≠ sollen (извне)" },
+          { de: "wollen", ru: "хотеть", note: "Modalverb | ich will" },
+          { de: "möchten", ru: "хотел бы (вежливо)", note: "вежливая форма | ich möchte" },
+          { de: "mögen", ru: "нравиться, любить", note: "Modalverb | ich mag" },
+          { de: "dürfen", ru: "иметь право / разрешено", note: "Modalverb | ich darf | Ich darf hier nicht rauchen" },
+          { de: "sollen", ru: "быть должным (по чужой воле)", note: "Modalverb | обязательство ИЗВНЕ (так сказали) | ≠ müssen (изнутри)" },
+          { de: "hätte gern", ru: "хотел бы (вежливо)", note: "⚠ готовая форма: haben → hätte" },
+          { de: "würde + Infinitiv", ru: "бы / условное наклонение", note: "werden → würde / würdest / würden" },
+        ],
+        questions: [
+          { level: 2, type: "tiles", q: "Составь: «Я не могу прийти.»",
+            words: ["Ich", "kann", "nicht", "kommen."],
+            explain: "Modalverb на 2-й позиции, Infinitiv в конец." },
+          { level: 2, type: "tiles", q: "Составь: «Я хочу учить немецкий.»",
+            words: ["Ich", "will", "Deutsch", "lernen."],
+            explain: "wollen на 2-й позиции, Infinitiv (lernen) в конце." },
+          { level: 3, type: "fill", q: "Вставь: \"Ich ___ Deutsch lernen.\" (хочу)", hint: "wollen — ich",
+            ans: "will",
+            explain: "ich will. Modalverb." },
+          { level: 3, type: "fill", q: "sollen или müssen?\n\"Ich ___ schlafen.\" (сам устал)", hint: "обязательство изнутри",
+            ans: "muss",
+            explain: "müssen — обязательство ИЗНУТРИ / объективная необходимость." },
+          { level: 3, type: "fill", q: "sollen или müssen?\n\"Du ___ nicht lügen.\" (тебе говорят)", hint: "обязательство извне",
+            ans: "sollst",
+            explain: "sollen — обязательство ИЗВНЕ. Du sollst nicht lügen." },
+          { level: 4, type: "conj", q: "Проспрягай «können» в Präsens:",
+            verb: "können", tense: "Präsens",
+            pronouns: ["ich", "du", "er/sie/es", "wir", "ihr", "sie/Sie"],
+            ans: ["kann", "kannst", "kann", "können", "könnt", "können"],
+            explain: "ich = er (kann). Modalverb." },
+          { level: 4, type: "conj", q: "Проспрягай «wollen» в Präsens:",
+            verb: "wollen", tense: "Präsens",
+            pronouns: ["ich", "du", "er/sie/es", "wir", "ihr", "sie/Sie"],
+            ans: ["will", "willst", "will", "wollen", "wollt", "wollen"],
+            explain: "ich = er (will)." },
+          { level: 4, type: "conj", q: "Проспрягай «müssen» в Präsens:",
+            verb: "müssen", tense: "Präsens",
+            pronouns: ["ich", "du", "er/sie/es", "wir", "ihr", "sie/Sie"],
+            ans: ["muss", "musst", "muss", "müssen", "müsst", "müssen"],
+            explain: "ich = er (muss)." },
+          { level: 4, type: "conj", q: "Проспрягай «dürfen» в Präsens:",
+            verb: "dürfen", tense: "Präsens",
+            pronouns: ["ich", "du", "er/sie/es", "wir", "ihr", "sie/Sie"],
+            ans: ["darf", "darfst", "darf", "dürfen", "dürft", "dürfen"],
+            explain: "ich = er (darf)." },
+        ],
+      },
+      {
+        id: "movement",
+        label: "🚌 Движение / Транспорт",
+        vocab: [
+          { de: "gehen", ru: "идти, ходить" },
+          { de: "kommen", ru: "приходить, приезжать" },
+          { de: "fahren", ru: "ехать (на транспорте)" },
+          { de: "fliegen", ru: "летать", note: "Unregel: flog / geflogen" },
+          { de: "schwimmen", ru: "плавать", note: "Unregel: schwamm / geschwommen" },
+          { de: "reisen", ru: "путешествовать" },
+          { de: "starten", ru: "взлетать / начинать" },
+          { de: "landen", ru: "приземляться" },
+          { de: "Fahrrad fahren", ru: "ехать на велосипеде" },
+          { de: "spazieren gehen", ru: "гулять, идти на прогулку", note: "Ich gehe spazieren" },
+          { de: "Gassi gehen", ru: "выгуливать собаку", note: "разг. | mit dem Hund Gassi gehen" },
+          { de: "joggen", ru: "бегать (трусцой)" },
+          { de: "abholen", ru: "забирать (кого-то)", note: "отделяемая ab- | Ich hole dich ab" },
+          { de: "bringen", ru: "приносить (A→B)", note: "однонаправленно, сам не возвращается" },
+          { de: "holen", ru: "сходить и принести (A→B→A)", note: "сходить и принести" },
+        ],
+        questions: [
+          { level: 2, type: "tiles", q: "Составь: «Я забираю тебя в 7 часов.»",
+            words: ["Ich", "hole", "dich", "um", "7", "Uhr", "ab."],
+            explain: "abholen — отделяемая. ab- уходит в конец." },
+        ],
+      },
+      {
+        id: "food",
+        label: "🍳 Еда / Готовка",
+        vocab: [
+          { de: "essen", ru: "есть, кушать", note: "Unregel" },
+          { de: "trinken", ru: "пить" },
+          { de: "backen", ru: "печь" },
+          { de: "braten", ru: "жарить" },
+          { de: "schmecken", ru: "быть вкусным" },
+          { de: "probieren", ru: "пробовать" },
+        ],
+        questions: [
+          { level: 3, type: "fill", q: "Вставь: \"Er ___ Pizza.\" (есть)", hint: "essen — er",
+            ans: "isst",
+            explain: "essen → er isst (e→i)." },
+        ],
+      },
+      {
+        id: "home",
+        label: "🏠 Дом / Быт / Покупки",
+        vocab: [
+          { de: "hinzufügen", ru: "добавлять", note: "отд. hinzu- | Partizip II: hinzugefügt" },
+          { de: "einsortieren", ru: "рассортировать", note: "отд. ein-" },
+          { de: "aufstehen", ru: "вставать", note: "отд. auf-" },
+          { de: "aufräumen", ru: "убираться", note: "отд. auf-" },
+          { de: "aufmachen", ru: "открывать", note: "отд. auf-" },
+          { de: "aufhängen", ru: "вешать", note: "отд. auf-" },
+          { de: "öffnen", ru: "открывать" },
+          { de: "schließen", ru: "закрывать" },
+          { de: "putzen", ru: "чистить, убирать" },
+          { de: "staubsaugen", ru: "пылесосить" },
+          { de: "decken", ru: "накрывать (стол)" },
+          { de: "einkaufen", ru: "ходить по магазинам", note: "отд. ein-" },
+          { de: "kaufen", ru: "покупать" },
+          { de: "bestellen", ru: "заказывать" },
+          { de: "bezahlen", ru: "оплачивать" },
+          { de: "bekommen", ru: "получать" },
+          { de: "kriegen", ru: "получать (разг.)", note: "= bekommen" },
+          { de: "nehmen", ru: "брать", note: "Unregel: nimmst / nimmt" },
+          { de: "benutzen", ru: "использовать, пользоваться" },
+          { de: "abstellen", ru: "ставить / парковать / выключать", note: "отд. ab- | das Auto abstellen / das Radio abstellen" },
+          { de: "rauchen", ru: "курить" },
+          { de: "anfangen", ru: "начинать", note: "отд. an-" },
+          { de: "vorbereiten", ru: "подготавливать", note: "отд. vor-" },
+          { de: "schlafen", ru: "спать", note: "Unregel" },
+        ],
+        questions: [
+          { level: 3, type: "fill", q: "Вставь: \"Du ___ schnell.\" (брать)", hint: "nehmen — du",
+            ans: "nimmst",
+            explain: "nehmen → du nimmst (h уходит, e→i, m→mm)." },
+        ],
+      },
+      {
+        id: "communication",
+        label: "💬 Общение / Эмоции",
+        vocab: [
+          { de: "passen", ru: "подходить", note: "Das passt! | прил.: passend" },
+          { de: "sprechen", ru: "говорить", note: "Unregel" },
+          { de: "fragen", ru: "спрашивать" },
+          { de: "buchstabieren", ru: "произносить по буквам" },
+          { de: "bedeuten", ru: "означать" },
+          { de: "duzen", ru: "обращаться на \"ты\"" },
+          { de: "wissen", ru: "знать (факт)", note: "≠ kennen! Unregel: ich weiß" },
+          { de: "kennen", ru: "знать (человека)", note: "≠ wissen" },
+          { de: "denken", ru: "думать" },
+          { de: "lieben", ru: "любить" },
+          { de: "küssen", ru: "целовать" },
+          { de: "kennenlernen", ru: "познакомиться", note: "отд. | Ich lerne sie kennen" },
+          { de: "sich vorstellen", ru: "представляться", note: "возвр. + отд. vor-" },
+          { de: "sich wundern", ru: "удивляться", note: "über + Akk" },
+          { de: "treffen", ru: "встречать", note: "Unregel" },
+          { de: "einladen", ru: "приглашать", note: "отд. ein-" },
+          { de: "schicken", ru: "отправлять" },
+          { de: "verabreden", ru: "договариваться (о встрече)", note: "обычно с кем-то — почти всегда возвратное: sich verabreden" },
+          { de: "sich verabreden", ru: "условиться о встрече", note: "возвратный | sich + mit + Dat | Ich verabrede mich mit Anna" },
+          { de: "grenzen", ru: "граничить", note: "от die Grenze | grenzen an + Akk | Deutschland grenzt an Polen" },
+          { de: "vermissen", ru: "скучать (об эмоции)", note: "≠ verlieren | Ich vermisse dich" },
+          { de: "verlieren", ru: "терять / проиграть", note: "≠ vermissen | о предмете или игре" },
+        ],
+        questions: [
+          { level: 3, type: "fill", q: "wissen или kennen? \"Ich ___ ihn gut.\" (его)", hint: "знать человека",
+            ans: "kenne",
+            explain: "kennen — знать человека. wissen — знать факт." },
+          { level: 3, type: "fill", q: "wissen или kennen? \"Ich ___, wo er wohnt.\"", hint: "знать факт",
+            ans: "weiß",
+            explain: "wissen — знать факт. Unregel: ich weiß." },
+          { level: 3, type: "fill", q: "vermissen или verlieren?\n\"Ich ___ meinen Schlüssel.\" (потерял)", hint: "о предмете",
+            ans: "verliere", altAns: ["habe verloren"],
+            explain: "verlieren — терять (предмет). vermissen — скучать." },
+        ],
+      },
+      {
+        id: "study",
+        label: "📚 Учёба / Работа",
+        vocab: [
+          { de: "arbeiten", ru: "работать" },
+          { de: "am Computer arbeiten", ru: "работать за компьютером" },
+          { de: "schreiben", ru: "писать" },
+          { de: "lesen", ru: "читать", note: "Unregel (e→ie)" },
+          { de: "hören", ru: "слушать" },
+          { de: "wiederholen", ru: "повторять" },
+          { de: "verdienen", ru: "зарабатывать" },
+          { de: "besuchen", ru: "посещать" },
+          { de: "einen Termin ausmachen", ru: "договориться о встрече", note: "= einen Termin vereinbaren" },
+        ],
+        questions: [
+          { level: 2, type: "tiles", q: "Составь: «Я работаю в офисе.»",
+            words: ["Ich", "arbeite", "im", "Büro."],
+            explain: "im = in + dem (Dat). Wo? — Dativ." },
+        ],
+      },
+      {
+        id: "leisure",
+        label: "🎮 Досуг / Хобби",
+        vocab: [
+          { de: "spielen", ru: "играть" },
+          { de: "zocken", ru: "играть (в игры, разг.)" },
+          { de: "malen", ru: "рисовать (живопись)", note: "≠ zeichnen" },
+          { de: "zeichnen", ru: "рисовать, чертить", note: "карандаш/линии" },
+          { de: "singen", ru: "петь" },
+          { de: "tanzen", ru: "танцевать" },
+          { de: "fotografieren", ru: "фотографировать" },
+          { de: "tätowieren", ru: "делать татуировку" },
+          { de: "sehen", ru: "смотреть, видеть", note: "Unregel (e→ie)" },
+          { de: "gucken", ru: "смотреть (разг.)", note: "север Германии" },
+          { de: "schauen", ru: "смотреть", note: "юг / Австрия" },
+          { de: "surfen", ru: "сёрфить", note: "im Internet / в спорте" },
+          { de: "reiten", ru: "ездить верхом" },
+          { de: "organisieren", ru: "организовывать" },
+          { de: "zoomen", ru: "звонить по видео" },
+          { de: "Sport treiben", ru: "заниматься спортом", note: "Ich treibe Sport" },
+          { de: "Partys feiern", ru: "отмечать вечеринки" },
+          { de: "Shoppen", ru: "шопинг" },
+          { de: "Gitarre spielen", ru: "играть на гитаре", note: "auch: Klavier/Geige spielen" },
+          { de: "werfen", ru: "бросать", note: "Unregel (e→i): du wirfst" },
+          { de: "fangen", ru: "ловить", note: "Unregel (a→ä): du fängst | ≠ anfangen" },
+          { de: "brausen", ru: "шуметь / мчаться / принимать душ", note: "3 знач.: Wind braust | Auto braust | sich brausen = sich duschen" },
+        ],
+        questions: [],
+      },
+      {
+        id: "impersonal",
+        label: "🌧 Безличные",
+        vocab: [
+          { de: "es hagelt", ru: "идёт град", note: "безличный | только с es" },
+        ],
+        questions: [],
+      },
+    ],
+  },
+
+  // ─────────────────────────────────────────────────────────────
+  // 🔥 СПРЯЖЕНИЕ UNREGELMÄSSIG
+  // ─────────────────────────────────────────────────────────────
+  {
+    id: "unregel",
+    label: "🔥 Спряжение Unregelmäßig",
+    color: "#e67e22",
+    desc: "Неправильные глаголы — спряжение",
+    vocab: [
+      // Здесь vocab — это пары «глагол → ключевая особенность» для карточек
+      { de: "sein", ru: "быть", note: "ich bin, du bist, er ist, wir sind, ihr seid, sie sind" },
+      { de: "haben", ru: "иметь", note: "ich habe, du hast, er hat, wir haben, ihr habt, sie haben" },
+      { de: "können", ru: "мочь", note: "ich kann, du kannst, er kann, wir können, ihr könnt" },
+      { de: "müssen", ru: "должен", note: "ich muss, du musst, er muss, wir müssen, ihr müsst" },
+      { de: "wollen", ru: "хотеть", note: "ich will, du willst, er will, wir wollen, ihr wollt" },
+      { de: "möchten", ru: "хотел бы", note: "ich möchte, du möchtest, er möchte, wir möchten, ihr möchtet" },
+      { de: "mögen", ru: "нравиться", note: "ich mag, du magst, er mag, wir mögen, ihr mögt" },
+      { de: "dürfen", ru: "иметь право", note: "ich darf, du darfst, er darf, wir dürfen, ihr dürft" },
+      { de: "nehmen", ru: "брать", note: "ich nehme, du nimmst, er nimmt, wir nehmen" },
+      { de: "sprechen", ru: "говорить", note: "e→i: du sprichst, er spricht" },
+      { de: "schlafen", ru: "спать", note: "a→ä: du schläfst, er schläft" },
+      { de: "essen", ru: "есть, кушать", note: "e→i: du isst, er isst" },
+      { de: "sehen", ru: "смотреть/видеть", note: "e→ie: du siehst, er sieht | Prät: sah | Part II: gesehen" },
+      { de: "lesen", ru: "читать", note: "e→ie: du liest, er liest | Prät: las | Part II: gelesen" },
+      { de: "werfen", ru: "бросать", note: "e→i: du wirfst, er wirft | Prät: warf | Part II: geworfen" },
+      { de: "fangen", ru: "ловить", note: "a→ä: du fängst, er fängt | Prät: fing | Part II: gefangen" },
+      { de: "treffen", ru: "встречать", note: "e→i: du triffst, er trifft" },
+      { de: "fliegen", ru: "летать", note: "Prät: flog | Part II: geflogen" },
+      { de: "schwimmen", ru: "плавать", note: "Prät: schwamm | Part II: geschwommen" },
+      { de: "bleiben", ru: "оставаться", note: "Prät: blieb | Part II: geblieben (с sein)" },
+      { de: "verlieren", ru: "терять", note: "Prät: verlor | Part II: verloren" },
+    ],
+    questions: [
+      { level: 4, type: "conj", q: "Проспрягай «sein» в Präsens:",
+        verb: "sein", tense: "Präsens",
+        pronouns: ["ich", "du", "er/sie/es", "wir", "ihr", "sie/Sie"],
+        ans: ["bin", "bist", "ist", "sind", "seid", "sind"],
+        explain: "Самый неправильный глагол. Учи наизусть." },
+      { level: 4, type: "conj", q: "Проспрягай «haben» в Präsens:",
+        verb: "haben", tense: "Präsens",
+        pronouns: ["ich", "du", "er/sie/es", "wir", "ihr", "sie/Sie"],
+        ans: ["habe", "hast", "hat", "haben", "habt", "haben"],
+        explain: "du hast / er hat — без b!" },
+      { level: 4, type: "conj", q: "Проспрягай «nehmen» в Präsens:",
+        verb: "nehmen", tense: "Präsens",
+        pronouns: ["ich", "du", "er/sie/es", "wir", "ihr", "sie/Sie"],
+        ans: ["nehme", "nimmst", "nimmt", "nehmen", "nehmt", "nehmen"],
+        explain: "du/er: nimm- (h уходит, e→i)." },
+      { level: 4, type: "conj", q: "Проспрягай «sprechen» в Präsens:",
+        verb: "sprechen", tense: "Präsens",
+        pronouns: ["ich", "du", "er/sie/es", "wir", "ihr", "sie/Sie"],
+        ans: ["spreche", "sprichst", "spricht", "sprechen", "sprecht", "sprechen"],
+        explain: "e→i в du/er." },
+      { level: 4, type: "conj", q: "Проспрягай «schlafen» в Präsens:",
+        verb: "schlafen", tense: "Präsens",
+        pronouns: ["ich", "du", "er/sie/es", "wir", "ihr", "sie/Sie"],
+        ans: ["schlafe", "schläfst", "schläft", "schlafen", "schlaft", "schlafen"],
+        explain: "a→ä в du/er." },
+      { level: 4, type: "conj", q: "Проспрягай «sehen» в Präsens:",
+        verb: "sehen", tense: "Präsens",
+        pronouns: ["ich", "du", "er/sie/es", "wir", "ihr", "sie/Sie"],
+        ans: ["sehe", "siehst", "sieht", "sehen", "seht", "sehen"],
+        explain: "e→ie в du/er. siehst, sieht." },
+      { level: 4, type: "conj", q: "Проспрягай «essen» в Präsens:",
+        verb: "essen", tense: "Präsens",
+        pronouns: ["ich", "du", "er/sie/es", "wir", "ihr", "sie/Sie"],
+        ans: ["esse", "isst", "isst", "essen", "esst", "essen"],
+        explain: "du/er совпадают: isst." },
+      { level: 4, type: "conj", q: "Проспрягай «werfen» в Präsens:",
+        verb: "werfen", tense: "Präsens",
+        pronouns: ["ich", "du", "er/sie/es", "wir", "ihr", "sie/Sie"],
+        ans: ["werfe", "wirfst", "wirft", "werfen", "werft", "werfen"],
+        explain: "e→i: du wirfst, er wirft." },
+      { level: 4, type: "conj", q: "Проспрягай «fangen» в Präsens:",
+        verb: "fangen", tense: "Präsens",
+        pronouns: ["ich", "du", "er/sie/es", "wir", "ihr", "sie/Sie"],
+        ans: ["fange", "fängst", "fängt", "fangen", "fangt", "fangen"],
+        explain: "a→ä: du fängst, er fängt." },
+      { level: 1, type: "mc", q: "Partizip II от «sehen»?",
+        opts: ["geseht", "gesehen", "sehte", "sah"], ans: 1,
+        explain: "sehen — Unregel. Part II: gesehen (с haben)." },
+      { level: 1, type: "mc", q: "Präteritum от «bleiben»?",
+        opts: ["bleibte", "blieb", "blei", "geblieben"], ans: 1,
+        explain: "bleiben → blieb / geblieben (с sein)." },
+      { level: 1, type: "mc", q: "Какое вспомогательное у «fliegen» в Perfekt?",
+        opts: ["haben", "sein", "werden", "müssen"], ans: 1,
+        explain: "Глаголы движения → sein. Ich bin geflogen." },
+    ],
+  },
+
+  // ─────────────────────────────────────────────────────────────
+  // 📦 СУЩЕСТВИТЕЛЬНЫЕ (большой блок)
+  // ─────────────────────────────────────────────────────────────
+  {
+    id: "nouns",
+    label: "📦 Существительные",
+    color: "#2980b9",
+    desc: "Артикли, темы, рода",
+    subblocks: [
+      {
+        id: "personal",
+        label: "👤 Личные данные",
+        vocab: [
+          { de: "der Vorname", ru: "имя", gender: "m" },
+          { de: "der Nachname", ru: "фамилия", gender: "m", note: "= der Familienname" },
+          { de: "die Postleitzahl", ru: "почтовый индекс", gender: "f", note: "PLZ, напр. 10115" },
+          { de: "die Straße", ru: "улица", gender: "f" },
+          { de: "die Hausnummer", ru: "номер дома", gender: "f" },
+          { de: "der Ort", ru: "город / место", gender: "m" },
+          { de: "die Adresse", ru: "адрес", gender: "f" },
+          { de: "das Telefon", ru: "телефон", gender: "n", note: "= die Handynummer" },
+          { de: "die Muttersprache", ru: "родной язык", gender: "f" },
+          { de: "der Beruf", ru: "профессия", gender: "m" },
+          { de: "das Alter", ru: "возраст", gender: "n" },
+          { de: "die Augenfarbe", ru: "цвет глаз", gender: "f" },
+          { de: "die Lieblingsfarbe", ru: "любимый цвет", gender: "f" },
+          { de: "das Lieblingsessen", ru: "любимая еда", gender: "n" },
+          { de: "die Lieblingsstadt", ru: "любимый город", gender: "f" },
+          { de: "der Familienstand", ru: "семейное положение", gender: "m" },
+          { de: "der Kuss", ru: "поцелуй", gender: "m" },
+        ],
+        questions: [],
+      },
+      {
+        id: "family",
+        label: "👨‍👩‍👧 Семья",
+        vocab: [
+          { de: "die Familie", ru: "семья", gender: "f" },
+          { de: "die Eltern", ru: "родители", gender: "pl" },
+          { de: "der Vater", ru: "отец", gender: "m", note: "Pl: die Väter" },
+          { de: "die Mutter", ru: "мать", gender: "f", note: "Pl: die Mütter" },
+          { de: "der Bruder", ru: "брат", gender: "m", note: "Pl: die Brüder" },
+          { de: "die Schwester", ru: "сестра", gender: "f", note: "Pl: die Schwestern" },
+          { de: "die Geschwister", ru: "братья и сёстры", gender: "pl" },
+          { de: "der Sohn", ru: "сын", gender: "m", note: "Pl: die Söhne" },
+          { de: "die Tochter", ru: "дочь", gender: "f", note: "Pl: die Töchter" },
+          { de: "das Kind", ru: "ребёнок", gender: "n", note: "Pl: die Kinder" },
+          { de: "der Onkel", ru: "дядя", gender: "m" },
+          { de: "die Tante", ru: "тётя", gender: "f" },
+          { de: "der Großvater", ru: "дедушка", gender: "m" },
+          { de: "die Großmutter", ru: "бабушка", gender: "f" },
+          { de: "die Oma", ru: "бабушка (разг.)", gender: "f", note: "Pl: die Omas" },
+          { de: "die Großeltern", ru: "бабушка и дедушка", gender: "pl" },
+          { de: "der Enkel", ru: "внук", gender: "m" },
+          { de: "die Enkelin", ru: "внучка", gender: "f" },
+          { de: "der Ehemann", ru: "муж", gender: "m" },
+          { de: "die Ehefrau", ru: "жена", gender: "f" },
+          { de: "der Mensch", ru: "человек", gender: "m" },
+          { de: "der Freund", ru: "друг / парень", gender: "m", note: "⚠ mein Freund = мой парень; ein Freund von mir = просто друг" },
+        ],
+        questions: [
+          { level: 3, type: "fill", q: "Pl от \"das Kind\"?", hint: "+er",
+            ans: "die Kinder", altAns: ["Kinder"],
+            explain: "das Kind → die Kinder." },
+          { level: 3, type: "fill", q: "Pl от \"der Vater\"?", hint: "+ Umlaut",
+            ans: "die Väter", altAns: ["Väter"],
+            explain: "der Vater → die Väter (a→ä)." },
+        ],
+      },
+      {
+        id: "professions",
+        label: "💼 Профессии",
+        vocab: [
+          { de: "der Elektriker", ru: "электрик (м)", gender: "m", note: "f: die Elektrikerin" },
+          { de: "der Student", ru: "студент", gender: "m", note: "f: die Studentin" },
+          { de: "der Architekt", ru: "архитектор", gender: "m", note: "f: die Architektin" },
+          { de: "der Schlachter", ru: "мясник", gender: "m" },
+          { de: "der Imker", ru: "пчеловод", gender: "m" },
+          { de: "der Tänzer", ru: "танцор", gender: "m", note: "f: die Tänzerin" },
+          { de: "der Kellner", ru: "официант", gender: "m", note: "f: die Bedienung" },
+          { de: "die Erzieherin", ru: "воспитательница", gender: "f", note: "в садике" },
+          { de: "der Chef", ru: "начальник / шеф", gender: "m", note: "f: die Chefin" },
+        ],
+        questions: [],
+      },
+      {
+        id: "daytime",
+        label: "🌅 Время суток",
+        vocab: [
+          { de: "der Morgen", ru: "утро", gender: "m", note: "05:00–09:00 | ⚠ Morgen с заглавной = утро, morgen со строчной = завтра" },
+          { de: "der Vormittag", ru: "первая половина дня", gender: "m", note: "10:00–12:00 | vor + Mittag" },
+          { de: "der Mittag", ru: "полдень", gender: "m", note: "12:00–14:00" },
+          { de: "der Nachmittag", ru: "вторая половина дня", gender: "m", note: "14:00–18:00 | nach + Mittag" },
+          { de: "der Abend", ru: "вечер", gender: "m", note: "18:00–22:00" },
+          { de: "die Nacht", ru: "ночь", gender: "f", note: "22:00–05:00 | ⚠ единственное среди частей суток женского рода" },
+        ],
+        questions: [],
+      },
+      {
+        id: "dates",
+        label: "📅 Дни / Месяцы / Даты",
+        vocab: [
+          { de: "der Montag", ru: "понедельник", gender: "m", note: "am Montag" },
+          { de: "der Dienstag", ru: "вторник", gender: "m" },
+          { de: "der Mittwoch", ru: "среда", gender: "m" },
+          { de: "der Donnerstag", ru: "четверг", gender: "m" },
+          { de: "der Freitag", ru: "пятница", gender: "m" },
+          { de: "der Samstag", ru: "суббота", gender: "m" },
+          { de: "der Sonntag", ru: "воскресенье", gender: "m" },
+          { de: "die Woche", ru: "неделя", gender: "f", note: "Pl: die Wochen | diese Woche — на этой неделе" },
+          { de: "der Mai", ru: "май", gender: "m", note: "im Mai — в мае" },
+          { de: "der Termin", ru: "встреча / запись", gender: "m", note: "einen Termin ausmachen" },
+          { de: "der Geburtstag", ru: "день рождения", gender: "m", note: "Alles Gute zum Geburtstag!" },
+          { de: "die Hochzeit", ru: "свадьба", gender: "f" },
+        ],
+        questions: [],
+      },
+      {
+        id: "media",
+        label: "📺 ТВ / Медиа",
+        vocab: [
+          { de: "der Film", ru: "фильм", gender: "m" },
+          { de: "der Zeichentrickfilm", ru: "рисованный мультфильм", gender: "m" },
+          { de: "der Puppentrickfilm", ru: "кукольный мультфильм", gender: "m" },
+          { de: "die Zeitung", ru: "газета", gender: "f", note: "Pl: die Zeitungen" },
+          { de: "der Fernsehabend", ru: "вечер у телевизора", gender: "m" },
+        ],
+        questions: [],
+      },
+      {
+        id: "music",
+        label: "🎵 Музыка / Хобби",
+        vocab: [
+          { de: "die Musik", ru: "музыка", gender: "f" },
+          { de: "die Musikanlage", ru: "музыкальный центр", gender: "f" },
+          { de: "die Band", ru: "группа (муз.)", gender: "f" },
+          { de: "der Verein", ru: "клуб / объединение", gender: "m" },
+          { de: "der Fußballverein", ru: "футбольный клуб", gender: "m" },
+          { de: "die Disco", ru: "дискотека", gender: "f" },
+          { de: "die gemeinsamen Aktivitäten", ru: "совместные занятия", gender: "pl" },
+        ],
+        questions: [],
+      },
+      {
+        id: "places",
+        label: "🍷 Заведения / Жильё / Поездки",
+        vocab: [
+          { de: "die Kneipe", ru: "пивная / бар / паб", gender: "f", note: "разг." },
+          { de: "die Sportkneipe", ru: "спорт-бар", gender: "f" },
+          { de: "der Reiseführer", ru: "путеводитель / экскурсовод", gender: "m" },
+          { de: "der Eintritt", ru: "вход / входная плата", gender: "m", note: "Eintritt frei" },
+          { de: "der Rabatt", ru: "скидка", gender: "m", note: "10% Rabatt" },
+          { de: "der Jugendliche", ru: "подросток / молодой человек", gender: "m", note: "склоняется как прил." },
+        ],
+        questions: [],
+      },
+      {
+        id: "nature",
+        label: "🐾 Животные / Природа",
+        vocab: [
+          { de: "der Hund", ru: "собака", gender: "m", note: "Pl: die Hunde" },
+          { de: "die Katze", ru: "кошка", gender: "f" },
+          { de: "die Maus", ru: "мышь", gender: "f", note: "Pl: die Mäuse" },
+          { de: "der Baum", ru: "дерево", gender: "m", note: "Pl: die Bäume" },
+          { de: "der Sommer", ru: "лето", gender: "m", note: "im Sommer" },
+          { de: "das Meer", ru: "море", gender: "n" },
+          { de: "die Natur", ru: "природа", gender: "f" },
+        ],
+        questions: [],
+      },
+      {
+        id: "writing",
+        label: "✏️ Письмо / Текст",
+        vocab: [
+          { de: "der Satz", ru: "предложение", gender: "m", note: "Pl: die Sätze" },
+          { de: "das Wort", ru: "слово", gender: "n", note: "Pl: die Wörter" },
+          { de: "der Satzanfang", ru: "начало предложения", gender: "m", note: "с заглавной буквы" },
+          { de: "das Zeichen", ru: "знак", gender: "n" },
+          { de: "das Fragezeichen", ru: "вопросительный знак ?", gender: "n" },
+          { de: "das Komma", ru: "запятая ,", gender: "n" },
+          { de: "der Tipp", ru: "совет / подсказка", gender: "m" },
+          { de: "LG (Liebe Grüße)", ru: "с приветом", note: "конец письма" },
+        ],
+        questions: [],
+      },
+      {
+        id: "tech",
+        label: "📱 Техника / Гаджеты",
+        vocab: [
+          { de: "das Handy", ru: "мобильный телефон", gender: "n" },
+          { de: "das Tablet", ru: "планшет", gender: "n" },
+          { de: "der Laptop", ru: "ноутбук", gender: "m" },
+          { de: "der Kopfhörer", ru: "наушники", gender: "m" },
+          { de: "das Kabel", ru: "кабель", gender: "n" },
+          { de: "die Fernbedienung", ru: "пульт", gender: "f" },
+          { de: "der Beamer", ru: "проектор", gender: "m" },
+          { de: "die Gitarre", ru: "гитара", gender: "f" },
+        ],
+        questions: [],
+      },
+      {
+        id: "transport",
+        label: "🚗 Транспорт",
+        vocab: [
+          { de: "das Auto", ru: "автомобиль", gender: "n" },
+          { de: "das Fahrrad", ru: "велосипед", gender: "n" },
+          { de: "das Motorrad", ru: "мотоцикл", gender: "n" },
+          { de: "der Flughafen", ru: "аэропорт", gender: "m" },
+          { de: "der Rollstuhl", ru: "инвалидное кресло", gender: "m" },
+          { de: "der Bus", ru: "автобус", gender: "m", note: "mit dem Bus fahren" },
+          { de: "die U-Bahn", ru: "метро", gender: "f" },
+          { de: "die S-Bahn", ru: "городская электричка", gender: "f" },
+          { de: "das Benzin", ru: "бензин", gender: "n" },
+          { de: "der Fahrgast", ru: "пассажир (общ. транспорт)", gender: "m", note: "Fahr + Gast | Pl: die Fahrgäste" },
+        ],
+        questions: [],
+      },
+      {
+        id: "home",
+        label: "🏠 Дом · Комнаты и мебель",
+        vocab: [
+          // Общая часть (Дом/Уборка)
+          { de: "der Wasserkocher", ru: "электрический чайник", gender: "m" },
+          { de: "der Wecker", ru: "будильник", gender: "m" },
+          { de: "der Spiegel", ru: "зеркало", gender: "m" },
+          { de: "der Eimer", ru: "ведро", gender: "m" },
+          { de: "der Bodenwischer", ru: "швабра", gender: "m" },
+          { de: "das Schloss", ru: "замок", gender: "n" },
+          { de: "der Schlüssel", ru: "ключ", gender: "m" },
+          { de: "das Dach", ru: "крыша", gender: "n", note: "[дах] | Pl: die Dächer | ein Dach über dem Kopf" },
+          { de: "die Freizeit", ru: "свободное время, досуг", gender: "f" },
+          { de: "die Dehnung", ru: "стретчинг / растяжка", gender: "f" },
+          // Schlafzimmer
+          { de: "das Bett", ru: "кровать", gender: "n" },
+          { de: "der Schrank", ru: "шкаф", gender: "m" },
+          { de: "das Kissen", ru: "подушка", gender: "n" },
+          { de: "der Nachttisch", ru: "тумбочка", gender: "m" },
+          { de: "das Bild", ru: "картина / фото", gender: "n" },
+          { de: "das Regal", ru: "полка / стеллаж", gender: "n" },
+          { de: "der Blumentopf", ru: "цветочный горшок", gender: "m" },
+          { de: "die Heizung", ru: "батарея / отопление", gender: "f" },
+          { de: "die Pflanze", ru: "растение", gender: "f" },
+          { de: "der Boden", ru: "пол", gender: "m" },
+          // Arbeitszimmer
+          { de: "der Bildschirm", ru: "экран", gender: "m" },
+          { de: "der Monitor", ru: "монитор", gender: "m" },
+          { de: "die Tischlampe", ru: "настольная лампа", gender: "f" },
+          { de: "der Drucker", ru: "принтер", gender: "m" },
+          { de: "der Computer", ru: "компьютер", gender: "m" },
+          { de: "der Rechner", ru: "компьютер / ПК (разг.)", gender: "m" },
+          { de: "der Schreibtisch", ru: "письменный стол", gender: "m" },
+          { de: "der Schreibtischstuhl", ru: "рабочий стул", gender: "m" },
+          { de: "der Korb", ru: "корзина", gender: "m" },
+          { de: "die Blume", ru: "цветок (срезанный)", gender: "f", note: "↔ die Pflanze (с корнями)" },
+          { de: "die Tastatur", ru: "клавиатура", gender: "f" },
+          { de: "das Dokument", ru: "документ", gender: "n" },
+          { de: "der Teppich", ru: "ковёр", gender: "m" },
+          { de: "die Kamera", ru: "камера / фотоаппарат", gender: "f" },
+          // Keller
+          { de: "die Waschmaschine", ru: "стиральная машина", gender: "f" },
+          { de: "der Wäschetrockner", ru: "сушильная машина", gender: "m" },
+          { de: "das Waschmittel", ru: "стиральный порошок", gender: "n" },
+          { de: "der Wasserschlauch", ru: "водяной шланг", gender: "m" },
+          { de: "die Wäsche", ru: "бельё / стирка", gender: "f" },
+          { de: "das Handtuch", ru: "полотенце", gender: "n" },
+          // Wohnzimmer
+          { de: "das Sofa", ru: "диван", gender: "n" },
+          { de: "der Sessel", ru: "кресло", gender: "m" },
+          { de: "der Fernseher", ru: "телевизор", gender: "m" },
+          { de: "die Karaffe", ru: "графин / кувшин", gender: "f", note: "красивый кувшин для воды/вина" },
+          // Bad
+          { de: "die Dusche", ru: "душ", gender: "f" },
+          { de: "die Toilette", ru: "туалет", gender: "f" },
+          { de: "das Waschbecken", ru: "раковина", gender: "n" },
+          { de: "die Badewanne", ru: "ванна", gender: "f" },
+          { de: "der Wasserhahn", ru: "кран", gender: "m" },
+          { de: "die Seife", ru: "мыло", gender: "f" },
+          { de: "die Zahnbürste", ru: "зубная щётка", gender: "f" },
+          // Kinderzimmer
+          { de: "die Kommode", ru: "комод", gender: "f" },
+          { de: "das Chaos", ru: "беспорядок", gender: "n", note: "⚠ das, не der!" },
+          { de: "die Jalousie", ru: "жалюзи", gender: "f" },
+          { de: "der Rollladen", ru: "рольставни / ролета", gender: "m" },
+          // Balkon
+          { de: "der Sonnenschirm", ru: "зонт от солнца", gender: "m" },
+          // Flur
+          { de: "die Garderobe", ru: "вешалка / гардероб", gender: "f" },
+          { de: "der Schuh", ru: "ботинок / туфля", gender: "m", note: "Pl: die Schuhe" },
+          // Küche
+          { de: "der Kühlschrank", ru: "холодильник", gender: "m" },
+          { de: "die Spüle", ru: "кухонная мойка", gender: "f" },
+          { de: "die Spülmaschine", ru: "посудомоечная машина", gender: "f" },
+          { de: "der Herd", ru: "плита", gender: "m" },
+          { de: "die Arbeitsplatte", ru: "столешница", gender: "f" },
+          { de: "die Kaffeemaschine", ru: "кофемашина", gender: "f" },
+          { de: "der Backofen", ru: "духовка", gender: "m" },
+          { de: "die Pfanne", ru: "сковорода", gender: "f" },
+          { de: "das Kochbuch", ru: "кулинарная книга", gender: "n" },
+        ],
+        questions: [],
+      },
+      {
+        id: "kitchen",
+        label: "🍳 Кухня / Посуда",
+        vocab: [
+          { de: "die Kanne", ru: "кувшин / графин", gender: "f", note: "общее: Teekanne, Kaffeekanne" },
+          { de: "die Teekanne", ru: "заварочный чайник", gender: "f" },
+          { de: "die Kaffeekanne", ru: "кофейник", gender: "f" },
+          { de: "der Teller", ru: "тарелка", gender: "m" },
+          { de: "die Gabel", ru: "вилка", gender: "f" },
+          { de: "der Löffel", ru: "ложка", gender: "m" },
+          { de: "das Messer", ru: "нож", gender: "n" },
+          { de: "die Serviette", ru: "салфетка", gender: "f" },
+          { de: "das Glas", ru: "стеклянный стакан", gender: "n" },
+          { de: "das Glas (Einmachglas)", ru: "банка (для хранения)", gender: "n" },
+          { de: "die Tasse", ru: "чашка", gender: "f" },
+          { de: "der Becher", ru: "стакан / кружка", gender: "m" },
+        ],
+        questions: [],
+      },
+      {
+        id: "shop",
+        label: "🛒 Магазин / Продукты",
+        vocab: [
+          { de: "der Supermarkt", ru: "магазин", gender: "m", note: "= der Laden" },
+          { de: "die Lebensmittel", ru: "продукты", gender: "pl" },
+          { de: "die Mengen", ru: "количества / объёмы", gender: "pl" },
+          { de: "die Verpackung", ru: "упаковка", gender: "f" },
+          { de: "der Kasten", ru: "ящик", gender: "m" },
+          { de: "die Flasche", ru: "бутылка", gender: "f" },
+          { de: "die Packung", ru: "пачка", gender: "f" },
+          { de: "die Dose", ru: "консервная банка", gender: "f" },
+          { de: "der Liter", ru: "литр", gender: "m" },
+          { de: "das Pfund", ru: "фунт (500 г)", gender: "n" },
+          { de: "das Kilo", ru: "килограмм", gender: "n" },
+          { de: "das Pfand", ru: "залог за тару", gender: "n" },
+          { de: "der Müll", ru: "мусор", gender: "m" },
+          { de: "die Abteilung", ru: "отдел", gender: "f" },
+          { de: "die Fleischabteilung", ru: "мясной отдел", gender: "f" },
+          { de: "die Rechnung", ru: "счёт", gender: "f" },
+          { de: "die Speisekarte", ru: "меню", gender: "f" },
+          { de: "die Getränke", ru: "напитки", gender: "pl" },
+          { de: "die Speisen", ru: "блюда", gender: "pl" },
+        ],
+        questions: [],
+      },
+      {
+        id: "food",
+        label: "🥗 Еда и напитки",
+        vocab: [
+          { de: "das Frühstück", ru: "завтрак", gender: "n", note: "beim Frühstück" },
+          { de: "das Mittagessen", ru: "обед", gender: "n" },
+          { de: "das Croissant", ru: "круассан", gender: "n" },
+          { de: "das Pausenbrot", ru: "бутерброд на перекус", gender: "n" },
+          { de: "der Nachtisch", ru: "десерт", gender: "m" },
+          { de: "der Fisch", ru: "рыба", gender: "m" },
+          { de: "das Brot", ru: "хлеб", gender: "n" },
+          { de: "das Brötchen", ru: "булочка", gender: "n" },
+          { de: "das Fleisch", ru: "мясо", gender: "n" },
+          { de: "die Wurst", ru: "колбаса", gender: "f" },
+          { de: "der Käse", ru: "сыр", gender: "m" },
+          { de: "der Reis", ru: "рис", gender: "m" },
+          { de: "die Spaghetti", ru: "спагетти", gender: "pl" },
+          { de: "das Olivenöl", ru: "оливковое масло", gender: "n" },
+          { de: "das Müsli", ru: "мюсли", gender: "n" },
+          { de: "die Milch", ru: "молоко", gender: "f" },
+          { de: "das Ei", ru: "яйцо", gender: "n" },
+          { de: "der Pfeffer", ru: "перец", gender: "m" },
+          { de: "der Knoblauch", ru: "чеснок", gender: "m" },
+          { de: "das Obst", ru: "фрукты (общ.)", gender: "n" },
+          { de: "das Gemüse", ru: "овощи (общ.)", gender: "n" },
+          { de: "die Tomate", ru: "помидор", gender: "f" },
+          { de: "die Zwiebel", ru: "лук", gender: "f" },
+          { de: "die Karotte", ru: "морковь", gender: "f" },
+          { de: "der Salat", ru: "салат / салатный лист", gender: "m" },
+          { de: "die Kartoffel", ru: "картофель", gender: "f" },
+          { de: "die Paprika", ru: "перец болгарский", gender: "f" },
+          { de: "der Pilz", ru: "гриб", gender: "m" },
+          { de: "die Banane", ru: "банан", gender: "f" },
+          { de: "die Orange", ru: "апельсин", gender: "f" },
+          { de: "der Apfel", ru: "яблоко", gender: "m" },
+          { de: "die Kiwi", ru: "киви", gender: "f" },
+          { de: "der Saft", ru: "сок", gender: "m" },
+          { de: "das Wasser", ru: "вода", gender: "n" },
+          { de: "der Tee", ru: "чай", gender: "m" },
+          { de: "der Kaffee", ru: "кофе", gender: "m" },
+          { de: "der Espresso", ru: "эспрессо", gender: "m" },
+          { de: "der Cappuccino", ru: "капучино", gender: "m" },
+          { de: "die Cola", ru: "кола", gender: "f" },
+          { de: "die Limo", ru: "лимонад", gender: "f" },
+          { de: "das Eis", ru: "мороженое / лёд", gender: "n" },
+          { de: "der Kuchen", ru: "пирог, торт", gender: "m" },
+          { de: "die Brezel", ru: "крендель-брецель", gender: "f" },
+        ],
+        questions: [],
+      },
+      {
+        id: "rooms",
+        label: "🏙 Помещения / Город",
+        vocab: [
+          { de: "der Aufzug", ru: "лифт", gender: "m", note: "Pl: die Aufzüge | = der Fahrstuhl" },
+          { de: "der Fahrstuhl", ru: "лифт (разг.)", gender: "m", note: "= der Aufzug" },
+          { de: "der Eingang", ru: "вход", gender: "m", note: "ein + Gang | Pl: die Eingänge | ↔ der Ausgang" },
+          { de: "der Ausgang", ru: "выход", gender: "m", note: "aus + Gang | ↔ der Eingang" },
+          { de: "die Hauptstadt", ru: "столица", gender: "f" },
+          { de: "die WG", ru: "совместная квартира", gender: "f", note: "die Wohngemeinschaft" },
+          { de: "die Nähe", ru: "близость", gender: "f", note: "in der Nähe — поблизости" },
+          { de: "der Hof", ru: "двор", gender: "m", note: "im Hof — во дворе" },
+          { de: "das Zimmer", ru: "комната", gender: "n", note: "≠ die Wohnung (вся квартира)" },
+          { de: "die Miete", ru: "арендная плата", gender: "f" },
+          { de: "die Wohnfläche", ru: "жилая площадь", gender: "f" },
+          { de: "die Etage", ru: "этаж", gender: "f", note: "= der Stock" },
+          { de: "der Garten", ru: "сад / двор", gender: "m", note: "Pl: die Gärten" },
+          { de: "die Terrasse", ru: "терраса", gender: "f" },
+          { de: "die Garage", ru: "гараж", gender: "f" },
+          { de: "der Keller", ru: "подвал", gender: "m" },
+          { de: "die Kaution", ru: "залог за квартиру", gender: "f", note: "1–3 месяца аренды" },
+          { de: "die Erlaubnis", ru: "разрешение", gender: "f", note: "↔ das Verbot" },
+          { de: "das Verbot", ru: "запрет", gender: "n" },
+          { de: "das Dachgeschoss", ru: "мансарда / верхний этаж", gender: "n" },
+          { de: "der N. Stock", ru: "этаж (1., 2., 3.)", gender: "m", note: "der 1. Stock = 1 этаж выше Erdgeschoss" },
+          { de: "das Erdgeschoss", ru: "первый этаж / партер", gender: "n", note: "⚠ наземный этаж, не 1. Stock!" },
+          { de: "das Untergeschoss", ru: "подвал / цокольный этаж", gender: "n" },
+          { de: "das Schlafzimmer", ru: "спальня", gender: "n" },
+          { de: "der Arbeitsplatz", ru: "рабочее место", gender: "m" },
+          { de: "die Werkstatt", ru: "мастерская", gender: "f" },
+          { de: "die Wohnung", ru: "квартира", gender: "f" },
+          { de: "die Küche", ru: "кухня", gender: "f" },
+          { de: "das Büro", ru: "офис", gender: "n" },
+          { de: "die Firma", ru: "фирма", gender: "f" },
+          { de: "die Schule", ru: "школа", gender: "f" },
+          { de: "der Bahnhof", ru: "вокзал", gender: "m" },
+          { de: "das Rathaus", ru: "ратуша", gender: "n" },
+          { de: "der Hafen", ru: "порт", gender: "m" },
+          { de: "der Marktplatz", ru: "рыночная площадь", gender: "m" },
+          { de: "die Brücke", ru: "мост", gender: "f" },
+          { de: "der Turm", ru: "башня", gender: "m" },
+          { de: "der Parkplatz", ru: "парковка", gender: "m" },
+          { de: "das Kino", ru: "кинотеатр", gender: "n", note: "ins Kino gehen" },
+          { de: "das Homeoffice", ru: "удалённая работа", gender: "n" },
+        ],
+        questions: [],
+      },
+      {
+        id: "clothing",
+        label: "👜 Одежда / Аксессуары",
+        vocab: [
+          { de: "die Kleidung", ru: "одежда (общ.)", gender: "f" },
+          { de: "die Jacke", ru: "куртка", gender: "f" },
+          { de: "die Brille", ru: "очки", gender: "f" },
+          { de: "der Rucksack", ru: "рюкзак", gender: "m" },
+          { de: "die Tasche", ru: "сумка", gender: "f" },
+          { de: "der Koffer", ru: "чемодан", gender: "m" },
+          { de: "das Geld", ru: "деньги", gender: "n" },
+          { de: "der Radiergummi", ru: "ластик", gender: "m" },
+        ],
+        questions: [],
+      },
+      {
+        id: "office",
+        label: "📚 Канцелярия / Учёба",
+        vocab: [
+          { de: "die Prüfung", ru: "экзамен, тест", gender: "f", note: "Ich habe morgen eine Prüfung" },
+          { de: "der Elternabend", ru: "родительское собрание", gender: "m" },
+          { de: "der Schüler", ru: "ученик", gender: "m" },
+          { de: "der Kindergarten", ru: "детский сад", gender: "m" },
+          { de: "das Heft", ru: "тетрадь", gender: "n" },
+          { de: "das Notizbuch", ru: "блокнот", gender: "n" },
+          { de: "das Buch", ru: "книга", gender: "n" },
+          { de: "der Stift", ru: "ручка", gender: "m", note: "= der Kuli" },
+          { de: "der Bleistift", ru: "карандаш", gender: "m" },
+          { de: "der Spitzer", ru: "точилка", gender: "m" },
+          { de: "das Federmäppchen", ru: "пенал", gender: "n" },
+          { de: "das Lineal", ru: "линейка", gender: "n" },
+          { de: "die Schere", ru: "ножницы", gender: "f" },
+          { de: "der Stuhl", ru: "стул", gender: "m" },
+          { de: "der Tisch", ru: "стол", gender: "m" },
+          { de: "die Lampe", ru: "лампа", gender: "f" },
+          { de: "das Fenster", ru: "окно", gender: "n" },
+          { de: "die Tür", ru: "дверь", gender: "f" },
+          { de: "die Tafel", ru: "доска", gender: "f" },
+          { de: "das Whiteboard", ru: "белая доска", gender: "n" },
+          { de: "die Maus", ru: "мышь (комп.)", gender: "f" },
+          { de: "der Ball", ru: "мяч", gender: "m" },
+          { de: "der Unterricht", ru: "урок / занятие", gender: "m", note: "Ich habe Unterricht" },
+          { de: "die Hausaufgabe", ru: "домашнее задание", gender: "f", note: "Pl: die Hausaufgaben" },
+          { de: "der Lehrplan", ru: "учебный план", gender: "m" },
+          { de: "das Kursfest", ru: "праздник курса", gender: "n" },
+          { de: "die Stunde", ru: "час / урок", gender: "f" },
+          { de: "die Einweisung", ru: "инструктаж", gender: "f" },
+          { de: "die Zusatzbelehrung", ru: "доп. инструктаж", gender: "f" },
+          { de: "die Fehlzeiten", ru: "пропуски (отсутствие)", gender: "pl" },
+        ],
+        questions: [],
+      },
+      {
+        id: "comm",
+        label: "💬 Общение / Документы",
+        vocab: [
+          { de: "der Anhang", ru: "вложение / приложение", gender: "m", note: "im Anhang — во вложении" },
+          { de: "die Nutzung", ru: "использование", gender: "f", note: "от nutzen | Offline-Nutzung" },
+          { de: "der Zugriff", ru: "доступ", gender: "m", note: "Zugriff auf das Internet" },
+          { de: "der Besitzer", ru: "владелец", gender: "m", note: "f: die Besitzerin" },
+          { de: "die Beziehungen", ru: "связи, знакомства", gender: "pl", note: "разг. \"Vitamin B\"" },
+          { de: "das Glück", ru: "счастье, удача", gender: "n", note: "Viel Glück!" },
+          { de: "der Spaß", ru: "веселье, удовольствие", gender: "m", note: "Viel Spaß!" },
+          { de: "der Urlaub", ru: "отпуск, каникулы", gender: "m", note: "im Urlaub" },
+          { de: "die Leitung", ru: "руководство; линия", gender: "f", note: "die Internetleitung" },
+          { de: "der Arztbesuch", ru: "визит к врачу", gender: "m" },
+          { de: "die Alternative", ru: "альтернатива", gender: "f" },
+          { de: "die Chance", ru: "шанс", gender: "f" },
+          { de: "der Schatz", ru: "сокровище / дорогой", gender: "m" },
+          { de: "die Verbindung", ru: "связь, соединение", gender: "f" },
+          { de: "das Gespräch", ru: "разговор", gender: "n" },
+          { de: "die Videokonferenz", ru: "видеоконференция", gender: "f" },
+          { de: "die Anmeldung", ru: "регистрация", gender: "f" },
+          { de: "die Begrüßung", ru: "приветствие", gender: "f" },
+          { de: "die Verabschiedung", ru: "прощание", gender: "f" },
+          { de: "die Antwort", ru: "ответ", gender: "f" },
+          { de: "die Nachrichten", ru: "новости / сообщения", gender: "pl" },
+          { de: "das Rauchverbot", ru: "запрет на курение", gender: "n" },
+          { de: "das Rauchen", ru: "курение", gender: "n" },
+          { de: "der Notfall", ru: "чрезвычайная ситуация", gender: "m" },
+          { de: "das Feuer", ru: "пожар / огонь", gender: "n" },
+          { de: "die Formalität", ru: "формальность", gender: "f" },
+          { de: "das Formular", ru: "бланк", gender: "n" },
+          { de: "die Integration", ru: "интеграция", gender: "f" },
+          { de: "der Kollege", ru: "коллега (м)", gender: "m", note: "f: die Kollegin" },
+          { de: "der Nachbar", ru: "сосед", gender: "m", note: "f: die Nachbarin" },
+        ],
+        questions: [],
+      },
+      {
+        id: "time",
+        label: "⏰ Время (часы)",
+        vocab: [
+          { de: "die Dauer", ru: "длительность", gender: "f", note: "от dauern | прил.: dauerhaft" },
+          { de: "die Zeit", ru: "время", gender: "f", note: "Ich habe Zeit / keine Zeit" },
+          { de: "die Uhr", ru: "часы (в общем)", gender: "f" },
+          { de: "die Wanduhr", ru: "настенные часы", gender: "f" },
+          { de: "die Armbanduhr", ru: "наручные часы", gender: "f" },
+          { de: "der Zeiger", ru: "стрелка (часов)", gender: "m" },
+          { de: "der Minutenzeiger", ru: "минутная стрелка", gender: "m" },
+          { de: "der Stundenzeiger", ru: "часовая стрелка", gender: "m" },
+        ],
+        questions: [],
+      },
+      {
+        id: "misc",
+        label: "📦 Разное",
+        vocab: [
+          { de: "das Leben", ru: "жизнь", gender: "n" },
+          { de: "die Arbeit", ru: "работа", gender: "f", note: "bei der Arbeit" },
+          { de: "die Hilfe", ru: "помощь", gender: "f", note: "Hilfe!" },
+          { de: "das Ziel", ru: "цель", gender: "n" },
+          { de: "die Bedienung", ru: "обслуживание / сервис", gender: "f", note: "= der Service" },
+          { de: "die Decke", ru: "потолок / одеяло", gender: "f", note: "два значения — контекст важен" },
+          { de: "die Steuer", ru: "налог", gender: "f", note: "Pl: die Steuern" },
+          { de: "das Wetter", ru: "погода", gender: "n" },
+          { de: "die Laune", ru: "настроение", gender: "f", note: "gute/schlechte Laune" },
+          { de: "der Stress", ru: "стресс", gender: "m", note: "Ich habe Stress" },
+          { de: "das Problem", ru: "проблема", gender: "n" },
+          { de: "der Gast", ru: "гость", gender: "m" },
+          { de: "die Grenze", ru: "граница / предел", gender: "f", note: "[грэнцэ] | Pl: die Grenzen" },
+        ],
+        questions: [
+          { level: 2, type: "tiles", q: "Составь: «Холодильник на кухне.»",
+            words: ["Der", "Kühlschrank", "ist", "in", "der", "Küche."],
+            explain: "Wo? + Dat. in der Küche (f, Dat)." },
+          { level: 2, type: "tiles", q: "Составь: «У меня есть собака.»",
+            words: ["Ich", "habe", "einen", "Hund."],
+            explain: "haben + Akk. der Hund (m) → einen Hund." },
+          { level: 3, type: "fill", q: "Какой артикль? \"___ Küche\" (кухня)", hint: "женский род",
+            ans: "die",
+            explain: "die Küche (f)." },
+          { level: 3, type: "fill", q: "Какой артикль? \"___ Auto\" (машина)", hint: "средний род",
+            ans: "das",
+            explain: "das Auto (n)." },
+          { level: 3, type: "fill", q: "Какой артикль? \"___ Hund\" (собака)", hint: "мужской род",
+            ans: "der",
+            explain: "der Hund (m)." },
+        ],
+      },
+    ],
+  },
+
+  // ─────────────────────────────────────────────────────────────
+  // 🎨 ПРИЛАГАТЕЛЬНЫЕ
+  // ─────────────────────────────────────────────────────────────
+  {
+    id: "adj",
+    label: "🎨 Прилагательные",
+    color: "#e91e63",
+    desc: "Цвета, описания, эмоции",
+    vocab: [
+      // Цвета
+      { de: "rot", ru: "красный" },
+      { de: "schwarz", ru: "чёрный" },
+      { de: "weiß", ru: "белый" },
+      { de: "grau", ru: "серый" },
+      { de: "braun", ru: "коричневый / карий", note: "о глазах = карий" },
+      { de: "rosa", ru: "розовый" },
+      { de: "gelb", ru: "жёлтый" },
+      { de: "orange", ru: "оранжевый" },
+      { de: "lila", ru: "фиолетовый" },
+      { de: "grün", ru: "зелёный" },
+      { de: "blau", ru: "синий / голубой" },
+      // Описание
+      { de: "passend", ru: "подходящий", note: "от passen" },
+      { de: "dauerhaft", ru: "постоянный, долговременный", note: "от Dauer" },
+      { de: "groß", ru: "большой", note: "↔ klein" },
+      { de: "klein", ru: "маленький", note: "↔ groß" },
+      { de: "alt", ru: "старый", note: "↔ neu | пожилой" },
+      { de: "neu", ru: "новый", note: "↔ alt" },
+      { de: "hell", ru: "светлый, яркий", note: "↔ dunkel" },
+      { de: "dunkel", ru: "тёмный", note: "↔ hell" },
+      { de: "kalt", ru: "холодный / холодно" },
+      { de: "laut", ru: "громкий, шумный", note: "↔ ruhig" },
+      { de: "ruhig", ru: "спокойный, тихий", note: "↔ laut" },
+      { de: "hoch", ru: "высокий", note: "↔ niedrig | в сравн.: höher" },
+      { de: "scharf", ru: "острый / резкий", note: "о еде" },
+      { de: "süß", ru: "сладкий / милый" },
+      { de: "leicht", ru: "лёгкий", note: "↔ schwer; простой" },
+      { de: "schwer", ru: "тяжёлый", note: "↔ leicht; сложный" },
+      { de: "modern", ru: "современный" },
+      { de: "offen", ru: "открытый", note: "↔ geschlossen" },
+      { de: "geschlossen", ru: "закрытый" },
+      { de: "frei", ru: "свободный", note: "↔ besetzt" },
+      { de: "besetzt", ru: "занятый" },
+      { de: "kaputt", ru: "сломанный" },
+      { de: "schön", ru: "красивый, прекрасный", note: "⚠ ≠ schon!" },
+      // Эмоции
+      { de: "lustig", ru: "смешной, весёлый" },
+      { de: "stressig", ru: "стрессовый" },
+      { de: "freundlich", ru: "дружелюбный" },
+      { de: "nervös", ru: "нервный" },
+      { de: "fit", ru: "в форме, бодрый" },
+      { de: "allein", ru: "один, в одиночестве" },
+      { de: "anstrengend", ru: "утомительный" },
+      { de: "einfach", ru: "простой, лёгкий" },
+      { de: "langweilig", ru: "скучный", note: "↔ interessant" },
+      { de: "schrecklich", ru: "ужасный" },
+      { de: "krank", ru: "больной", note: "↔ gesund" },
+      { de: "gesund", ru: "здоровый" },
+      { de: "möglich", ru: "возможный" },
+      { de: "notwendig", ru: "необходимый" },
+      { de: "wichtig", ru: "важный" },
+      { de: "pünktlich", ru: "пунктуальный, вовремя" },
+      { de: "fertig", ru: "готовый, законченный" },
+      // Цена
+      { de: "teuer", ru: "дорогой", note: "↔ billig" },
+      { de: "billig", ru: "дешёвый", note: "может = «некачественный»" },
+      { de: "lecker", ru: "вкусный" },
+      { de: "köstlich", ru: "восхитительно вкусный" },
+      { de: "toll", ru: "здорово" },
+      // Статус
+      { de: "verheiratet", ru: "женат / замужем" },
+      { de: "geschieden", ru: "разведён / разведена" },
+      { de: "verliebt", ru: "влюблён / влюблена" },
+      { de: "Single", ru: "одинок" },
+      // Состояния / оценки
+      { de: "schade", ru: "жаль", note: "Das ist schade! | Schade, dass..." },
+      { de: "günstig", ru: "выгодный / недорогой / удобный", note: "günstiger Preis | günstige Gelegenheit | нейтральнее чем billig" },
+      { de: "nächst- / nächste", ru: "следующий / ближайший", note: "превосх. от nah | склоняется: nächste Woche, nächsten Montag" },
+    ],
+    questions: [
+      { level: 2, type: "tiles", q: "Составь: «Квартира маленькая, но красивая.»",
+        words: ["Die", "Wohnung", "ist", "klein,", "aber", "schön."],
+        explain: "После sein — без окончания. aber = но." },
+      { level: 2, type: "tiles", q: "Составь: «У меня большая собака.»",
+        words: ["Ich", "habe", "einen", "großen", "Hund."],
+        explain: "m, Akk → einen + großen (m Akk → -en)." },
+      { level: 3, type: "fill", q: "Антоним к «groß»?", hint: "противоположное",
+        ans: "klein",
+        explain: "groß ↔ klein." },
+      { level: 3, type: "fill", q: "Антоним к «teuer»?", hint: "↔ дорогой",
+        ans: "billig", altAns: ["günstig"],
+        explain: "teuer ↔ billig / günstig." },
+      { level: 3, type: "fill", q: "Окончание: «ein groß___ Haus» (n, Nom)", hint: "n с ein → -es",
+        ans: "es",
+        explain: "ein großes Haus (n)." },
+      { level: 3, type: "fill", q: "Окончание: «die schön___ Frau» (f, Nom)", hint: "f с der → -e",
+        ans: "e",
+        explain: "die schöne Frau." },
+      { level: 1, type: "mc", q: "schön или schon — «красивый»?",
+        opts: ["schon", "schön", "оба", "ни одно"], ans: 1,
+        explain: "schön = красивый. schon = уже (наречие)." },
+    ],
+  },
+
+  // ─────────────────────────────────────────────────────────────
+  // 🔄 НАРЕЧИЯ
+  // ─────────────────────────────────────────────────────────────
+  {
+    id: "adv",
+    label: "🔄 Наречия",
+    color: "#f39c12",
+    desc: "Время, место, степень, частицы",
+    vocab: [
+      // Время
+      { de: "jetzt", ru: "сейчас" },
+      { de: "heute", ru: "сегодня" },
+      { de: "gestern", ru: "вчера" },
+      { de: "morgen", ru: "завтра", note: "⚠ ≠ der Morgen (утро)!" },
+      { de: "früh", ru: "рано" },
+      { de: "später", ru: "позже", note: "Bis später!" },
+      { de: "gleich", ru: "сейчас, тут же", note: "Bis gleich!" },
+      { de: "zuerst", ru: "сначала" },
+      { de: "dann", ru: "затем, потом" },
+      { de: "endlich", ru: "наконец-то" },
+      { de: "schon", ru: "уже", note: "⚠ ≠ schön!" },
+      { de: "immer", ru: "всегда" },
+      { de: "oft", ru: "часто" },
+      { de: "manchmal", ru: "иногда" },
+      { de: "selten", ru: "редко" },
+      { de: "nie", ru: "никогда" },
+      // Место
+      { de: "da", ru: "здесь / там / дома" },
+      { de: "links", ru: "налево" },
+      { de: "rechts", ru: "направо" },
+      { de: "oben", ru: "вверху" },
+      { de: "unten", ru: "внизу" },
+      { de: "vor", ru: "перед" },
+      { de: "unterwegs", ru: "в пути" },
+      // Степень
+      { de: "sehr", ru: "очень" },
+      { de: "ein bisschen", ru: "немного" },
+      { de: "wenig", ru: "мало", note: "↔ viel" },
+      { de: "mehr", ru: "больше, ещё" },
+      { de: "nicht mehr", ru: "больше не, уже не" },
+      { de: "zu", ru: "слишком" },
+      { de: "nur", ru: "только" },
+      { de: "besonders", ru: "особенно" },
+      // Согласие
+      { de: "gleichfalls", ru: "взаимно, также", note: "Danke gleichfalls!" },
+      { de: "ebenfalls", ru: "также, тоже" },
+      { de: "stimmt", ru: "верно, правильно" },
+      { de: "egal", ru: "всё равно, неважно" },
+      // Самочувствие
+      { de: "gut", ru: "хорошо" },
+      { de: "schlecht", ru: "плохо" },
+      // Прочие частицы
+      { de: "dabei", ru: "при этом / рядом" },
+      { de: "leider", ru: "к сожалению" },
+      { de: "vielleicht", ru: "может быть" },
+      { de: "gerne", ru: "охотно, с удовольствием" },
+      { de: "langsam", ru: "медленно", note: "↔ schnell" },
+      { de: "aber", ru: "но, однако" },
+      { de: "doch", ru: "же / ведь / всё-таки" },
+      { de: "Halt", ru: "типа / ну / просто", note: "Das ist halt so" },
+    ],
+    questions: [
+      { level: 1, type: "mc", q: "Шкала частоты: что чаще всего?",
+        opts: ["selten", "manchmal", "oft", "immer"], ans: 3,
+        explain: "immer → oft → manchmal → selten → nie." },
+      { level: 1, type: "mc", q: "morgen или der Morgen — «завтра»?",
+        opts: ["der Morgen", "morgen (со строчной)", "оба", "ни одно"], ans: 1,
+        explain: "morgen (наречие) = завтра. Morgen (с заглавной, m) = утро." },
+      { level: 2, type: "tiles", q: "Составь: «Завтра я работаю.»",
+        words: ["Morgen", "arbeite", "ich."],
+        explain: "Наречие в начале → инверсия: Verb + Subjekt. Morgen со строчной (правда, в начале предложения с заглавной — но это просто 1-я буква)." },
+      { level: 3, type: "fill", q: "Вставь: \"Bis ___!\" (До скорого)", hint: "сейчас, тут же",
+        ans: "gleich",
+        explain: "Bis gleich! — До скорого / Скоро увидимся." },
+      { level: 3, type: "fill", q: "Антоним «schnell»?", hint: "противоположное",
+        ans: "langsam",
+        explain: "schnell ↔ langsam." },
+    ],
+  },
+
+  // ─────────────────────────────────────────────────────────────
+  // 👤 МЕСТОИМЕНИЯ
+  // ─────────────────────────────────────────────────────────────
+  {
+    id: "mestoim",
+    label: "👤 Местоимения",
+    color: "#8e44ad",
+    desc: "Личные, рефлексивные, притяжательные",
+    vocab: [
+      { de: "ich", ru: "я" },
+      { de: "du", ru: "ты (неформ.)" },
+      { de: "er", ru: "он" },
+      { de: "sie", ru: "она" },
+      { de: "es", ru: "оно" },
+      { de: "wir", ru: "мы" },
+      { de: "ihr", ru: "вы (группа)" },
+      { de: "sie (Pl)", ru: "они" },
+      { de: "Sie", ru: "Вы (формально)", note: "всегда с заглавной" },
+      { de: "man", ru: "безличное «один / люди / принято»", note: "Man darf hier nicht rauchen" },
+      // Akkusativ
+      { de: "mich", ru: "меня (Akk)" },
+      { de: "dich", ru: "тебя (Akk)" },
+      { de: "ihn", ru: "его (Akk, м.)" },
+      { de: "sie", ru: "её / их (Akk)" },
+      { de: "uns", ru: "нас (Akk/Dat)" },
+      { de: "euch", ru: "вас (группа, Akk/Dat)" },
+      // Dativ
+      { de: "mir", ru: "мне (Dat)" },
+      { de: "dir", ru: "тебе (Dat)" },
+      { de: "ihm", ru: "ему / ей-ему (Dat от er/es)", note: "⚠ es в Dat → ihm, не ihr!" },
+      { de: "ihr (Dat)", ru: "ей (Dat от sie-она)" },
+      { de: "ihnen", ru: "им (Dat)" },
+      { de: "Ihnen", ru: "Вам (формально, Dat)" },
+      // Притяжательные
+      { de: "mein / meine", ru: "мой / моя", note: "m,n → mein | f, Pl → meine" },
+      { de: "dein / deine", ru: "твой / твоя" },
+      { de: "sein / seine", ru: "его" },
+      { de: "ihr / ihre", ru: "её / их" },
+      { de: "unser / unsere", ru: "наш / наша" },
+      { de: "euer / eure", ru: "ваш / ваша" },
+      { de: "Ihr / Ihre", ru: "Ваш / Ваша (формально)" },
+      // Отрицания
+      { de: "keine / keinen", ru: "отрицание существительного" },
+      { de: "nicht", ru: "отрицание действия / прил." },
+      { de: "niemand", ru: "никто" },
+    ],
+    questions: [
+      { level: 1, type: "mc", q: "Akkusativ от «ich»?",
+        opts: ["mir", "mich", "mein", "ich"], ans: 1,
+        explain: "ich → mich (Akk) / mir (Dat)." },
+      { level: 1, type: "mc", q: "Dativ от «du»?",
+        opts: ["dich", "dein", "dir", "du"], ans: 2,
+        explain: "du → dich (Akk) / dir (Dat)." },
+      { level: 1, type: "mc", q: "Dativ от «er»?",
+        opts: ["ihn", "ihm", "ihr", "ihnen"], ans: 1,
+        explain: "er → ihn (Akk) / ihm (Dat)." },
+      { level: 1, type: "mc", q: "Dativ от «es»?",
+        opts: ["es", "ihm", "ihr", "ihnen"], ans: 1,
+        explain: "⚠ es в Dat → ihm, не ihr! Ловушка." },
+      { level: 1, type: "mc", q: "Dativ от «sie» (она)?",
+        opts: ["sie", "ihn", "ihm", "ihr"], ans: 3,
+        explain: "sie (она) → sie (Akk) / ihr (Dat)." },
+      { level: 1, type: "mc", q: "«mein» или «meine» с «Wohnung» (f)?",
+        opts: ["mein", "meine", "meinen", "meinem"], ans: 1,
+        explain: "f → +e: meine Wohnung." },
+      { level: 1, type: "mc", q: "«mein» или «meine» с «Buch» (n)?",
+        opts: ["mein", "meine", "meinen", "meinem"], ans: 0,
+        explain: "n → без окончания: mein Buch." },
+      { level: 3, type: "fill", q: "Вставь: \"Ich wasche ___\" (моюсь)", hint: "себя, Akk",
+        ans: "mich",
+        explain: "ich → mich. Akkusativ — действие на себя." },
+      { level: 3, type: "fill", q: "Вставь: \"Ich wasche ___ die Hände\" (себе руки)", hint: "себе, Dat",
+        ans: "mir",
+        explain: "ich → mir. Dativ — кому?" },
+      { level: 3, type: "fill", q: "Возвратное для er/sie/es в Akk?", hint: "всегда одно слово",
+        ans: "sich",
+        explain: "Er/sie/es и sie/Sie → всегда sich." },
+    ],
+  },
+
+  // ─────────────────────────────────────────────────────────────
+  // 📋 ТЕРМИНЫ
+  // ─────────────────────────────────────────────────────────────
+  {
+    id: "termin",
+    label: "📋 Термины",
+    color: "#34495e",
+    desc: "Грамматика, предлоги, W-Fragen",
+    vocab: [
+      { de: "der Aussagesatz", ru: "утвердительное предложение" },
+      { de: "der Fragesatz", ru: "вопросительное предложение" },
+      { de: "das Präteritum", ru: "простое прошедшее" },
+      { de: "das Präsens", ru: "настоящее время" },
+      { de: "das Subjekt", ru: "подлежащее" },
+      { de: "das Objekt", ru: "дополнение" },
+      { de: "der Nominativ", ru: "именительный (Wer? Was?)" },
+      { de: "der Akkusativ", ru: "винительный (Wen? Was?)" },
+      { de: "der Dativ", ru: "дательный (Wem?)" },
+      { de: "der Singular", ru: "ед. число (Sg)" },
+      { de: "der Plural", ru: "мн. число (Pl)" },
+      { de: "regelmäßig", ru: "правильный (глагол)" },
+      { de: "unregelmäßig", ru: "неправильный (глагол)" },
+      { de: "das Partizip II", ru: "причастие прош. вр." },
+      { de: "die W-Fragen", ru: "вопросительные слова" },
+      { de: "die trennbaren Verben", ru: "глаголы с отделяемой приставкой" },
+      // Предлоги
+      { de: "mit", ru: "с (Dat)", note: "mit dem Freund" },
+      { de: "bei", ru: "у / около (Dat)", note: "bei der Arbeit" },
+      { de: "beim", ru: "bei + dem", note: "beim Friseur" },
+      // W-Fragen
+      { de: "Wer?", ru: "Кто?" },
+      { de: "Was?", ru: "Что?" },
+      { de: "Wo?", ru: "Где?", note: "статика" },
+      { de: "Woher?", ru: "Откуда?" },
+      { de: "Wohin?", ru: "Куда?", note: "направление" },
+      { de: "Wann?", ru: "Когда?" },
+      { de: "Warum?", ru: "Почему?" },
+      { de: "Wie?", ru: "Как?" },
+      { de: "Wie viel?", ru: "Сколько?" },
+    ],
+    questions: [
+      { level: 1, type: "mc", q: "Какой вопрос для Akkusativ?",
+        opts: ["Wer?", "Wem?", "Wen?", "Wo?"], ans: 2,
+        explain: "Akk → Wen? Was?" },
+      { level: 1, type: "mc", q: "Какой вопрос для Dativ?",
+        opts: ["Wer?", "Wem?", "Wen?", "Wo?"], ans: 1,
+        explain: "Dat → Wem?" },
+      { level: 1, type: "mc", q: "«Wohin?» спрашивает о...",
+        opts: ["месте (где?)", "направлении (куда?)", "источнике (откуда?)", "времени"], ans: 1,
+        explain: "Wohin? = куда? (направление, + Akk)." },
+      { level: 1, type: "mc", q: "«Wo?» использует какой падеж с предлогом?",
+        opts: ["Nom", "Akk", "Dat", "никакой"], ans: 2,
+        explain: "Wo? — статика → Dativ. Im, in der и т.д." },
+    ],
+  },
+
+  // ─────────────────────────────────────────────────────────────
+  // 📐 ПРАВИЛА
+  // ─────────────────────────────────────────────────────────────
+  {
+    id: "rules",
+    label: "📐 Правила",
+    color: "#7c5cbf",
+    desc: "Грамматика и конструкции",
+    vocab: [
+      // Здесь vocab используется как «карточки правил»
+      { de: "Possessivartikel: m/n → без окончания", ru: "mein Kuli, mein Buch" },
+      { de: "Possessivartikel: f/Pl → +e", ru: "meine Wohnung, meine Eltern" },
+      { de: "Man darf nicht + Verb", ru: "Запрет действия. Man darf nicht grillen." },
+      { de: "Man darf kein + Nomen", ru: "Запрет существительного. Man darf keine Haustiere haben." },
+      { de: "sein — после: профессии, прилагательные, нац.", ru: "Ich bin Arzt. Er ist müde." },
+      { de: "haben — после: существительные (у меня есть)", ru: "Ich habe Hunger." },
+      { de: "Präteritum sein", ru: "war/warst/war/waren/wart/waren" },
+      { de: "Präteritum haben", ru: "hatte/hattest/hatte/hatten/hattet/hatten" },
+      { de: "wissen — знать факт", ru: "Ich weiß, wo er wohnt." },
+      { de: "kennen — знать человека", ru: "Ich kenne ihn gut." },
+      { de: "Modalverb: 2-я поз. + Infinitiv в конец", ru: "Ich kann Deutsch lernen." },
+      { de: "Regelmäßig: -e/-st/-t/-en/-t/-en", ru: "machen: mache, machst, macht..." },
+      { de: "Nominativ — кто/что (подлежащее)", ru: "der/die/das/die | ein/eine/ein" },
+      { de: "Akkusativ — кого/что (m: der→den, ein→einen)", ru: "den/die/das/die | einen/eine/ein" },
+      { de: "Dativ — кому (m,n: dem; f: der; Pl: den)", ru: "dem/der/dem/den | einem/einer/einem" },
+      { de: "Partizip II: ge-...-t", ru: "machen → gemacht" },
+      { de: "Partizip II: НЕ ge- если be-/er-/ver- или -ieren", ru: "besuchen→besucht, organisieren→organisiert" },
+      { de: "Отделяемая приставка → в конец", ru: "aufstehen: Ich stehe auf." },
+      { de: "Verb + gern = любить (делать)", ru: "Ich koche gern." },
+      { de: "Wohin? + in + Akkusativ", ru: "ins Kino, in den Park, in die Kneipe" },
+      { de: "sollen vs müssen", ru: "sollen — извне (так сказали); müssen — изнутри / необходимо" },
+      { de: "Прил. перед сущ. → всегда окончание", ru: "Dat — всегда -en; Akk у m → -en; остальное -e" },
+    ],
+    questions: [
+      { level: 1, type: "mc", q: "«Ich bin ___» — что лучше подставить?",
+        opts: ["Hunger", "müde", "Auto", "Buch"], ans: 1,
+        explain: "sein + прил. → müde. haben + сущ. → Hunger." },
+      { level: 1, type: "mc", q: "Partizip II от «besuchen»?",
+        opts: ["gebesucht", "besucht", "besuchte", "besuchen"], ans: 1,
+        explain: "Глаголы с be-/er-/ver- → БЕЗ ge-." },
+      { level: 1, type: "mc", q: "Partizip II от «organisieren»?",
+        opts: ["georganisiert", "organisiert", "organisierte", "organisieren"], ans: 1,
+        explain: "Глаголы на -ieren → БЕЗ ge-." },
+      { level: 1, type: "mc", q: "Partizip II от «machen»?",
+        opts: ["machte", "gemacht", "macht", "gemächt"], ans: 1,
+        explain: "Регулярный: ge- + основа + -t." },
+      { level: 2, type: "tiles", q: "Составь: «Здесь нельзя курить.»",
+        words: ["Man", "darf", "hier", "nicht", "rauchen."],
+        explain: "Modalverb на 2-й, Infinitiv в конец. nicht — отрицание действия." },
+      { level: 2, type: "tiles", q: "Составь: «Я встаю в 7.»",
+        words: ["Ich", "stehe", "um", "7", "Uhr", "auf."],
+        explain: "aufstehen — отделяемая. auf уходит в конец." },
+      { level: 3, type: "fill", q: "Präteritum от «sein» для «ich»?", hint: "был",
+        ans: "war",
+        explain: "ich war." },
+      { level: 3, type: "fill", q: "Präteritum от «haben» для «ich»?", hint: "имел",
+        ans: "hatte",
+        explain: "ich hatte." },
+      { level: 3, type: "fill", q: "Артикль в Akk от «der Hund»?", hint: "m → меняется",
+        ans: "den",
+        explain: "der → den (только m меняется в Akk)." },
+      { level: 3, type: "fill", q: "Артикль в Dat от «die Frau»?", hint: "f, Dat",
+        ans: "der",
+        explain: "f, Dat → der. Совпадает по форме с Nom m, но это Dat f." },
+    ],
+  },
+
+  // ─────────────────────────────────────────────────────────────
+  // 💬 ФРАЗЫ
+  // ─────────────────────────────────────────────────────────────
+  {
+    id: "phrases",
+    label: "💬 Фразы",
+    color: "#27ae60",
+    desc: "Приветствия, вопросы, ресторан",
+    vocab: [
+      { de: "Freut mich!", ru: "Очень приятно!" },
+      { de: "Können wir \"du\" sagen?", ru: "Можем перейти на «ты»?" },
+      { de: "Viel Spaß!", ru: "Повеселись!" },
+      { de: "Viel Glück!", ru: "Удачи!" },
+      { de: "Leider nicht.", ru: "К сожалению, нет." },
+      { de: "Tut mir leid", ru: "Мне жаль" },
+      { de: "Guten Morgen", ru: "Доброе утро" },
+      { de: "Guten Tag", ru: "Добрый день" },
+      { de: "Guten Abend", ru: "Добрый вечер" },
+      { de: "Auf Wiedersehen", ru: "До свидания (формально)" },
+      { de: "Gesundheit!", ru: "Будьте здоровы! (после чихания)" },
+      { de: "Wie bitte?", ru: "Что? Простите?" },
+      { de: "Wiederholen Sie bitte", ru: "Повторите пожалуйста" },
+      { de: "Was bedeutet das?", ru: "Что это означает?" },
+      { de: "Wie geht es Ihnen?", ru: "Как вы (форм.)?" },
+      { de: "Wie geht es dir?", ru: "Как ты?" },
+      { de: "Mir geht es gut", ru: "Мне хорошо" },
+      { de: "Ich habe Hunger", ru: "Я голоден", note: "haben + Hunger" },
+      { de: "Ich habe Durst", ru: "Я хочу пить" },
+      { de: "Frei / Besetzt", ru: "Свободно / Занято" },
+      { de: "Einen Augenblick, bitte", ru: "Одну минуту" },
+      { de: "Ich hätte gern …", ru: "Я бы хотел … (вежливый заказ)" },
+      { de: "Die Rechnung, bitte", ru: "Счёт, пожалуйста" },
+      { de: "Das schmeckt lecker!", ru: "Это очень вкусно!" },
+      { de: "Zahlen bitte", ru: "Счёт, пожалуйста" },
+      { de: "Sonst noch etwas?", ru: "Что-нибудь ещё?" },
+      { de: "Es gibt …", ru: "Есть … / Имеется …" },
+    ],
+    questions: [
+      { level: 1, type: "mc", q: "«Wie geht es Ihnen?» — как ответить хорошо?",
+        opts: ["Sehr gut, danke", "Auf Wiedersehen", "Gesundheit", "Wie bitte?"], ans: 0,
+        explain: "Sehr gut, danke. Und Ihnen?" },
+      { level: 1, type: "mc", q: "Что значит «Tut mir leid»?",
+        opts: ["Удачи!", "Мне жаль", "Очень приятно", "Что-нибудь ещё?"], ans: 1,
+        explain: "Tut mir leid — мне жаль / прости." },
+      { level: 1, type: "mc", q: "Как сказать «Я голоден»?",
+        opts: ["Ich bin Hunger", "Ich habe Hunger", "Mir ist Hunger", "Ich Hunger habe"], ans: 1,
+        explain: "haben + Hunger (не sein!)." },
+      { level: 2, type: "tiles", q: "Составь: «Я бы хотел кофе.»",
+        words: ["Ich", "hätte", "gern", "einen", "Kaffee."],
+        explain: "hätte gern — вежливый заказ. der Kaffee (m) → einen." },
+      { level: 2, type: "tiles", q: "Составь: «Счёт, пожалуйста.»",
+        words: ["Die", "Rechnung,", "bitte."],
+        explain: "Die Rechnung, bitte. = Zahlen bitte." },
+    ],
+  },
+];
+
+// ═══════════════════════════════════════════════════════════════
+// СОБИРАЕМ БЛОКИ С УЧЁТОМ ДУБЛИРОВАНИЯ «НОВЫЕ» В ТЕМАТИЧЕСКИЕ
+// ═══════════════════════════════════════════════════════════════
+// Формат поля `also` в neu.vocab:
+//   "blockId"           — блок без подкатегорий: добавляем в общий vocab блока
+//   "blockId:subId"     — блок с подкатегориями: добавляем в указанный подблок
+const BLOCKS = (() => {
+  const neu = RAW_BLOCKS.find((b) => b.id === "neu");
+  const neuVocab = neu ? neu.vocab : [];
+
+  return RAW_BLOCKS.map((b) => {
+    if (b.id === "neu") return b;
+
+    if (b.subblocks) {
+      // Блок с подкатегориями
+      const newSubblocks = b.subblocks.map((sb) => {
+        const target = `${b.id}:${sb.id}`;
+        const extras = neuVocab
+          .filter((v) => v.also && v.also.includes(target))
+          .map((v) => ({ ...v, fromNew: true }));
+        return { ...sb, vocab: [...sb.vocab, ...extras] };
+      });
+      return { ...b, subblocks: newSubblocks };
+    } else {
+      // Плоский блок
+      const extras = neuVocab
+        .filter((v) => v.also && v.also.includes(b.id))
+        .map((v) => ({ ...v, fromNew: true }));
+      return { ...b, vocab: [...b.vocab, ...extras] };
+    }
+  });
+})();
+
+// Хелперы для работы с подблоками
+function blockHasSubblocks(block) {
+  return Array.isArray(block && block.subblocks) && block.subblocks.length > 0;
+}
+function getActiveContent(block, subblock) {
+  if (!block) return null;
+  if (subblock) {
+    return {
+      vocab: subblock.vocab || [],
+      questions: subblock.questions || [],
+      label: `${block.label} · ${subblock.label}`,
+      shortLabel: subblock.label,
+      color: subblock.color || block.color,
+    };
+  }
+  return {
+    vocab: block.vocab || [],
+    questions: block.questions || [],
+    label: block.label,
+    shortLabel: block.label,
+    color: block.color,
+  };
+}
+
+// ═══════════════════════════════════════════════════════════════
+// СТИЛИ (объекты)
+// ═══════════════════════════════════════════════════════════════
+const S = {
+  page: {
+    minHeight: "100vh",
+    background: "var(--bg-body)",
+    color: "var(--text-main)",
+    fontFamily: "system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif",
+    padding: "20px 16px",
+  },
+  container: { maxWidth: 760, margin: "0 auto" },
+  card: {
+    background: "var(--bg-card)",
+    borderRadius: 14,
+    boxShadow: "var(--shadow-card)",
+    padding: "20px 22px",
+    marginBottom: 14,
+  },
+  h1: { fontSize: 24, marginBottom: 4, color: "var(--text-title)", textAlign: "center" },
+  h2: { fontSize: 20, marginBottom: 12, color: "var(--text-title)" },
+  muted: { color: "var(--text-muted)", fontSize: 13 },
+  topBar: { display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 16 },
+  themeBtn: {
+    background: "var(--bg-panel)",
+    border: "1px solid var(--border-soft)",
+    borderRadius: 8,
+    padding: "6px 12px",
+    fontSize: 16,
+    cursor: "pointer",
+    color: "var(--text-main)",
+  },
+  modeCard: {
+    background: "var(--bg-card)",
+    borderRadius: 16,
+    padding: "24px 20px",
+    cursor: "pointer",
+    boxShadow: "var(--shadow-card)",
+    textAlign: "center",
+    transition: "transform 0.15s, box-shadow 0.15s",
+    border: "2px solid transparent",
+  },
+  blockCard: {
+    background: "var(--bg-card)",
+    borderRadius: 14,
+    padding: "16px 16px",
+    cursor: "pointer",
+    boxShadow: "var(--shadow-card)",
+    transition: "transform 0.15s, box-shadow 0.15s",
+  },
+  primaryBtn: (color = "#3498db") => ({
+    background: color,
+    color: "white",
+    border: "none",
+    padding: "10px 22px",
+    borderRadius: 10,
+    cursor: "pointer",
+    fontSize: 14,
+    fontWeight: 600,
+    fontFamily: "inherit",
+  }),
+  outlineBtn: (color = "#3498db") => ({
+    background: "transparent",
+    color: color,
+    border: `2px solid ${color}`,
+    padding: "8px 18px",
+    borderRadius: 10,
+    cursor: "pointer",
+    fontSize: 14,
+    fontWeight: 600,
+    fontFamily: "inherit",
+  }),
+  input: {
+    width: "100%",
+    padding: "10px 14px",
+    fontSize: 15,
+    border: "2px solid var(--border-input)",
+    borderRadius: 10,
+    background: "var(--bg-input)",
+    color: "var(--text-main)",
+    fontFamily: "inherit",
+  },
+  badge: (kind) => {
+    const map = {
+      m: { bg: "var(--badge-m-bg)", fg: "var(--badge-m-fg)", label: "m" },
+      f: { bg: "var(--badge-f-bg)", fg: "var(--badge-f-fg)", label: "f" },
+      n: { bg: "var(--badge-n-bg)", fg: "var(--badge-n-fg)", label: "n" },
+      pl: { bg: "var(--badge-pl-bg)", fg: "var(--badge-pl-fg)", label: "Pl" },
+    };
+    const conf = map[kind];
+    if (!conf) return null;
+    return conf;
+  },
+};
+
+// ═══════════════════════════════════════════════════════════════
+// УПРАВЛЕНИЕ ТЕМОЙ (хук)
+// ═══════════════════════════════════════════════════════════════
+function useTheme() {
+  const [theme, setTheme] = useState(() => {
+    try {
+      return localStorage.getItem("trainer-theme") || "auto";
+    } catch (e) {
+      return "auto";
+    }
+  });
+  useEffect(() => {
+    document.documentElement.classList.remove("theme-auto", "theme-light", "theme-dark");
+    document.documentElement.classList.add("theme-" + theme);
+    try {
+      localStorage.setItem("trainer-theme", theme);
+    } catch (e) {}
+  }, [theme]);
+  function cycleTheme() {
+    setTheme((t) => (t === "auto" ? "light" : t === "light" ? "dark" : "auto"));
+  }
+  const icon = theme === "auto" ? "🌓" : theme === "light" ? "☀️" : "🌙";
+  return { theme, cycleTheme, icon };
+}
+
+// ═══════════════════════════════════════════════════════════════
+// КОМПОНЕНТ: ШАПКА С КНОПКОЙ ТЕМЫ
+// ═══════════════════════════════════════════════════════════════
+function TopBar({ left, right, icon, onTheme }) {
+  return (
+    <div style={S.topBar}>
+      <div>{left}</div>
+      <div style={{ display: "flex", gap: 8, alignItems: "center" }}>
+        {right}
+        <button style={S.themeBtn} onClick={onTheme} title="Переключить тему">
+          {icon}
+        </button>
+      </div>
+    </div>
+  );
+}
+
+// ═══════════════════════════════════════════════════════════════
+// КОМПОНЕНТ: КАРТОЧКА (FLIP)
+// ═══════════════════════════════════════════════════════════════
+function FlipCard({ item, flipped, onFlip, color }) {
+  const badge = item.gender ? S.badge(item.gender) : null;
+  return (
+    <div
+      onClick={onFlip}
+      style={{
+        perspective: 1000,
+        cursor: "pointer",
+        height: 280,
+        marginBottom: 14,
+      }}
+    >
+      <div className={"flip-card-inner" + (flipped ? " flipped" : "")}>
+        <div
+          className="flip-face front"
+          style={{
+            background: "var(--bg-card)",
+            border: `2px solid ${color}`,
+            boxShadow: "var(--shadow-card)",
+            textAlign: "center",
+          }}
+        >
+          <div>
+            {badge && (
+              <span
+                style={{
+                  display: "inline-block",
+                  padding: "3px 10px",
+                  borderRadius: 12,
+                  background: badge.bg,
+                  color: badge.fg,
+                  fontSize: 12,
+                  fontWeight: 700,
+                  marginBottom: 12,
+                }}
+              >
+                {badge.label}
+              </span>
+            )}
+            <div style={{ fontSize: 28, fontWeight: 700, color: "var(--text-title)", marginBottom: 8 }}>
+              {item.de}
+            </div>
+            <div style={{ fontSize: 12, color: "var(--text-muted)" }}>
+              Нажми, чтобы перевернуть
+            </div>
+          </div>
+        </div>
+        <div
+          className="flip-face back"
+          style={{
+            background: color,
+            color: "white",
+            textAlign: "center",
+          }}
+        >
+          <div>
+            <div style={{ fontSize: 24, fontWeight: 700, marginBottom: 10 }}>{item.ru}</div>
+            {item.note && (
+              <div style={{ fontSize: 13, opacity: 0.9, lineHeight: 1.5 }}>{item.note}</div>
+            )}
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+// ═══════════════════════════════════════════════════════════════
+// ГЕНЕРАЦИЯ МИНИ-ТЕСТА ПО VOCAB (для режима «Изучение»)
+// ═══════════════════════════════════════════════════════════════
+function buildVocabQuiz(vocab) {
+  // mc-вопросы: половина DE→RU, половина RU→DE
+  const items = vocab.slice();
+  const questions = [];
+  items.forEach((item, idx) => {
+    const direction = idx % 2 === 0 ? "de2ru" : "ru2de";
+    // Сгенерировать 3 неправильных ответа из других items
+    const others = items.filter((_, i) => i !== idx);
+    const wrong = shuffle(others).slice(0, 3);
+    if (direction === "de2ru") {
+      const opts = shuffle([item.ru, ...wrong.map((w) => w.ru)]);
+      const ans = opts.indexOf(item.ru);
+      questions.push({
+        type: "mc",
+        q: `Как переводится «${item.de}»?`,
+        opts,
+        ans,
+        explain: item.note || `${item.de} — ${item.ru}`,
+      });
+    } else {
+      const opts = shuffle([item.de, ...wrong.map((w) => w.de)]);
+      const ans = opts.indexOf(item.de);
+      questions.push({
+        type: "mc",
+        q: `Как по-немецки «${item.ru}»?`,
+        opts,
+        ans,
+        explain: item.note || `${item.ru} — ${item.de}`,
+      });
+    }
+  });
+  return shuffle(questions);
+}
+
+// ═══════════════════════════════════════════════════════════════
+// MAIN APP
+// ═══════════════════════════════════════════════════════════════
+function App() {
+  const { theme, cycleTheme, icon } = useTheme();
+  // phase: home | select-block | select-subblock | block-start | learn-cards | learn-test | test-quiz | results
+  const [phase, setPhase] = useState("home");
+  const [mode, setMode] = useState(null); // 'learn' | 'test'
+  const [blockId, setBlockId] = useState(null);
+  const [subblockId, setSubblockId] = useState(null);
+
+  // Состояние для изучения (карточек)
+  const [cardIdx, setCardIdx] = useState(0);
+  const [cardFlipped, setCardFlipped] = useState(false);
+  const [shuffledVocab, setShuffledVocab] = useState([]);
+
+  // Состояние для квиза (mc/tiles/fill/conj)
+  const [quizQuestions, setQuizQuestions] = useState([]);
+  const [qIdx, setQIdx] = useState(0);
+  const [answered, setAnswered] = useState(false);
+  const [isCorrect, setIsCorrect] = useState(false);
+  const [selected, setSelected] = useState(null);
+  const [userInput, setUserInput] = useState("");
+  const [score, setScore] = useState(0);
+  const [history, setHistory] = useState([]);
+  // tiles state
+  const [tilePool, setTilePool] = useState([]);
+  const [tileBuilt, setTileBuilt] = useState([]);
+  // conj state
+  const [conjInputs, setConjInputs] = useState([]);
+  const [conjResults, setConjResults] = useState([]);
+
+  const activeBlock = blockId ? BLOCKS.find((b) => b.id === blockId) : null;
+  const activeSubblock =
+    activeBlock && subblockId && activeBlock.subblocks
+      ? activeBlock.subblocks.find((sb) => sb.id === subblockId)
+      : null;
+  const content = getActiveContent(activeBlock, activeSubblock);
+  const q = quizQuestions[qIdx];
+  const total = quizQuestions.length;
+
+  // Подготовка состояния под текущий вопрос
+  useEffect(() => {
+    if (!q) return;
+    setAnswered(false);
+    setIsCorrect(false);
+    setSelected(null);
+    setUserInput("");
+    setConjResults([]);
+    if (q.type === "tiles") {
+      const indices = q.words.map((_, i) => i);
+      setTilePool(shuffle(indices));
+      setTileBuilt([]);
+    }
+    if (q.type === "conj") {
+      setConjInputs(q.pronouns.map(() => ""));
+    }
+  }, [qIdx, quizQuestions]);
+
+  // ─── НАВИГАЦИЯ ───
+  function goHome() {
+    setPhase("home");
+    setMode(null);
+    setBlockId(null);
+    setSubblockId(null);
+    resetQuiz();
+  }
+  function backToBlocks() {
+    setBlockId(null);
+    setSubblockId(null);
+    resetQuiz();
+    setPhase("select-block");
+  }
+  function backToSubblocks() {
+    setSubblockId(null);
+    resetQuiz();
+    setPhase("select-subblock");
+  }
+  function pickMode(m) {
+    setMode(m);
+    setPhase("select-block");
+  }
+  function pickBlock(id) {
+    setBlockId(id);
+    setSubblockId(null);
+    const block = BLOCKS.find((b) => b.id === id);
+    if (!block) return;
+    if (blockHasSubblocks(block)) {
+      setPhase("select-subblock");
+    } else {
+      // Плоский блок → сразу к стартовому экрану (learn) или к квизу (test)
+      enterBlockOrSubblock(block, null);
+    }
+  }
+  function pickSubblock(subId) {
+    setSubblockId(subId);
+    const block = activeBlock;
+    if (!block) return;
+    const sb = block.subblocks.find((s) => s.id === subId);
+    if (!sb) return;
+    enterBlockOrSubblock(block, sb);
+  }
+  // Что делать после выбора блока/подблока, в зависимости от режима
+  function enterBlockOrSubblock(block, subblock) {
+    if (mode === "test") {
+      const c = getActiveContent(block, subblock);
+      startTestQuizFromContent(c);
+    } else {
+      // mode === 'learn' → block-start с двумя кнопками
+      setPhase("block-start");
+    }
+  }
+  function startTestQuizFromContent(c) {
+    if (!c) return;
+    const arranged = arrangeByLevel(shuffleMC(c.questions || []));
+    setQuizQuestions(arranged);
+    setQIdx(0);
+    setScore(0);
+    setHistory([]);
+    setPhase("test-quiz");
+  }
+  function startCards() {
+    if (!content) return;
+    setShuffledVocab(shuffle(content.vocab));
+    setCardIdx(0);
+    setCardFlipped(false);
+    setPhase("learn-cards");
+  }
+  function startLearnQuiz() {
+    if (!content) return;
+    const quiz = buildVocabQuiz(content.vocab);
+    setQuizQuestions(quiz);
+    setQIdx(0);
+    setScore(0);
+    setHistory([]);
+    setPhase("learn-test");
+  }
+  function resetQuiz() {
+    setQuizQuestions([]);
+    setQIdx(0);
+    setScore(0);
+    setHistory([]);
+  }
+
+  // ─── ОБРАБОТЧИКИ ВОПРОСОВ ───
+  function handleMC(i) {
+    if (answered) return;
+    setSelected(i);
+    const ok = i === q.ans;
+    setIsCorrect(ok);
+    setAnswered(true);
+    if (ok) setScore((s) => s + 1);
+    setHistory((h) => [...h, { q, userAnswer: q.opts[i], isCorrect: ok }]);
+  }
+  function handleFillSubmit() {
+    if (answered) return;
+    const ok = checkFill(userInput, q.ans, q.altAns || []);
+    setIsCorrect(ok);
+    setAnswered(true);
+    if (ok) setScore((s) => s + 1);
+    setHistory((h) => [...h, { q, userAnswer: userInput || "—", isCorrect: ok }]);
+  }
+  function handleTileCheck() {
+    if (answered) return;
+    const built = tileBuilt.map((i) => q.words[i]).join(" ");
+    const correct = q.words.join(" ");
+    const ok = built === correct;
+    setIsCorrect(ok);
+    setAnswered(true);
+    if (ok) setScore((s) => s + 1);
+    setHistory((h) => [...h, { q, userAnswer: built || "—", isCorrect: ok }]);
+  }
+  function handleConjCheck() {
+    if (answered) return;
+    const results = conjInputs.map((v, i) => normalise(v) === normalise(q.ans[i]));
+    const ok = results.every(Boolean);
+    setConjResults(results);
+    setIsCorrect(ok);
+    setAnswered(true);
+    if (ok) setScore((s) => s + 1);
+    const ua = q.pronouns.map((p, i) => `${p}: ${conjInputs[i] || "—"}`).join(" / ");
+    setHistory((h) => [...h, { q, userAnswer: ua, isCorrect: ok }]);
+  }
+  function pickTile(id) {
+    setTilePool((p) => p.filter((x) => x !== id));
+    setTileBuilt((b) => [...b, id]);
+  }
+  function unpickTile(pos) {
+    const id = tileBuilt[pos];
+    setTileBuilt((b) => b.filter((_, i) => i !== pos));
+    setTilePool((p) => [...p, id]);
+  }
+  function nextQ() {
+    if (qIdx + 1 < total) {
+      setQIdx((i) => i + 1);
+    } else {
+      setPhase("results");
+    }
+  }
+
+  // ═══════════════════════════════════════════════════════════════
+  // РЕНДЕР
+  // ═══════════════════════════════════════════════════════════════
+  return (
+    <>
+      <style>{THEME_CSS}</style>
+
+      {/* ─── HOME ─── */}
+      {phase === "home" && (
+        <div style={S.page}>
+          <div style={S.container}>
+            <TopBar left={<div />} icon={icon} onTheme={cycleTheme} />
+            <div style={{ textAlign: "center", marginBottom: 28 }}>
+              <div style={{ fontSize: 52, marginBottom: 6 }}>🇩🇪</div>
+              <h1 style={S.h1}>Тренажёр немецкого</h1>
+              <p style={S.muted}>Выбери режим</p>
+            </div>
+            <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 14 }}>
+              <div
+                style={{ ...S.modeCard, borderColor: "#7c5cbf" }}
+                onClick={() => pickMode("learn")}
+              >
+                <div style={{ fontSize: 42, marginBottom: 6 }}>🧠</div>
+                <div style={{ fontSize: 18, fontWeight: 700, marginBottom: 4, color: "var(--text-title)" }}>
+                  Изучение
+                </div>
+                <div style={S.muted}>Карточки + мини-тест на перевод</div>
+              </div>
+              <div
+                style={{ ...S.modeCard, borderColor: "#1a7a4a" }}
+                onClick={() => pickMode("test")}
+              >
+                <div style={{ fontSize: 42, marginBottom: 6 }}>🎯</div>
+                <div style={{ fontSize: 18, fontWeight: 700, marginBottom: 4, color: "var(--text-title)" }}>
+                  Тест
+                </div>
+                <div style={S.muted}>Уровни 1–4: выбор / плитки / fill / спряжение</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* ─── SELECT BLOCK ─── */}
+      {phase === "select-block" && (
+        <div style={S.page}>
+          <div style={S.container}>
+            <TopBar
+              left={
+                <button style={S.outlineBtn("#888")} onClick={goHome}>
+                  ← Назад
+                </button>
+              }
+              right={
+                <span style={S.muted}>
+                  {mode === "learn" ? "🧠 Изучение" : "🎯 Тест"}
+                </span>
+              }
+              icon={icon}
+              onTheme={cycleTheme}
+            />
+            <h2 style={S.h2}>Выбери блок</h2>
+            <div
+              style={{
+                display: "grid",
+                gridTemplateColumns: "repeat(auto-fill, minmax(200px, 1fr))",
+                gap: 12,
+              }}
+            >
+              {BLOCKS.map((b) => {
+                // Подсчёт для подсказки на карточке
+                let vocabCount, qCount, subInfo;
+                if (blockHasSubblocks(b)) {
+                  vocabCount = b.subblocks.reduce((s, sb) => s + (sb.vocab || []).length, 0);
+                  qCount = b.subblocks.reduce((s, sb) => s + (sb.questions || []).length, 0);
+                  subInfo = `${b.subblocks.length} подкатегорий`;
+                } else {
+                  vocabCount = (b.vocab || []).length;
+                  qCount = (b.questions || []).length;
+                  subInfo = null;
+                }
+                return (
+                  <div
+                    key={b.id}
+                    style={{ ...S.blockCard, borderLeft: `5px solid ${b.color}` }}
+                    onClick={() => pickBlock(b.id)}
+                  >
+                    <div style={{ fontWeight: 700, fontSize: 15, marginBottom: 4, color: "var(--text-title)" }}>
+                      {b.label}
+                    </div>
+                    <div style={{ ...S.muted, marginBottom: 10, lineHeight: 1.4 }}>{b.desc}</div>
+                    <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", gap: 6 }}>
+                      <span
+                        style={{
+                          fontSize: 11,
+                          background: b.color,
+                          color: "white",
+                          padding: "3px 10px",
+                          borderRadius: 20,
+                          fontWeight: 600,
+                        }}
+                      >
+                        {mode === "learn" ? `${vocabCount} слов` : `${qCount} заданий`}
+                      </span>
+                      {subInfo && (
+                        <span style={{ fontSize: 11, color: "var(--text-muted)" }}>{subInfo}</span>
+                      )}
+                      <span style={{ fontSize: 18, color: b.color }}>→</span>
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* ─── SELECT SUBBLOCK ─── */}
+      {phase === "select-subblock" && activeBlock && blockHasSubblocks(activeBlock) && (
+        <div style={S.page}>
+          <div style={S.container}>
+            <TopBar
+              left={
+                <button style={S.outlineBtn("#888")} onClick={backToBlocks}>
+                  ← Блоки
+                </button>
+              }
+              right={
+                <span style={S.muted}>
+                  {mode === "learn" ? "🧠 Изучение" : "🎯 Тест"}
+                </span>
+              }
+              icon={icon}
+              onTheme={cycleTheme}
+            />
+            <h2 style={S.h2}>{activeBlock.label}</h2>
+            <p style={{ ...S.muted, marginBottom: 16 }}>Выбери подкатегорию</p>
+            <div
+              style={{
+                display: "grid",
+                gridTemplateColumns: "repeat(auto-fill, minmax(220px, 1fr))",
+                gap: 10,
+              }}
+            >
+              {activeBlock.subblocks.map((sb) => {
+                const vCount = (sb.vocab || []).length;
+                const qCount = (sb.questions || []).length;
+                const color = sb.color || activeBlock.color;
+                return (
+                  <div
+                    key={sb.id}
+                    style={{ ...S.blockCard, borderLeft: `4px solid ${color}`, padding: "12px 14px" }}
+                    onClick={() => pickSubblock(sb.id)}
+                  >
+                    <div style={{ fontWeight: 600, fontSize: 14, marginBottom: 6, color: "var(--text-title)" }}>
+                      {sb.label}
+                    </div>
+                    <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+                      <span
+                        style={{
+                          fontSize: 11,
+                          background: color,
+                          color: "white",
+                          padding: "2px 9px",
+                          borderRadius: 16,
+                          fontWeight: 600,
+                        }}
+                      >
+                        {mode === "learn" ? `${vCount} слов` : `${qCount} заданий`}
+                      </span>
+                      <span style={{ fontSize: 16, color: color }}>→</span>
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* ─── BLOCK START (только в режиме Изучение) ─── */}
+      {phase === "block-start" && activeBlock && content && (
+        <div style={S.page}>
+          <div style={S.container}>
+            <TopBar
+              left={
+                <button
+                  style={S.outlineBtn("#888")}
+                  onClick={blockHasSubblocks(activeBlock) ? backToSubblocks : backToBlocks}
+                >
+                  ← Назад
+                </button>
+              }
+              right={<span style={S.muted}>🧠 Изучение</span>}
+              icon={icon}
+              onTheme={cycleTheme}
+            />
+            <div style={{ textAlign: "center", marginBottom: 24 }}>
+              <h2 style={{ ...S.h2, marginBottom: 6 }}>{content.label}</h2>
+              <p style={S.muted}>{content.vocab.length} слов</p>
+            </div>
+            <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 12 }}>
+              <div
+                style={{ ...S.modeCard, borderColor: content.color }}
+                onClick={startCards}
+              >
+                <div style={{ fontSize: 38, marginBottom: 6 }}>📇</div>
+                <div style={{ fontSize: 16, fontWeight: 700, marginBottom: 4, color: "var(--text-title)" }}>
+                  С карточками
+                </div>
+                <div style={S.muted}>Сначала просмотр карточек DE→RU, потом мини-тест</div>
+              </div>
+              <div
+                style={{ ...S.modeCard, borderColor: content.color }}
+                onClick={startLearnQuiz}
+              >
+                <div style={{ fontSize: 38, marginBottom: 6 }}>⚡</div>
+                <div style={{ fontSize: 16, fontWeight: 700, marginBottom: 4, color: "var(--text-title)" }}>
+                  Сразу к тесту
+                </div>
+                <div style={S.muted}>Без карточек — сразу тест на перевод</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* ─── LEARN: CARDS ─── */}
+      {phase === "learn-cards" && activeBlock && content && (
+        <div style={S.page}>
+          <div style={S.container}>
+            <TopBar
+              left={
+                <button
+                  style={S.outlineBtn("#888")}
+                  onClick={() => setPhase("block-start")}
+                >
+                  ← Назад
+                </button>
+              }
+              right={
+                <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
+                  <button
+                    style={{ ...S.outlineBtn(content.color), padding: "5px 10px", fontSize: 12 }}
+                    onClick={startLearnQuiz}
+                    title="Прервать карточки и сразу перейти к тесту"
+                  >
+                    ⚡ К тесту
+                  </button>
+                  <span style={S.muted}>
+                    {cardIdx + 1} / {shuffledVocab.length}
+                  </span>
+                </div>
+              }
+              icon={icon}
+              onTheme={cycleTheme}
+            />
+            <div style={{ textAlign: "center", marginBottom: 12 }}>
+              <span style={{ fontSize: 13, color: "var(--text-muted)", fontWeight: 600 }}>
+                {content.label}
+              </span>
+            </div>
+            <div
+              style={{
+                height: 4,
+                background: "var(--border-soft)",
+                borderRadius: 2,
+                marginBottom: 18,
+              }}
+            >
+              <div
+                style={{
+                  height: 4,
+                  background: content.color,
+                  borderRadius: 2,
+                  width: `${((cardIdx + 1) / shuffledVocab.length) * 100}%`,
+                  transition: "width 0.3s",
+                }}
+              />
+            </div>
+            {shuffledVocab[cardIdx] && (
+              <FlipCard
+                item={shuffledVocab[cardIdx]}
+                flipped={cardFlipped}
+                onFlip={() => setCardFlipped((f) => !f)}
+                color={content.color}
+              />
+            )}
+            <div style={{ display: "flex", justifyContent: "space-between", gap: 8, marginTop: 12 }}>
+              <button
+                style={S.outlineBtn(content.color)}
+                onClick={() => {
+                  setCardFlipped(false);
+                  setCardIdx((i) => Math.max(0, i - 1));
+                }}
+                disabled={cardIdx === 0}
+              >
+                ← Назад
+              </button>
+              {cardIdx + 1 < shuffledVocab.length ? (
+                <button
+                  style={S.primaryBtn(content.color)}
+                  onClick={() => {
+                    setCardFlipped(false);
+                    setCardIdx((i) => i + 1);
+                  }}
+                >
+                  Дальше →
+                </button>
+              ) : (
+                <button style={S.primaryBtn(content.color)} onClick={startLearnQuiz}>
+                  Готов · Перейти к тесту →
+                </button>
+              )}
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* ─── QUIZ (используется и в learn-test, и в test-quiz) ─── */}
+      {(phase === "learn-test" || phase === "test-quiz") && q && activeBlock && (
+        <div style={S.page}>
+          <div style={S.container}>
+            <TopBar
+              left={
+                <button style={S.outlineBtn("#888")} onClick={goHome}>
+                  ← В меню
+                </button>
+              }
+              right={
+                <span style={S.muted}>
+                  {qIdx + 1}/{total} · {score}✓
+                </span>
+              }
+              icon={icon}
+              onTheme={cycleTheme}
+            />
+            <div style={{ textAlign: "center", marginBottom: 12 }}>
+              <span style={{ fontSize: 13, color: "var(--text-muted)", fontWeight: 600 }}>
+                {content.label} · {phase === "learn-test" ? "Мини-тест на перевод" : "Тест"}
+              </span>
+            </div>
+
+            {/* Уровень + прогресс */}
+            <div style={{ display: "flex", gap: 8, alignItems: "center", marginBottom: 10 }}>
+              {q.level && (
+                <span
+                  style={{
+                    fontSize: 11,
+                    background: { 1: "#27ae60", 2: "#2471a3", 3: "#b7600a", 4: "#7c5cbf" }[q.level] || "#888",
+                    color: "white",
+                    padding: "3px 10px",
+                    borderRadius: 20,
+                    whiteSpace: "nowrap",
+                    fontWeight: 600,
+                  }}
+                >
+                  {{ 1: "Ур. 1 · Выбор", 2: "Ур. 2 · Плитки", 3: "Ур. 3 · Вставь", 4: "Ур. 4 · Спряжение" }[q.level]}
+                </span>
+              )}
+            </div>
+            <div style={{ height: 4, background: "var(--border-soft)", borderRadius: 2, marginBottom: 16 }}>
+              <div
+                style={{
+                  height: 4,
+                  background: content.color,
+                  borderRadius: 2,
+                  width: `${((qIdx + 1) / total) * 100}%`,
+                  transition: "width 0.3s",
+                }}
+              />
+            </div>
+
+            <div style={S.card}>
+              <div
+                style={{
+                  fontSize: 16,
+                  marginBottom: 18,
+                  whiteSpace: "pre-line",
+                  lineHeight: 1.6,
+                  color: "var(--text-main)",
+                }}
+              >
+                {q.q}
+              </div>
+              {q.hint && !answered && (
+                <div style={{ ...S.muted, fontStyle: "italic", marginBottom: 12 }}>💡 {q.hint}</div>
+              )}
+
+              {/* MC */}
+              {q.type === "mc" && (
+                <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
+                  {q.opts.map((opt, i) => {
+                    let bg = "var(--bg-card)",
+                      border = "2px solid var(--border-soft)",
+                      color = "var(--text-main)";
+                    if (answered) {
+                      if (i === q.ans) {
+                        bg = "var(--green-bg)";
+                        border = "2px solid var(--green)";
+                        color = "var(--green)";
+                      } else if (i === selected) {
+                        bg = "var(--red-bg)";
+                        border = "2px solid var(--red)";
+                        color = "var(--red)";
+                      } else {
+                        bg = "var(--bg-soft)";
+                        color = "var(--text-muted)";
+                      }
+                    }
+                    return (
+                      <button
+                        key={i}
+                        onClick={() => handleMC(i)}
+                        style={{
+                          background: bg,
+                          border,
+                          color,
+                          padding: "11px 16px",
+                          borderRadius: 10,
+                          cursor: answered ? "default" : "pointer",
+                          fontSize: 14,
+                          fontFamily: "inherit",
+                          textAlign: "left",
+                          transition: "all 0.15s",
+                          fontWeight: 500,
+                        }}
+                      >
+                        {answered && i === q.ans && "✓ "}
+                        {answered && i === selected && i !== q.ans && "✗ "}
+                        {opt}
+                      </button>
+                    );
+                  })}
+                </div>
+              )}
+
+              {/* TILES */}
+              {q.type === "tiles" && (
+                <div>
+                  <div
+                    style={{
+                      minHeight: 50,
+                      background: "var(--bg-soft)",
+                      border: `2px dashed ${answered ? (isCorrect ? "var(--green)" : "var(--red)") : "var(--border-soft)"}`,
+                      borderRadius: 10,
+                      padding: "10px 12px",
+                      marginBottom: 14,
+                      display: "flex",
+                      flexWrap: "wrap",
+                      gap: 8,
+                      alignItems: "center",
+                    }}
+                  >
+                    {tileBuilt.length === 0 && (
+                      <span style={{ color: "var(--text-muted)", fontSize: 13 }}>
+                        Нажимай слова снизу по порядку...
+                      </span>
+                    )}
+                    {tileBuilt.map((id, pos) => (
+                      <button
+                        key={pos}
+                        onClick={() => !answered && unpickTile(pos)}
+                        style={{
+                          background: answered
+                            ? isCorrect
+                              ? "var(--green-bg)"
+                              : "var(--red-bg)"
+                            : "var(--bg-card)",
+                          border: `1.5px solid ${
+                            answered ? (isCorrect ? "var(--green)" : "var(--red)") : "var(--accent)"
+                          }`,
+                          borderRadius: 8,
+                          padding: "6px 12px",
+                          cursor: answered ? "default" : "pointer",
+                          fontSize: 14,
+                          fontFamily: "inherit",
+                          fontWeight: 600,
+                          color: answered
+                            ? isCorrect
+                              ? "var(--green)"
+                              : "var(--red)"
+                            : "var(--text-main)",
+                        }}
+                      >
+                        {q.words[id]}
+                      </button>
+                    ))}
+                  </div>
+                  <div style={{ display: "flex", flexWrap: "wrap", gap: 8, marginBottom: 14 }}>
+                    {tilePool.map((id) => (
+                      <button
+                        key={id}
+                        onClick={() => !answered && pickTile(id)}
+                        style={{
+                          background: "var(--bg-card)",
+                          border: "2px solid var(--border-soft)",
+                          borderRadius: 8,
+                          padding: "6px 12px",
+                          cursor: answered ? "default" : "pointer",
+                          fontSize: 14,
+                          fontFamily: "inherit",
+                          fontWeight: 600,
+                          color: "var(--text-main)",
+                          opacity: answered ? 0.5 : 1,
+                        }}
+                      >
+                        {q.words[id]}
+                      </button>
+                    ))}
+                  </div>
+                  {!answered && (
+                    <button
+                      onClick={handleTileCheck}
+                      style={S.primaryBtn(content.color)}
+                      disabled={tileBuilt.length !== q.words.length}
+                    >
+                      Проверить ✓
+                    </button>
+                  )}
+                </div>
+              )}
+
+              {/* FILL */}
+              {q.type === "fill" && (
+                <div>
+                  <input
+                    style={{
+                      ...S.input,
+                      borderColor: answered
+                        ? isCorrect
+                          ? "var(--green)"
+                          : "var(--red)"
+                        : "var(--border-input)",
+                    }}
+                    type="text"
+                    value={userInput}
+                    onChange={(e) => setUserInput(e.target.value)}
+                    onKeyDown={(e) => {
+                      if (e.key === "Enter" && !answered) handleFillSubmit();
+                    }}
+                    disabled={answered}
+                    placeholder="Введи ответ..."
+                    autoFocus
+                  />
+                  {!answered && (
+                    <button
+                      onClick={handleFillSubmit}
+                      style={{ ...S.primaryBtn(content.color), marginTop: 12 }}
+                    >
+                      Проверить ✓
+                    </button>
+                  )}
+                </div>
+              )}
+
+              {/* CONJ */}
+              {q.type === "conj" && (
+                <div>
+                  <div style={{ display: "flex", flexDirection: "column", gap: 8, marginBottom: 14 }}>
+                    {q.pronouns.map((p, i) => (
+                      <div
+                        key={i}
+                        style={{ display: "flex", gap: 8, alignItems: "center" }}
+                      >
+                        <div
+                          style={{
+                            padding: "8px 10px",
+                            background: "var(--bg-soft)",
+                            borderRadius: 6,
+                            fontWeight: 600,
+                            color: "var(--text-main)",
+                            minWidth: 90,
+                            fontSize: 14,
+                          }}
+                        >
+                          {p}
+                        </div>
+                        <input
+                          style={{
+                            ...S.input,
+                            borderColor: answered
+                              ? conjResults[i]
+                                ? "var(--green)"
+                                : "var(--red)"
+                              : "var(--border-input)",
+                          }}
+                          type="text"
+                          value={conjInputs[i] || ""}
+                          onChange={(e) => {
+                            const next = [...conjInputs];
+                            next[i] = e.target.value;
+                            setConjInputs(next);
+                          }}
+                          disabled={answered}
+                          placeholder={`Форма для «${p}»`}
+                        />
+                      </div>
+                    ))}
+                  </div>
+                  {!answered && (
+                    <button onClick={handleConjCheck} style={S.primaryBtn(content.color)}>
+                      Проверить ✓
+                    </button>
+                  )}
+                  {answered && !isCorrect && (
+                    <div style={{ fontSize: 13, marginTop: 10 }}>
+                      <span style={{ color: "var(--text-muted)" }}>Правильно: </span>
+                      <span style={{ color: "var(--green)", fontWeight: 600 }}>
+                        {q.pronouns.map((p, i) => `${p}: ${q.ans[i]}`).join(" / ")}
+                      </span>
+                    </div>
+                  )}
+                </div>
+              )}
+
+              {/* После ответа */}
+              {answered && (
+                <div
+                  style={{
+                    marginTop: 16,
+                    paddingTop: 14,
+                    borderTop: "1px solid var(--border-soft)",
+                  }}
+                >
+                  <div
+                    style={{
+                      fontSize: 14,
+                      fontWeight: 700,
+                      color: isCorrect ? "var(--green)" : "var(--red)",
+                      marginBottom: 8,
+                    }}
+                  >
+                    {isCorrect ? "✓ Правильно!" : "✗ Неправильно"}
+                  </div>
+                  {q.type === "tiles" && !isCorrect && (
+                    <div style={{ fontSize: 13, marginBottom: 8 }}>
+                      <span style={{ color: "var(--text-muted)" }}>Правильно: </span>
+                      <span style={{ color: "var(--green)", fontWeight: 600 }}>{q.words.join(" ")}</span>
+                    </div>
+                  )}
+                  {q.type === "fill" && !isCorrect && (
+                    <div style={{ fontSize: 13, marginBottom: 8 }}>
+                      <span style={{ color: "var(--text-muted)" }}>Правильно: </span>
+                      <span style={{ color: "var(--green)", fontWeight: 600 }}>{q.ans}</span>
+                    </div>
+                  )}
+                  {q.explain && (
+                    <div
+                      style={{
+                        fontSize: 13,
+                        color: "var(--text-muted)",
+                        lineHeight: 1.5,
+                        whiteSpace: "pre-line",
+                      }}
+                    >
+                      💡 {q.explain}
+                    </div>
+                  )}
+                  <button
+                    onClick={nextQ}
+                    style={{ ...S.primaryBtn(content.color), marginTop: 14 }}
+                  >
+                    {qIdx + 1 < total ? "Дальше →" : "Завершить →"}
+                  </button>
+                </div>
+              )}
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* ─── RESULTS ─── */}
+      {phase === "results" && activeBlock && (
+        <div style={S.page}>
+          <div style={S.container}>
+            <TopBar
+              left={
+                <button style={S.outlineBtn("#888")} onClick={goHome}>
+                  ← В меню
+                </button>
+              }
+              icon={icon}
+              onTheme={cycleTheme}
+            />
+            <div style={{ textAlign: "center", marginBottom: 24 }}>
+              <div style={{ fontSize: 52, marginBottom: 6 }}>
+                {(() => {
+                  const pct = total > 0 ? Math.round((score / total) * 100) : 0;
+                  return pct >= 85 ? "🏆" : pct >= 65 ? "💪" : "📚";
+                })()}
+              </div>
+              <div style={{ ...S.muted, marginBottom: 4 }}>{content.label}</div>
+              <h2 style={{ fontSize: 22, marginBottom: 6, color: "var(--text-title)" }}>
+                {(() => {
+                  const pct = total > 0 ? Math.round((score / total) * 100) : 0;
+                  return pct >= 85 ? "Ausgezeichnet!" : pct >= 65 ? "Gut gemacht!" : "Weiter üben!";
+                })()}
+              </h2>
+              <div
+                style={{
+                  fontSize: 44,
+                  fontWeight: 700,
+                  color: "var(--green)",
+                  margin: "10px 0",
+                }}
+              >
+                {score} / {total}
+              </div>
+              <div style={S.muted}>
+                {total > 0 ? Math.round((score / total) * 100) : 0}% правильных ответов
+              </div>
+              <div style={{ display: "flex", gap: 10, justifyContent: "center", marginTop: 18, flexWrap: "wrap" }}>
+                <button onClick={goHome} style={S.primaryBtn("#1a1d2e")}>
+                  ← В меню
+                </button>
+                <button
+                  onClick={() => {
+                    if (mode === "learn") {
+                      startLearnQuiz();
+                    } else {
+                      startTestQuizFromContent(content);
+                    }
+                  }}
+                  style={S.outlineBtn(content.color)}
+                >
+                  ⚡ Повторить
+                </button>
+              </div>
+            </div>
+
+            {/* Разбор */}
+            <h3 style={{ fontSize: 16, marginBottom: 12, color: "var(--text-title)" }}>📋 Разбор</h3>
+            {history.map((entry, idx) => {
+              const { q: hq, userAnswer, isCorrect: ok } = entry;
+              return (
+                <div
+                  key={idx}
+                  style={{
+                    ...S.card,
+                    border: `1px solid ${ok ? "rgba(26,122,74,0.3)" : "rgba(192,57,43,0.3)"}`,
+                    marginBottom: 10,
+                  }}
+                >
+                  <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", marginBottom: 8 }}>
+                    <span style={S.muted}>
+                      {idx + 1}/{history.length}
+                    </span>
+                    <span style={{ fontSize: 18, color: ok ? "var(--green)" : "var(--red)" }}>
+                      {ok ? "✓" : "✗"}
+                    </span>
+                  </div>
+                  <div style={{ fontSize: 14, marginBottom: 8, whiteSpace: "pre-line", lineHeight: 1.5 }}>
+                    {hq.q}
+                  </div>
+                  <div style={{ fontSize: 13, marginBottom: ok ? 0 : 6 }}>
+                    <span style={S.muted}>Твой ответ: </span>
+                    <span style={{ color: ok ? "var(--green)" : "var(--red)", fontWeight: 600 }}>
+                      {userAnswer}
+                    </span>
+                  </div>
+                  {!ok && (
+                    <div style={{ fontSize: 13, marginBottom: 4 }}>
+                      <span style={S.muted}>Правильно: </span>
+                      <span style={{ color: "var(--green)", fontWeight: 600 }}>
+                        {hq.type === "mc"
+                          ? hq.opts[hq.ans]
+                          : hq.type === "tiles"
+                          ? hq.words.join(" ")
+                          : hq.type === "fill"
+                          ? hq.ans
+                          : hq.type === "conj"
+                          ? hq.pronouns.map((p, i) => `${p}: ${hq.ans[i]}`).join(" / ")
+                          : "—"}
+                      </span>
+                    </div>
+                  )}
+                  {!ok && hq.explain && (
+                    <div
+                      style={{
+                        fontSize: 12,
+                        color: "var(--text-muted)",
+                        marginTop: 6,
+                        paddingTop: 6,
+                        borderTop: "1px solid var(--border-soft)",
+                        lineHeight: 1.5,
+                      }}
+                    >
+                      💡 {hq.explain}
+                    </div>
+                  )}
+                </div>
+              );
+            })}
+          </div>
+        </div>
+      )}
+    </>
+  );
+}
+
+
+// Рендер
+ReactDOM.render(React.createElement(App), document.getElementById('root'));
+
+</script>
+
+</body>
+</html>
