@@ -31,30 +31,6 @@ html, body {
 }
 #root { min-height: 100vh; }
 
-.back-home {
-  position: fixed;
-  top: 12px; right: 12px;
-  width: 38px; height: 38px;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  background: rgba(255,255,255,0.9);
-  color: #333;
-  border: 1px solid #ccc;
-  border-radius: 6px;
-  font-size: 16px;
-  text-decoration: none;
-  z-index: 10000;
-  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-}
-.theme-dark .back-home,
-html:not(.theme-light) .back-home {
-  background: rgba(40,40,40,0.9);
-  color: #e0e0e0;
-  border-color: #555;
-}
-.back-home:hover { opacity: 0.85; }
-
 .loader {
   position: fixed;
   top: 50%; left: 50%;
@@ -65,8 +41,6 @@ html:not(.theme-light) .back-home {
 </style>
 </head>
 <body>
-
-<a href="index.html" class="back-home" title="На главную">🏠</a>
 
 <div id="root">
   <div class="loader">Загрузка тренажёра…</div>
@@ -1877,6 +1851,18 @@ const S = {
     cursor: "pointer",
     color: "var(--text-main)",
   },
+  homeBtn: {
+    background: "var(--bg-panel)",
+    border: "1px solid var(--border-soft)",
+    borderRadius: 8,
+    padding: "6px 12px",
+    fontSize: 16,
+    color: "var(--text-main)",
+    textDecoration: "none",
+    display: "inline-flex",
+    alignItems: "center",
+    lineHeight: 1,
+  },
   modeCard: {
     background: "var(--bg-card)",
     borderRadius: 16,
@@ -1971,7 +1957,10 @@ function useTheme() {
 function TopBar({ left, right, icon, onTheme }) {
   return (
     <div style={S.topBar}>
-      <div>{left}</div>
+      <div style={{ display: "flex", gap: 8, alignItems: "center" }}>
+        <a href="index.html" style={S.homeBtn} title="На главную">🏠</a>
+        {left}
+      </div>
       <div style={{ display: "flex", gap: 8, alignItems: "center" }}>
         {right}
         <button style={S.themeBtn} onClick={onTheme} title="Переключить тему">
