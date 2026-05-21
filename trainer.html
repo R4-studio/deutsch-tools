@@ -1849,6 +1849,69 @@ function TopBar({ left, right, icon, onTheme, onHome }) {
 }
 
 // ═══════════════════════════════════════════════════════════════
+// КОМПОНЕНТ: КАРТОЧКА СПРЯЖЕНИЯ (FLIP) — для unregel
+// ═══════════════════════════════════════════════════════════════
+function ConjFlipCard({ conj, flipped, onFlip, color }) {
+  return (
+    <div
+      onClick={onFlip}
+      style={{ perspective: 1000, cursor: "pointer", height: 280, marginBottom: 14 }}
+    >
+      <div className={"flip-card-inner" + (flipped ? " flipped" : "")}>
+        <div className="flip-face front"
+             style={{
+               background: "var(--bg-card)",
+               border: `2px solid ${color}`,
+               boxShadow: "var(--shadow-card)",
+               textAlign: "center",
+             }}>
+          <div>
+            {conj.modal && (
+              <span style={{
+                display: "inline-block", padding: "3px 10px", borderRadius: 12,
+                background: "#fff3cd", color: "#856404",
+                fontSize: 12, fontWeight: 700, marginBottom: 12,
+              }}>Modalverb</span>
+            )}
+            <div style={{ fontSize: 32, fontWeight: 700, color: "var(--text-title)", marginBottom: 8 }}>
+              {conj.verb}
+            </div>
+            {conj.ru && (
+              <div style={{ fontSize: 16, color: "var(--text-muted)", marginBottom: 14 }}>
+                — {conj.ru}
+              </div>
+            )}
+            <div style={{ fontSize: 12, color: "var(--text-muted)" }}>
+              Нажми, чтобы увидеть спряжение
+            </div>
+          </div>
+        </div>
+        <div className="flip-face back"
+             style={{ background: color, color: "white", textAlign: "center" }}>
+          <div style={{ padding: "0 20px" }}>
+            <div style={{ fontSize: 18, fontWeight: 700, marginBottom: 10 }}>
+              {conj.verb} · Präsens
+            </div>
+            <table style={{ margin: "0 auto", fontSize: 15 }}>
+              <tbody>
+                {conj.pronouns.map((p, i) => (
+                  <tr key={i}>
+                    <td style={{ padding: "3px 12px", textAlign: "right", opacity: 0.85 }}>{p}</td>
+                    <td style={{ padding: "3px 12px", textAlign: "left", fontWeight: 700 }}>
+                      {conj.forms[i]}
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+// ═══════════════════════════════════════════════════════════════
 // КОМПОНЕНТ: КАРТОЧКА (FLIP)
 // ═══════════════════════════════════════════════════════════════
 function FlipCard({ item, flipped, onFlip, color }) {
@@ -2115,6 +2178,82 @@ function genL3_conj_unregel(conj) {
   };
 }
 
+// ─── unregel-блок: Ур 1 — перевод глагола DE→RU ──────────────────────────
+function genL1_unregel_translate_DE_RU(conj, allConjugations) {
+  if (!conj.ru) return null;
+  const distractors = allConjugations
+    .filter(c => c.id !== conj.id && c.ru && c.ru !== conj.ru)
+    .map(c => c.ru);
+  if (distractors.length < 3) return null;
+  const opts = shuffle([conj.ru, ...shuffle(distractors).slice(0, 3)]);
+  const ans = opts.indexOf(conj.ru);
+  return {
+    auto: true, level: "A1", difficulty: 1, type: "mc",
+    q: `Переведи: «${conj.verb}»`,
+    opts, ans,
+    sourceId: conj.id,
+  };
+}
+
+// ─── unregel-блок: Ур 1 — перевод глагола RU→DE ──────────────────────────
+function genL1_unregel_translate_RU_DE(conj, allConjugations) {
+  if (!conj.ru) return null;
+  const distractors = allConjugations
+    .filter(c => c.id !== conj.id && c.verb !== conj.verb)
+    .map(c => c.verb);
+  if (distractors.length < 3) return null;
+  const opts = shuffle([conj.verb, ...shuffle(distractors).slice(0, 3)]);
+  const ans = opts.indexOf(conj.verb);
+  return {
+    auto: true, level: "A1", difficulty: 1, type: "mc",
+    q: `Как сказать «${conj.ru}»?`,
+    opts, ans,
+    sourceId: conj.id,
+  };
+}
+
+// ─── unregel-блок: Ур 2 — fill на одну форму ─────────────────────────────
+function genL2_unregel_one_form(conj) {
+  const pronounIdx = Math.floor(Math.random() * conj.pronouns.length);
+  const pronoun = conj.pronouns[pronounIdx];
+  const correctForm = conj.forms[pronounIdx];
+  return {
+    auto: true, level: "A1", difficulty: 2, type: "fill",
+    q: `${pronoun} ___ (${conj.verb}${conj.ru ? " — " + conj.ru : ""})`,
+    ans: correctForm,
+    altAns: [],
+    hint: `${conj.verb} в Präsens`,
+    sourceId: conj.id,
+  };
+}
+
+// ─── unregel-блок: Ур 3 — conj на все 6 форм ─────────────────────────────
+function genL3_unregel_full_conj(conj) {
+  return {
+    auto: true, level: "A2", difficulty: 3, type: "conj",
+    q: `Проспрягай «${conj.verb}»${conj.ru ? " — " + conj.ru : ""} в Präsens:`,
+    verb: conj.verb,
+    tense: "Präsens",
+    pronouns: conj.pronouns,
+    ans: conj.forms,
+    sourceId: conj.id,
+  };
+}
+
+// ─── Сборка пула вопросов для блока unregel ──────────────────────────────
+function buildUnregelQuestions(conjugations) {
+  const pool = [];
+  for (const c of conjugations) {
+    const q1a = genL1_unregel_translate_DE_RU(c, conjugations);
+    if (q1a) pool.push(q1a);
+    const q1b = genL1_unregel_translate_RU_DE(c, conjugations);
+    if (q1b) pool.push(q1b);
+    pool.push(genL2_unregel_one_form(c));
+    pool.push(genL3_unregel_full_conj(c));
+  }
+  return pool;
+}
+
 // ─── Главная функция: собрать пул автогенерированных вопросов для топиков ──
 function buildAutoQuestions(topics, vocab, conjugations) {
   // Берём слова из заданных topics
@@ -2162,8 +2301,13 @@ function buildTestSession(topics, vocab, conjugations, manualQuestions, blockId)
   // Пропорции по уровням
   const QUOTA = { 1: 8, 2: 7, 3: 6, 4: 5, 5: 4 };
 
-  // 1. Автогенерация для уровней 1-3
-  const autoPool = buildAutoQuestions(topics, vocab, conjugations);
+  // Особый блок: unregel — используем собственный пул вопросов по CONJUGATIONS
+  let autoPool;
+  if (blockId === "unregel") {
+    autoPool = buildUnregelQuestions(conjugations);
+  } else {
+    autoPool = buildAutoQuestions(topics, vocab, conjugations);
+  }
 
   // 2. Ручные вопросы из QUESTIONS, привязанные к этому блоку или сабблоку
   const trainerTopic = `trainer:${blockId}`;
@@ -2263,12 +2407,35 @@ function App() {
   }
   function pickBlock(b) {
     setActiveBlock(b);
+    if (b.kind === "conjugations") {
+      // unregel-блок: свой поток
+      if (mode === "test") {
+        startTestUnregel();
+      } else {
+        // learn → сразу карточки спряжений
+        startLearnConj();
+      }
+      return;
+    }
     if (b.kind) {
       alert("Блок «" + b.label + "» — пока только в шпоре. В тренажёре появится позже.");
       return;
     }
     if (blockHasSubblocks(b)) setPhase("select-subblock");
     else pickAction(null);
+  }
+
+  function startLearnConj() {
+    setCardIdx(0);
+    setFlipped(false);
+    setPhase("learn-conj-cards");
+  }
+
+  function startTestUnregel() {
+    const session = buildTestSession([], VOCAB, CONJUGATIONS, QUESTIONS, "unregel");
+    setQuestions(session); setQIdx(0); setUserAns(""); setAnswered(false);
+    setCorrectCount(0); setHintVisible(false); setTiles([]); setChosen([]); setConjAnswers([]);
+    setPhase("test-quiz");
   }
   function pickSub(s) {
     setActiveSub(s);
@@ -2396,7 +2563,10 @@ function App() {
                 <div style={S.cardTitle}>{b.label}</div>
                 {b.desc && <div style={S.cardDesc}>{b.desc}</div>}
                 {blockHasSubblocks(b) && <div style={S.cardMeta}>{b.subblocks.length} тем</div>}
-                {b.kind && <div style={{ ...S.cardMeta }}>(только в шпоре)</div>}
+                {b.kind === "conjugations" && (
+                  <div style={S.cardMeta}>{CONJUGATIONS.length} глаголов</div>
+                )}
+                {b.kind && b.kind !== "conjugations" && <div style={{ ...S.cardMeta }}>(только в шпоре)</div>}
               </div>
             ))}
           </div>
@@ -2497,6 +2667,48 @@ function App() {
             <button style={S.outlineBtn()} onClick={prevCard} disabled={cardIdx === 0}>← Назад</button>
             <button style={S.primaryBtn(activeBlock.color)} onClick={nextCard}>
               {cardIdx + 1 >= vocab.length ? "К мини-тесту →" : "Дальше →"}
+            </button>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  // ─── LEARN CONJ CARDS (для unregel) ─────────────────────────────────────
+  function renderLearnConjCards() {
+    if (CONJUGATIONS.length === 0) {
+      return <div style={S.page}><div style={S.container}>Нет данных по спряжениям.</div></div>;
+    }
+    const conj = CONJUGATIONS[cardIdx];
+    return (
+      <div style={S.page}>
+        <div style={S.container}>
+          <TopBar
+            left={
+              <button style={S.outlineBtn(activeBlock.color)}
+                      onClick={() => { setPhase("select-block"); setActiveBlock(null); }}>
+                ← Блоки
+              </button>
+            }
+            right={<span style={S.muted}>{cardIdx + 1} / {CONJUGATIONS.length}</span>}
+            icon={icon} onTheme={cycleTheme} onHome={goHome} />
+          <ConjFlipCard conj={conj} flipped={flipped}
+                        onFlip={() => setFlipped(!flipped)}
+                        color={activeBlock.color} />
+          <div style={{ display: "flex", gap: 12, justifyContent: "center", marginTop: 20 }}>
+            <button style={S.outlineBtn()} onClick={prevCard} disabled={cardIdx === 0}>← Назад</button>
+            <button style={S.primaryBtn(activeBlock.color)}
+                    onClick={() => {
+                      if (cardIdx + 1 >= CONJUGATIONS.length) {
+                        // Конец карточек: возврат к блокам
+                        setPhase("select-block");
+                        setActiveBlock(null);
+                      } else {
+                        setCardIdx(cardIdx + 1);
+                        setFlipped(false);
+                      }
+                    }}>
+              {cardIdx + 1 >= CONJUGATIONS.length ? "Готово →" : "Дальше →"}
             </button>
           </div>
         </div>
@@ -2742,6 +2954,7 @@ function App() {
       {phase === "select-subblock" && activeBlock && blockHasSubblocks(activeBlock) && renderSelectSubblock()}
       {phase === "block-start" && activeBlock && renderBlockStart()}
       {phase === "learn-cards" && activeBlock && renderLearnCards()}
+      {phase === "learn-conj-cards" && activeBlock && renderLearnConjCards()}
       {(phase === "learn-test" || phase === "test-quiz") && activeBlock && renderQuiz()}
       {phase === "results" && activeBlock && renderResults()}
     </>
