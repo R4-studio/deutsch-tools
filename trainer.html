@@ -7,7 +7,7 @@
 
 <script>
 (function() {
-  var saved = localStorage.getItem('trainer-theme') || 'auto';
+  var saved = localStorage.getItem('theme') || 'auto';
   document.documentElement.classList.add('theme-' + saved);
 })();
 </script>
@@ -60,6 +60,10 @@ function shuffle(arr) {
 function normalise(s) {
   return (s || "")
     .toLowerCase()
+    .replace(/ä/g, "ae")
+    .replace(/ö/g, "oe")
+    .replace(/ü/g, "ue")
+    .replace(/ß/g, "ss")
     .replace(/[.!?,;"„“]/g, "")
     .replace(/\s+/g, " ")
     .trim();
@@ -1688,6 +1692,58 @@ const S = {
     borderRadius: 8,
     fontSize: 11,
   },
+  // Бейдж уровня сверху (как на скриншоте — "Ур. 1 · Выбор")
+  levelBadge: (color) => ({
+    display: "inline-block",
+    background: color,
+    color: "white",
+    padding: "6px 14px",
+    borderRadius: 18,
+    fontSize: 13,
+    fontWeight: 700,
+    marginBottom: 14,
+    letterSpacing: 0.3,
+  }),
+  // Прогресс-бар (тонкая полоса под бейджем)
+  progressTrack: {
+    width: "100%",
+    height: 6,
+    background: "var(--border-soft)",
+    borderRadius: 3,
+    overflow: "hidden",
+    marginBottom: 20,
+  },
+  progressFill: (color, pct) => ({
+    width: pct + "%",
+    height: "100%",
+    background: color,
+    transition: "width 0.3s ease",
+  }),
+  // Плашка ✓ Правильно / ✗ Неправильно
+  verdictRight: {
+    color: "var(--green)",
+    fontSize: 16,
+    fontWeight: 700,
+    marginTop: 14,
+    marginBottom: 6,
+  },
+  verdictWrong: {
+    color: "var(--red)",
+    fontSize: 16,
+    fontWeight: 700,
+    marginTop: 14,
+    marginBottom: 6,
+  },
+  // Правильный ответ ниже плашки (зелёным)
+  correctAns: {
+    fontSize: 14,
+    color: "var(--text-main)",
+    marginBottom: 10,
+  },
+  correctAnsValue: {
+    color: "var(--green)",
+    fontWeight: 700,
+  },
   questionText: {
     fontSize: 18,
     color: "var(--text-title)",
@@ -1797,6 +1853,65 @@ const S = {
     width: "100%",
     borderCollapse: "collapse",
   },
+  // ─── Разбор результатов ──────────────────────────────────────────
+  reviewWrap: {
+    marginTop: 32,
+  },
+  reviewHeading: {
+    fontSize: 16,
+    fontWeight: 700,
+    color: "var(--text-title)",
+    marginBottom: 12,
+    display: "flex",
+    alignItems: "center",
+    gap: 8,
+  },
+  reviewCard: {
+    background: "var(--bg-card)",
+    border: "1px solid var(--border-soft)",
+    borderRadius: 10,
+    padding: "14px 16px",
+    marginBottom: 8,
+  },
+  reviewHeader: {
+    display: "flex",
+    justifyContent: "space-between",
+    alignItems: "center",
+    fontSize: 12,
+    color: "var(--text-muted)",
+    marginBottom: 6,
+  },
+  reviewQ: {
+    fontSize: 14,
+    color: "var(--text-main)",
+    fontWeight: 600,
+    marginBottom: 8,
+  },
+  reviewRow: {
+    fontSize: 13,
+    color: "var(--text-muted)",
+    marginBottom: 3,
+  },
+  reviewUserCorrect: {
+    color: "var(--green)",
+    fontWeight: 600,
+  },
+  reviewUserWrong: {
+    color: "var(--red)",
+    fontWeight: 600,
+  },
+  reviewAns: {
+    color: "var(--green)",
+    fontWeight: 600,
+  },
+  reviewExplain: {
+    fontSize: 12,
+    color: "var(--text-muted)",
+    marginTop: 8,
+    paddingTop: 8,
+    borderTop: "1px solid var(--border-soft)",
+    lineHeight: 1.5,
+  },
 };
 
 
@@ -1806,7 +1921,7 @@ const S = {
 function useTheme() {
   const [theme, setTheme] = useState(() => {
     try {
-      return localStorage.getItem("trainer-theme") || "auto";
+      return localStorage.getItem("theme") || "auto";
     } catch (e) {
       return "auto";
     }
@@ -1815,7 +1930,7 @@ function useTheme() {
     document.documentElement.classList.remove("theme-auto", "theme-light", "theme-dark");
     document.documentElement.classList.add("theme-" + theme);
     try {
-      localStorage.setItem("trainer-theme", theme);
+      localStorage.setItem("theme", theme);
     } catch (e) {}
   }, [theme]);
   function cycleTheme() {
@@ -2313,30 +2428,53 @@ function buildTestSession(topics, vocab, conjugations, manualQuestions, blockId)
   const trainerTopic = `trainer:${blockId}`;
   const manualPool = manualQuestions.filter(q => q.topic === trainerTopic);
 
-  // 3. Объединяем пулы по уровням
+  // 3. Дедупликация: если на одно слово есть ручной вопрос и авто-вопрос — оставить ручной
+  const manualSourceIds = new Set(manualPool.map(q => q.sourceId).filter(Boolean));
+  const autoFiltered = autoPool.filter(q => !q.sourceId || !manualSourceIds.has(q.sourceId));
+
+  // 4. Объединяем по уровням
   const byLevel = { 1: [], 2: [], 3: [], 4: [], 5: [] };
-  for (const q of [...autoPool, ...manualPool]) {
+  for (const q of [...autoFiltered, ...manualPool]) {
     const lvl = q.difficulty || 1;
     if (byLevel[lvl]) byLevel[lvl].push(q);
   }
 
-  // 4. Семплим по квоте, добирая из соседних уровней если не хватает
+  // 5. Сборка сессии: ПО ПОРЯДКУ уровней, внутри каждого — шафл
+  // Семплим по квоте, добирая из соседних уровней если не хватает
+  // Результат: сначала все Ур 1, потом все Ур 2, ... — порядок уровней сохраняется
   const session = [];
   const used = new Set();
+
+  // Первый проход: по квоте на уровень
+  const takenByLevel = { 1: [], 2: [], 3: [], 4: [], 5: [] };
   for (const lvl of [1, 2, 3, 4, 5]) {
     const want = QUOTA[lvl];
     const pool = shuffle(byLevel[lvl].filter(q => !used.has(q)));
     const take = pool.slice(0, want);
     take.forEach(q => used.add(q));
-    session.push(...take);
-  }
-  // Добор: если не наскребли 30 — добираем из любого пула
-  if (session.length < 30) {
-    const allRest = shuffle([...autoPool, ...manualPool].filter(q => !used.has(q)));
-    session.push(...allRest.slice(0, 30 - session.length));
+    takenByLevel[lvl] = take;
   }
 
-  // Перемешиваем MC опции и общий порядок
+  // Второй проход: добор. Если total < 30 — добираем недостающее с тех уровней где осталось
+  const totalTaken = Object.values(takenByLevel).reduce((s, a) => s + a.length, 0);
+  if (totalTaken < 30) {
+    let need = 30 - totalTaken;
+    for (const lvl of [1, 2, 3, 4, 5]) {
+      if (need <= 0) break;
+      const remaining = shuffle(byLevel[lvl].filter(q => !used.has(q)));
+      const extra = remaining.slice(0, need);
+      extra.forEach(q => used.add(q));
+      takenByLevel[lvl].push(...extra);
+      need -= extra.length;
+    }
+  }
+
+  // Сборка финального порядка: ПО УРОВНЯМ
+  for (const lvl of [1, 2, 3, 4, 5]) {
+    session.push(...takenByLevel[lvl]);
+  }
+
+  // Перемешиваем MC опции (но не порядок вопросов!)
   return shuffleMC(session);
 }
 
@@ -2369,6 +2507,10 @@ function App() {
   const [tiles, setTiles] = useState([]);
   const [chosen, setChosen] = useState([]);
   const [conjAnswers, setConjAnswers] = useState([]);
+  // Для разбора в конце: массив {q, userAnswer, isCorrect}
+  const [userAnswers, setUserAnswers] = useState([]);
+  // Для текущей плашки ✓/✗
+  const [lastVerdict, setLastVerdict] = useState(null); // true | false | null
 
   // ─── Вычисляемые ────────────────────────────────────────────────────────
   function getActiveTopics() {
@@ -2435,6 +2577,7 @@ function App() {
     const session = buildTestSession([], VOCAB, CONJUGATIONS, QUESTIONS, "unregel");
     setQuestions(session); setQIdx(0); setUserAns(""); setAnswered(false);
     setCorrectCount(0); setHintVisible(false); setTiles([]); setChosen([]); setConjAnswers([]);
+    setUserAnswers([]); setLastVerdict(null);
     setPhase("test-quiz");
   }
   function pickSub(s) {
@@ -2456,6 +2599,7 @@ function App() {
     const session = buildTestSession(topics, VOCAB, CONJUGATIONS, QUESTIONS, blockId);
     setQuestions(session); setQIdx(0); setUserAns(""); setAnswered(false);
     setCorrectCount(0); setHintVisible(false); setTiles([]); setChosen([]); setConjAnswers([]);
+    setUserAnswers([]); setLastVerdict(null);
     setPhase("test-quiz");
   }
   function startLearnCards() {
@@ -2467,6 +2611,7 @@ function App() {
       .map(item => genL1_translate_DE_RU(item, VOCAB)).filter(Boolean);
     setQuestions(shuffleMC(session)); setQIdx(0); setUserAns(""); setAnswered(false);
     setCorrectCount(0); setTiles([]); setChosen([]);
+    setUserAnswers([]); setLastVerdict(null);
     setPhase("learn-test");
   }
   function goBackToSubblocks() {
@@ -2483,15 +2628,24 @@ function App() {
     if (cardIdx > 0) { setCardIdx(cardIdx - 1); setFlipped(false); }
   }
 
-  function submitAnswer(isCorrect) {
+  function submitAnswer(isCorrect, userValue) {
     if (isCorrect) setCorrectCount(c => c + 1);
     setAnswered(true);
+    setLastVerdict(isCorrect);
+    // Сохраняем детали для финального разбора
+    const q = questions[qIdx];
+    setUserAnswers(prev => [...prev, {
+      q,
+      userValue,
+      isCorrect,
+    }]);
   }
   function nextQ() {
     if (qIdx + 1 >= questions.length) setPhase("results");
     else {
       setQIdx(qIdx + 1); setUserAns(""); setAnswered(false); setHintVisible(false);
       setChosen([]); setConjAnswers([]);
+      setLastVerdict(null);
       const nq = questions[qIdx + 1];
       if (nq && nq.type === "tiles") setTiles(shuffle(nq.words.map((w, i) => ({ w, i }))));
     }
@@ -2510,6 +2664,35 @@ function App() {
   // ─── Цвета режимов ──────────────────────────────────────────────────────
   const modeColor = mode === "learn" ? "#7c5cbf" : "#1a7a4a";
   const modeLabel = mode === "learn" ? "🧠 Изучение" : "🎯 Тестирование";
+
+  // ─── Подписи уровней (для пользователя — без сокращений) ────────────────
+  const LEVEL_LABELS = {
+    1: { name: "Уровень 1", action: "Выбор", color: "#1a7a4a" },     // зелёный
+    2: { name: "Уровень 2", action: "Артикль / Спряжение", color: "#3498db" }, // синий
+    3: { name: "Уровень 3", action: "Вставь / Заполни", color: "#e67e22" },  // оранжевый
+    4: { name: "Уровень 4", action: "Составь предложение", color: "#9b59b6" }, // фиолетовый
+    5: { name: "Уровень 5", action: "Открытый ответ", color: "#e74c3c" },     // красный
+  };
+
+  // ─── Названия типов вопросов (полные, для пользователя) ─────────────────
+  const TYPE_LABELS = {
+    mc: "Выбор",
+    fill: "Вставь",
+    tiles: "Составь",
+    conj: "Спряжение",
+  };
+
+  // Получить note слова/глагола привязанного к вопросу через sourceId
+  function getNoteForQuestion(q) {
+    if (!q || !q.sourceId) return q?.explain || "";
+    // Ищем в VOCAB
+    const v = VOCAB.find(x => x.id === q.sourceId);
+    if (v && v.note) return v.note;
+    // Ищем в CONJUGATIONS
+    const c = CONJUGATIONS.find(x => x.id === q.sourceId);
+    if (c && c.ru) return `${c.verb} — ${c.ru}`;
+    return q.explain || "";
+  }
 
   // ─── HOME ──────────────────────────────────────────────────────────────
   function renderHome() {
@@ -2739,6 +2922,15 @@ function App() {
       ? "Мини-тест на перевод"
       : (activeSub ? activeSub.label : activeBlock.label);
 
+    // Уровень и подпись (полная для пользователя)
+    const lvl = q.difficulty || 1;
+    const lvlInfo = LEVEL_LABELS[lvl] || LEVEL_LABELS[1];
+    // Прогресс % (на основе текущего номера вопроса, не правильных)
+    const progressPct = Math.round(((qIdx + (answered ? 1 : 0)) / questions.length) * 100);
+
+    // Текст правильного ответа для плашки разбора
+    const correctAnsText = formatCorrectAnswer(q);
+
     return (
       <div style={S.page}>
         <div style={S.container}>
@@ -2754,16 +2946,48 @@ function App() {
             right={<span style={S.muted}>{qIdx + 1} / {questions.length} · ✓ {correctCount}</span>}
             icon={icon} onTheme={cycleTheme} onHome={goHome} />
           <div style={{ textAlign: "center", color: "var(--text-muted)", fontSize: 13, marginBottom: 12 }}>
-            {subLabel}
+            {subLabel} · {modeLabel.includes("Тест") ? "Тестирование" : "Изучение"}
           </div>
+
+          {/* Бейдж уровня */}
+          <div style={S.levelBadge(lvlInfo.color)}>
+            {lvlInfo.name} · {lvlInfo.action}
+          </div>
+
+          {/* Прогресс-бар */}
+          <div style={S.progressTrack}>
+            <div style={S.progressFill(lvlInfo.color, progressPct)} />
+          </div>
+
           <div style={S.questionCard}>
             <div style={S.questionMeta}>
-              Уровень {q.difficulty || "?"} · {q.type}
+              {TYPE_LABELS[q.type] || q.type}
               {q.auto && <span style={S.autoBadge}>авто</span>}
             </div>
             <div style={S.questionText}>{q.q}</div>
             {renderAnswerControls(q)}
-            {answered && q.explain && (<div style={S.explain}>💡 {q.explain}</div>)}
+
+            {/* Плашка ✓ Правильно / ✗ Неправильно */}
+            {answered && lastVerdict === true && (
+              <div style={S.verdictRight}>✓ Правильно</div>
+            )}
+            {answered && lastVerdict === false && (
+              <>
+                <div style={S.verdictWrong}>✗ Неправильно</div>
+                {correctAnsText && (
+                  <div style={S.correctAns}>
+                    Правильно: <span style={S.correctAnsValue}>{correctAnsText}</span>
+                  </div>
+                )}
+              </>
+            )}
+
+            {/* Объяснение (note слова или explain вопроса) — после ответа */}
+            {answered && (() => {
+              const explainText = getNoteForQuestion(q);
+              if (!explainText) return null;
+              return <div style={S.explain}>💡 {explainText}</div>;
+            })()}
           </div>
           {answered && (
             <div style={{ textAlign: "center", marginTop: 16 }}>
@@ -2777,6 +3001,27 @@ function App() {
     );
   }
 
+  // Форматирование правильного ответа для плашки разбора
+  function formatCorrectAnswer(q) {
+    if (!q) return "";
+    if (q.type === "mc") {
+      return q.opts ? q.opts[q.ans] : "";
+    }
+    if (q.type === "fill") {
+      return q.ans || "";
+    }
+    if (q.type === "tiles") {
+      return q.words ? q.words.join(" ") : "";
+    }
+    if (q.type === "conj") {
+      // Для conj — показываем "Pronoun → Form" парами
+      if (!q.pronouns || !q.ans) return "";
+      return q.pronouns.map((p, i) => `${p} ${q.ans[i]}`).join(", ");
+    }
+    return "";
+  }
+
+
   function renderAnswerControls(q) {
     if (q.type === "mc") {
       return (
@@ -2787,7 +3032,7 @@ function App() {
                              ...(answered && i === q.ans ? S.mcBtnCorrect : {}),
                              ...(answered && i !== q.ans && +userAns === i ? S.mcBtnWrong : {}) }}
                     disabled={answered}
-                    onClick={() => { setUserAns(String(i)); submitAnswer(i === q.ans); }}>
+                    onClick={() => { setUserAns(String(i)); submitAnswer(i === q.ans, q.opts[i]); }}>
               {opt}
             </button>
           ))}
@@ -2802,7 +3047,7 @@ function App() {
                  disabled={answered}
                  onKeyDown={e => {
                    if (e.key === "Enter" && !answered)
-                     submitAnswer(checkFill(userAns, q.ans, q.altAns));
+                     submitAnswer(checkFill(userAns, q.ans, q.altAns), userAns);
                  }}
                  placeholder="Введи ответ..." />
           {q.hint && (
@@ -2814,15 +3059,9 @@ function App() {
           {!answered && (
             <div style={{ marginTop: 12, textAlign: "right" }}>
               <button style={S.primaryBtn(activeBlock.color)}
-                      onClick={() => submitAnswer(checkFill(userAns, q.ans, q.altAns))}>
+                      onClick={() => submitAnswer(checkFill(userAns, q.ans, q.altAns), userAns)}>
                 Проверить
               </button>
-            </div>
-          )}
-          {answered && (
-            <div style={{ ...S.answerLine,
-                          color: checkFill(userAns, q.ans, q.altAns) ? "var(--green)" : "var(--red)" }}>
-              Правильно: <b>{q.ans}</b>
             </div>
           )}
         </div>
@@ -2855,14 +3094,11 @@ function App() {
                       onClick={() => {
                         const userPhrase = chosen.map(c => c.w).join(" ");
                         const correctPhrase = q.words.join(" ");
-                        submitAnswer(normalise(userPhrase) === normalise(correctPhrase));
+                        submitAnswer(normalise(userPhrase) === normalise(correctPhrase), userPhrase);
                       }}>
                 Проверить
               </button>
             </div>
-          )}
-          {answered && (
-            <div style={{ ...S.answerLine }}>Правильно: <b>{q.words.join(" ")}</b></div>
           )}
         </div>
       );
@@ -2900,7 +3136,10 @@ function App() {
                       onClick={() => {
                         const allCorrect = q.ans.every((a, i) =>
                           normalise(conjAnswers[i] || "") === normalise(a));
-                        submitAnswer(allCorrect);
+                        // Сохраняем ответы пользователя как объект {pronoun: form}
+                        const userValue = q.pronouns.map((p, i) =>
+                          `${p} ${conjAnswers[i] || "—"}`).join(", ");
+                        submitAnswer(allCorrect, userValue);
                       }}>
                 Проверить
               </button>
@@ -2939,9 +3178,64 @@ function App() {
               </button>
             </div>
           </div>
+
+          {/* ── РАЗБОР: список всех вопросов ─────────────────────── */}
+          {userAnswers.length > 0 && (
+            <div style={S.reviewWrap}>
+              <div style={S.reviewHeading}>📋 Разбор</div>
+              {userAnswers.map((ua, idx) => {
+                const q = ua.q;
+                const correctText = formatCorrectAnswer(q);
+                const userText = formatUserAnswerForReview(ua, q);
+                const explainText = getNoteForQuestion(q);
+                const lvl = q.difficulty || 1;
+                const lvlInfo = LEVEL_LABELS[lvl] || LEVEL_LABELS[1];
+
+                return (
+                  <div key={idx} style={S.reviewCard}>
+                    <div style={S.reviewHeader}>
+                      <span>
+                        {idx + 1} / {userAnswers.length}
+                        <span style={{ marginLeft: 8, color: lvlInfo.color, fontWeight: 600 }}>
+                          · {lvlInfo.name}
+                        </span>
+                      </span>
+                      <span style={{ fontSize: 16,
+                                     color: ua.isCorrect ? "var(--green)" : "var(--red)",
+                                     fontWeight: 700 }}>
+                        {ua.isCorrect ? "✓" : "✗"}
+                      </span>
+                    </div>
+                    <div style={S.reviewQ}>{q.q}</div>
+                    <div style={S.reviewRow}>
+                      Твой ответ:{" "}
+                      <span style={ua.isCorrect ? S.reviewUserCorrect : S.reviewUserWrong}>
+                        {userText || "—"}
+                      </span>
+                    </div>
+                    {!ua.isCorrect && correctText && (
+                      <div style={S.reviewRow}>
+                        Правильно: <span style={S.reviewAns}>{correctText}</span>
+                      </div>
+                    )}
+                    {explainText && (
+                      <div style={S.reviewExplain}>💡 {explainText}</div>
+                    )}
+                  </div>
+                );
+              })}
+            </div>
+          )}
         </div>
       </div>
     );
+  }
+
+  // Текст ответа пользователя для разбора (с учётом mc — преобразуем index в текст)
+  function formatUserAnswerForReview(ua, q) {
+    if (ua.userValue === undefined || ua.userValue === null) return "";
+    // Для mc ua.userValue это уже текст опции (так передаётся в submitAnswer)
+    return String(ua.userValue);
   }
 
   // ─── MAIN SWITCH ────────────────────────────────────────────────────────
