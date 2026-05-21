@@ -1,26 +1,29 @@
 // ═══════════════════════════════════════════════════════════════
-// data.js — единый источник правды для шпоры и тренажёра
+// data.js v3 — единый источник правды для шпоры и тренажёра
 // ═══════════════════════════════════════════════════════════════
-// Схема VOCAB:
-//   { id, de, ru, pos, gender?, plural?, level, topics: [...], note?, new? }
-//   id: u/n/v/a/d/p/f + 4 цифры (u=num, n=noun, v=verb, a=adj, d=adv, p=pron, f=phrase)
-//   pos: num | noun | verb | adj | adv | pron | phrase
-//   gender: m | f | n | pl   (только для noun)
-//   level: A1 | A2  (эвристика; можно поправить вручную)
-//   topics: ['nouns:family', ...]
-//   new: true — слово в буфере «Новые» (вычищается при следующем переносе)
+// VOCAB:           словарь (752+ записей)
+// CONJUGATIONS:    спряжения unregelmäßig в Präsens
+// QUESTIONS:       ручные вопросы (5-уровневая модель)
+// SOUNDS:          правила произношения
+// TERMS:           грамматические термины
+// RULES:           правила (HTML-блоки)
+// BLOCKS:          структура меню тренажёра (блоки + сабблоки + topics)
+// TOPIC_TITLES:    slug → русское название с эмодзи
+// TAB_TITLES:      tab → русское название
+// PHRASE_UNITS:    составные конструкции для тайлов
+// SENTENCE_TEMPLATES: шаблоны предложений (зарезервировано на Фазу 2)
+// ═══════════════════════════════════════════════════════════════
 //
-// Схема QUESTIONS:
-//   { id, topic: 'trainer:X', level, difficulty: 1-4, type, q, ... }
-//   id: q + 4 цифры
-//   type: 'mc' (opts, ans) | 'tiles' (words) | 'fill' (ans, hint, altAns) | 'conj' (verb, tense, pronouns, ans)
-//   difficulty: 1=mc, 2=tiles, 3=fill, 4=conj (из JSX-уровней)
-//   level: A1 (diff 1-2) | A2 (diff 3-4)
+// Уровни сложности вопросов (поле difficulty):
+//   1 — перевод DE↔RU
+//   2 — артикль (mc) / спряжение Präsens (mc)
+//   3 — fill: plural, спряжение unregel, склонение
+//   4 — tiles (составление предложений)
+//   5 — рукописные ответы (заглушка под Фазу 3)
 // ═══════════════════════════════════════════════════════════════
 
-// Сгенерировано из v31 (HTML) + v2 (JSX)
 // VOCAB=752 (A1=722, A2=30)
-// CONJUGATIONS=21 QUESTIONS=100
+// CONJUGATIONS=21 QUESTIONS=100 (L1=0, L2=36, L3=46, L4=18, L5=0)
 // RULES=21 SOUNDS=17 TERMS=34
 
 const VOCAB = [
@@ -818,45 +821,45 @@ const CONJUGATIONS = [
 
 const QUESTIONS = [
   // ─── trainer:neu (9) ─────────────────────────────────
-  { id: "q0001", topic: "trainer:neu", level: "A1", difficulty: 2, type: "tiles", q: "Составь:\n«Я участвую в курсе.»", words: ["Ich", "nehme", "an", "dem", "Kurs", "teil."], explain: "teilnehmen — отдел. teil- уходит в конец. teilnehmen an + Dat." },
-  { id: "q0002", topic: "trainer:neu", level: "A1", difficulty: 2, type: "tiles", q: "Составь:\n«Это предложение очень выгодное.»", words: ["Das", "Angebot", "ist", "sehr", "günstig."], explain: "После sein — без окончания. das Angebot (n)." },
-  { id: "q0003", topic: "trainer:neu", level: "A1", difficulty: 2, type: "tiles", q: "Составь:\n«Сердечно приветствуем в Берлине!»", words: ["Herzlich", "willkommen", "in", "Berlin!"], explain: "Стандартная формула приветствия. in + Dat (im/in Berlin)." },
+  { id: "q0001", topic: "trainer:neu", level: "A2", difficulty: 4, type: "tiles", q: "Составь:\n«Я участвую в курсе.»", words: ["Ich", "nehme", "an", "dem", "Kurs", "teil."], explain: "teilnehmen — отдел. teil- уходит в конец. teilnehmen an + Dat." },
+  { id: "q0002", topic: "trainer:neu", level: "A2", difficulty: 4, type: "tiles", q: "Составь:\n«Это предложение очень выгодное.»", words: ["Das", "Angebot", "ist", "sehr", "günstig."], explain: "После sein — без окончания. das Angebot (n)." },
+  { id: "q0003", topic: "trainer:neu", level: "A2", difficulty: 4, type: "tiles", q: "Составь:\n«Сердечно приветствуем в Берлине!»", words: ["Herzlich", "willkommen", "in", "Berlin!"], explain: "Стандартная формула приветствия. in + Dat (im/in Berlin)." },
   { id: "q0004", topic: "trainer:neu", level: "A2", difficulty: 3, type: "fill", q: "Pl от \"der Gruß\"?", ans: "die Grüße", hint: "+ Umlaut, +e", altAns: ["Grüße"], explain: "der Gruß → die Grüße (u→ü, +e)." },
   { id: "q0005", topic: "trainer:neu", level: "A2", difficulty: 3, type: "fill", q: "Какой артикль? \"___ Kunst\"", ans: "die", hint: "женский род", explain: "die Kunst (f). Pl: die Künste." },
   { id: "q0006", topic: "trainer:neu", level: "A2", difficulty: 3, type: "fill", q: "Какой артикль? \"___ Angebot\" (предложение)", ans: "das", hint: "средний род", explain: "das Angebot (n). От anbieten." },
   { id: "q0007", topic: "trainer:neu", level: "A2", difficulty: 3, type: "fill", q: "От какого слова образовано «herzlich»?", ans: "Herz", hint: "сердце", altAns: ["das Herz", "Herz "], explain: "Herz + -lich = herzlich. Суффикс -lich образует прилагательные." },
   { id: "q0008", topic: "trainer:neu", level: "A2", difficulty: 3, type: "fill", q: "От какого слова «täglich»?", ans: "Tag", hint: "день", altAns: ["der Tag", "Tag "], explain: "Tag + -lich = täglich (с умлаутом)." },
-  { id: "q0009", topic: "trainer:neu", level: "A2", difficulty: 4, type: "conj", q: "Проспрягай «laden» в Präsens:", ans: ["lade", "lädst", "lädt", "laden", "ladet", "laden"], verb: "laden", tense: "Präsens", pronouns: ["ich", "du", "er/sie/es", "wir", "ihr", "sie/Sie"], explain: "Unregelmäßig: a→ä у du и er. ich lade, du lädst, er lädt." },
+  { id: "q0009", topic: "trainer:neu", level: "A2", difficulty: 3, type: "conj", q: "Проспрягай «laden» в Präsens:", ans: ["lade", "lädst", "lädt", "laden", "ladet", "laden"], verb: "laden", tense: "Präsens", pronouns: ["ich", "du", "er/sie/es", "wir", "ihr", "sie/Sie"], explain: "Unregelmäßig: a→ä у du и er. ich lade, du lädst, er lädt." },
   // ─── trainer:nums (7) ─────────────────────────────────
-  { id: "q0010", topic: "trainer:nums", level: "A1", difficulty: 1, type: "mc", q: "Как пишется число 30?", opts: ["dreizig", "dreißig", "dreizehn", "drießig"], ans: 1, explain: "30 — dreißig. Через ß, не z." },
-  { id: "q0011", topic: "trainer:nums", level: "A1", difficulty: 1, type: "mc", q: "Что означает «halb drei»?", opts: ["3 часа", "2:30", "3:30", "половина четвёртого"], ans: 1, explain: "halb drei = половина третьего = 2:30. В немецком смотрят на СЛЕДУЮЩИЙ час." },
-  { id: "q0012", topic: "trainer:nums", level: "A1", difficulty: 1, type: "mc", q: "Какой предлог для дней?", opts: ["um", "in", "am", "auf"], ans: 2, explain: "am Montag, am Dienstag... am = an + dem (Dativ)." },
-  { id: "q0013", topic: "trainer:nums", level: "A1", difficulty: 1, type: "mc", q: "Какой предлог для времени (часов)?", opts: ["am", "um", "in", "bei"], ans: 1, explain: "um 5 Uhr — в 5 часов." },
-  { id: "q0014", topic: "trainer:nums", level: "A1", difficulty: 2, type: "tiles", q: "Составь: «В понедельник в 5 часов.»", words: ["Am", "Montag", "um", "5", "Uhr."], explain: "am + день, um + время." },
+  { id: "q0010", topic: "trainer:nums", level: "A1", difficulty: 2, type: "mc", q: "Как пишется число 30?", opts: ["dreizig", "dreißig", "dreizehn", "drießig"], ans: 1, explain: "30 — dreißig. Через ß, не z." },
+  { id: "q0011", topic: "trainer:nums", level: "A1", difficulty: 2, type: "mc", q: "Что означает «halb drei»?", opts: ["3 часа", "2:30", "3:30", "половина четвёртого"], ans: 1, explain: "halb drei = половина третьего = 2:30. В немецком смотрят на СЛЕДУЮЩИЙ час." },
+  { id: "q0012", topic: "trainer:nums", level: "A1", difficulty: 2, type: "mc", q: "Какой предлог для дней?", opts: ["um", "in", "am", "auf"], ans: 2, explain: "am Montag, am Dienstag... am = an + dem (Dativ)." },
+  { id: "q0013", topic: "trainer:nums", level: "A1", difficulty: 2, type: "mc", q: "Какой предлог для времени (часов)?", opts: ["am", "um", "in", "bei"], ans: 1, explain: "um 5 Uhr — в 5 часов." },
+  { id: "q0014", topic: "trainer:nums", level: "A2", difficulty: 4, type: "tiles", q: "Составь: «В понедельник в 5 часов.»", words: ["Am", "Montag", "um", "5", "Uhr."], explain: "am + день, um + время." },
   { id: "q0015", topic: "trainer:nums", level: "A2", difficulty: 3, type: "fill", q: "Вставь: \"Es ist ___ drei.\" (2:30)", ans: "halb", hint: "половина", explain: "halb drei = 2:30. На следующий час." },
   { id: "q0016", topic: "trainer:nums", level: "A2", difficulty: 3, type: "fill", q: "Вставь: \"viertel ___ zwölf\" (12:15)", ans: "nach", hint: "после полудня", explain: "viertel nach zwölf = четверть первого = 12:15." },
   // ─── trainer:sounds (6) ─────────────────────────────────
-  { id: "q0017", topic: "trainer:sounds", level: "A1", difficulty: 1, type: "mc", q: "Как читается «ei» в слове «mein»?", opts: ["[эй]", "[ай]", "[и]", "[е]"], ans: 1, explain: "ei, ai → [ай]. mein = [майн]." },
-  { id: "q0018", topic: "trainer:sounds", level: "A1", difficulty: 1, type: "mc", q: "Как читается «ie» в слове «sieben»?", opts: ["[ие]", "[й]", "[и:]", "[ай]"], ans: 2, explain: "ie → [и:] (долгое и). sieben = [зибэн]." },
-  { id: "q0019", topic: "trainer:sounds", level: "A1", difficulty: 1, type: "mc", q: "Как читается «eu» в слове «neun»?", opts: ["[еу]", "[э]", "[ой]", "[у]"], ans: 2, explain: "eu, äu → [ой]. neun = [нойн]." },
-  { id: "q0020", topic: "trainer:sounds", level: "A1", difficulty: 1, type: "mc", q: "Как читается «sch» в «Schule»?", opts: ["[сч]", "[ш]", "[ск]", "[щ]"], ans: 1, explain: "sch → [ш]. Schule = [шулэ]." },
-  { id: "q0021", topic: "trainer:sounds", level: "A1", difficulty: 1, type: "mc", q: "Как читается «ch» в слове «ich»?", opts: ["[х] — ach-Laut", "[к]", "[хь] — ich-Laut", "[ш]"], ans: 2, explain: "ch после e/i/ei/ä/ö/ü → [хь] (ich-Laut). ich = [ихь]." },
-  { id: "q0022", topic: "trainer:sounds", level: "A1", difficulty: 1, type: "mc", q: "Как читается «ch» в слове «machen»?", opts: ["[хь]", "[к]", "[х] — ach-Laut", "[ш]"], ans: 2, explain: "ch после a/o/u/au → [х] (ach-Laut). machen = [махэн]." },
+  { id: "q0017", topic: "trainer:sounds", level: "A1", difficulty: 2, type: "mc", q: "Как читается «ei» в слове «mein»?", opts: ["[эй]", "[ай]", "[и]", "[е]"], ans: 1, explain: "ei, ai → [ай]. mein = [майн]." },
+  { id: "q0018", topic: "trainer:sounds", level: "A1", difficulty: 2, type: "mc", q: "Как читается «ie» в слове «sieben»?", opts: ["[ие]", "[й]", "[и:]", "[ай]"], ans: 2, explain: "ie → [и:] (долгое и). sieben = [зибэн]." },
+  { id: "q0019", topic: "trainer:sounds", level: "A1", difficulty: 2, type: "mc", q: "Как читается «eu» в слове «neun»?", opts: ["[еу]", "[э]", "[ой]", "[у]"], ans: 2, explain: "eu, äu → [ой]. neun = [нойн]." },
+  { id: "q0020", topic: "trainer:sounds", level: "A1", difficulty: 2, type: "mc", q: "Как читается «sch» в «Schule»?", opts: ["[сч]", "[ш]", "[ск]", "[щ]"], ans: 1, explain: "sch → [ш]. Schule = [шулэ]." },
+  { id: "q0021", topic: "trainer:sounds", level: "A1", difficulty: 2, type: "mc", q: "Как читается «ch» в слове «ich»?", opts: ["[х] — ach-Laut", "[к]", "[хь] — ich-Laut", "[ш]"], ans: 2, explain: "ch после e/i/ei/ä/ö/ü → [хь] (ich-Laut). ich = [ихь]." },
+  { id: "q0022", topic: "trainer:sounds", level: "A1", difficulty: 2, type: "mc", q: "Как читается «ch» в слове «machen»?", opts: ["[хь]", "[к]", "[х] — ach-Laut", "[ш]"], ans: 2, explain: "ch после a/o/u/au → [х] (ach-Laut). machen = [махэн]." },
   // ─── trainer:basic (2) ─────────────────────────────────
-  { id: "q0023", topic: "trainer:basic", level: "A1", difficulty: 2, type: "tiles", q: "Составь: «Ты любишь готовить?»", words: ["Kochst", "du", "gern?"], explain: "Verb + gern = «любить (делать)». Ja/Nein-Frage: Verb на 1-й позиции." },
+  { id: "q0023", topic: "trainer:basic", level: "A2", difficulty: 4, type: "tiles", q: "Составь: «Ты любишь готовить?»", words: ["Kochst", "du", "gern?"], explain: "Verb + gern = «любить (делать)». Ja/Nein-Frage: Verb на 1-й позиции." },
   { id: "q0024", topic: "trainer:basic", level: "A2", difficulty: 3, type: "fill", q: "Präteritum от «sein» для «ich»?", ans: "war", hint: "был", explain: "ich war (Präteritum)." },
   // ─── trainer:modal (9) ─────────────────────────────────
-  { id: "q0025", topic: "trainer:modal", level: "A1", difficulty: 2, type: "tiles", q: "Составь: «Я не могу прийти.»", words: ["Ich", "kann", "nicht", "kommen."], explain: "Modalverb на 2-й позиции, Infinitiv в конец." },
-  { id: "q0026", topic: "trainer:modal", level: "A1", difficulty: 2, type: "tiles", q: "Составь: «Я хочу учить немецкий.»", words: ["Ich", "will", "Deutsch", "lernen."], explain: "wollen на 2-й позиции, Infinitiv (lernen) в конце." },
+  { id: "q0025", topic: "trainer:modal", level: "A2", difficulty: 4, type: "tiles", q: "Составь: «Я не могу прийти.»", words: ["Ich", "kann", "nicht", "kommen."], explain: "Modalverb на 2-й позиции, Infinitiv в конец." },
+  { id: "q0026", topic: "trainer:modal", level: "A2", difficulty: 4, type: "tiles", q: "Составь: «Я хочу учить немецкий.»", words: ["Ich", "will", "Deutsch", "lernen."], explain: "wollen на 2-й позиции, Infinitiv (lernen) в конце." },
   { id: "q0027", topic: "trainer:modal", level: "A2", difficulty: 3, type: "fill", q: "Вставь: \"Ich ___ Deutsch lernen.\" (хочу)", ans: "will", hint: "wollen — ich", explain: "ich will. Modalverb." },
   { id: "q0028", topic: "trainer:modal", level: "A2", difficulty: 3, type: "fill", q: "sollen или müssen?\n\"Ich ___ schlafen.\" (сам устал)", ans: "muss", hint: "обязательство изнутри", explain: "müssen — обязательство ИЗНУТРИ / объективная необходимость." },
   { id: "q0029", topic: "trainer:modal", level: "A2", difficulty: 3, type: "fill", q: "sollen или müssen?\n\"Du ___ nicht lügen.\" (тебе говорят)", ans: "sollst", hint: "обязательство извне", explain: "sollen — обязательство ИЗВНЕ. Du sollst nicht lügen." },
-  { id: "q0030", topic: "trainer:modal", level: "A2", difficulty: 4, type: "conj", q: "Проспрягай «können» в Präsens:", ans: ["kann", "kannst", "kann", "können", "könnt", "können"], verb: "können", tense: "Präsens", pronouns: ["ich", "du", "er/sie/es", "wir", "ihr", "sie/Sie"], explain: "ich = er (kann). Modalverb." },
-  { id: "q0031", topic: "trainer:modal", level: "A2", difficulty: 4, type: "conj", q: "Проспрягай «wollen» в Präsens:", ans: ["will", "willst", "will", "wollen", "wollt", "wollen"], verb: "wollen", tense: "Präsens", pronouns: ["ich", "du", "er/sie/es", "wir", "ihr", "sie/Sie"], explain: "ich = er (will)." },
-  { id: "q0032", topic: "trainer:modal", level: "A2", difficulty: 4, type: "conj", q: "Проспрягай «müssen» в Präsens:", ans: ["muss", "musst", "muss", "müssen", "müsst", "müssen"], verb: "müssen", tense: "Präsens", pronouns: ["ich", "du", "er/sie/es", "wir", "ihr", "sie/Sie"], explain: "ich = er (muss)." },
-  { id: "q0033", topic: "trainer:modal", level: "A2", difficulty: 4, type: "conj", q: "Проспрягай «dürfen» в Präsens:", ans: ["darf", "darfst", "darf", "dürfen", "dürft", "dürfen"], verb: "dürfen", tense: "Präsens", pronouns: ["ich", "du", "er/sie/es", "wir", "ihr", "sie/Sie"], explain: "ich = er (darf)." },
+  { id: "q0030", topic: "trainer:modal", level: "A2", difficulty: 3, type: "conj", q: "Проспрягай «können» в Präsens:", ans: ["kann", "kannst", "kann", "können", "könnt", "können"], verb: "können", tense: "Präsens", pronouns: ["ich", "du", "er/sie/es", "wir", "ihr", "sie/Sie"], explain: "ich = er (kann). Modalverb." },
+  { id: "q0031", topic: "trainer:modal", level: "A2", difficulty: 3, type: "conj", q: "Проспрягай «wollen» в Präsens:", ans: ["will", "willst", "will", "wollen", "wollt", "wollen"], verb: "wollen", tense: "Präsens", pronouns: ["ich", "du", "er/sie/es", "wir", "ihr", "sie/Sie"], explain: "ich = er (will)." },
+  { id: "q0032", topic: "trainer:modal", level: "A2", difficulty: 3, type: "conj", q: "Проспрягай «müssen» в Präsens:", ans: ["muss", "musst", "muss", "müssen", "müsst", "müssen"], verb: "müssen", tense: "Präsens", pronouns: ["ich", "du", "er/sie/es", "wir", "ihr", "sie/Sie"], explain: "ich = er (muss)." },
+  { id: "q0033", topic: "trainer:modal", level: "A2", difficulty: 3, type: "conj", q: "Проспрягай «dürfen» в Präsens:", ans: ["darf", "darfst", "darf", "dürfen", "dürft", "dürfen"], verb: "dürfen", tense: "Präsens", pronouns: ["ich", "du", "er/sie/es", "wir", "ihr", "sie/Sie"], explain: "ich = er (darf)." },
   // ─── trainer:movement (1) ─────────────────────────────────
-  { id: "q0034", topic: "trainer:movement", level: "A1", difficulty: 2, type: "tiles", q: "Составь: «Я забираю тебя в 7 часов.»", words: ["Ich", "hole", "dich", "um", "7", "Uhr", "ab."], explain: "abholen — отделяемая. ab- уходит в конец." },
+  { id: "q0034", topic: "trainer:movement", level: "A2", difficulty: 4, type: "tiles", q: "Составь: «Я забираю тебя в 7 часов.»", words: ["Ich", "hole", "dich", "um", "7", "Uhr", "ab."], explain: "abholen — отделяемая. ab- уходит в конец." },
   // ─── trainer:food (1) ─────────────────────────────────
   { id: "q0035", topic: "trainer:food", level: "A2", difficulty: 3, type: "fill", q: "Вставь: \"Er ___ Pizza.\" (есть)", ans: "isst", hint: "essen — er", explain: "essen → er isst (e→i)." },
   // ─── trainer:home (1) ─────────────────────────────────
@@ -866,76 +869,76 @@ const QUESTIONS = [
   { id: "q0038", topic: "trainer:communication", level: "A2", difficulty: 3, type: "fill", q: "wissen или kennen? \"Ich ___, wo er wohnt.\"", ans: "weiß", hint: "знать факт", explain: "wissen — знать факт. Unregel: ich weiß." },
   { id: "q0039", topic: "trainer:communication", level: "A2", difficulty: 3, type: "fill", q: "vermissen или verlieren?\n\"Ich ___ meinen Schlüssel.\" (потерял)", ans: "verliere", hint: "о предмете", altAns: ["habe verloren"], explain: "verlieren — терять (предмет). vermissen — скучать." },
   // ─── trainer:study (1) ─────────────────────────────────
-  { id: "q0040", topic: "trainer:study", level: "A1", difficulty: 2, type: "tiles", q: "Составь: «Я работаю в офисе.»", words: ["Ich", "arbeite", "im", "Büro."], explain: "im = in + dem (Dat). Wo? — Dativ." },
+  { id: "q0040", topic: "trainer:study", level: "A2", difficulty: 4, type: "tiles", q: "Составь: «Я работаю в офисе.»", words: ["Ich", "arbeite", "im", "Büro."], explain: "im = in + dem (Dat). Wo? — Dativ." },
   // ─── trainer:unregel (12) ─────────────────────────────────
-  { id: "q0041", topic: "trainer:unregel", level: "A2", difficulty: 4, type: "conj", q: "Проспрягай «sein» в Präsens:", ans: ["bin", "bist", "ist", "sind", "seid", "sind"], verb: "sein", tense: "Präsens", pronouns: ["ich", "du", "er/sie/es", "wir", "ihr", "sie/Sie"], explain: "Самый неправильный глагол. Учи наизусть." },
-  { id: "q0042", topic: "trainer:unregel", level: "A2", difficulty: 4, type: "conj", q: "Проспрягай «haben» в Präsens:", ans: ["habe", "hast", "hat", "haben", "habt", "haben"], verb: "haben", tense: "Präsens", pronouns: ["ich", "du", "er/sie/es", "wir", "ihr", "sie/Sie"], explain: "du hast / er hat — без b!" },
-  { id: "q0043", topic: "trainer:unregel", level: "A2", difficulty: 4, type: "conj", q: "Проспрягай «nehmen» в Präsens:", ans: ["nehme", "nimmst", "nimmt", "nehmen", "nehmt", "nehmen"], verb: "nehmen", tense: "Präsens", pronouns: ["ich", "du", "er/sie/es", "wir", "ihr", "sie/Sie"], explain: "du/er: nimm- (h уходит, e→i)." },
-  { id: "q0044", topic: "trainer:unregel", level: "A2", difficulty: 4, type: "conj", q: "Проспрягай «sprechen» в Präsens:", ans: ["spreche", "sprichst", "spricht", "sprechen", "sprecht", "sprechen"], verb: "sprechen", tense: "Präsens", pronouns: ["ich", "du", "er/sie/es", "wir", "ihr", "sie/Sie"], explain: "e→i в du/er." },
-  { id: "q0045", topic: "trainer:unregel", level: "A2", difficulty: 4, type: "conj", q: "Проспрягай «schlafen» в Präsens:", ans: ["schlafe", "schläfst", "schläft", "schlafen", "schlaft", "schlafen"], verb: "schlafen", tense: "Präsens", pronouns: ["ich", "du", "er/sie/es", "wir", "ihr", "sie/Sie"], explain: "a→ä в du/er." },
-  { id: "q0046", topic: "trainer:unregel", level: "A2", difficulty: 4, type: "conj", q: "Проспрягай «sehen» в Präsens:", ans: ["sehe", "siehst", "sieht", "sehen", "seht", "sehen"], verb: "sehen", tense: "Präsens", pronouns: ["ich", "du", "er/sie/es", "wir", "ihr", "sie/Sie"], explain: "e→ie в du/er. siehst, sieht." },
-  { id: "q0047", topic: "trainer:unregel", level: "A2", difficulty: 4, type: "conj", q: "Проспрягай «essen» в Präsens:", ans: ["esse", "isst", "isst", "essen", "esst", "essen"], verb: "essen", tense: "Präsens", pronouns: ["ich", "du", "er/sie/es", "wir", "ihr", "sie/Sie"], explain: "du/er совпадают: isst." },
-  { id: "q0048", topic: "trainer:unregel", level: "A2", difficulty: 4, type: "conj", q: "Проспрягай «werfen» в Präsens:", ans: ["werfe", "wirfst", "wirft", "werfen", "werft", "werfen"], verb: "werfen", tense: "Präsens", pronouns: ["ich", "du", "er/sie/es", "wir", "ihr", "sie/Sie"], explain: "e→i: du wirfst, er wirft." },
-  { id: "q0049", topic: "trainer:unregel", level: "A2", difficulty: 4, type: "conj", q: "Проспрягай «fangen» в Präsens:", ans: ["fange", "fängst", "fängt", "fangen", "fangt", "fangen"], verb: "fangen", tense: "Präsens", pronouns: ["ich", "du", "er/sie/es", "wir", "ihr", "sie/Sie"], explain: "a→ä: du fängst, er fängt." },
-  { id: "q0050", topic: "trainer:unregel", level: "A1", difficulty: 1, type: "mc", q: "Partizip II от «sehen»?", opts: ["geseht", "gesehen", "sehte", "sah"], ans: 1, explain: "sehen — Unregel. Part II: gesehen (с haben)." },
-  { id: "q0051", topic: "trainer:unregel", level: "A1", difficulty: 1, type: "mc", q: "Präteritum от «bleiben»?", opts: ["bleibte", "blieb", "blei", "geblieben"], ans: 1, explain: "bleiben → blieb / geblieben (с sein)." },
-  { id: "q0052", topic: "trainer:unregel", level: "A1", difficulty: 1, type: "mc", q: "Какое вспомогательное у «fliegen» в Perfekt?", opts: ["haben", "sein", "werden", "müssen"], ans: 1, explain: "Глаголы движения → sein. Ich bin geflogen." },
+  { id: "q0041", topic: "trainer:unregel", level: "A2", difficulty: 3, type: "conj", q: "Проспрягай «sein» в Präsens:", ans: ["bin", "bist", "ist", "sind", "seid", "sind"], verb: "sein", tense: "Präsens", pronouns: ["ich", "du", "er/sie/es", "wir", "ihr", "sie/Sie"], explain: "Самый неправильный глагол. Учи наизусть." },
+  { id: "q0042", topic: "trainer:unregel", level: "A2", difficulty: 3, type: "conj", q: "Проспрягай «haben» в Präsens:", ans: ["habe", "hast", "hat", "haben", "habt", "haben"], verb: "haben", tense: "Präsens", pronouns: ["ich", "du", "er/sie/es", "wir", "ihr", "sie/Sie"], explain: "du hast / er hat — без b!" },
+  { id: "q0043", topic: "trainer:unregel", level: "A2", difficulty: 3, type: "conj", q: "Проспрягай «nehmen» в Präsens:", ans: ["nehme", "nimmst", "nimmt", "nehmen", "nehmt", "nehmen"], verb: "nehmen", tense: "Präsens", pronouns: ["ich", "du", "er/sie/es", "wir", "ihr", "sie/Sie"], explain: "du/er: nimm- (h уходит, e→i)." },
+  { id: "q0044", topic: "trainer:unregel", level: "A2", difficulty: 3, type: "conj", q: "Проспрягай «sprechen» в Präsens:", ans: ["spreche", "sprichst", "spricht", "sprechen", "sprecht", "sprechen"], verb: "sprechen", tense: "Präsens", pronouns: ["ich", "du", "er/sie/es", "wir", "ihr", "sie/Sie"], explain: "e→i в du/er." },
+  { id: "q0045", topic: "trainer:unregel", level: "A2", difficulty: 3, type: "conj", q: "Проспрягай «schlafen» в Präsens:", ans: ["schlafe", "schläfst", "schläft", "schlafen", "schlaft", "schlafen"], verb: "schlafen", tense: "Präsens", pronouns: ["ich", "du", "er/sie/es", "wir", "ihr", "sie/Sie"], explain: "a→ä в du/er." },
+  { id: "q0046", topic: "trainer:unregel", level: "A2", difficulty: 3, type: "conj", q: "Проспрягай «sehen» в Präsens:", ans: ["sehe", "siehst", "sieht", "sehen", "seht", "sehen"], verb: "sehen", tense: "Präsens", pronouns: ["ich", "du", "er/sie/es", "wir", "ihr", "sie/Sie"], explain: "e→ie в du/er. siehst, sieht." },
+  { id: "q0047", topic: "trainer:unregel", level: "A2", difficulty: 3, type: "conj", q: "Проспрягай «essen» в Präsens:", ans: ["esse", "isst", "isst", "essen", "esst", "essen"], verb: "essen", tense: "Präsens", pronouns: ["ich", "du", "er/sie/es", "wir", "ihr", "sie/Sie"], explain: "du/er совпадают: isst." },
+  { id: "q0048", topic: "trainer:unregel", level: "A2", difficulty: 3, type: "conj", q: "Проспрягай «werfen» в Präsens:", ans: ["werfe", "wirfst", "wirft", "werfen", "werft", "werfen"], verb: "werfen", tense: "Präsens", pronouns: ["ich", "du", "er/sie/es", "wir", "ihr", "sie/Sie"], explain: "e→i: du wirfst, er wirft." },
+  { id: "q0049", topic: "trainer:unregel", level: "A2", difficulty: 3, type: "conj", q: "Проспрягай «fangen» в Präsens:", ans: ["fange", "fängst", "fängt", "fangen", "fangt", "fangen"], verb: "fangen", tense: "Präsens", pronouns: ["ich", "du", "er/sie/es", "wir", "ihr", "sie/Sie"], explain: "a→ä: du fängst, er fängt." },
+  { id: "q0050", topic: "trainer:unregel", level: "A1", difficulty: 2, type: "mc", q: "Partizip II от «sehen»?", opts: ["geseht", "gesehen", "sehte", "sah"], ans: 1, explain: "sehen — Unregel. Part II: gesehen (с haben)." },
+  { id: "q0051", topic: "trainer:unregel", level: "A1", difficulty: 2, type: "mc", q: "Präteritum от «bleiben»?", opts: ["bleibte", "blieb", "blei", "geblieben"], ans: 1, explain: "bleiben → blieb / geblieben (с sein)." },
+  { id: "q0052", topic: "trainer:unregel", level: "A1", difficulty: 2, type: "mc", q: "Какое вспомогательное у «fliegen» в Perfekt?", opts: ["haben", "sein", "werden", "müssen"], ans: 1, explain: "Глаголы движения → sein. Ich bin geflogen." },
   // ─── trainer:family (2) ─────────────────────────────────
   { id: "q0053", topic: "trainer:family", level: "A2", difficulty: 3, type: "fill", q: "Pl от \"das Kind\"?", ans: "die Kinder", hint: "+er", altAns: ["Kinder"], explain: "das Kind → die Kinder." },
   { id: "q0054", topic: "trainer:family", level: "A2", difficulty: 3, type: "fill", q: "Pl от \"der Vater\"?", ans: "die Väter", hint: "+ Umlaut", altAns: ["Väter"], explain: "der Vater → die Väter (a→ä)." },
   // ─── trainer:misc (5) ─────────────────────────────────
-  { id: "q0055", topic: "trainer:misc", level: "A1", difficulty: 2, type: "tiles", q: "Составь: «Холодильник на кухне.»", words: ["Der", "Kühlschrank", "ist", "in", "der", "Küche."], explain: "Wo? + Dat. in der Küche (f, Dat)." },
-  { id: "q0056", topic: "trainer:misc", level: "A1", difficulty: 2, type: "tiles", q: "Составь: «У меня есть собака.»", words: ["Ich", "habe", "einen", "Hund."], explain: "haben + Akk. der Hund (m) → einen Hund." },
+  { id: "q0055", topic: "trainer:misc", level: "A2", difficulty: 4, type: "tiles", q: "Составь: «Холодильник на кухне.»", words: ["Der", "Kühlschrank", "ist", "in", "der", "Küche."], explain: "Wo? + Dat. in der Küche (f, Dat)." },
+  { id: "q0056", topic: "trainer:misc", level: "A2", difficulty: 4, type: "tiles", q: "Составь: «У меня есть собака.»", words: ["Ich", "habe", "einen", "Hund."], explain: "haben + Akk. der Hund (m) → einen Hund." },
   { id: "q0057", topic: "trainer:misc", level: "A2", difficulty: 3, type: "fill", q: "Какой артикль? \"___ Küche\" (кухня)", ans: "die", hint: "женский род", explain: "die Küche (f)." },
   { id: "q0058", topic: "trainer:misc", level: "A2", difficulty: 3, type: "fill", q: "Какой артикль? \"___ Auto\" (машина)", ans: "das", hint: "средний род", explain: "das Auto (n)." },
   { id: "q0059", topic: "trainer:misc", level: "A2", difficulty: 3, type: "fill", q: "Какой артикль? \"___ Hund\" (собака)", ans: "der", hint: "мужской род", explain: "der Hund (m)." },
   // ─── trainer:adj (7) ─────────────────────────────────
-  { id: "q0060", topic: "trainer:adj", level: "A1", difficulty: 2, type: "tiles", q: "Составь: «Квартира маленькая, но красивая.»", words: ["Die", "Wohnung", "ist", "klein,", "aber", "schön."], explain: "После sein — без окончания. aber = но." },
-  { id: "q0061", topic: "trainer:adj", level: "A1", difficulty: 2, type: "tiles", q: "Составь: «У меня большая собака.»", words: ["Ich", "habe", "einen", "großen", "Hund."], explain: "m, Akk → einen + großen (m Akk → -en)." },
+  { id: "q0060", topic: "trainer:adj", level: "A2", difficulty: 4, type: "tiles", q: "Составь: «Квартира маленькая, но красивая.»", words: ["Die", "Wohnung", "ist", "klein,", "aber", "schön."], explain: "После sein — без окончания. aber = но." },
+  { id: "q0061", topic: "trainer:adj", level: "A2", difficulty: 4, type: "tiles", q: "Составь: «У меня большая собака.»", words: ["Ich", "habe", "einen", "großen", "Hund."], explain: "m, Akk → einen + großen (m Akk → -en)." },
   { id: "q0062", topic: "trainer:adj", level: "A2", difficulty: 3, type: "fill", q: "Антоним к «groß»?", ans: "klein", hint: "противоположное", explain: "groß ↔ klein." },
   { id: "q0063", topic: "trainer:adj", level: "A2", difficulty: 3, type: "fill", q: "Антоним к «teuer»?", ans: "billig", hint: "↔ дорогой", altAns: ["günstig"], explain: "teuer ↔ billig / günstig." },
   { id: "q0064", topic: "trainer:adj", level: "A2", difficulty: 3, type: "fill", q: "Окончание: «ein groß___ Haus» (n, Nom)", ans: "es", hint: "n с ein → -es", explain: "ein großes Haus (n)." },
   { id: "q0065", topic: "trainer:adj", level: "A2", difficulty: 3, type: "fill", q: "Окончание: «die schön___ Frau» (f, Nom)", ans: "e", hint: "f с der → -e", explain: "die schöne Frau." },
-  { id: "q0066", topic: "trainer:adj", level: "A1", difficulty: 1, type: "mc", q: "schön или schon — «красивый»?", opts: ["schon", "schön", "оба", "ни одно"], ans: 1, explain: "schön = красивый. schon = уже (наречие)." },
+  { id: "q0066", topic: "trainer:adj", level: "A1", difficulty: 2, type: "mc", q: "schön или schon — «красивый»?", opts: ["schon", "schön", "оба", "ни одно"], ans: 1, explain: "schön = красивый. schon = уже (наречие)." },
   // ─── trainer:adv (5) ─────────────────────────────────
-  { id: "q0067", topic: "trainer:adv", level: "A1", difficulty: 1, type: "mc", q: "Шкала частоты: что чаще всего?", opts: ["selten", "manchmal", "oft", "immer"], ans: 3, explain: "immer → oft → manchmal → selten → nie." },
-  { id: "q0068", topic: "trainer:adv", level: "A1", difficulty: 1, type: "mc", q: "morgen или der Morgen — «завтра»?", opts: ["der Morgen", "morgen (со строчной)", "оба", "ни одно"], ans: 1, explain: "morgen (наречие) = завтра. Morgen (с заглавной, m) = утро." },
-  { id: "q0069", topic: "trainer:adv", level: "A1", difficulty: 2, type: "tiles", q: "Составь: «Завтра я работаю.»", words: ["Morgen", "arbeite", "ich."], explain: "Наречие в начале → инверсия: Verb + Subjekt. Morgen со строчной (правда, в начале предложения с заглавной — но это просто 1-я буква)." },
+  { id: "q0067", topic: "trainer:adv", level: "A1", difficulty: 2, type: "mc", q: "Шкала частоты: что чаще всего?", opts: ["selten", "manchmal", "oft", "immer"], ans: 3, explain: "immer → oft → manchmal → selten → nie." },
+  { id: "q0068", topic: "trainer:adv", level: "A1", difficulty: 2, type: "mc", q: "morgen или der Morgen — «завтра»?", opts: ["der Morgen", "morgen (со строчной)", "оба", "ни одно"], ans: 1, explain: "morgen (наречие) = завтра. Morgen (с заглавной, m) = утро." },
+  { id: "q0069", topic: "trainer:adv", level: "A2", difficulty: 4, type: "tiles", q: "Составь: «Завтра я работаю.»", words: ["Morgen", "arbeite", "ich."], explain: "Наречие в начале → инверсия: Verb + Subjekt. Morgen со строчной (правда, в начале предложения с заглавной — но это просто 1-я буква)." },
   { id: "q0070", topic: "trainer:adv", level: "A2", difficulty: 3, type: "fill", q: "Вставь: \"Bis ___!\" (До скорого)", ans: "gleich", hint: "сейчас, тут же", explain: "Bis gleich! — До скорого / Скоро увидимся." },
   { id: "q0071", topic: "trainer:adv", level: "A2", difficulty: 3, type: "fill", q: "Антоним «schnell»?", ans: "langsam", hint: "противоположное", explain: "schnell ↔ langsam." },
   // ─── trainer:mestoim (10) ─────────────────────────────────
-  { id: "q0072", topic: "trainer:mestoim", level: "A1", difficulty: 1, type: "mc", q: "Akkusativ от «ich»?", opts: ["mir", "mich", "mein", "ich"], ans: 1, explain: "ich → mich (Akk) / mir (Dat)." },
-  { id: "q0073", topic: "trainer:mestoim", level: "A1", difficulty: 1, type: "mc", q: "Dativ от «du»?", opts: ["dich", "dein", "dir", "du"], ans: 2, explain: "du → dich (Akk) / dir (Dat)." },
-  { id: "q0074", topic: "trainer:mestoim", level: "A1", difficulty: 1, type: "mc", q: "Dativ от «er»?", opts: ["ihn", "ihm", "ihr", "ihnen"], ans: 1, explain: "er → ihn (Akk) / ihm (Dat)." },
-  { id: "q0075", topic: "trainer:mestoim", level: "A1", difficulty: 1, type: "mc", q: "Dativ от «es»?", opts: ["es", "ihm", "ihr", "ihnen"], ans: 1, explain: "⚠ es в Dat → ihm, не ihr! Ловушка." },
-  { id: "q0076", topic: "trainer:mestoim", level: "A1", difficulty: 1, type: "mc", q: "Dativ от «sie» (она)?", opts: ["sie", "ihn", "ihm", "ihr"], ans: 3, explain: "sie (она) → sie (Akk) / ihr (Dat)." },
-  { id: "q0077", topic: "trainer:mestoim", level: "A1", difficulty: 1, type: "mc", q: "«mein» или «meine» с «Wohnung» (f)?", opts: ["mein", "meine", "meinen", "meinem"], ans: 1, explain: "f → +e: meine Wohnung." },
-  { id: "q0078", topic: "trainer:mestoim", level: "A1", difficulty: 1, type: "mc", q: "«mein» или «meine» с «Buch» (n)?", opts: ["mein", "meine", "meinen", "meinem"], ans: 0, explain: "n → без окончания: mein Buch." },
+  { id: "q0072", topic: "trainer:mestoim", level: "A1", difficulty: 2, type: "mc", q: "Akkusativ от «ich»?", opts: ["mir", "mich", "mein", "ich"], ans: 1, explain: "ich → mich (Akk) / mir (Dat)." },
+  { id: "q0073", topic: "trainer:mestoim", level: "A1", difficulty: 2, type: "mc", q: "Dativ от «du»?", opts: ["dich", "dein", "dir", "du"], ans: 2, explain: "du → dich (Akk) / dir (Dat)." },
+  { id: "q0074", topic: "trainer:mestoim", level: "A1", difficulty: 2, type: "mc", q: "Dativ от «er»?", opts: ["ihn", "ihm", "ihr", "ihnen"], ans: 1, explain: "er → ihn (Akk) / ihm (Dat)." },
+  { id: "q0075", topic: "trainer:mestoim", level: "A1", difficulty: 2, type: "mc", q: "Dativ от «es»?", opts: ["es", "ihm", "ihr", "ihnen"], ans: 1, explain: "⚠ es в Dat → ihm, не ihr! Ловушка." },
+  { id: "q0076", topic: "trainer:mestoim", level: "A1", difficulty: 2, type: "mc", q: "Dativ от «sie» (она)?", opts: ["sie", "ihn", "ihm", "ihr"], ans: 3, explain: "sie (она) → sie (Akk) / ihr (Dat)." },
+  { id: "q0077", topic: "trainer:mestoim", level: "A1", difficulty: 2, type: "mc", q: "«mein» или «meine» с «Wohnung» (f)?", opts: ["mein", "meine", "meinen", "meinem"], ans: 1, explain: "f → +e: meine Wohnung." },
+  { id: "q0078", topic: "trainer:mestoim", level: "A1", difficulty: 2, type: "mc", q: "«mein» или «meine» с «Buch» (n)?", opts: ["mein", "meine", "meinen", "meinem"], ans: 0, explain: "n → без окончания: mein Buch." },
   { id: "q0079", topic: "trainer:mestoim", level: "A2", difficulty: 3, type: "fill", q: "Вставь: \"Ich wasche ___\" (моюсь)", ans: "mich", hint: "себя, Akk", explain: "ich → mich. Akkusativ — действие на себя." },
   { id: "q0080", topic: "trainer:mestoim", level: "A2", difficulty: 3, type: "fill", q: "Вставь: \"Ich wasche ___ die Hände\" (себе руки)", ans: "mir", hint: "себе, Dat", explain: "ich → mir. Dativ — кому?" },
   { id: "q0081", topic: "trainer:mestoim", level: "A2", difficulty: 3, type: "fill", q: "Возвратное для er/sie/es в Akk?", ans: "sich", hint: "всегда одно слово", explain: "Er/sie/es и sie/Sie → всегда sich." },
   // ─── trainer:termin (4) ─────────────────────────────────
-  { id: "q0082", topic: "trainer:termin", level: "A1", difficulty: 1, type: "mc", q: "Какой вопрос для Akkusativ?", opts: ["Wer?", "Wem?", "Wen?", "Wo?"], ans: 2, explain: "Akk → Wen? Was?" },
-  { id: "q0083", topic: "trainer:termin", level: "A1", difficulty: 1, type: "mc", q: "Какой вопрос для Dativ?", opts: ["Wer?", "Wem?", "Wen?", "Wo?"], ans: 1, explain: "Dat → Wem?" },
-  { id: "q0084", topic: "trainer:termin", level: "A1", difficulty: 1, type: "mc", q: "«Wohin?» спрашивает о...", opts: ["месте (где?)", "направлении (куда?)", "источнике (откуда?)", "времени"], ans: 1, explain: "Wohin? = куда? (направление, + Akk)." },
-  { id: "q0085", topic: "trainer:termin", level: "A1", difficulty: 1, type: "mc", q: "«Wo?» использует какой падеж с предлогом?", opts: ["Nom", "Akk", "Dat", "никакой"], ans: 2, explain: "Wo? — статика → Dativ. Im, in der и т.д." },
+  { id: "q0082", topic: "trainer:termin", level: "A1", difficulty: 2, type: "mc", q: "Какой вопрос для Akkusativ?", opts: ["Wer?", "Wem?", "Wen?", "Wo?"], ans: 2, explain: "Akk → Wen? Was?" },
+  { id: "q0083", topic: "trainer:termin", level: "A1", difficulty: 2, type: "mc", q: "Какой вопрос для Dativ?", opts: ["Wer?", "Wem?", "Wen?", "Wo?"], ans: 1, explain: "Dat → Wem?" },
+  { id: "q0084", topic: "trainer:termin", level: "A1", difficulty: 2, type: "mc", q: "«Wohin?» спрашивает о...", opts: ["месте (где?)", "направлении (куда?)", "источнике (откуда?)", "времени"], ans: 1, explain: "Wohin? = куда? (направление, + Akk)." },
+  { id: "q0085", topic: "trainer:termin", level: "A1", difficulty: 2, type: "mc", q: "«Wo?» использует какой падеж с предлогом?", opts: ["Nom", "Akk", "Dat", "никакой"], ans: 2, explain: "Wo? — статика → Dativ. Im, in der и т.д." },
   // ─── trainer:rules (10) ─────────────────────────────────
-  { id: "q0086", topic: "trainer:rules", level: "A1", difficulty: 1, type: "mc", q: "«Ich bin ___» — что лучше подставить?", opts: ["Hunger", "müde", "Auto", "Buch"], ans: 1, explain: "sein + прил. → müde. haben + сущ. → Hunger." },
-  { id: "q0087", topic: "trainer:rules", level: "A1", difficulty: 1, type: "mc", q: "Partizip II от «besuchen»?", opts: ["gebesucht", "besucht", "besuchte", "besuchen"], ans: 1, explain: "Глаголы с be-/er-/ver- → БЕЗ ge-." },
-  { id: "q0088", topic: "trainer:rules", level: "A1", difficulty: 1, type: "mc", q: "Partizip II от «organisieren»?", opts: ["georganisiert", "organisiert", "organisierte", "organisieren"], ans: 1, explain: "Глаголы на -ieren → БЕЗ ge-." },
-  { id: "q0089", topic: "trainer:rules", level: "A1", difficulty: 1, type: "mc", q: "Partizip II от «machen»?", opts: ["machte", "gemacht", "macht", "gemächt"], ans: 1, explain: "Регулярный: ge- + основа + -t." },
-  { id: "q0090", topic: "trainer:rules", level: "A1", difficulty: 2, type: "tiles", q: "Составь: «Здесь нельзя курить.»", words: ["Man", "darf", "hier", "nicht", "rauchen."], explain: "Modalverb на 2-й, Infinitiv в конец. nicht — отрицание действия." },
-  { id: "q0091", topic: "trainer:rules", level: "A1", difficulty: 2, type: "tiles", q: "Составь: «Я встаю в 7.»", words: ["Ich", "stehe", "um", "7", "Uhr", "auf."], explain: "aufstehen — отделяемая. auf уходит в конец." },
+  { id: "q0086", topic: "trainer:rules", level: "A1", difficulty: 2, type: "mc", q: "«Ich bin ___» — что лучше подставить?", opts: ["Hunger", "müde", "Auto", "Buch"], ans: 1, explain: "sein + прил. → müde. haben + сущ. → Hunger." },
+  { id: "q0087", topic: "trainer:rules", level: "A1", difficulty: 2, type: "mc", q: "Partizip II от «besuchen»?", opts: ["gebesucht", "besucht", "besuchte", "besuchen"], ans: 1, explain: "Глаголы с be-/er-/ver- → БЕЗ ge-." },
+  { id: "q0088", topic: "trainer:rules", level: "A1", difficulty: 2, type: "mc", q: "Partizip II от «organisieren»?", opts: ["georganisiert", "organisiert", "organisierte", "organisieren"], ans: 1, explain: "Глаголы на -ieren → БЕЗ ge-." },
+  { id: "q0089", topic: "trainer:rules", level: "A1", difficulty: 2, type: "mc", q: "Partizip II от «machen»?", opts: ["machte", "gemacht", "macht", "gemächt"], ans: 1, explain: "Регулярный: ge- + основа + -t." },
+  { id: "q0090", topic: "trainer:rules", level: "A2", difficulty: 4, type: "tiles", q: "Составь: «Здесь нельзя курить.»", words: ["Man", "darf", "hier", "nicht", "rauchen."], explain: "Modalverb на 2-й, Infinitiv в конец. nicht — отрицание действия." },
+  { id: "q0091", topic: "trainer:rules", level: "A2", difficulty: 4, type: "tiles", q: "Составь: «Я встаю в 7.»", words: ["Ich", "stehe", "um", "7", "Uhr", "auf."], explain: "aufstehen — отделяемая. auf уходит в конец." },
   { id: "q0092", topic: "trainer:rules", level: "A2", difficulty: 3, type: "fill", q: "Präteritum от «sein» для «ich»?", ans: "war", hint: "был", explain: "ich war." },
   { id: "q0093", topic: "trainer:rules", level: "A2", difficulty: 3, type: "fill", q: "Präteritum от «haben» для «ich»?", ans: "hatte", hint: "имел", explain: "ich hatte." },
-  { id: "q0094", topic: "trainer:rules", level: "A2", difficulty: 3, type: "fill", q: "Артикль в Akk от «der Hund»?", ans: "den", hint: "m → меняется", explain: "der → den (только m меняется в Akk)." },
-  { id: "q0095", topic: "trainer:rules", level: "A2", difficulty: 3, type: "fill", q: "Артикль в Dat от «die Frau»?", ans: "der", hint: "f, Dat", explain: "f, Dat → der. Совпадает по форме с Nom m, но это Dat f." },
+  { id: "q0094", topic: "trainer:rules", level: "A1", difficulty: 2, type: "fill", q: "Артикль в Akk от «der Hund»?", ans: "den", hint: "m → меняется", explain: "der → den (только m меняется в Akk)." },
+  { id: "q0095", topic: "trainer:rules", level: "A1", difficulty: 2, type: "fill", q: "Артикль в Dat от «die Frau»?", ans: "der", hint: "f, Dat", explain: "f, Dat → der. Совпадает по форме с Nom m, но это Dat f." },
   // ─── trainer:phrases (5) ─────────────────────────────────
-  { id: "q0096", topic: "trainer:phrases", level: "A1", difficulty: 1, type: "mc", q: "«Wie geht es Ihnen?» — как ответить хорошо?", opts: ["Sehr gut, danke", "Auf Wiedersehen", "Gesundheit", "Wie bitte?"], ans: 0, explain: "Sehr gut, danke. Und Ihnen?" },
-  { id: "q0097", topic: "trainer:phrases", level: "A1", difficulty: 1, type: "mc", q: "Что значит «Tut mir leid»?", opts: ["Удачи!", "Мне жаль", "Очень приятно", "Что-нибудь ещё?"], ans: 1, explain: "Tut mir leid — мне жаль / прости." },
-  { id: "q0098", topic: "trainer:phrases", level: "A1", difficulty: 1, type: "mc", q: "Как сказать «Я голоден»?", opts: ["Ich bin Hunger", "Ich habe Hunger", "Mir ist Hunger", "Ich Hunger habe"], ans: 1, explain: "haben + Hunger (не sein!)." },
-  { id: "q0099", topic: "trainer:phrases", level: "A1", difficulty: 2, type: "tiles", q: "Составь: «Я бы хотел кофе.»", words: ["Ich", "hätte", "gern", "einen", "Kaffee."], explain: "hätte gern — вежливый заказ. der Kaffee (m) → einen." },
-  { id: "q0100", topic: "trainer:phrases", level: "A1", difficulty: 2, type: "tiles", q: "Составь: «Счёт, пожалуйста.»", words: ["Die", "Rechnung,", "bitte."], explain: "Die Rechnung, bitte. = Zahlen bitte." },
+  { id: "q0096", topic: "trainer:phrases", level: "A1", difficulty: 2, type: "mc", q: "«Wie geht es Ihnen?» — как ответить хорошо?", opts: ["Sehr gut, danke", "Auf Wiedersehen", "Gesundheit", "Wie bitte?"], ans: 0, explain: "Sehr gut, danke. Und Ihnen?" },
+  { id: "q0097", topic: "trainer:phrases", level: "A1", difficulty: 2, type: "mc", q: "Что значит «Tut mir leid»?", opts: ["Удачи!", "Мне жаль", "Очень приятно", "Что-нибудь ещё?"], ans: 1, explain: "Tut mir leid — мне жаль / прости." },
+  { id: "q0098", topic: "trainer:phrases", level: "A1", difficulty: 2, type: "mc", q: "Как сказать «Я голоден»?", opts: ["Ich bin Hunger", "Ich habe Hunger", "Mir ist Hunger", "Ich Hunger habe"], ans: 1, explain: "haben + Hunger (не sein!)." },
+  { id: "q0099", topic: "trainer:phrases", level: "A2", difficulty: 4, type: "tiles", q: "Составь: «Я бы хотел кофе.»", words: ["Ich", "hätte", "gern", "einen", "Kaffee."], explain: "hätte gern — вежливый заказ. der Kaffee (m) → einen." },
+  { id: "q0100", topic: "trainer:phrases", level: "A2", difficulty: 4, type: "tiles", q: "Составь: «Счёт, пожалуйста.»", words: ["Die", "Rechnung,", "bitte."], explain: "Die Rechnung, bitte. = Zahlen bitte." },
 ];
 
 const SOUNDS = [
@@ -1019,7 +1022,272 @@ const RULES = [
   { id: "r021", title: "Суффикс -lich — образование прилагательных", topic: "rules:new", level: "A1", new: true, html: "<div class=\"rule-box\">\n<h3>Суффикс <b>-lich</b> — образование прилагательных</h3>\n<p style=\"font-size:13px;margin-bottom:10px\">Суффикс <b>-lich</b> превращает существительное в прилагательное со значением «относящийся к / похожий на». Похож на русский суффикс «-ный».</p>\n<table>\n<tr><th>Существительное</th><th>+ -lich</th><th>Перевод</th></tr>\n<tr><td>das Herz (сердце)</td><td>herz<b>lich</b></td><td>сердечный</td></tr>\n<tr><td>der Tag (день)</td><td>täg<b>lich</b></td><td>ежедневный</td></tr>\n<tr><td>der Freund (друг)</td><td>freund<b>lich</b></td><td>дружелюбный</td></tr>\n<tr><td>der Mensch (человек)</td><td>mensch<b>lich</b></td><td>человеческий</td></tr>\n<tr><td>der Monat (месяц)</td><td>monat<b>lich</b></td><td>ежемесячный</td></tr>\n<tr><td>der Beruf (профессия)</td><td>beruf<b>lich</b></td><td>профессиональный</td></tr>\n</table>\n<p style=\"font-size:12px;margin-top:8px\">💡 Часто корневая гласная меняется на умлаут: Tag → t<b>ä</b>glich, Nacht → n<b>ä</b>chtlich</p>\n</div>" },
 ];
 
-// Экспорт
+// ═══════════════════════════════════════════════════════════════
+// TOPIC_TITLES — slug → русское название (с эмодзи)
+// ═══════════════════════════════════════════════════════════════
+const TOPIC_TITLES = {
+  "adj:colors": "🎨 Цвета",
+  "adj:marital": "💍 Семейный статус",
+  "adj:people-emotions": "😊 Люди / эмоции / состояние",
+  "adj:price-taste": "💰 Цена / вкус / похвала",
+  "adj:things": "🌡 Описание предметов / характеристики",
+  "adv:agreement": "🤝 Согласие / реакции",
+  "adv:degree-quantity": "📊 Степень / количество",
+  "adv:feelings": "👍 Самочувствие / оценка",
+  "adv:particles": "🎯 Прочие наречия / частицы",
+  "adv:place-direction": "📍 Место / направление",
+  "adv:time-frequency": "⏰ Время / частота",
+  "mestoim:negation": "Отрицательные местоимения / частицы",
+  "mestoim:personal": "Личные местоимения (Nominativ)",
+  "mestoim:possessive": "Притяжательные местоимения",
+  "new:new-adj-adv": "🎨 Прилагательные / Наречия",
+  "new:new-nouns": "📦 Существительные",
+  "new:new-verbs": "⚡ Глаголы",
+  "nouns:animals-nature": "🐾 Животные / Природа",
+  "nouns:balcony": "🌿 der Balkon",
+  "nouns:basement": "🗃 der Keller",
+  "nouns:bathroom": "🚿 das Bad",
+  "nouns:bedroom": "🛏 das Schlafzimmer",
+  "nouns:city-places": "🏙️ Помещения / Город",
+  "nouns:clothing": "👜 Одежда / Аксессуары",
+  "nouns:communication-docs": "💬 Общение / Документы",
+  "nouns:dates": "📅 Дни / Месяцы / Даты",
+  "nouns:day-parts": "🌅 Время суток",
+  "nouns:family": "👨‍👩‍👧 Семья",
+  "nouns:food-drink": "🥗 Еда и напитки",
+  "nouns:hallway": "🚪 der Flur",
+  "nouns:home-cleaning": "🏠 Дом / Уборка",
+  "nouns:kidsroom": "🧸 das Kinderzimmer",
+  "nouns:kitchen": "🍳 die Küche",
+  "nouns:kitchenware": "🍽️ Кухня / Посуда",
+  "nouns:livingroom": "🛋 das Wohnzimmer",
+  "nouns:media": "📺 ТВ / Медиа",
+  "nouns:misc": "Разное",
+  "nouns:music-hobby": "🎵 Музыка / Хобби",
+  "nouns:office": "🖥 das Arbeitszimmer",
+  "nouns:personal-data": "👤 Личные данные",
+  "nouns:places-travel": "🍷 Заведения / Жильё / Поездки",
+  "nouns:professions": "💼 Профессии",
+  "nouns:shop": "🛒 Магазин / Продукты",
+  "nouns:stationery-study": "📚 Канцелярия / Учёба",
+  "nouns:tech": "📱 Техника / Гаджеты",
+  "nouns:time-clock": "⏰ Время (часы)",
+  "nouns:transport": "🚗 Транспорт",
+  "nouns:writing": "✏️ Письмо / Текст",
+  "nums:numbers": "Цифры 0–12",
+  "nums:numbers-special": "Особые случаи",
+  "nums:time": "Время",
+  "phrases:classroom": "Учебные команды",
+  "phrases:greetings": "Приветствия / Прощания",
+  "phrases:misc": "Разное",
+  "phrases:questions": "Вопросы / Просьбы",
+  "phrases:restaurant": "В ресторане",
+  "phrases:slang": "Slang / Разговорный",
+  "phrases:wellbeing": "Самочувствие",
+  "verbs:basic": "💡 Базовые / Общие",
+  "verbs:communication": "💬 Общение / эмоции",
+  "verbs:food": "🍳 Еда / готовка",
+  "verbs:home": "🏠 Дом / быт / покупки",
+  "verbs:impersonal": "🌧 Безличные (погода и пр.)",
+  "verbs:leisure": "🎮 Досуг / хобби",
+  "verbs:modal": "🎯 Modalverben и условные формы",
+  "verbs:movement": "🚌 Движение / транспорт",
+  "verbs:study": "📚 Учёба / работа",
+};
+
+const TAB_TITLES = {
+  "nums": "🔢 Числа",
+  "sounds": "🔤 Звуки",
+  "verbs": "⚡ Глаголы",
+  "unregel": "🔥 Спряжение Unregelmäßig",
+  "nouns": "📦 Существительные",
+  "adj": "🎨 Прилагательные",
+  "adv": "🔄 Наречия",
+  "mestoim": "👤 Местоимения",
+  "termin": "📋 Термины",
+  "rules": "📐 Правила",
+  "phrases": "💬 Фразы",
+  "new": "🆕 Новые",
+};
+
+// ═══════════════════════════════════════════════════════════════
+// BLOCKS — структура меню тренажёра
+// ═══════════════════════════════════════════════════════════════
+// Каждый блок имеет:
+//   id, label, color
+//   subblocks: [{id, label, topics: [...]}]  ← для блоков с подкатегориями
+//   kind: 'sounds' | 'conjugations' | 'terms' | 'rules'  ← для особых блоков
+const BLOCKS = [
+  { id: "neu", label: "🆕 Новые", color: "#b03030", desc: "Свежие слова и правила (буфер)",
+    subblocks: [
+      { id: "nouns", label: "📦 Существительные", topics: ["new:new-nouns"] },
+      { id: "verbs", label: "⚡ Глаголы", topics: ["new:new-verbs"] },
+      { id: "adj", label: "🎨 Прилагательные / Наречия", topics: ["new:new-adj-adv"] },
+    ]
+  },
+  { id: "nums", label: "🔢 Числа", color: "#16a085",
+    subblocks: [
+      { id: "numbers", label: "🔢 Цифры", topics: ["nums:numbers"] },
+      { id: "special", label: "✨ Особые случаи", topics: ["nums:numbers-special"] },
+      { id: "time", label: "⏰ Время", topics: ["nums:time"] },
+    ]
+  },
+  { id: "sounds", label: "🔤 Звуки", color: "#9b59b6", desc: "Правила произношения буквосочетаний", kind: "sounds",
+  },
+  { id: "verbs", label: "⚡ Глаголы", color: "#1a7a4a",
+    subblocks: [
+      { id: "basic", label: "💡 Базовые / Общие", topics: ["verbs:basic"] },
+      { id: "modal", label: "🎯 Modalverben", topics: ["verbs:modal"] },
+      { id: "movement", label: "🚌 Движение / Транспорт", topics: ["verbs:movement"] },
+      { id: "food", label: "🍳 Еда / Готовка", topics: ["verbs:food"] },
+      { id: "home", label: "🏠 Дом / Быт / Покупки", topics: ["verbs:home"] },
+      { id: "communication", label: "💬 Общение / Эмоции", topics: ["verbs:communication"] },
+      { id: "study", label: "📚 Учёба / Работа", topics: ["verbs:study"] },
+      { id: "leisure", label: "🎮 Досуг / Хобби", topics: ["verbs:leisure"] },
+      { id: "impersonal", label: "🌧 Безличные", topics: ["verbs:impersonal"] },
+    ]
+  },
+  { id: "unregel", label: "🔥 Спряжение Unregelmäßig", color: "#e67e22", desc: "Неправильные глаголы со спряжением в Präsens", kind: "conjugations",
+  },
+  { id: "nouns", label: "📦 Существительные", color: "#2980b9",
+    subblocks: [
+      { id: "personal", label: "👤 Личные данные", topics: ["nouns:personal-data"] },
+      { id: "family", label: "👨‍👩‍👧 Семья", topics: ["nouns:family"] },
+      { id: "professions", label: "💼 Профессии", topics: ["nouns:professions"] },
+      { id: "daytime", label: "🌅 Время суток", topics: ["nouns:day-parts"] },
+      { id: "dates", label: "📅 Дни / Месяцы / Даты", topics: ["nouns:dates"] },
+      { id: "media", label: "📺 ТВ / Медиа", topics: ["nouns:media"] },
+      { id: "music", label: "🎵 Музыка / Хобби", topics: ["nouns:music-hobby"] },
+      { id: "places", label: "🍷 Заведения / Жильё / Поездки", topics: ["nouns:places-travel"] },
+      { id: "nature", label: "🐾 Животные / Природа", topics: ["nouns:animals-nature"] },
+      { id: "writing", label: "✏️ Письмо / Текст", topics: ["nouns:writing"] },
+      { id: "tech", label: "📱 Техника / Гаджеты", topics: ["nouns:tech"] },
+      { id: "transport", label: "🚗 Транспорт", topics: ["nouns:transport"] },
+      { id: "home", label: "🏠 Дом · Комнаты и мебель", topics: ["nouns:home-cleaning", "nouns:bedroom", "nouns:livingroom", "nouns:bathroom", "nouns:kidsroom", "nouns:balcony", "nouns:hallway", "nouns:basement", "nouns:office"] },
+      { id: "kitchen", label: "🍳 Кухня / Посуда", topics: ["nouns:kitchen", "nouns:kitchenware"] },
+      { id: "shop", label: "🛒 Магазин / Продукты", topics: ["nouns:shop"] },
+      { id: "food", label: "🥗 Еда и напитки", topics: ["nouns:food-drink"] },
+      { id: "rooms", label: "🏙 Помещения / Город", topics: ["nouns:city-places"] },
+      { id: "clothing", label: "👜 Одежда / Аксессуары", topics: ["nouns:clothing"] },
+      { id: "office", label: "📚 Канцелярия / Учёба", topics: ["nouns:stationery-study"] },
+      { id: "comm", label: "💬 Общение / Документы", topics: ["nouns:communication-docs"] },
+      { id: "time", label: "⏰ Время (часы)", topics: ["nouns:time-clock"] },
+      { id: "misc", label: "📦 Разное", topics: ["nouns:misc"] },
+    ]
+  },
+  { id: "adj", label: "🎨 Прилагательные", color: "#e91e63",
+    subblocks: [
+      { id: "colors", label: "🎨 Цвета", topics: ["adj:colors"] },
+      { id: "things", label: "🌡 Описание предметов", topics: ["adj:things"] },
+      { id: "people", label: "😊 Люди / эмоции", topics: ["adj:people-emotions"] },
+      { id: "price", label: "💰 Цена / вкус", topics: ["adj:price-taste"] },
+      { id: "marital", label: "💍 Семейный статус", topics: ["adj:marital"] },
+    ]
+  },
+  { id: "adv", label: "🔄 Наречия", color: "#f39c12",
+    subblocks: [
+      { id: "time", label: "⏰ Время / частота", topics: ["adv:time-frequency"] },
+      { id: "place", label: "📍 Место / направление", topics: ["adv:place-direction"] },
+      { id: "degree", label: "📊 Степень / количество", topics: ["adv:degree-quantity"] },
+      { id: "agreement", label: "🤝 Согласие / реакции", topics: ["adv:agreement"] },
+      { id: "feelings", label: "👍 Самочувствие / оценка", topics: ["adv:feelings"] },
+      { id: "particles", label: "🎯 Частицы", topics: ["adv:particles"] },
+    ]
+  },
+  { id: "mestoim", label: "👤 Местоимения", color: "#8e44ad",
+    subblocks: [
+      { id: "personal", label: "Личные местоимения", topics: ["mestoim:personal"] },
+      { id: "possessive", label: "Притяжательные", topics: ["mestoim:possessive"] },
+      { id: "negation", label: "Отрицательные / частицы", topics: ["mestoim:negation"] },
+    ]
+  },
+  { id: "termin", label: "📋 Термины", color: "#34495e", desc: "Грамматические термины", kind: "terms",
+  },
+  { id: "rules", label: "📐 Правила", color: "#7c5cbf", desc: "Грамматические правила и таблицы", kind: "rules",
+  },
+  { id: "phrases", label: "💬 Фразы", color: "#27ae60",
+    subblocks: [
+      { id: "greetings", label: "👋 Приветствия / Прощания", topics: ["phrases:greetings"] },
+      { id: "questions", label: "❓ Вопросы / Просьбы", topics: ["phrases:questions"] },
+      { id: "wellbeing", label: "💆 Самочувствие", topics: ["phrases:wellbeing"] },
+      { id: "restaurant", label: "🍽 В ресторане", topics: ["phrases:restaurant"] },
+      { id: "classroom", label: "🎓 Учебные команды", topics: ["phrases:classroom"] },
+      { id: "slang", label: "💢 Slang / Разговорный", topics: ["phrases:slang"] },
+      { id: "misc", label: "💬 Разное", topics: ["phrases:misc"] },
+    ]
+  },
+];
+
+// ═══════════════════════════════════════════════════════════════
+// PHRASE_UNITS — составные конструкции, не разбиваемые в тайлах
+// ═══════════════════════════════════════════════════════════════
+const PHRASE_UNITS = [
+  "ins Haus",
+  "ins Kino",
+  "in die Schule",
+  "in den Park",
+  "am Montag",
+  "am Dienstag",
+  "am Mittwoch",
+  "am Donnerstag",
+  "am Freitag",
+  "am Samstag",
+  "am Sonntag",
+  "am Abend",
+  "am Morgen",
+  "am Wochenende",
+  "zu Hause",
+  "nach Hause",
+  "zur Arbeit",
+  "zur Schule",
+  "im Park",
+  "im Kino",
+  "im Büro",
+  "im Haus",
+  "im Garten",
+  "im Sommer",
+  "im Winter",
+  "im Frühling",
+  "im Herbst",
+  "im Januar",
+  "im Februar",
+  "im März",
+  "im April",
+  "im Mai",
+  "im Juni",
+  "im Juli",
+  "im August",
+  "im September",
+  "im Oktober",
+  "im November",
+  "im Dezember",
+  "an der Universität",
+  "an der Schule",
+  "auf der Straße",
+  "auf dem Tisch",
+  "auf dem Stuhl",
+  "mit dem Auto",
+  "mit dem Bus",
+  "mit dem Zug",
+  "mit dem Fahrrad",
+  "der gleiche",
+  "die gleiche",
+  "das gleiche",
+  "ein bisschen",
+  "ein paar",
+  "es gibt",
+  "es geht",
+  "um 8 Uhr",
+  "um 9 Uhr",
+  "um 10 Uhr",
+];
+
+// ═══════════════════════════════════════════════════════════════
+// SENTENCE_TEMPLATES — зарезервировано под Фазу 2 (mc артикля в предложении)
+// ═══════════════════════════════════════════════════════════════
+const SENTENCE_TEMPLATES = [];
+
 if (typeof module !== 'undefined' && module.exports) {
-  module.exports = { VOCAB, CONJUGATIONS, QUESTIONS, SOUNDS, TERMS, RULES };
+  module.exports = { VOCAB, CONJUGATIONS, QUESTIONS, SOUNDS, TERMS, RULES,
+    BLOCKS, TOPIC_TITLES, TAB_TITLES, PHRASE_UNITS, SENTENCE_TEMPLATES };
 }

@@ -386,6 +386,7 @@ tr:hover td{background:var(--bg-row-hover)}
   document.documentElement.classList.add('theme-' + saved);
 })();
 </script>
+<script src="data.js"></script>
 </head><body>
   <div class="search-bar">
   <div style="display:flex;align-items:center;gap:8px;padding:10px;">
@@ -2626,4 +2627,290 @@ function goToResult(index) {
   Update: 18.05.2026 | v31
 </div>
 
+
+<!-- Рендер шпоры из data.js -->
+<script>
+// ═══════════════════════════════════════════════════════════════
+// РЕНДЕРЕР ШПОРЫ ИЗ data.js
+// ═══════════════════════════════════════════════════════════════
+// Перезаписывает содержимое всех панелей-табов сгенерированным
+// контентом из VOCAB / CONJUGATIONS / SOUNDS / TERMS / RULES.
+// Использует TOPIC_TITLES для русских заголовков секций.
+
+(function() {
+  if (typeof VOCAB === 'undefined') {
+    console.warn('data.js не загружен — рендер шпоры пропущен');
+    return;
+  }
+
+  function escHtml(s) {
+    if (s === null || s === undefined) return '';
+    return String(s)
+      .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
+      .replace(/"/g, '&quot;');
+  }
+
+  // ─── Рендер таблицы существительных ──────────────────────────────────────
+  function renderNounsRow(item) {
+    const badge = item.gender
+      ? '<span class="badge ' + item.gender + '">' + (item.gender === 'pl' ? 'Pl' : item.gender) + '</span>'
+      : '';
+    const noteParts = [];
+    if (item.plural) noteParts.push('Pl: ' + item.plural);
+    if (item.note) noteParts.push(item.note);
+    const noteCol = noteParts.join(' | ');
+    return '<tr><td>' + escHtml(item.de) + '</td>'
+         + '<td>' + badge + '</td>'
+         + '<td>' + escHtml(item.ru) + (noteCol ? ' | ' + escHtml(noteCol) : '') + '</td></tr>';
+  }
+
+  // ─── Рендер обычной таблицы (verb/adj/adv/pron/phrase) ──────────────────
+  function renderSimpleRow(item) {
+    return '<tr><td>' + escHtml(item.de) + '</td>'
+         + '<td>' + escHtml(item.ru) + '</td>'
+         + '<td>' + escHtml(item.note || '') + '</td></tr>';
+  }
+
+  // ─── Рендер строки чисел (cifra | de | произношение) ────────────────────
+  function renderNumRow(item) {
+    return '<tr><td>' + escHtml(item.ru) + '</td>'
+         + '<td>' + escHtml(item.de) + '</td>'
+         + '<td>' + escHtml(item.note || '') + '</td></tr>';
+  }
+
+  // ─── Рендер таблицы по списку слов ──────────────────────────────────────
+  function tableHTML(items, rowFn, headers) {
+    if (items.length === 0) return '';
+    return '<table><thead><tr>'
+         + headers.map(h => '<th>' + h + '</th>').join('')
+         + '</tr></thead><tbody>'
+         + items.map(rowFn).join('')
+         + '</tbody></table>';
+  }
+
+  // ─── Сгруппировать VOCAB по topic ───────────────────────────────────────
+  function groupByTopic(items) {
+    const groups = {};
+    for (const item of items) {
+      for (const t of (item.topics || [])) {
+        if (!groups[t]) groups[t] = [];
+        groups[t].push(item);
+      }
+    }
+    return groups;
+  }
+
+  // ─── Сгенерировать секции для таба ───────────────────────────────────────
+  function renderSections(tabId, posFilter, rowFn, headers) {
+    const items = VOCAB.filter(v =>
+      posFilter.includes(v.pos) &&
+      v.topics.some(t => t.startsWith(tabId + ':'))
+    );
+    const groups = groupByTopic(items);
+    // Берём только topics этого таба
+    const topicsInTab = Object.keys(groups).filter(t => t.startsWith(tabId + ':'));
+    if (topicsInTab.length === 0) return '';
+
+    return topicsInTab.map(topic => {
+      const title = TOPIC_TITLES[topic] || topic;
+      return '<div class="section">'
+           + '<div class="section-title">' + escHtml(title) + '</div>'
+           + tableHTML(groups[topic], rowFn, headers)
+           + '</div>';
+    }).join('');
+  }
+
+  // ─── Рендер: nums ────────────────────────────────────────────────────────
+  function renderNums() {
+    const panel = document.getElementById('tab-nums');
+    if (!panel) return;
+    panel.innerHTML = renderSections('nums', ['num'], renderNumRow,
+      ['Цифра', 'Немецкий', 'Произношение']);
+  }
+
+  // ─── Рендер: sounds (произношение) ───────────────────────────────────────
+  function renderSounds() {
+    const panel = document.getElementById('tab-sounds');
+    if (!panel || typeof SOUNDS === 'undefined') return;
+    let html = '<div class="section">'
+             + '<div class="section-title">🔤 Произношение букв и сочетаний</div>'
+             + '<table><thead><tr><th>Буква/сочетание</th><th>Произношение</th><th>Пример</th></tr></thead><tbody>';
+    for (const s of SOUNDS) {
+      html += '<tr><td>' + escHtml(s.combo) + '</td>'
+            + '<td>' + escHtml(s.pronunciation) + '</td>'
+            + '<td>' + escHtml(s.example) + '</td></tr>';
+    }
+    html += '</tbody></table></div>';
+    panel.innerHTML = html;
+  }
+
+  // ─── Рендер: verbs ──────────────────────────────────────────────────────
+  function renderVerbs() {
+    const panel = document.getElementById('tab-verbs');
+    if (!panel) return;
+    panel.innerHTML = renderSections('verbs', ['verb'], renderSimpleRow,
+      ['Глагол', 'Перевод', 'Примечание']);
+  }
+
+  // ─── Рендер: unregel (спряжения) ────────────────────────────────────────
+  function renderUnregel() {
+    const panel = document.getElementById('tab-unregel');
+    if (!panel || typeof CONJUGATIONS === 'undefined') return;
+    let html = '';
+    for (const c of CONJUGATIONS) {
+      const modalTag = c.modal ? ' <span style="background:#fff3cd;padding:2px 8px;border-radius:6px;font-size:12px;color:#856404">Modalverb</span>' : '';
+      html += '<div class="rule-box"><h3>' + escHtml(c.verb)
+            + (c.ru ? ' — ' + escHtml(c.ru) : '') + modalTag + '</h3>'
+            + '<table class="conj-table"><tbody>';
+      for (let i = 0; i < c.pronouns.length; i++) {
+        html += '<tr><td>' + escHtml(c.pronouns[i]) + '</td>'
+              + '<td><b>' + escHtml(c.forms[i]) + '</b></td></tr>';
+      }
+      html += '</tbody></table></div>';
+    }
+    panel.innerHTML = '<div class="section">' + html + '</div>';
+  }
+
+  // ─── Рендер: nouns ──────────────────────────────────────────────────────
+  function renderNouns() {
+    const panel = document.getElementById('tab-nouns');
+    if (!panel) return;
+    panel.innerHTML = renderSections('nouns', ['noun'], renderNounsRow,
+      ['Существительное', 'Род', 'Перевод / Примечание']);
+  }
+
+  // ─── Рендер: adj/adv/mestoim ────────────────────────────────────────────
+  function renderAdj() {
+    const panel = document.getElementById('tab-adj');
+    if (!panel) return;
+    panel.innerHTML = renderSections('adj', ['adj'], renderSimpleRow,
+      ['Прилагательное', 'Перевод', 'Примечание']);
+  }
+  function renderAdv() {
+    const panel = document.getElementById('tab-adv');
+    if (!panel) return;
+    panel.innerHTML = renderSections('adv', ['adv'], renderSimpleRow,
+      ['Наречие', 'Перевод', 'Примечание']);
+  }
+  function renderMestoim() {
+    const panel = document.getElementById('tab-mestoim');
+    if (!panel) return;
+    let html = renderSections('mestoim', ['pron'], renderSimpleRow,
+      ['Местоимение', 'Перевод', 'Примечание']);
+    // Добавляем правила склонения местоимений (из RULES с topic rules:pronouns)
+    if (typeof RULES !== 'undefined') {
+      const pronounRules = RULES.filter(r => r.topic === 'rules:pronouns');
+      for (const r of pronounRules) {
+        html += r.html;
+      }
+    }
+    panel.innerHTML = html;
+  }
+
+  // ─── Рендер: termin ─────────────────────────────────────────────────────
+  function renderTermin() {
+    const panel = document.getElementById('tab-termin');
+    if (!panel || typeof TERMS === 'undefined') return;
+    // Группируем TERMS по topic
+    const groups = {};
+    for (const t of TERMS) {
+      if (!groups[t.topic]) groups[t.topic] = [];
+      groups[t.topic].push(t);
+    }
+    let html = '';
+    for (const topic of Object.keys(groups)) {
+      const title = TOPIC_TITLES[topic] || topic;
+      html += '<div class="section">'
+            + '<div class="section-title">' + escHtml(title) + '</div>'
+            + '<table><thead><tr><th>Термин</th><th>Перевод</th><th>Примечание</th></tr></thead><tbody>';
+      for (const t of groups[topic]) {
+        html += '<tr><td>' + escHtml(t.term) + '</td>'
+              + '<td>' + escHtml(t.ru) + '</td>'
+              + '<td>' + escHtml(t.note) + '</td></tr>';
+      }
+      html += '</tbody></table></div>';
+    }
+    panel.innerHTML = html;
+  }
+
+  // ─── Рендер: rules ──────────────────────────────────────────────────────
+  function renderRules() {
+    const panel = document.getElementById('tab-rules');
+    if (!panel || typeof RULES === 'undefined') return;
+    const rules = RULES.filter(r => r.topic === 'rules:grammar');
+    let html = '';
+    for (const r of rules) {
+      html += r.html;
+    }
+    panel.innerHTML = '<div class="section">' + html + '</div>';
+  }
+
+  // ─── Рендер: phrases ────────────────────────────────────────────────────
+  function renderPhrases() {
+    const panel = document.getElementById('tab-phrases');
+    if (!panel) return;
+    panel.innerHTML = renderSections('phrases', ['phrase'], renderSimpleRow,
+      ['Фраза', 'Перевод', 'Примечание']);
+  }
+
+  // ─── Рендер: new (буфер новых слов) ─────────────────────────────────────
+  function renderNew() {
+    const panel = document.getElementById('tab-new');
+    if (!panel) return;
+    // Берём все слова с new: true
+    const newItems = VOCAB.filter(v => v.new);
+    // Группируем по pos
+    const byPos = { noun: [], verb: [], adj: [], adv: [] };
+    for (const item of newItems) {
+      if (byPos[item.pos]) byPos[item.pos].push(item);
+    }
+    const POS_LABELS = {
+      noun: '📦 Существительные',
+      verb: '⚡ Глаголы',
+      adj: '🎨 Прилагательные / Наречия',
+    };
+    let html = '';
+    for (const pos of ['noun', 'verb', 'adj']) {
+      const items = pos === 'adj' ? [...byPos.adj, ...byPos.adv] : byPos[pos];
+      if (items.length === 0) continue;
+      const rowFn = pos === 'noun' ? renderNounsRow : renderSimpleRow;
+      const headers = pos === 'noun'
+        ? ['Существительное', 'Род', 'Перевод / Примечание']
+        : ['Слово', 'Перевод', 'Примечание'];
+      html += '<div class="section">'
+            + '<div class="section-title">' + POS_LABELS[pos] + '</div>'
+            + tableHTML(items, rowFn, headers)
+            + '</div>';
+    }
+    // Новые правила
+    if (typeof RULES !== 'undefined') {
+      const newRules = RULES.filter(r => r.new);
+      if (newRules.length > 0) {
+        html += '<div class="section">'
+              + '<div class="section-title">📐 Правила</div>'
+              + newRules.map(r => r.html).join('')
+              + '</div>';
+      }
+    }
+    panel.innerHTML = html;
+  }
+
+  // ─── Запуск всех рендеров ───────────────────────────────────────────────
+  renderNums();
+  renderSounds();
+  renderVerbs();
+  renderUnregel();
+  renderNouns();
+  renderAdj();
+  renderAdv();
+  renderMestoim();
+  renderTermin();
+  renderRules();
+  renderPhrases();
+  renderNew();
+
+  console.log('✓ Шпора отрендерена из data.js');
+})();
+
+</script>
 </body></html>
