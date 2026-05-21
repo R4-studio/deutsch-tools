@@ -390,7 +390,7 @@ tr:hover td{background:var(--bg-row-hover)}
 </head><body>
   <div class="search-bar">
   <div style="display:flex;align-items:center;gap:8px;padding:10px;">
-  <a href="index.html" class="home-btn" title="На главную">🏠</a>
+  <a href="index.html" class="home-btn" title="На главную">❌</a>
   <button class="burger-btn" onclick="openMenu()" title="Меню">☰</button>
   <input type="text" id="searchInput" placeholder="Поиск..." onkeyup="jumpSearch(event)">
   <button onclick="jumpSearch({key:'Enter'})" style="padding:8px 14px;font-size:13px;border-radius:6px;background:var(--accent);color:white;border:none;cursor:pointer;font-weight:600;white-space:nowrap;">Найти</button>
@@ -2768,7 +2768,7 @@ function goToResult(index) {
       }
       html += '</tbody></table></div>';
     }
-    panel.innerHTML = '<div class="section">' + html + '</div>';
+    panel.innerHTML = '<div class="section"><div class="three-col">' + html + '</div></div>';
   }
 
   // ─── Рендер: nouns ──────────────────────────────────────────────────────

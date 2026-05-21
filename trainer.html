@@ -1595,6 +1595,22 @@ const S = {
     display: "inline-flex",
     alignItems: "center",
     lineHeight: 1,
+    cursor: "pointer",
+    fontFamily: "inherit",
+  },
+  closeBtn: {
+    background: "var(--bg-panel)",
+    border: "1px solid var(--border-soft)",
+    borderRadius: 8,
+    padding: "6px 12px",
+    fontSize: 16,
+    color: "var(--text-main)",
+    textDecoration: "none",
+    display: "inline-flex",
+    alignItems: "center",
+    lineHeight: 1,
+    cursor: "pointer",
+    fontFamily: "inherit",
   },
   brand: {
     fontSize: 12,
@@ -1812,11 +1828,14 @@ function useTheme() {
 // ═══════════════════════════════════════════════════════════════
 // КОМПОНЕНТ: ШАПКА С КНОПКОЙ ТЕМЫ И ДОМ
 // ═══════════════════════════════════════════════════════════════
-function TopBar({ left, right, icon, onTheme }) {
+function TopBar({ left, right, icon, onTheme, onHome }) {
   return (
     <div style={S.topBar}>
       <div style={{ display: "flex", gap: 8, alignItems: "center" }}>
-        <a href="index.html" style={S.homeBtn} title="На главную">🏠</a>
+        <a href="index.html" style={S.closeBtn} title="Выйти из тренажёра">❌</a>
+        {onHome && (
+          <button style={S.homeBtn} onClick={onHome} title="На главную тренажёра">🏠</button>
+        )}
         {left}
       </div>
       <div style={{ display: "flex", gap: 8, alignItems: "center" }}>
@@ -2367,7 +2386,7 @@ function App() {
           <TopBar
             left={<button style={S.outlineBtn("#888")} onClick={goHome}>← Назад</button>}
             right={<span style={S.muted}>{modeLabel}</span>}
-            icon={icon} onTheme={cycleTheme} />
+            icon={icon} onTheme={cycleTheme} onHome={goHome} />
           <h2 style={{ ...S.heading, textAlign: "center" }}>Выбери блок</h2>
           <div style={S.grid}>
             {BLOCKS.map(b => (
@@ -2399,7 +2418,7 @@ function App() {
               </button>
             }
             right={<span style={S.muted}>{modeLabel}</span>}
-            icon={icon} onTheme={cycleTheme} />
+            icon={icon} onTheme={cycleTheme} onHome={goHome} />
           <h2 style={{ ...S.heading, textAlign: "center" }}>{activeBlock.label}</h2>
           <p style={{ ...S.subheading, textAlign: "center" }}>Выбери тему</p>
 
@@ -2442,7 +2461,7 @@ function App() {
           <TopBar
             left={<button style={S.outlineBtn(activeBlock.color)} onClick={goBackToSubblocks}>← Назад</button>}
             right={<span style={S.muted}>{modeLabel}</span>}
-            icon={icon} onTheme={cycleTheme} />
+            icon={icon} onTheme={cycleTheme} onHome={goHome} />
           <h2 style={{ ...S.heading, textAlign: "center" }}>{heading}</h2>
           <p style={{ ...S.subheading, textAlign: "center" }}>{vocab.length} слов</p>
 
@@ -2472,7 +2491,7 @@ function App() {
           <TopBar
             left={<button style={S.outlineBtn(activeBlock.color)} onClick={() => setPhase("block-start")}>← Назад</button>}
             right={<span style={S.muted}>{cardIdx + 1} / {vocab.length}</span>}
-            icon={icon} onTheme={cycleTheme} />
+            icon={icon} onTheme={cycleTheme} onHome={goHome} />
           <FlipCard item={item} flipped={flipped} onFlip={() => setFlipped(!flipped)} color={activeBlock.color} />
           <div style={{ display: "flex", gap: 12, justifyContent: "center", marginTop: 20 }}>
             <button style={S.outlineBtn()} onClick={prevCard} disabled={cardIdx === 0}>← Назад</button>
@@ -2494,7 +2513,7 @@ function App() {
             <TopBar
               left={<button style={S.outlineBtn(activeBlock.color)} onClick={goBackToSubblocks}>← Назад</button>}
               right={<span style={S.muted}>{modeLabel}</span>}
-              icon={icon} onTheme={cycleTheme} />
+              icon={icon} onTheme={cycleTheme} onHome={goHome} />
             <div style={{ textAlign: "center", marginTop: 40 }}>
               <p>Нет вопросов для этого блока.</p>
               <button style={S.primaryBtn(activeBlock.color)} onClick={goBackToSubblocks}>Назад</button>
@@ -2521,7 +2540,7 @@ function App() {
               </button>
             }
             right={<span style={S.muted}>{qIdx + 1} / {questions.length} · ✓ {correctCount}</span>}
-            icon={icon} onTheme={cycleTheme} />
+            icon={icon} onTheme={cycleTheme} onHome={goHome} />
           <div style={{ textAlign: "center", color: "var(--text-muted)", fontSize: 13, marginBottom: 12 }}>
             {subLabel}
           </div>
@@ -2690,7 +2709,7 @@ function App() {
           <TopBar
             left={<button style={S.outlineBtn(activeBlock.color)} onClick={goHome}>← На главную</button>}
             right={<span style={S.muted}>{modeLabel}</span>}
-            icon={icon} onTheme={cycleTheme} />
+            icon={icon} onTheme={cycleTheme} onHome={goHome} />
           <div style={{ ...S.questionCard, textAlign: "center", padding: 40 }}>
             <div style={{ fontSize: 64, marginBottom: 16 }}>
               {pct >= 80 ? "🎉" : pct >= 50 ? "👍" : "💪"}
@@ -2717,14 +2736,6 @@ function App() {
   return (
     <>
       <style>{THEME_CSS}</style>
-      <a href="index.html" style={{
-        position: "fixed", top: 12, right: 12,
-        width: 38, height: 38,
-        display: "inline-flex", alignItems: "center", justifyContent: "center",
-        background: "var(--bg-card)", border: "1px solid var(--border-soft)",
-        borderRadius: 8, fontSize: 16, textDecoration: "none",
-        zIndex: 10000, color: "var(--text-main)",
-      }} title="На главную">🏠</a>
 
       {phase === "home" && renderHome()}
       {phase === "select-block" && renderSelectBlock()}
