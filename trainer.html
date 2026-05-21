@@ -1744,6 +1744,58 @@ const S = {
     color: "var(--green)",
     fontWeight: 700,
   },
+  // ─── Экран результатов: карточка разбора ─────────────────────────
+  reviewItem: {
+    background: "var(--bg-card)",
+    border: "1px solid var(--border-soft)",
+    borderRadius: 10,
+    padding: "14px 16px",
+    marginBottom: 10,
+    position: "relative",
+  },
+  reviewIdx: {
+    fontSize: 12,
+    color: "var(--text-muted)",
+    marginBottom: 4,
+  },
+  reviewStatus: (ok) => ({
+    position: "absolute",
+    top: 14,
+    right: 16,
+    fontSize: 18,
+    fontWeight: 700,
+    color: ok ? "var(--green)" : "var(--red)",
+  }),
+  reviewQ: {
+    fontSize: 14,
+    color: "var(--text-title)",
+    fontWeight: 600,
+    marginBottom: 8,
+    paddingRight: 24,
+    whiteSpace: "pre-wrap",
+  },
+  reviewLine: {
+    fontSize: 13,
+    color: "var(--text-main)",
+    marginTop: 4,
+  },
+  reviewMyAns: (ok) => ({
+    color: ok ? "var(--green)" : "var(--red)",
+    fontWeight: 600,
+  }),
+  reviewRightAns: {
+    color: "var(--green)",
+    fontWeight: 600,
+  },
+  reviewNote: {
+    marginTop: 10,
+    padding: "8px 10px",
+    background: "var(--bg-soft)",
+    borderRadius: 6,
+    fontSize: 12,
+    color: "var(--text-muted)",
+    lineHeight: 1.5,
+  },
   questionText: {
     fontSize: 18,
     color: "var(--text-title)",
@@ -1865,52 +1917,6 @@ const S = {
     display: "flex",
     alignItems: "center",
     gap: 8,
-  },
-  reviewCard: {
-    background: "var(--bg-card)",
-    border: "1px solid var(--border-soft)",
-    borderRadius: 10,
-    padding: "14px 16px",
-    marginBottom: 8,
-  },
-  reviewHeader: {
-    display: "flex",
-    justifyContent: "space-between",
-    alignItems: "center",
-    fontSize: 12,
-    color: "var(--text-muted)",
-    marginBottom: 6,
-  },
-  reviewQ: {
-    fontSize: 14,
-    color: "var(--text-main)",
-    fontWeight: 600,
-    marginBottom: 8,
-  },
-  reviewRow: {
-    fontSize: 13,
-    color: "var(--text-muted)",
-    marginBottom: 3,
-  },
-  reviewUserCorrect: {
-    color: "var(--green)",
-    fontWeight: 600,
-  },
-  reviewUserWrong: {
-    color: "var(--red)",
-    fontWeight: 600,
-  },
-  reviewAns: {
-    color: "var(--green)",
-    fontWeight: 600,
-  },
-  reviewExplain: {
-    fontSize: 12,
-    color: "var(--text-muted)",
-    marginTop: 8,
-    paddingTop: 8,
-    borderTop: "1px solid var(--border-soft)",
-    lineHeight: 1.5,
   },
 };
 
@@ -2440,36 +2446,39 @@ function buildTestSession(topics, vocab, conjugations, manualQuestions, blockId)
   }
 
   // 5. Сборка сессии: ПО ПОРЯДКУ уровней, внутри каждого — шафл
-  // Семплим по квоте, добирая из соседних уровней если не хватает
-  // Результат: сначала все Ур 1, потом все Ур 2, ... — порядок уровней сохраняется
-  const session = [];
+  // Базовая квота: { 1: 8, 2: 7, 3: 6, 4: 5, 5: 4 } = 30
+  // Если на каком-то уровне не хватает — недостача перетекает на ПРЕДЫДУЩИЙ уровень.
+  // Пример: Ур5=0 → Ур4 расширяется с 5 до 9
+  // Пример: Ур3=4 (нужно 6) → Ур2 расширяется с 7 до 9 (на 2 больше)
+  const takenByLevel = { 1: [], 2: [], 3: [], 4: [], 5: [] };
   const used = new Set();
 
-  // Первый проход: по квоте на уровень
-  const takenByLevel = { 1: [], 2: [], 3: [], 4: [], 5: [] };
+  // Сначала вычисляем итоговые квоты с учётом перетекания (сверху вниз)
+  const finalQuota = { 1: QUOTA[1], 2: QUOTA[2], 3: QUOTA[3], 4: QUOTA[4], 5: QUOTA[5] };
+  // Идём с самого верха (Ур 5) вниз. Если на уровне не хватает — донос на предыдущий
+  for (const lvl of [5, 4, 3, 2]) {
+    const available = byLevel[lvl].length;
+    if (available < finalQuota[lvl]) {
+      const shortfall = finalQuota[lvl] - available;
+      finalQuota[lvl] = available;     // на этом уровне берём всё что есть
+      finalQuota[lvl - 1] += shortfall; // недостающие добавляются в предыдущий
+    }
+  }
+  // На Ур 1 может тоже не хватить — там просто берём что есть, никуда не переносим
+  if (byLevel[1].length < finalQuota[1]) {
+    finalQuota[1] = byLevel[1].length;
+  }
+
+  // Семплим по итоговым квотам
   for (const lvl of [1, 2, 3, 4, 5]) {
-    const want = QUOTA[lvl];
     const pool = shuffle(byLevel[lvl].filter(q => !used.has(q)));
-    const take = pool.slice(0, want);
+    const take = pool.slice(0, finalQuota[lvl]);
     take.forEach(q => used.add(q));
     takenByLevel[lvl] = take;
   }
 
-  // Второй проход: добор. Если total < 30 — добираем недостающее с тех уровней где осталось
-  const totalTaken = Object.values(takenByLevel).reduce((s, a) => s + a.length, 0);
-  if (totalTaken < 30) {
-    let need = 30 - totalTaken;
-    for (const lvl of [1, 2, 3, 4, 5]) {
-      if (need <= 0) break;
-      const remaining = shuffle(byLevel[lvl].filter(q => !used.has(q)));
-      const extra = remaining.slice(0, need);
-      extra.forEach(q => used.add(q));
-      takenByLevel[lvl].push(...extra);
-      need -= extra.length;
-    }
-  }
-
   // Сборка финального порядка: ПО УРОВНЯМ
+  const session = [];
   for (const lvl of [1, 2, 3, 4, 5]) {
     session.push(...takenByLevel[lvl]);
   }
@@ -3181,8 +3190,10 @@ function App() {
 
           {/* ── РАЗБОР: список всех вопросов ─────────────────────── */}
           {userAnswers.length > 0 && (
-            <div style={S.reviewWrap}>
-              <div style={S.reviewHeading}>📋 Разбор</div>
+            <div style={{ marginTop: 24 }}>
+              <div style={{ fontSize: 16, fontWeight: 700, color: "var(--text-title)", marginBottom: 12 }}>
+                📋 Разбор
+              </div>
               {userAnswers.map((ua, idx) => {
                 const q = ua.q;
                 const correctText = formatCorrectAnswer(q);
@@ -3192,34 +3203,30 @@ function App() {
                 const lvlInfo = LEVEL_LABELS[lvl] || LEVEL_LABELS[1];
 
                 return (
-                  <div key={idx} style={S.reviewCard}>
-                    <div style={S.reviewHeader}>
-                      <span>
-                        {idx + 1} / {userAnswers.length}
-                        <span style={{ marginLeft: 8, color: lvlInfo.color, fontWeight: 600 }}>
-                          · {lvlInfo.name}
-                        </span>
-                      </span>
-                      <span style={{ fontSize: 16,
-                                     color: ua.isCorrect ? "var(--green)" : "var(--red)",
-                                     fontWeight: 700 }}>
-                        {ua.isCorrect ? "✓" : "✗"}
+                  <div key={idx} style={S.reviewItem}>
+                    <div style={S.reviewIdx}>
+                      {idx + 1} / {userAnswers.length}
+                      <span style={{ marginLeft: 8, color: lvlInfo.color, fontWeight: 600 }}>
+                        · {lvlInfo.name}
                       </span>
                     </div>
+                    <div style={S.reviewStatus(ua.isCorrect)}>
+                      {ua.isCorrect ? "✓" : "✗"}
+                    </div>
                     <div style={S.reviewQ}>{q.q}</div>
-                    <div style={S.reviewRow}>
+                    <div style={S.reviewLine}>
                       Твой ответ:{" "}
-                      <span style={ua.isCorrect ? S.reviewUserCorrect : S.reviewUserWrong}>
+                      <span style={S.reviewMyAns(ua.isCorrect)}>
                         {userText || "—"}
                       </span>
                     </div>
                     {!ua.isCorrect && correctText && (
-                      <div style={S.reviewRow}>
-                        Правильно: <span style={S.reviewAns}>{correctText}</span>
+                      <div style={S.reviewLine}>
+                        Правильно: <span style={S.reviewRightAns}>{correctText}</span>
                       </div>
                     )}
                     {explainText && (
-                      <div style={S.reviewExplain}>💡 {explainText}</div>
+                      <div style={S.reviewNote}>💡 {explainText}</div>
                     )}
                   </div>
                 );
