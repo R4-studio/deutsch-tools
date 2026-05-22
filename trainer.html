@@ -1021,12 +1021,12 @@ function genL2_conj_regelmaessig(item, vocabPool, conjugations) {
   };
 }
 
-// ─── Генератор: Ур 3 — plural (fill) ──────────────────────────────────────
-function genL3_plural(item) {
+// ─── Генератор: Ур 2 — plural существительного (fill) ────────────────────
+// Перенесено из Ур 3 — это базовая форма слова, относится к Ур 2
+function genL2_plural(item) {
   if (item.pos !== "noun" || !item.plural || item.gender === "pl") return null;
-  // Игнорируем абстрактные/массовые (без plural)
   return {
-    auto: true, level: "A2", difficulty: 3, type: "fill",
+    auto: true, level: "A1", difficulty: 2, type: "fill",
     q: `Множественное число от «${item.de}»?`,
     ans: item.plural,
     altAns: [item.plural.replace(/^die /, "")],
@@ -1035,24 +1035,341 @@ function genL3_plural(item) {
   };
 }
 
-// ─── Генератор: Ур 3 — спряжение unregelmäßig (fill) ──────────────────────
-function genL3_conj_unregel(conj) {
-  // Случайное местоимение из доступных
-  const pronounIdx = Math.floor(Math.random() * conj.pronouns.length);
-  const pronoun = conj.pronouns[pronounIdx];
-  const correctForm = conj.forms[pronounIdx];
+// ─── Генератор: Ур 2 — Komparativ для adj (mc) ───────────────────────────
+// Автогенерация Komparativ с правилами + список исключений
+const ADJ_COMP_EXCEPTIONS = {
+  "alt": "älter", "groß": "größer", "gut": "besser", "viel": "mehr",
+  "kurz": "kürzer", "warm": "wärmer", "kalt": "kälter", "stark": "stärker",
+  "jung": "jünger", "hoch": "höher", "lang": "länger", "klug": "klüger",
+  "arm": "ärmer", "dumm": "dümmer", "hart": "härter", "krank": "kränker",
+  "schwach": "schwächer", "scharf": "schärfer", "rot": "röter",
+  "schwarz": "schwärzer", "gern": "lieber",
+};
 
+function adjKomparativ(adj) {
+  if (ADJ_COMP_EXCEPTIONS[adj]) return ADJ_COMP_EXCEPTIONS[adj];
+  // -e в конце → +r
+  if (adj.endsWith("e")) return adj + "r";
+  // -el → выпадает e: dunkel → dunkler
+  if (adj.endsWith("el")) return adj.slice(0, -2) + "ler";
+  // -er → выпадает e: teuer → teurer
+  if (adj.endsWith("er")) return adj.slice(0, -2) + "rer";
+  // стандартно: + er
+  return adj + "er";
+}
+
+function genL2_komparativ(item, vocabPool) {
+  if (item.pos !== "adj") return null;
+  // Не делаем для adv (у наречий обычно нет Komparativ кроме особых)
+  const correct = adjKomparativ(item.de);
+  // Дистракторы — варианты которые могли бы быть, но неправильные
+  const distractors = [
+    item.de + "t",          // schnellt
+    item.de + "ste",        // schnellste
+    item.de + "e",          // schnelle
+  ].filter(d => d !== correct);
+  if (distractors.length < 3) return null;
+  const opts = shuffle([correct, ...distractors.slice(0, 3)]);
+  const ans = opts.indexOf(correct);
   return {
-    auto: true, level: "A2", difficulty: 3, type: "fill",
-    q: `Спряги «${conj.verb}» для «${pronoun}»:`,
-    ans: correctForm,
-    altAns: [],
-    hint: conj.modal ? "модальный" : "Präsens",
-    sourceId: conj.id,
+    auto: true, level: "A1", difficulty: 2, type: "mc",
+    q: `Как будет «${item.de}» в Komparativ?`,
+    opts, ans,
+    sourceId: item.id,
   };
 }
 
-// ─── unregel-блок: Ур 1 — перевод глагола DE→RU ──────────────────────────
+// ─── Генератор: Ур 2 — слово по теме (для adj/adv, mc) ───────────────────
+// Цель: натренировать ассоциацию слова с темой
+const TOPIC_RU_HINTS = {
+  "adj:colors": "цвет",
+  "adj:things": "характеристика предмета",
+  "adj:people-emotions": "эмоция / состояние",
+  "adj:price-taste": "цена / вкус",
+  "adj:marital": "семейный статус",
+  "adv:time-frequency": "время или частота",
+  "adv:place-direction": "место / направление",
+  "adv:degree-quantity": "степень / количество",
+  "adv:agreement": "согласие / реакция",
+  "adv:feelings": "самочувствие",
+  "adv:particles": "частица",
+};
+
+function genL2_topic_classify(item, vocabPool) {
+  if (item.pos !== "adj" && item.pos !== "adv") return null;
+  const topic = item.topics?.[0];
+  if (!topic) return null;
+  const hint = TOPIC_RU_HINTS[topic];
+  if (!hint) return null;
+  // Дистракторы: 3 слова из ДРУГИХ topics того же pos
+  const sameTypeOtherTopic = vocabPool.filter(v =>
+    v.pos === item.pos && v.id !== item.id &&
+    !v.topics.some(t => t === topic)
+  );
+  if (sameTypeOtherTopic.length < 3) return null;
+  const distractors = shuffle(sameTypeOtherTopic).slice(0, 3).map(v => v.de);
+  const opts = shuffle([item.de, ...distractors]);
+  const ans = opts.indexOf(item.de);
+  return {
+    auto: true, level: "A1", difficulty: 2, type: "mc",
+    q: `Какое слово описывает «${hint}»?`,
+    opts, ans,
+    sourceId: item.id,
+  };
+}
+
+// ─── Генератор: Ур 2 — Pers. Pronouns Nom/Akk/Dat (mc) ───────────────────
+// Захардкоженная таблица личных местоимений
+const PERSONAL_PRONOUNS_TABLE = [
+  { nom: "ich",   akk: "mich",  dat: "mir",   ru: "я" },
+  { nom: "du",    akk: "dich",  dat: "dir",   ru: "ты" },
+  { nom: "er",    akk: "ihn",   dat: "ihm",   ru: "он" },
+  { nom: "sie",   akk: "sie",   dat: "ihr",   ru: "она" },
+  { nom: "es",    akk: "es",    dat: "ihm",   ru: "оно" },
+  { nom: "wir",   akk: "uns",   dat: "uns",   ru: "мы" },
+  { nom: "ihr",   akk: "euch",  dat: "euch",  ru: "вы (мн.)" },
+  { nom: "sie",   akk: "sie",   dat: "ihnen", ru: "они" },
+  { nom: "Sie",   akk: "Sie",   dat: "Ihnen", ru: "Вы (вежл.)" },
+];
+
+const PRONOUN_TEMPLATES_AKK = [
+  "Er sieht ___",       // Akk
+  "Ich verstehe ___",   // Akk
+  "Sie kennt ___",      // Akk
+  "Wir lieben ___",     // Akk
+];
+const PRONOUN_TEMPLATES_DAT = [
+  "Er gibt ___ ein Buch",  // Dat
+  "Sie hilft ___",          // Dat
+  "Ich danke ___",          // Dat
+  "Es gefällt ___",         // Dat
+];
+
+function genL2_pers_pronoun(vocabPool) {
+  // Случайно выбираем местоимение и шаблон
+  const p = PERSONAL_PRONOUNS_TABLE[Math.floor(Math.random() * PERSONAL_PRONOUNS_TABLE.length)];
+  const useAkk = Math.random() < 0.5;
+  const tmplPool = useAkk ? PRONOUN_TEMPLATES_AKK : PRONOUN_TEMPLATES_DAT;
+  const tmpl = tmplPool[Math.floor(Math.random() * tmplPool.length)];
+  const correct = useAkk ? p.akk : p.dat;
+  // Дистракторы — другие формы того же местоимения + случайные
+  const distractors = new Set();
+  distractors.add(p.nom);  // именительный
+  distractors.add(useAkk ? p.dat : p.akk);  // другой падеж
+  // Подмешиваем случайные из таблицы
+  while (distractors.size < 3) {
+    const r = PERSONAL_PRONOUNS_TABLE[Math.floor(Math.random() * PERSONAL_PRONOUNS_TABLE.length)];
+    distractors.add(r.akk);
+    if (distractors.size < 3) distractors.add(r.dat);
+  }
+  distractors.delete(correct);
+  const opts = shuffle([correct, ...[...distractors].slice(0, 3)]);
+  const ans = opts.indexOf(correct);
+  return {
+    auto: true, level: "A1", difficulty: 2, type: "mc",
+    q: `Вставь местоимение «${p.ru}»:\n${tmpl.replace("___", "_____")}`,
+    opts, ans,
+  };
+}
+
+// ─── Генератор: Ур 3 — артикль в контексте (для существительных, mc) ──
+// Шаблоны с указанием падежа
+const ARTICLE_TEMPLATES = [
+  { tmpl: "___ {noun} ist hier",        case: "Nom" },
+  { tmpl: "___ {noun} ist sehr schön",  case: "Nom" },
+  { tmpl: "Ich habe ___ {noun}",        case: "Akk" },
+  { tmpl: "Ich kaufe ___ {noun}",       case: "Akk" },
+  { tmpl: "Ich sehe ___ {noun}",        case: "Akk" },
+  { tmpl: "Er nimmt ___ {noun}",        case: "Akk" },
+  { tmpl: "Ich helfe ___ {noun}",       case: "Dat" },
+  { tmpl: "Ich spreche mit ___ {noun}", case: "Dat" },
+  { tmpl: "Es gehört ___ {noun}",       case: "Dat" },
+  { tmpl: "Wir danken ___ {noun}",      case: "Dat" },
+];
+
+// Артикли по роду и падежу (с definite артиклем)
+const ARTICLE_FORMS = {
+  m: { Nom: "der", Akk: "den", Dat: "dem" },
+  f: { Nom: "die", Akk: "die", Dat: "der" },
+  n: { Nom: "das", Akk: "das", Dat: "dem" },
+};
+
+function genL3_article_in_context(item) {
+  if (item.pos !== "noun" || !item.gender || item.gender === "pl") return null;
+  const tmpl = ARTICLE_TEMPLATES[Math.floor(Math.random() * ARTICLE_TEMPLATES.length)];
+  const forms = ARTICLE_FORMS[item.gender];
+  if (!forms) return null;
+  const correct = forms[tmpl.case];
+  // Дистракторы — другие артикли
+  const allArticles = ["der", "die", "das", "den", "dem"];
+  const distractors = allArticles.filter(a => a !== correct).slice(0, 3);
+  const opts = shuffle([correct, ...distractors]);
+  const ans = opts.indexOf(correct);
+  // Имя существительного без артикля
+  const nounStem = item.de.replace(/^(der |die |das )/, "");
+  const display = tmpl.tmpl.replace("{noun}", nounStem);
+  return {
+    auto: true, level: "A2", difficulty: 3, type: "mc",
+    q: `Вставь артикль (${tmpl.case}):\n${display}`,
+    opts, ans,
+    sourceId: item.id,
+  };
+}
+
+// ─── Генератор: Ур 3 — Komparativ выбор в предложении (опционально) ───────
+// Пропускаю — у нас уже есть L2 Komparativ, не дублирую
+
+// ─── Генератор: Ур 3 — Possessive Pronouns mc ────────────────────────────
+const POSSESSIVE_PRONOUNS_TABLE = [
+  { stem: "mein",  ru: "мой/моя/моё" },
+  { stem: "dein",  ru: "твой/твоя/твоё" },
+  { stem: "sein",  ru: "его" },
+  { stem: "ihr",   ru: "её / их" },
+  { stem: "unser", ru: "наш" },
+  { stem: "euer",  ru: "ваш (мн.)" },
+  { stem: "Ihr",   ru: "Ваш (вежл.)" },
+];
+
+// Окончания притяжательных по роду + падеж
+// Для притяжательных в Akk masc → +en (meinen), в остальных как у "ein/eine"
+function possessiveEnding(gender, kase) {
+  if (kase === "Nom") {
+    return { m: "", f: "e", n: "" }[gender] || "";
+  }
+  if (kase === "Akk") {
+    return { m: "en", f: "e", n: "" }[gender] || "";
+  }
+  if (kase === "Dat") {
+    return { m: "em", f: "er", n: "em" }[gender] || "";
+  }
+  return "";
+}
+
+function genL3_possessive(item) {
+  // Берём существительное с известным родом
+  if (item.pos !== "noun" || !item.gender || item.gender === "pl") return null;
+  const p = POSSESSIVE_PRONOUNS_TABLE[Math.floor(Math.random() * POSSESSIVE_PRONOUNS_TABLE.length)];
+  // Случайный падеж: Nom / Akk / Dat
+  const cases = ["Nom", "Akk", "Dat"];
+  const kase = cases[Math.floor(Math.random() * cases.length)];
+  const ending = possessiveEnding(item.gender, kase);
+  const correct = p.stem + ending;
+  // Дистракторы — другие окончания того же притяжательного
+  const altEndings = ["", "e", "en", "em", "er"];
+  const distractors = altEndings.map(e => p.stem + e).filter(d => d !== correct);
+  if (distractors.length < 3) return null;
+  const opts = shuffle([correct, ...shuffle(distractors).slice(0, 3)]);
+  const ans = opts.indexOf(correct);
+  const nounStem = item.de.replace(/^(der |die |das )/, "");
+  // Шаблон с привязкой к падежу
+  const tmpls = {
+    Nom: `___ ${nounStem} ist hier (${p.ru})`,
+    Akk: `Ich habe ___ ${nounStem} (${p.ru})`,
+    Dat: `Ich helfe ___ ${nounStem} (${p.ru})`,
+  };
+  return {
+    auto: true, level: "A2", difficulty: 3, type: "mc",
+    q: `Вставь притяжательное (${kase}):\n${tmpls[kase]}`,
+    opts, ans,
+    sourceId: item.id,
+  };
+}
+
+// ─── Главная функция: собрать пул автогенерированных вопросов для топиков ──
+function buildAutoQuestions(topics, vocab, conjugations) {
+  // Берём слова из заданных topics
+  const items = vocab.filter(v => v.topics.some(t => topics.includes(t)));
+  if (items.length === 0) return [];
+
+  const pool = [];
+
+  // Ур 1: для каждого слова — DE→RU и RU→DE
+  for (const item of items) {
+    const q1 = genL1_translate_DE_RU(item, vocab);
+    if (q1) pool.push(q1);
+    const q2 = genL1_translate_RU_DE(item, vocab);
+    if (q2) pool.push(q2);
+  }
+
+  // Ур 2: артикли + plural для noun, спряжение для verb,
+  //       Komparativ + topic-classify для adj/adv,
+  //       Pers. Pronouns для блока местоимений
+  for (const item of items) {
+    // noun
+    const qa = genL2_article(item);
+    if (qa) pool.push(qa);
+    const qpl = genL2_plural(item);
+    if (qpl) pool.push(qpl);
+    // verb
+    const qc = genL2_conj_regelmaessig(item, vocab, conjugations);
+    if (qc) pool.push(qc);
+    // adj
+    const qk = genL2_komparativ(item, vocab);
+    if (qk) pool.push(qk);
+    // adj/adv
+    const qt = genL2_topic_classify(item, vocab);
+    if (qt) pool.push(qt);
+  }
+  // Если есть местоимения в этой теме — Pers. Pronoun вопросы
+  const hasPronouns = items.some(v => v.pos === "pron");
+  if (hasPronouns) {
+    // Генерим 5 случайных вопросов (они не привязаны к конкретному местоимению)
+    for (let i = 0; i < 5; i++) {
+      pool.push(genL2_pers_pronoun(vocab));
+    }
+  }
+
+  // Ур 3: полное спряжение verbs + артикль в контексте noun + Possessive noun
+  // Глаголы: full conj для каждого глагола в теме (regelmäßig из REGEL_VERBS, unregel из CONJUGATIONS)
+  const verbsInTopic = items.filter(v => v.pos === "verb");
+  for (const v of verbsInTopic) {
+    // Пропускаем составные глаголы (с пробелами)
+    if (v.de.includes(" ")) continue;
+    // Сначала проверка в CONJUGATIONS (unregelmäßig)
+    const conj = conjugations.find(c => c.verb === v.de);
+    if (conj) {
+      pool.push(genL3_unregel_full_conj(conj));
+      continue;
+    }
+    // Затем REGEL_VERBS
+    if (typeof REGEL_VERBS !== "undefined") {
+      const reg = REGEL_VERBS.find(r => r.verb === v.de);
+      if (reg) {
+        pool.push({
+          auto: true, level: "A1", difficulty: 3, type: "conj",
+          q: `Проспрягай «${reg.verb}»${reg.ru ? " — " + reg.ru : ""} в Präsens:`,
+          verb: reg.verb,
+          tense: "Präsens",
+          pronouns: ["ich", "du", "er/sie/es", "wir", "ihr", "sie/Sie"],
+          ans: reg.forms,
+          sourceId: reg.id,
+        });
+        continue;
+      }
+    }
+    // Fallback — автогенератор regelmäßig
+    const generated = [0,1,2,3,4,5].map(i => getConjForm(v.de, i, conjugations));
+    pool.push({
+      auto: true, level: "A1", difficulty: 3, type: "conj",
+      q: `Проспрягай «${v.de}» — ${v.ru} в Präsens:`,
+      verb: v.de,
+      tense: "Präsens",
+      pronouns: ["ich", "du", "er/sie/es", "wir", "ihr", "sie/Sie"],
+      ans: generated,
+      sourceId: v.id,
+    });
+  }
+
+  // Артикли в контексте + Possessive — для существительных
+  for (const item of items) {
+    const qac = genL3_article_in_context(item);
+    if (qac) pool.push(qac);
+    const qpos = genL3_possessive(item);
+    if (qpos) pool.push(qpos);
+  }
+
+  return pool;
+}
 function genL1_unregel_translate_DE_RU(conj, allConjugations) {
   if (!conj.ru) return null;
   const distractors = allConjugations
@@ -1128,52 +1445,14 @@ function buildUnregelQuestions(conjugations) {
   return pool;
 }
 
-// ─── Главная функция: собрать пул автогенерированных вопросов для топиков ──
-function buildAutoQuestions(topics, vocab, conjugations) {
-  // Берём слова из заданных topics
-  const items = vocab.filter(v => v.topics.some(t => topics.includes(t)));
-  if (items.length === 0) return [];
-
-  const pool = [];
-
-  // Ур 1: для каждого слова — DE→RU и RU→DE
-  for (const item of items) {
-    const q1 = genL1_translate_DE_RU(item, vocab);
-    if (q1) pool.push(q1);
-    const q2 = genL1_translate_RU_DE(item, vocab);
-    if (q2) pool.push(q2);
-  }
-
-  // Ур 2: артикли для noun, спряжение для verb
-  for (const item of items) {
-    const qa = genL2_article(item);
-    if (qa) pool.push(qa);
-    const qc = genL2_conj_regelmaessig(item, vocab, conjugations);
-    if (qc) pool.push(qc);
-  }
-
-  // Ур 3: plural + unregel
-  for (const item of items) {
-    const qp = genL3_plural(item);
-    if (qp) pool.push(qp);
-  }
-  // Ур 3 unregel: только для глаголов которые есть и в этом топике, и в CONJUGATIONS
-  const verbsInTopic = items.filter(v => v.pos === "verb");
-  for (const v of verbsInTopic) {
-    const conj = conjugations.find(c => c.verb === v.de);
-    if (conj) {
-      const qu = genL3_conj_unregel(conj);
-      if (qu) pool.push(qu);
-    }
-  }
-
-  return pool;
-}
-
-// ─── Сборщик тестовой сессии: 30 вопросов по пропорции 8/7/6/5/4 ──────────
-function buildTestSession(topics, vocab, conjugations, manualQuestions, blockId) {
-  // Пропорции по уровням
-  const QUOTA = { 1: 8, 2: 7, 3: 6, 4: 5, 5: 4 };
+// ─── Сборщик тестовой сессии: 30 вопросов по новой пропорции 8/6/6/6/4 ──
+function buildTestSession(topics, vocab, conjugations, manualQuestions, blockId, levelFilter) {
+  // Новые пропорции (Ур 1=8, Ур 2=6, Ур 3=6, Ур 4=6, Ур 5=4)
+  // Если задан levelFilter (число 1-5) — это тест по одному уровню
+  // Если null/undefined — это общий тест
+  const QUOTA = { 1: 8, 2: 6, 3: 6, 4: 6, 5: 4 };
+  // Размеры одиночных тестов по уровню
+  const SOLO_SIZE = { 1: 15, 2: 15, 3: 15, 4: 10, 5: 10 };
 
   // Особый блок: unregel — используем собственный пул вопросов по CONJUGATIONS
   let autoPool;
@@ -1209,7 +1488,14 @@ function buildTestSession(topics, vocab, conjugations, manualQuestions, blockId)
     if (byLevel[lvl]) byLevel[lvl].push(q);
   }
 
-  // 5. Сборка сессии: ПО ПОРЯДКУ уровней, внутри каждого — шафл
+  // ─── Тест по одному уровню ─────────────────────────────────────────────
+  if (levelFilter && [1, 2, 3, 4, 5].includes(levelFilter)) {
+    const wanted = SOLO_SIZE[levelFilter];
+    const pool = shuffle(byLevel[levelFilter]).slice(0, wanted);
+    return shuffleMC(pool);
+  }
+
+  // ─── Общий тест (все уровни) ────────────────────────────────────────────
   // Базовая квота: { 1: 8, 2: 7, 3: 6, 4: 5, 5: 4 } = 30
   // Если на каком-то уровне не хватает — недостача перетекает на ПРЕДЫДУЩИЙ уровень.
   // Пример: Ур5=0 → Ур4 расширяется с 5 до 9
@@ -1325,7 +1611,8 @@ function App() {
     if (b.kind === "conjugations") {
       // unregel-блок: свой поток
       if (mode === "test") {
-        startTestUnregel();
+        // Через выбор типа теста (общий / по уровню)
+        setPhase("select-test-type");
       } else {
         // learn → сразу карточки спряжений
         startLearnConj();
@@ -1346,8 +1633,8 @@ function App() {
     setPhase("learn-conj-cards");
   }
 
-  function startTestUnregel() {
-    const session = buildTestSession([], VOCAB, CONJUGATIONS, QUESTIONS, "unregel");
+  function startTestUnregel(levelFilter = null) {
+    const session = buildTestSession([], VOCAB, CONJUGATIONS, QUESTIONS, "unregel", levelFilter);
     setQuestions(session); setQIdx(0); setUserAns(""); setAnswered(false);
     setCorrectCount(0); setHintVisible(false); setTiles([]); setChosen([]); setConjAnswers([]);
     setUserAnswers([]); setLastVerdict(null);
@@ -1358,18 +1645,24 @@ function App() {
     pickAction(s);
   }
   function pickAction(sub) {
-    if (mode === "test") startTest(sub);
-    else setPhase("block-start");
+    if (mode === "test") {
+      // Перед запуском теста — экран выбора типа (общий / по уровню)
+      setPhase("select-test-type");
+    } else {
+      setPhase("block-start");
+    }
   }
   function startTestAll() {
+    // "Тест по всему блоку" — без сабблока
     setActiveSub(null);
-    startTest(null);
+    // Сразу к выбору типа теста
+    setPhase("select-test-type");
   }
-  function startTest(sub) {
+  function startTest(sub, levelFilter = null) {
     const topics = sub ? sub.topics
       : (activeBlock.subblocks ? activeBlock.subblocks.flatMap(s => s.topics) : []);
     const blockId = sub ? `${activeBlock.id}:${sub.id}` : activeBlock.id;
-    const session = buildTestSession(topics, VOCAB, CONJUGATIONS, QUESTIONS, blockId);
+    const session = buildTestSession(topics, VOCAB, CONJUGATIONS, QUESTIONS, blockId, levelFilter);
     setQuestions(session); setQIdx(0); setUserAns(""); setAnswered(false);
     setCorrectCount(0); setHintVisible(false); setTiles([]); setChosen([]); setConjAnswers([]);
     setUserAnswers([]); setLastVerdict(null);
@@ -1598,6 +1891,131 @@ function App() {
             <button style={{ ...S.bigBtn, background: "#888" }} onClick={startLearnMiniTest}>
               ⚡ Сразу к мини-тесту
             </button>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  // ─── SELECT TEST TYPE (выбор общий тест / по уровню) ────────────────────
+  function renderSelectTestType() {
+    // Подсчёт сколько вопросов доступно по каждому уровню
+    const topics = activeSub
+      ? activeSub.topics
+      : (activeBlock.subblocks ? activeBlock.subblocks.flatMap(s => s.topics) : []);
+    const blockId = activeSub ? `${activeBlock.id}:${activeSub.id}` : activeBlock.id;
+
+    // Используем тот же buildTestSession для подсчёта пула, но без обрезки
+    // Для оценки: считаем что есть в пуле для каждого уровня (без квот)
+    let autoPool, manualPool;
+    if (blockId === "unregel") {
+      autoPool = buildUnregelQuestions(CONJUGATIONS);
+    } else {
+      autoPool = buildAutoQuestions(topics, VOCAB, CONJUGATIONS);
+    }
+    const trainerTopic = `trainer:${blockId}`;
+    if (blockId.includes(":")) {
+      manualPool = QUESTIONS.filter(q => q.topic === trainerTopic);
+    } else {
+      const prefix = trainerTopic + ":";
+      manualPool = QUESTIONS.filter(q =>
+        q.topic === trainerTopic || q.topic.startsWith(prefix)
+      );
+    }
+    const allPool = [...autoPool, ...manualPool];
+    const countByLevel = { 1: 0, 2: 0, 3: 0, 4: 0, 5: 0 };
+    for (const q of allPool) {
+      const lvl = q.difficulty || 1;
+      if (countByLevel[lvl] !== undefined) countByLevel[lvl]++;
+    }
+
+    const heading = activeSub ? activeSub.label : activeBlock.label;
+
+    // Цвета и подписи уровней
+    const levelInfo = [
+      { lvl: 1, color: "#1a7a4a", name: "Уровень 1", action: "Перевод" },
+      { lvl: 2, color: "#3498db", name: "Уровень 2", action: "Базовая форма" },
+      { lvl: 3, color: "#e67e22", name: "Уровень 3", action: "Склонение" },
+      { lvl: 4, color: "#9b59b6", name: "Уровень 4", action: "В предложении" },
+      { lvl: 5, color: "#e74c3c", name: "Уровень 5", action: "Открытый ответ" },
+    ];
+
+    return (
+      <div style={S.page}>
+        <div style={S.container}>
+          <TopBar
+            left={
+              <button style={S.outlineBtn(activeBlock.color)}
+                      onClick={() => {
+                        if (activeBlock.kind === "conjugations") {
+                          setPhase("select-block"); setActiveBlock(null);
+                        } else if (blockHasSubblocks(activeBlock)) {
+                          setPhase("select-subblock"); setActiveSub(null);
+                        } else {
+                          setPhase("select-block"); setActiveBlock(null);
+                        }
+                      }}>
+                ← Назад
+              </button>
+            }
+            right={<span style={S.muted}>{modeLabel}</span>}
+            icon={icon} onTheme={cycleTheme} onHome={goHome} />
+          <h2 style={{ ...S.heading, textAlign: "center" }}>{heading}</h2>
+          <p style={{ ...S.subheading, textAlign: "center" }}>Выбери тест</p>
+
+          {/* Большая кнопка — общий тест */}
+          <div style={{ textAlign: "center", marginBottom: 24 }}>
+            <button style={{ ...S.bigBtn, background: "#1a7a4a", minWidth: 280 }}
+                    onClick={() => {
+                      if (activeBlock.kind === "conjugations") startTestUnregel(null);
+                      else startTest(activeSub, null);
+                    }}>
+              🎯 Общий тест (30 вопросов)
+            </button>
+          </div>
+
+          <div style={{ ...S.subheading, textAlign: "center", marginBottom: 12 }}>или по одному уровню</div>
+
+          {/* Кнопки уровней */}
+          <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
+            {levelInfo.map(li => {
+              const count = countByLevel[li.lvl];
+              const hasAny = count > 0;
+              return (
+                <button
+                  key={li.lvl}
+                  disabled={!hasAny}
+                  onClick={() => {
+                    if (activeBlock.kind === "conjugations") startTestUnregel(li.lvl);
+                    else startTest(activeSub, li.lvl);
+                  }}
+                  style={{
+                    display: "flex", alignItems: "center", justifyContent: "space-between",
+                    padding: "14px 18px",
+                    background: hasAny ? "var(--bg-card)" : "var(--bg-soft)",
+                    border: `2px solid ${hasAny ? li.color : "var(--border-soft)"}`,
+                    borderRadius: 12,
+                    cursor: hasAny ? "pointer" : "not-allowed",
+                    opacity: hasAny ? 1 : 0.5,
+                    color: "var(--text-main)",
+                    fontFamily: "inherit",
+                    textAlign: "left",
+                  }}>
+                  <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
+                    <span style={{
+                      ...S.levelBadge(li.color),
+                      marginBottom: 0,
+                      padding: "4px 10px",
+                      fontSize: 12,
+                    }}>{li.name}</span>
+                    <span style={{ fontSize: 14, fontWeight: 600 }}>{li.action}</span>
+                  </div>
+                  <span style={{ fontSize: 13, color: "var(--text-muted)" }}>
+                    {hasAny ? `${count} вопросов` : "—"}
+                  </span>
+                </button>
+              );
+            })}
           </div>
         </div>
       </div>
@@ -2017,6 +2435,7 @@ function App() {
       {phase === "home" && renderHome()}
       {phase === "select-block" && renderSelectBlock()}
       {phase === "select-subblock" && activeBlock && blockHasSubblocks(activeBlock) && renderSelectSubblock()}
+      {phase === "select-test-type" && activeBlock && renderSelectTestType()}
       {phase === "block-start" && activeBlock && renderBlockStart()}
       {phase === "learn-cards" && activeBlock && renderLearnCards()}
       {phase === "learn-conj-cards" && activeBlock && renderLearnConjCards()}
