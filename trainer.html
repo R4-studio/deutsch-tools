@@ -906,6 +906,84 @@ function conjRegelmaessig(infinitive, pronoun) {
   }
 }
 
+// ═══════════════════════════════════════════════════════════════
+// АВТОГЕНЕРАТОР Partizip II (regelmäßig)
+// Правила:
+//   - На -ieren: без ge-, +t (studieren → studiert)
+//   - Неотделяемые приставки (be/ent/er/ge/ver/zer/miss/emp): без ge-
+//   - Отделяемые приставки (auf/ein/aus/...): prefix + ge + stem + t/et
+//   - Стандарт: ge + stem + t/et (на -t/-d → -et)
+// ═══════════════════════════════════════════════════════════════
+const INSEPARABLE_PREFIXES_P2 = ["be", "ent", "er", "ge", "ver", "zer", "miss", "emp"];
+const SEPARABLE_PREFIXES_P2 = [
+  "ab", "an", "auf", "aus", "bei", "ein", "fest", "fort", "her", "hin",
+  "los", "mit", "nach", "vor", "weg", "weiter", "zu", "zurück", "zusammen"
+];
+
+function partizip2Regelmaessig(infinitive) {
+  // На -ieren: без ge-
+  if (infinitive.endsWith("ieren")) {
+    return infinitive.slice(0, -2) + "t";  // studieren → studiert
+  }
+
+  // Stem
+  let stem;
+  if (infinitive.endsWith("en")) {
+    stem = infinitive.slice(0, -2);
+  } else if (infinitive.endsWith("n")) {
+    stem = infinitive.slice(0, -1);
+  } else {
+    stem = infinitive;
+  }
+
+  // Окончание (с -et или -t)
+  const needsEt = /[td]$/.test(stem) || /(chn|ffn|tm|dm|gn)$/.test(stem);
+  const ending = needsEt ? "et" : "t";
+
+  // Неотделяемая приставка → без ge-
+  for (const prefix of INSEPARABLE_PREFIXES_P2) {
+    if (infinitive.startsWith(prefix) && infinitive.length > prefix.length + 2) {
+      return stem + ending;
+    }
+  }
+
+  // Отделяемая приставка → prefix + ge + ...
+  for (const prefix of SEPARABLE_PREFIXES_P2) {
+    if (infinitive.startsWith(prefix) && infinitive.length > prefix.length + 2) {
+      const subInf = infinitive.slice(prefix.length);
+      return prefix + partizip2Regelmaessig(subInf);
+    }
+  }
+
+  // Стандарт
+  return "ge" + stem + ending;
+}
+
+// Получить Partizip II глагола: 3 приоритета
+//   1. CONJUGATIONS (unregelmäßig) если поле partizip2 заполнено
+//   2. REGEL_VERBS (партицип в таблице — для исключений)
+//   3. partizip2Regelmaessig (автогенератор) — fallback
+function getPartizip2(infinitive, conjugations) {
+  const conj = conjugations.find(c => c.verb === infinitive);
+  if (conj && conj.partizip2) return conj.partizip2;
+  if (typeof REGEL_VERBS !== "undefined") {
+    const reg = REGEL_VERBS.find(v => v.verb === infinitive);
+    if (reg && reg.partizip2) return reg.partizip2;
+  }
+  return partizip2Regelmaessig(infinitive);
+}
+
+// Получить aux (haben/sein) для глагола
+function getAux(infinitive, conjugations) {
+  const conj = conjugations.find(c => c.verb === infinitive);
+  if (conj && conj.aux) return conj.aux;
+  if (typeof REGEL_VERBS !== "undefined") {
+    const reg = REGEL_VERBS.find(v => v.verb === infinitive);
+    if (reg && reg.aux) return reg.aux;
+  }
+  return "haben";  // дефолт
+}
+
 // Получить спряжение глагола: 3 приоритета:
 //   1. CONJUGATIONS (unregelmäßig — sein, haben, gehen и т.д.) — высший приоритет
 //   2. REGEL_VERBS (твоя таблица regelmäßig — вручную проверенные формы)
@@ -1104,7 +1182,7 @@ function genL2_topic_classify(item, vocabPool) {
   // Дистракторы: 3 слова из ДРУГИХ topics того же pos
   const sameTypeOtherTopic = vocabPool.filter(v =>
     v.pos === item.pos && v.id !== item.id &&
-    !v.topics.some(t => t === topic)
+    !(v.topics || []).some(t => t === topic)
   );
   if (sameTypeOtherTopic.length < 3) return null;
   const distractors = shuffle(sameTypeOtherTopic).slice(0, 3).map(v => v.de);
@@ -1278,7 +1356,7 @@ function genL3_possessive(item) {
 // ─── Главная функция: собрать пул автогенерированных вопросов для топиков ──
 function buildAutoQuestions(topics, vocab, conjugations) {
   // Берём слова из заданных topics
-  const items = vocab.filter(v => v.topics.some(t => topics.includes(t)));
+  const items = vocab.filter(v => (v.topics || []).some(t => topics.includes(t)));
   if (items.length === 0) return [];
 
   const pool = [];
@@ -1368,6 +1446,24 @@ function buildAutoQuestions(topics, vocab, conjugations) {
     if (qpos) pool.push(qpos);
   }
 
+  // ─── Partizip II ─────────────────────────────────────────────────────
+  // Ур 3: таблица из 6 случайных regel-глаголов (если в теме есть глаголы)
+  if (verbsInTopic.length >= 6) {
+    const p2Table = genL3_partizip2_table(verbsInTopic, conjugations);
+    if (p2Table) pool.push(p2Table);
+    // Делаем 2-3 такие таблицы из разных глаголов
+    const p2Table2 = genL3_partizip2_table(verbsInTopic, conjugations);
+    if (p2Table2) pool.push(p2Table2);
+  }
+
+  // Ур 4: fill в Perfekt-предложении (несколько штук)
+  if (verbsInTopic.length > 0) {
+    for (let i = 0; i < 3; i++) {
+      const q = genL4_perfekt_fill(verbsInTopic, conjugations);
+      if (q) pool.push(q);
+    }
+  }
+
   return pool;
 }
 function genL1_unregel_translate_DE_RU(conj, allConjugations) {
@@ -1428,6 +1524,64 @@ function genL3_unregel_full_conj(conj) {
     pronouns: conj.pronouns,
     ans: conj.forms,
     sourceId: conj.id,
+  };
+}
+
+// ─── Генератор: Ур 3 — Partizip II таблица (6 случайных regel-глаголов) ───
+// Цель: тренировать формирование Partizip II по правилам regelmäßig
+function genL3_partizip2_table(verbsAvailable, conjugations) {
+  // Берём 6 случайных regel-глаголов (которых нет в CONJUGATIONS как unregel)
+  // verbsAvailable — массив VOCAB-записей глаголов
+  const regelOnly = verbsAvailable.filter(v => {
+    if (v.de.includes(" ")) return false;  // composite пропускаем
+    const isUnregel = conjugations.find(c => c.verb === v.de);
+    return !isUnregel;
+  });
+  if (regelOnly.length < 6) return null;
+  const chosen = shuffle(regelOnly).slice(0, 6);
+  return {
+    auto: true, level: "A2", difficulty: 3, type: "conj",
+    q: "Поставь в Partizip II (Perfekt):",
+    verb: "partizip2",  // маркер
+    tense: "Partizip II",
+    pronouns: chosen.map(v => v.de),
+    ans: chosen.map(v => getPartizip2(v.de, conjugations)),
+  };
+}
+
+// ─── Генератор: Ур 4 — Perfekt-предложение (fill на Partizip II) ──────────
+// Шаблоны: "Ich {aux} ... {p2}" — пользователь вписывает Partizip II
+const PERFEKT_TEMPLATES_HABEN = [
+  { tmpl: "Ich habe das Buch ___",       ru: "Я прочитал книгу", obj_pos: ["noun"] },
+  { tmpl: "Sie hat ein Lied ___",        ru: "Она спела песню",   obj_pos: ["noun"] },
+  { tmpl: "Wir haben die Hausaufgaben ___", ru: "Мы сделали уроки", obj_pos: ["noun"] },
+  { tmpl: "Er hat den Test ___",         ru: "Он сделал тест",     obj_pos: ["noun"] },
+  { tmpl: "Ich habe den ganzen Tag ___", ru: "Я весь день ...",    obj_pos: ["verb"] },
+  { tmpl: "Wir haben gestern ___",       ru: "Вчера мы ...",        obj_pos: ["verb"] },
+];
+
+function genL4_perfekt_fill(verbsAvailable, conjugations) {
+  // Берём случайный regel глагол (для unregel сейчас не делаем — другой генератор будет)
+  const regelOnly = verbsAvailable.filter(v => {
+    if (v.de.includes(" ")) return false;
+    const isUnregel = conjugations.find(c => c.verb === v.de);
+    if (isUnregel) return false;
+    const aux = getAux(v.de, conjugations);
+    return aux === "haben";  // пока только haben-глаголы
+  });
+  if (regelOnly.length === 0) return null;
+  const verb = regelOnly[Math.floor(Math.random() * regelOnly.length)];
+  const p2 = getPartizip2(verb.de, conjugations);
+  // Шаблон по смыслу — берём из verb-шаблонов
+  const tmpls = PERFEKT_TEMPLATES_HABEN.filter(t => t.obj_pos.includes("verb"));
+  const tmpl = tmpls[Math.floor(Math.random() * tmpls.length)];
+  return {
+    auto: true, level: "A2", difficulty: 4, type: "fill",
+    q: `Перфект — впиши Partizip II от «${verb.de}» (${verb.ru || ""}):\n${tmpl.tmpl}`,
+    ans: p2,
+    altAns: [],
+    hint: `Partizip II от ${verb.de}`,
+    sourceId: verb.id,
   };
 }
 
@@ -1582,14 +1736,14 @@ function App() {
   function getActiveVocab() {
     const topics = getActiveTopics();
     if (topics.length === 0) return [];
-    return VOCAB.filter(v => v.topics.some(t => topics.includes(t)));
+    return VOCAB.filter(v => (v.topics || []).some(t => topics.includes(t)));
   }
   function blockHasSubblocks(b) { return b && b.subblocks && b.subblocks.length > 0; }
   function countWords(topics) {
-    return VOCAB.filter(v => v.topics.some(t => topics.includes(t))).length;
+    return VOCAB.filter(v => (v.topics || []).some(t => topics.includes(t))).length;
   }
   function countQuestions(topics, blockId) {
-    const items = VOCAB.filter(v => v.topics.some(t => topics.includes(t)));
+    const items = VOCAB.filter(v => (v.topics || []).some(t => topics.includes(t)));
     let count = items.length * 2;
     count += items.filter(v => v.pos === 'noun' && v.gender && v.gender !== 'pl').length;
     count += items.filter(v => v.pos === 'verb').length;

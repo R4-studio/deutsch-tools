@@ -200,20 +200,22 @@ def read_sheet(wb, name, expected_headers=None):
 # ═══════════════════════════════════════════════════════════════
 def process_nouns(rows):
     items = []
-    seen = set()
+    seen = set()  # ключ: (de, topic) — позволяет одно слово в разных темах
     for r in rows:
         de = r.get("de")
         if not de: continue
         de = str(de).strip()
-        if de in seen:
-            print(f"  ⚠ Дубль noun: {de}")
+        topic = str(r.get("topic") or "").strip()
+        key = (de, topic)
+        if key in seen:
+            print(f"  ⚠ Дубль noun: {de} ({topic or 'без topic'})")
             continue
-        seen.add(de)
+        seen.add(key)
         item = {"de": de}
         if r.get("gender"): item["gender"] = str(r["gender"]).strip()
         if r.get("ru"): item["ru"] = str(r["ru"]).strip()
         if r.get("plural"): item["plural"] = str(r["plural"]).strip()
-        if r.get("topic"): item["topics"] = [str(r["topic"]).strip()]
+        item["topics"] = [topic] if topic else []
         if r.get("level"): item["level"] = str(r["level"]).strip()
         if r.get("note"): item["note"] = str(r["note"]).strip()
         if is_true(r.get("new")): item["new"] = True
@@ -251,7 +253,7 @@ def process_verbs(rows):
         # VOCAB запись
         vi = {"de": verb, "pos": "verb"}
         if r.get("ru"): vi["ru"] = str(r["ru"]).strip()
-        if r.get("topic"): vi["topics"] = [str(r["topic"]).strip()]
+        vi["topics"] = [str(r["topic"]).strip()] if r.get("topic") else []
         if r.get("level"): vi["level"] = str(r["level"]).strip()
         if r.get("note"): vi["note"] = str(r["note"]).strip()
         if is_true(r.get("new")): vi["new"] = True
@@ -341,7 +343,7 @@ def process_adjectives(rows):
         if r.get("ru"): item["ru"] = str(r["ru"]).strip()
         if r.get("comparative"): item["comparative"] = str(r["comparative"]).strip()
         if r.get("superlative"): item["superlative"] = str(r["superlative"]).strip()
-        if r.get("topic"): item["topics"] = [str(r["topic"]).strip()]
+        item["topics"] = [str(r["topic"]).strip()] if r.get("topic") else []
         if r.get("level"): item["level"] = str(r["level"]).strip()
         if r.get("antonym"): item["antonym"] = str(r["antonym"]).strip()
         if r.get("note"): item["note"] = str(r["note"]).strip()
@@ -356,7 +358,7 @@ def process_adverbs(rows):
         if not de: continue
         item = {"de": str(de).strip(), "pos": "adv"}
         if r.get("ru"): item["ru"] = str(r["ru"]).strip()
-        if r.get("topic"): item["topics"] = [str(r["topic"]).strip()]
+        item["topics"] = [str(r["topic"]).strip()] if r.get("topic") else []
         if r.get("level"): item["level"] = str(r["level"]).strip()
         if r.get("note"): item["note"] = str(r["note"]).strip()
         if is_true(r.get("new")): item["new"] = True
@@ -369,6 +371,7 @@ def process_pronouns(rows):
         de = r.get("de")
         if not de: continue
         item = {"de": str(de).strip(), "pos": "pron"}
+        item["topics"] = []  # для совместимости с кодом который везде делает .topics.some()
         if r.get("ru"): item["ru"] = str(r["ru"]).strip()
         if r.get("kind"): item["kind"] = str(r["kind"]).strip()
         if r.get("case"): item["case"] = str(r["case"]).strip()
@@ -384,6 +387,7 @@ def process_numbers(rows):
         de = r.get("de")
         if not de: continue
         item = {"de": str(de).strip(), "pos": "num"}
+        item["topics"] = []  # для совместимости с кодом
         if r.get("digit") is not None: item["digit"] = str(r["digit"]).strip()
         if r.get("ru"): item["ru"] = str(r["ru"]).strip()
         if r.get("kind"): item["kind"] = str(r["kind"]).strip()
@@ -399,7 +403,7 @@ def process_phrases(rows):
         if not de: continue
         item = {"de": str(de).strip(), "pos": "phrase"}
         if r.get("ru"): item["ru"] = str(r["ru"]).strip()
-        if r.get("topic"): item["topics"] = [str(r["topic"]).strip()]
+        item["topics"] = [str(r["topic"]).strip()] if r.get("topic") else []
         if r.get("level"): item["level"] = str(r["level"]).strip()
         if r.get("context"): item["context"] = str(r["context"]).strip()
         if r.get("note"): item["note"] = str(r["note"]).strip()
