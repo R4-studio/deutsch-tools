@@ -39,8 +39,10 @@ database.xlsx  ──[update_data.py]──>  data.js  ──>  cheatsheet.html
 2. Перейти на нужный лист (nouns, verbs, adjectives, adverbs, pronouns, numbers, phrases, sounds, terms, rules, questions)
 3. Добавить строку (id можно не заполнять — сгенерируется автоматически)
 4. Сохранить xlsx
-5. В терминале: `python update_data.py`
+5. В терминале из корня репо: `python update_data.py`
 6. `git add . && git commit -m "..." && git push`
+
+> Изменения появляются на сайте только после пуша автора. Локально сайт работает оффлайн — двойной клик по `index.html`.
 
 ---
 
