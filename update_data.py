@@ -450,27 +450,31 @@ def process_rules(rows):
         items.append(item)
     return items
 
+DIFFICULTY_DEFAULTS = {"mc": 1, "fill": 4, "tiles": 4, "conj": 3, "open": 5}
+
 def process_questions(rows):
     items = []
     for r in rows:
         topic = r.get("topic")
-        qtype = r.get("type")
+        qtype_raw = r.get("type")
         q = r.get("q")
-        if not (topic and qtype and q): continue
-        item = {"topic": str(topic).strip(), "type": str(qtype).strip(), "q": str(q).strip()}
+        if not (topic and qtype_raw and q): continue
+        qtype = str(qtype_raw).strip()
+        item = {"topic": str(topic).strip(), "type": qtype, "q": str(q).strip()}
+        # level = A1/A2 (языковой), difficulty = 1-5 (уровень в тренажёре)
         level = r.get("level")
         if level is not None:
-            # Может быть число или строка
+            lvl_str = str(level).strip()
+            if lvl_str:
+                item["level"] = lvl_str
+        difficulty = r.get("difficulty")
+        if difficulty is not None and str(difficulty).strip() != "":
             try:
-                item["difficulty"] = int(level)
+                item["difficulty"] = int(float(difficulty))
             except (ValueError, TypeError):
-                # Если "A1"/"A2" — превращаем в число
-                lvl_str = str(level).strip()
-                if lvl_str in ("A1", "A2"):
-                    item["difficulty"] = 1  # fallback
-                    item["level"] = lvl_str
-                else:
-                    item["difficulty"] = 1
+                item["difficulty"] = DIFFICULTY_DEFAULTS.get(qtype, 1)
+        else:
+            item["difficulty"] = DIFFICULTY_DEFAULTS.get(qtype, 1)
         # Разбор по типу
         if qtype == "mc":
             opts = r.get("opts")

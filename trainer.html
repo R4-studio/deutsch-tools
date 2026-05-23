@@ -13,7 +13,7 @@
 
 <script crossorigin src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
 <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
-<script src="data.js"></script>
+<script src="data.js?v=20260523"></script>
 <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
 
 <style>
@@ -1599,6 +1599,152 @@ function buildUnregelQuestions(conjugations) {
   return pool;
 }
 
+// ═══════════════════════════════════════════════════════════════
+// ГЕНЕРАТОРЫ ВОПРОСОВ ДЛЯ БЛОКА PERFEKT
+// ═══════════════════════════════════════════════════════════════
+
+// Ур 1: «Что значит Partizip II X?» (Partizip → RU)
+function genPerfL1_p2_to_ru(verb, allVerbs) {
+  if (!verb.partizip2 || !verb.ru) return null;
+  const distractors = allVerbs
+    .filter(v => v !== verb && v.ru && v.ru !== verb.ru)
+    .map(v => v.ru);
+  if (distractors.length < 3) return null;
+  const opts = shuffle([verb.ru, ...shuffle(distractors).slice(0, 3)]);
+  const ans = opts.indexOf(verb.ru);
+  return {
+    auto: true, level: "A1", difficulty: 1, type: "mc",
+    q: `Что значит Partizip II «${verb.partizip2}»?`,
+    opts, ans,
+    sourceId: verb.id,
+  };
+}
+
+// Ур 1: «Какой инфинитив у gegessen?» (Partizip → Infinitiv)
+function genPerfL1_p2_to_inf(verb, allVerbs) {
+  if (!verb.partizip2) return null;
+  const distractors = allVerbs
+    .filter(v => v !== verb && v.verb !== verb.verb)
+    .map(v => v.verb);
+  if (distractors.length < 3) return null;
+  const opts = shuffle([verb.verb, ...shuffle(distractors).slice(0, 3)]);
+  const ans = opts.indexOf(verb.verb);
+  return {
+    auto: true, level: "A1", difficulty: 1, type: "mc",
+    q: `Какой инфинитив у Partizip II «${verb.partizip2}»?`,
+    opts, ans,
+    sourceId: verb.id,
+  };
+}
+
+// Ур 2: «Какой aux у X?» (haben / sein)
+function genPerfL2_aux(verb) {
+  if (!verb.aux) return null;
+  return {
+    auto: true, level: "A1", difficulty: 2, type: "mc",
+    q: `С каким вспомогательным глаголом «${verb.verb}» образует Perfekt?`,
+    opts: ["haben", "sein"],
+    ans: verb.aux === "sein" ? 1 : 0,
+    hint: verb.ru || "",
+    sourceId: verb.id,
+  };
+}
+
+// Ур 3: fill — «Partizip II от X?»
+function genPerfL3_p2_fill(verb) {
+  if (!verb.partizip2) return null;
+  return {
+    auto: true, level: "A1", difficulty: 3, type: "fill",
+    q: `Поставь в Partizip II: «${verb.verb}» — ${verb.ru || ""}`,
+    ans: verb.partizip2,
+    altAns: [],
+    hint: `aux: ${verb.aux || "haben"}`,
+    sourceId: verb.id,
+  };
+}
+
+// Ур 3: таблица из 6 случайных глаголов (regel или unregel) — Partizip II fill
+function genPerfL3_p2_table(verbsAvailable) {
+  if (verbsAvailable.length < 6) return null;
+  const chosen = shuffle(verbsAvailable.slice()).slice(0, 6);
+  return {
+    auto: true, level: "A1", difficulty: 3, type: "conj",
+    q: "Поставь в Partizip II:",
+    verb: "partizip2",
+    tense: "Partizip II",
+    pronouns: chosen.map(v => v.verb),
+    ans: chosen.map(v => v.partizip2),
+  };
+}
+
+// Ур 4: fill в Perfekt-предложении (берёт aux + вписывает Partizip II)
+const PERFEKT_SENTENCE_TEMPLATES = [
+  { tmpl: "Ich {AUX} gestern lange ___", who: "ich" },
+  { tmpl: "Wir {AUX} das Buch ___", who: "wir" },
+  { tmpl: "Er {AUX} den ganzen Tag ___", who: "er" },
+  { tmpl: "Sie {AUX} schon ___", who: "sie" },
+  { tmpl: "{AUX} du heute ___?", who: "du" },
+];
+
+function genPerfL4_sentence(verb) {
+  if (!verb.partizip2 || !verb.aux) return null;
+  const tmpl = PERFEKT_SENTENCE_TEMPLATES[Math.floor(Math.random() * PERFEKT_SENTENCE_TEMPLATES.length)];
+  // Спрягаем aux под местоимение из шаблона
+  const auxForms = {
+    haben: { ich: "habe", du: "hast", er: "hat", wir: "haben", ihr: "habt", sie: "haben" },
+    sein:  { ich: "bin",  du: "bist", er: "ist", wir: "sind",  ihr: "seid", sie: "sind"  },
+  };
+  const auxForm = auxForms[verb.aux][tmpl.who];
+  const sentence = tmpl.tmpl.replace("{AUX}", auxForm);
+  return {
+    auto: true, level: "A2", difficulty: 4, type: "fill",
+    q: `Впиши Partizip II от «${verb.verb}» (${verb.ru || ""}):\n${sentence}`,
+    ans: verb.partizip2,
+    altAns: [],
+    hint: `aux: ${verb.aux}`,
+    sourceId: verb.id,
+  };
+}
+
+// Сборщик: пул вопросов для блока perfekt
+function buildPerfektQuestions(blockId) {
+  // blockId: "perfekt", "perfekt:regel", "perfekt:unregel"
+  // Источники: REGEL_VERBS для regel, CONJUGATIONS для unregel
+  let regelList = [];
+  let unregelList = [];
+  if (typeof REGEL_VERBS !== "undefined") regelList = REGEL_VERBS;
+  if (typeof CONJUGATIONS !== "undefined") unregelList = CONJUGATIONS;
+
+  let pool = [];
+  let primary;  // основной список глаголов для генераторов
+  if (blockId === "perfekt:regel") primary = regelList;
+  else if (blockId === "perfekt:unregel") primary = unregelList;
+  else primary = [...regelList, ...unregelList];
+
+  const allForDistractors = [...regelList, ...unregelList];
+
+  for (const v of primary) {
+    if (!v.partizip2) continue;
+    const q1a = genPerfL1_p2_to_ru(v, allForDistractors);
+    if (q1a) pool.push(q1a);
+    const q1b = genPerfL1_p2_to_inf(v, allForDistractors);
+    if (q1b) pool.push(q1b);
+    const q2 = genPerfL2_aux(v);
+    if (q2) pool.push(q2);
+    const q3 = genPerfL3_p2_fill(v);
+    if (q3) pool.push(q3);
+    const q4 = genPerfL4_sentence(v);
+    if (q4) pool.push(q4);
+  }
+  // Ур 3 таблицы — 2-3 штуки
+  for (let i = 0; i < 3; i++) {
+    const q = genPerfL3_p2_table(primary.filter(v => v.partizip2));
+    if (q) pool.push(q);
+  }
+  return pool;
+}
+
+
 // ─── Сборщик тестовой сессии: 30 вопросов по новой пропорции 8/6/6/6/4 ──
 function buildTestSession(topics, vocab, conjugations, manualQuestions, blockId, levelFilter) {
   // Новые пропорции (Ур 1=8, Ур 2=6, Ур 3=6, Ур 4=6, Ур 5=4)
@@ -1612,6 +1758,8 @@ function buildTestSession(topics, vocab, conjugations, manualQuestions, blockId,
   let autoPool;
   if (blockId === "unregel") {
     autoPool = buildUnregelQuestions(conjugations);
+  } else if (blockId === "perfekt" || blockId.startsWith("perfekt:")) {
+    autoPool = buildPerfektQuestions(blockId);
   } else {
     autoPool = buildAutoQuestions(topics, vocab, conjugations);
   }
@@ -1743,6 +1891,20 @@ function App() {
     return VOCAB.filter(v => (v.topics || []).some(t => topics.includes(t))).length;
   }
   function countQuestions(topics, blockId) {
+    // Особый случай: блок Perfekt (regel/unregel) — считаем глаголы из соответствующих списков
+    if (blockId === "perfekt:regel") {
+      const n = (typeof REGEL_VERBS !== "undefined" ? REGEL_VERBS.filter(v => v.partizip2).length : 0);
+      return Math.min(n * 4 + 3, 30);  // 4 типа вопросов на глагол + 3 таблицы
+    }
+    if (blockId === "perfekt:unregel") {
+      const n = (typeof CONJUGATIONS !== "undefined" ? CONJUGATIONS.filter(v => v.partizip2).length : 0);
+      return Math.min(n * 4 + 3, 30);
+    }
+    if (blockId === "perfekt") {
+      const r = (typeof REGEL_VERBS !== "undefined" ? REGEL_VERBS.filter(v => v.partizip2).length : 0);
+      const u = (typeof CONJUGATIONS !== "undefined" ? CONJUGATIONS.filter(v => v.partizip2).length : 0);
+      return Math.min((r + u) * 4 + 6, 30);
+    }
     const items = VOCAB.filter(v => (v.topics || []).some(t => topics.includes(t)));
     let count = items.length * 2;
     count += items.filter(v => v.pos === 'noun' && v.gender && v.gender !== 'pl').length;
@@ -1770,6 +1932,18 @@ function App() {
       } else {
         // learn → сразу карточки спряжений
         startLearnConj();
+      }
+      return;
+    }
+    if (b.kind === "perfekt") {
+      // Perfekt-блок: имеет сабблоки regel/unregel
+      if (mode === "test") {
+        setPhase("select-subblock");
+      } else {
+        // В learn-режиме пока нет карточек для Perfekt — отправляем в шпору
+        alert("Карточки для Прошедшего времени пока в шпаргалке. Используй тест!");
+        setActiveBlock(null);
+        setPhase("select-block");
       }
       return;
     }
@@ -2064,6 +2238,8 @@ function App() {
     let autoPool, manualPool;
     if (blockId === "unregel") {
       autoPool = buildUnregelQuestions(CONJUGATIONS);
+    } else if (blockId === "perfekt" || blockId.startsWith("perfekt:")) {
+      autoPool = buildPerfektQuestions(blockId);
     } else {
       autoPool = buildAutoQuestions(topics, VOCAB, CONJUGATIONS);
     }

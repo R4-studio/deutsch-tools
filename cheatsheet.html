@@ -237,6 +237,77 @@ tr:hover td{background:var(--bg-row-hover)}
   transition: transform 0.3s ease;
 }
 
+/* ─── Дропдаун результатов поиска ──────────── */
+.search-dropdown {
+  position: fixed;
+  top: 56px;
+  left: 10px;
+  right: 10px;
+  max-width: 600px;
+  margin: 0 auto;
+  background: var(--bg-panel);
+  border: 1px solid var(--border-soft);
+  border-radius: 8px;
+  box-shadow: var(--shadow-bar);
+  z-index: 999;
+  max-height: 60vh;
+  overflow-y: auto;
+  display: none;
+}
+.search-dropdown.open { display: block; }
+.search-result {
+  padding: 10px 14px;
+  border-bottom: 1px solid var(--border-row);
+  cursor: pointer;
+  font-size: 13px;
+  color: var(--text-main);
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+  line-height: 1.4;
+}
+.search-result:last-child { border-bottom: none; }
+.search-result:hover,
+.search-result.focused { background: var(--bg-row-hover); }
+.search-result .sr-icon { font-size: 14px; flex-shrink: 0; }
+.search-result .sr-kind {
+  font-size: 11px;
+  color: var(--text-th);
+  text-transform: lowercase;
+  flex-shrink: 0;
+}
+.search-result .sr-primary { font-weight: 600; color: var(--text-title); }
+.search-result .sr-secondary { color: var(--text-muted); }
+.search-more {
+  padding: 8px 14px;
+  font-size: 12px;
+  color: var(--text-muted);
+  text-align: center;
+  background: var(--bg-th);
+  border-top: 1px solid var(--border-soft);
+}
+@media (max-width: 768px) {
+  .search-dropdown {
+    left: 6px;
+    right: 6px;
+    top: 56px;
+    max-height: calc(100vh - 80px);
+  }
+  .search-result { font-size: 12px; padding: 8px 12px; }
+}
+
+/* Подсветка карточки после перехода по результату */
+.search-flash {
+  animation: searchFlash 1.4s ease-out;
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+  border-radius: 4px;
+}
+@keyframes searchFlash {
+  0% { background: var(--bg-highlight); }
+  100% { background: transparent; }
+}
+
 .conj-table{width:auto;min-width:180px}
 .conj-table td{padding:5px 10px;border-bottom:1px solid var(--border-row)}
 .conj-table td:first-child{color:var(--text-th);font-size:11px;width:80px}
@@ -386,18 +457,21 @@ tr:hover td{background:var(--bg-row-hover)}
   document.documentElement.classList.add('theme-' + saved);
 })();
 </script>
-<script src="data.js"></script>
+<script src="data.js?v=20260523"></script>
 </head><body>
   <div class="search-bar">
   <div style="display:flex;align-items:center;gap:8px;padding:10px;">
   <a href="index.html" class="home-btn" title="На главную">❌</a>
   <button class="burger-btn" onclick="openMenu()" title="Меню">☰</button>
-  <input type="text" id="searchInput" placeholder="Поиск..." onkeyup="jumpSearch(event)">
-  <button onclick="jumpSearch({key:'Enter'})" style="padding:8px 14px;font-size:13px;border-radius:6px;background:var(--accent);color:white;border:none;cursor:pointer;font-weight:600;white-space:nowrap;">Найти</button>
+  <input type="text" id="searchInput" placeholder="Поиск...">
+  <button id="searchBtn" style="padding:8px 14px;font-size:13px;border-radius:6px;background:var(--accent);color:white;border:none;cursor:pointer;font-weight:600;white-space:nowrap;">Найти</button>
   <span id="searchCount" style="font-size:12px;color:var(--text-muted);white-space:nowrap;"></span>
   <button class="theme-toggle" id="themeToggle" onclick="cycleTheme()" title="Переключить тему">🌓</button>
 </div>
 </div>
+
+<!-- Дропдаун результатов поиска -->
+<div class="search-dropdown" id="searchDropdown" role="listbox" aria-label="Результаты поиска"></div>
 
 <!-- Backdrop (затемнение фона) -->
 <div class="menu-backdrop" id="menuBackdrop" onclick="closeMenu()"></div>
@@ -427,6 +501,7 @@ tr:hover td{background:var(--bg-row-hover)}
   <div class="tab" onclick="show('sounds')">🔤 Звуки</div>
   <div class="tab" onclick="show('verbs')">⚡ Глаголы</div>
   <div class="tab" onclick="show('unregel')">🔥 Спряжение Unregelmäßig</div>
+  <div class="tab" onclick="show('perfekt')">🕰️ Прошедшее время</div>
   <div class="tab" onclick="show('nouns')">📦 Существительные</div>
   <div class="tab" onclick="show('adj')">🎨 Прилагательные</div>
   <div class="tab" onclick="show('adv')">🔄 Наречия</div>
@@ -991,6 +1066,11 @@ tr:hover td{background:var(--bg-row-hover)}
 </div>
 </div>
 
+</div>
+
+<!-- ПРОШЕДШЕЕ ВРЕМЯ -->
+<div class="panel" id="tab-perfekt">
+<!-- Контент рендерится JS из data.js -->
 </div>
 
 <!-- СУЩЕСТВИТЕЛЬНЫЕ -->
@@ -2531,8 +2611,6 @@ document.querySelectorAll('table').forEach(t => {
   }
 });
 
-let searchResults = [];
-let currentIndex = -1;
 function show(id){
   document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
   document.querySelectorAll('.panel').forEach(p=>p.classList.remove('active'));
@@ -2546,78 +2624,370 @@ function show(id){
   });
 }
 
-function jumpSearch(e) {
-  const input = document.getElementById('searchInput');
-  const query = input.value.toLowerCase().trim();
+// ═══════════════════════════════════════════════════════════════
+// ТРИГРАММНЫЙ ПОИСК
+// ═══════════════════════════════════════════════════════════════
+(function() {
+  const ARTICLES = new Set([
+    'der','die','das','den','dem','des',
+    'ein','eine','einen','einem','eines','einer'
+  ]);
+  const ICONS = {
+    noun:'📦', verb:'⚡', adj:'🎨', adv:'🔄', pron:'👤',
+    num:'🔢', phrase:'💬', rule:'📐', term:'📋', sound:'🔤'
+  };
+  const POS_TO_TAB = {
+    noun:'nouns', verb:'verbs', adj:'adj', adv:'adv',
+    pron:'mestoim', num:'nums', phrase:'phrases'
+  };
+  const KIND_TO_TAB = {
+    rule:'rules', term:'termin', sound:'sounds'
+  };
 
-  // если пусто - сброс
-  if (!query) {
-    searchResults = [];
-    currentIndex = -1;
-    document.getElementById('searchCount').innerText = '';
-    return;
+  // Раскладка QWERTY ↔ ЙЦУКЕН (по таблице из спеки)
+  const LAYOUT_MAP = {
+    // qwerty → йцукен
+    'q':'й','w':'ц','e':'у','r':'к','t':'е','y':'н','u':'г','i':'ш',
+    'o':'щ','p':'з','[':'х',']':'ъ','a':'ф','s':'ы','d':'в','f':'а',
+    'g':'п','h':'р','j':'о','k':'л','l':'д',';':'ж',"'":'э','z':'я',
+    'x':'ч','c':'с','v':'м','b':'и','n':'т','m':'ь',',':'б','.':'ю'
+  };
+  const LAYOUT_MAP_REV = {};
+  for (const k in LAYOUT_MAP) LAYOUT_MAP_REV[LAYOUT_MAP[k]] = k;
+
+  function normUmlaut(s) {
+    return s
+      .replace(/ä/g,'ae').replace(/ö/g,'oe').replace(/ü/g,'ue').replace(/ß/g,'ss')
+      .replace(/Ä/g,'ae').replace(/Ö/g,'oe').replace(/Ü/g,'ue');
   }
 
-  // если это НЕ Enter - просто ищем заново
-  if (!e || e.key !== "Enter") {
-    searchResults = [];
-    currentIndex = -1;
+  function norm(s) {
+    return normUmlaut(String(s || '').toLowerCase());
+  }
 
-    const rows = document.querySelectorAll("td, .section-title, h1, h2, h3, h4, .rule-box");
+  function stripArticles(s) {
+    return s.split(/\s+/).filter(w => !ARTICLES.has(w)).join(' ').trim();
+  }
 
-    rows.forEach(row => {
-      const text = (row.textContent || '').toLowerCase();
-      if (text.includes(query)) {
-        searchResults.push(row);
+  function trigrams(s) {
+    const out = new Set();
+    if (s.length < 3) return out;
+    for (let i = 0; i <= s.length - 3; i++) out.add(s.slice(i, i + 3));
+    return out;
+  }
+
+  // Конверсия раскладки. Возвращает null если конверсия не имеет смысла
+  // (входная строка не латиница и не кириллица, или результат идентичен).
+  function convertLayout(s) {
+    const hasCyrillic = /[а-яёъ]/i.test(s);
+    const map = hasCyrillic ? LAYOUT_MAP_REV : LAYOUT_MAP;
+    let out = '', changed = false;
+    for (const ch of s) {
+      if (map[ch]) { out += map[ch]; changed = true; }
+      else out += ch;
+    }
+    return changed ? out : null;
+  }
+
+  // ─── Построение индекса ─────────────────────────────────────────────
+  let INDEX = null;
+  let UNREGEL_VERBS = null;
+
+  function buildIndex() {
+    if (typeof VOCAB === 'undefined') return null;
+    UNREGEL_VERBS = new Set(
+      (typeof CONJUGATIONS !== 'undefined' ? CONJUGATIONS : []).map(c => c.verb)
+    );
+    const idx = [];
+
+    // VOCAB: noun, verb, adj, adv, pron, num, phrase
+    for (const v of VOCAB) {
+      const parts = [v.de || '', v.ru || '', v.note || ''];
+      const searchSrc = parts.filter(Boolean).join(' ');
+      const normText = norm(searchSrc);
+      idx.push({
+        kind: v.pos,
+        item: v,
+        primary: v.de,
+        secondary: v.ru || '',
+        norm: normText,
+        ngrams: trigrams(normText)
+      });
+    }
+    // TERMS
+    if (typeof TERMS !== 'undefined') for (const t of TERMS) {
+      const searchSrc = [t.term, t.ru, t.note].filter(Boolean).join(' ');
+      const normText = norm(searchSrc);
+      idx.push({
+        kind: 'term', item: t,
+        primary: t.term, secondary: t.ru || '',
+        norm: normText, ngrams: trigrams(normText)
+      });
+    }
+    // RULES
+    if (typeof RULES !== 'undefined') for (const r of RULES) {
+      const searchSrc = [r.title, r.content_md || '', r.note].filter(Boolean).join(' ');
+      const normText = norm(searchSrc);
+      idx.push({
+        kind: 'rule', item: r,
+        primary: r.title, secondary: r.note || '',
+        norm: normText, ngrams: trigrams(normText)
+      });
+    }
+    // SOUNDS
+    if (typeof SOUNDS !== 'undefined') for (const s of SOUNDS) {
+      const searchSrc = [s.combo, s.pronunciation, s.example, s.translation].filter(Boolean).join(' ');
+      const normText = norm(searchSrc);
+      idx.push({
+        kind: 'sound', item: s,
+        primary: s.combo,
+        secondary: s.pronunciation || s.example || '',
+        norm: normText, ngrams: trigrams(normText)
+      });
+    }
+    return idx;
+  }
+
+  // ─── Поиск ──────────────────────────────────────────────────────────
+  function searchRaw(rawQuery) {
+    if (!INDEX) return { results: [], total: 0 };
+    let q = stripArticles(norm(rawQuery));
+    if (!q) return { results: [], total: 0 };
+
+    let scored = [];
+    if (q.length < 3) {
+      // Substring «начинается с» — лидирующий префикс норм-текста или любого слова
+      for (const e of INDEX) {
+        if (e.norm.startsWith(q) || (' ' + e.norm).includes(' ' + q)) {
+          scored.push({ entry: e });
+        }
       }
-    });
-
-    if (searchResults.length > 0) {
-      currentIndex = 0;
-      goToResult(currentIndex);
-      document.getElementById('searchCount').innerText = searchResults.length + ' совпадений';
-    } else {
-      document.getElementById('searchCount').innerText = '0 совпадений';
+      scored.sort((a, b) => {
+        const ap = norm(a.entry.primary).startsWith(q);
+        const bp = norm(b.entry.primary).startsWith(q);
+        if (ap !== bp) return ap ? -1 : 1;
+        return a.entry.primary.localeCompare(b.entry.primary);
+      });
+      return { results: scored.map(s => s.entry), total: scored.length };
     }
 
-    return;
+    // ── Длина >= 3 ──
+    // Сначала substring match (точные подстроки) — это основной режим
+    for (const e of INDEX) {
+      if (!e.norm.includes(q)) continue;
+      const np = stripArticles(norm(e.primary));
+      let score;
+      if (np === q) score = 1000;                         // точное совпадение
+      else if (np.startsWith(q)) score = 800;             // primary начинается с
+      else if ((' ' + np).includes(' ' + q)) score = 600; // совпадает со словом в primary
+      else if (np.includes(q)) score = 400;               // primary содержит подстроку
+      else score = 200;                                   // только в secondary/note
+      score -= e.primary.length * 0.5;                    // более короткие — выше
+      scored.push({ entry: e, score: score });
+    }
+
+    if (scored.length > 0) {
+      scored.sort((a, b) => b.score - a.score || a.entry.primary.localeCompare(b.entry.primary));
+      return { results: scored.map(s => s.entry), total: scored.length };
+    }
+
+    // ── Fallback: триграммы (для опечаток) ──
+    const qgrams = trigrams(q);
+    const qSize = qgrams.size;
+    if (qSize === 0) return { results: [], total: 0 };
+    for (const e of INDEX) {
+      let common = 0;
+      for (const g of qgrams) if (e.ngrams.has(g)) common++;
+      const sim = common / qSize;
+      if (sim < 0.5) continue;  // выше порог для fuzzy
+      scored.push({ entry: e, score: sim });
+    }
+    scored.sort((a, b) => b.score - a.score || a.entry.primary.localeCompare(b.entry.primary));
+    return { results: scored.map(s => s.entry), total: scored.length };
   }
 
-  // если Enter - листаем
-  if (searchResults.length === 0) return;
-
-  if (e.shiftKey) {
-    currentIndex--;
-  } else {
-    currentIndex++;
+  function search(rawQuery) {
+    let r = searchRaw(rawQuery);
+    if (r.total > 0) return r;
+    // Fallback: конверсия раскладки
+    const flipped = convertLayout(rawQuery);
+    if (flipped && flipped !== rawQuery) {
+      r = searchRaw(flipped);
+    }
+    return r;
   }
 
-  // зацикливание
-  if (currentIndex >= searchResults.length) currentIndex = 0;
-  if (currentIndex < 0) currentIndex = searchResults.length - 1;
+  // ─── Поиск элемента в DOM ──────────────────────────────────────────
+  function tabIdFor(entry) {
+    if (entry.kind === 'verb' && UNREGEL_VERBS && UNREGEL_VERBS.has(entry.item.de)) {
+      return 'unregel';
+    }
+    return POS_TO_TAB[entry.kind] || KIND_TO_TAB[entry.kind] || null;
+  }
 
-  goToResult(currentIndex);
-}
-function goToResult(index) {
-  const row = searchResults[index];
+  function findCardInPanel(panel, entry) {
+    if (!panel) return null;
+    const target = norm(entry.primary);
+    // 1) Для VOCAB / TERMS: ищем <tr>, где первый <td> совпадает по тексту
+    const rows = panel.querySelectorAll('tbody tr');
+    for (const tr of rows) {
+      const firstTd = tr.querySelector('td');
+      if (!firstTd) continue;
+      if (norm(firstTd.textContent.trim()) === target) return tr;
+    }
+    // 2) Для CONJUGATIONS (unregel): ищем .rule-box с <h3>
+    if (entry.kind === 'verb') {
+      const boxes = panel.querySelectorAll('.rule-box');
+      for (const box of boxes) {
+        const h3 = box.querySelector('h3');
+        if (!h3) continue;
+        // h3 содержит "verbname — перевод"
+        const h3text = norm(h3.textContent.split('—')[0].trim());
+        if (h3text === target) return box;
+      }
+    }
+    // 3) Для RULES: ищем .rule-box со .section-title равным title
+    if (entry.kind === 'rule') {
+      const boxes = panel.querySelectorAll('.rule-box');
+      for (const box of boxes) {
+        const t = box.querySelector('.section-title');
+        if (!t) continue;
+        if (norm(t.textContent.trim()) === target) return box;
+      }
+    }
+    // 4) Fallback — первая карточка вообще
+    return null;
+  }
 
-  const panel = row.closest(".panel");
-  if (!panel) return;
-  const panelId = panel.id.replace("tab-", "");
-
-  show(panelId);
-
-  setTimeout(() => {
-    row.scrollIntoView({ behavior: "smooth", block: "center" });
-
-    row.style.background = "var(--bg-highlight)";
-
+  function jumpTo(entry) {
+    const tabId = tabIdFor(entry);
+    if (!tabId) return;
+    if (typeof show === 'function') show(tabId);
+    // Дать табу отрендериться
     setTimeout(() => {
-      row.style.background = "";
-    }, 1200);
+      const panel = document.getElementById('tab-' + tabId);
+      const el = findCardInPanel(panel, entry);
+      if (el) {
+        el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        el.classList.add('search-flash');
+        setTimeout(() => el.classList.remove('search-flash'), 1500);
+      } else if (panel) {
+        panel.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }
+    }, 80);
+  }
 
-  }, 50);
-}
+  // ─── Рендер дропдауна ──────────────────────────────────────────────
+  function escHtml(s) {
+    return String(s || '')
+      .replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')
+      .replace(/"/g,'&quot;');
+  }
+
+  function renderDropdown(results, total) {
+    const dd = document.getElementById('searchDropdown');
+    if (!results.length) {
+      dd.classList.remove('open');
+      dd.innerHTML = '';
+      return;
+    }
+    const top = results.slice(0, 10);
+    let html = '';
+    top.forEach((e, i) => {
+      const icon = ICONS[e.kind] || '•';
+      const sec = e.secondary ? ' <span class="sr-secondary">— ' + escHtml(e.secondary) + '</span>' : '';
+      html += '<div class="search-result" data-idx="' + i + '" role="option">'
+            + '<span class="sr-icon">' + icon + '</span>'
+            + '<span class="sr-kind">' + e.kind + ':</span>'
+            + '<span><span class="sr-primary">' + escHtml(e.primary) + '</span>' + sec + '</span>'
+            + '</div>';
+    });
+    if (total > top.length) {
+      html += '<div class="search-more">и ещё ' + (total - top.length) + ' — уточни запрос</div>';
+    }
+    dd.innerHTML = html;
+    dd.classList.add('open');
+    // Привязываем клики
+    dd.querySelectorAll('.search-result').forEach(el => {
+      el.addEventListener('click', () => {
+        const idx = parseInt(el.dataset.idx, 10);
+        closeDropdown();
+        jumpTo(top[idx]);
+      });
+    });
+    // Сохраняем для Enter-навигации
+    dd._currentTop = top;
+  }
+
+  function closeDropdown() {
+    const dd = document.getElementById('searchDropdown');
+    dd.classList.remove('open');
+  }
+
+  // ─── Обработчики ────────────────────────────────────────────────────
+  let debounceTimer = null;
+  function runSearch() {
+    const input = document.getElementById('searchInput');
+    const q = (input.value || '').trim();
+    const countEl = document.getElementById('searchCount');
+    if (countEl) countEl.innerText = '';
+    if (!q) { closeDropdown(); return; }
+    // Если запрос — это только артикль (после strip → пусто), не показываем
+    const stripped = stripArticles(norm(q));
+    if (!stripped) { closeDropdown(); return; }
+    const { results, total } = search(q);
+    renderDropdown(results, total);
+  }
+
+  function onInput() {
+    clearTimeout(debounceTimer);
+    debounceTimer = setTimeout(runSearch, 150);
+  }
+
+  function jumpToFirst() {
+    const dd = document.getElementById('searchDropdown');
+    if (!dd.classList.contains('open')) return;
+    const top = dd._currentTop;
+    if (top && top.length) {
+      closeDropdown();
+      jumpTo(top[0]);
+    }
+  }
+
+  // ─── Инициализация ──────────────────────────────────────────────────
+  function init() {
+    INDEX = buildIndex();
+    const input = document.getElementById('searchInput');
+    const btn = document.getElementById('searchBtn');
+    const dd = document.getElementById('searchDropdown');
+    if (!input || !dd) return;
+
+    input.addEventListener('input', onInput);
+    input.addEventListener('keydown', function(ev) {
+      if (ev.key === 'Enter') { ev.preventDefault(); jumpToFirst(); }
+      else if (ev.key === 'Escape') { closeDropdown(); }
+    });
+    if (btn) btn.addEventListener('click', jumpToFirst);
+
+    // Esc глобально
+    document.addEventListener('keydown', function(ev) {
+      if (ev.key === 'Escape') closeDropdown();
+    });
+    // Клик вне дропдауна и инпута
+    document.addEventListener('click', function(ev) {
+      if (!dd.classList.contains('open')) return;
+      if (dd.contains(ev.target) || ev.target === input || ev.target === btn) return;
+      closeDropdown();
+    });
+  }
+
+  // Ждём data.js. Если уже загружен — индексируем сразу, иначе по DOMContentLoaded.
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', init);
+  } else {
+    init();
+  }
+})();
 </script>
 
 <div class="to-top" onclick="window.scrollTo({top:0, behavior:'smooth'})" style="position:fixed;bottom:20px;left:20px;width:auto;padding:10px 18px;border-radius:50px;opacity:0.85;box-shadow:0 4px 12px rgba(0,0,0,0.2);z-index:999;">
@@ -2668,6 +3038,30 @@ function goToResult(index) {
   function renderSimpleRow(item) {
     return '<tr><td>' + escHtml(item.de) + '</td>'
          + '<td>' + escHtml(item.ru) + '</td>'
+         + '<td>' + escHtml(item.note || '') + '</td></tr>';
+  }
+
+  // ─── Рендер строки глагола с Partizip II ────────────────────────────────
+  function renderVerbRow(item) {
+    // Ищем Partizip II и aux: сначала в CONJUGATIONS, потом в REGEL_VERBS
+    let p2 = '', aux = '';
+    if (typeof CONJUGATIONS !== 'undefined') {
+      const c = CONJUGATIONS.find(c => c.verb === item.de);
+      if (c) { p2 = c.partizip2 || ''; aux = c.aux || ''; }
+    }
+    if (!p2 && typeof REGEL_VERBS !== 'undefined') {
+      const r = REGEL_VERBS.find(r => r.verb === item.de);
+      if (r) { p2 = r.partizip2 || ''; aux = r.aux || ''; }
+    }
+    // Форматирование колонки Partizip II
+    const auxColor = aux === 'sein' ? '#a11' : '#0056b3';
+    const p2Col = p2
+      ? '<span style="color:' + auxColor + ';font-weight:500">' + escHtml(aux) + '</span> '
+        + '<b>' + escHtml(p2) + '</b>'
+      : '<span style="color:var(--text-muted)">—</span>';
+    return '<tr><td>' + escHtml(item.de) + '</td>'
+         + '<td>' + escHtml(item.ru) + '</td>'
+         + '<td>' + p2Col + '</td>'
          + '<td>' + escHtml(item.note || '') + '</td></tr>';
   }
 
@@ -2748,8 +3142,8 @@ function goToResult(index) {
   function renderVerbs() {
     const panel = document.getElementById('tab-verbs');
     if (!panel) return;
-    panel.innerHTML = renderSections('verbs', ['verb'], renderSimpleRow,
-      ['Глагол', 'Перевод', 'Примечание']);
+    panel.innerHTML = renderSections('verbs', ['verb'], renderVerbRow,
+      ['Глагол', 'Перевод', 'Perfekt', 'Примечание']);
   }
 
   // ─── Рендер: unregel (спряжения) ────────────────────────────────────────
@@ -2766,9 +3160,118 @@ function goToResult(index) {
         html += '<tr><td>' + escHtml(c.pronouns[i]) + '</td>'
               + '<td><b>' + escHtml(c.forms[i]) + '</b></td></tr>';
       }
-      html += '</tbody></table></div>';
+      html += '</tbody></table>';
+      // Partizip II + aux
+      if (c.partizip2 || c.aux) {
+        html += '<div style="margin-top:10px;padding-top:8px;border-top:1px solid var(--border-soft);font-size:13px">';
+        if (c.aux) {
+          const auxColor = c.aux === 'sein' ? '#a11' : '#0056b3';
+          html += '<div style="margin-bottom:4px"><span style="color:var(--text-muted)">Perfekt mit:</span> '
+                + '<b style="color:' + auxColor + '">' + escHtml(c.aux) + '</b></div>';
+        }
+        if (c.partizip2) {
+          html += '<div><span style="color:var(--text-muted)">Partizip II:</span> '
+                + '<b>' + escHtml(c.partizip2) + '</b></div>';
+        }
+        html += '</div>';
+      }
+      html += '</div>';
     }
     panel.innerHTML = '<div class="section"><div class="three-col">' + html + '</div></div>';
+  }
+
+  // ─── Рендер: perfekt (обзорная таблица + правила) ───────────────────────
+  function renderPerfekt() {
+    const panel = document.getElementById('tab-perfekt');
+    if (!panel) return;
+    let html = '';
+
+    // ─── Правило 1: Как образуется Perfekt ────────────────────────────────
+    html += '<div class="section">';
+    html += '<div class="section-title">🕰️ Что такое Perfekt</div>';
+    html += '<div class="rule-box">';
+    html += '<p>Прошедшее время в разговорной речи. Образуется по схеме:</p>';
+    html += '<p style="text-align:center;font-size:18px;margin:14px 0;padding:10px;background:var(--bg-th);border-radius:8px">'
+          + '<b>haben</b> или <b style="color:#a11">sein</b> (в Präsens) + <b>Partizip II</b></p>';
+    html += '<p style="font-size:13px"><b>Пример:</b><br>'
+          + 'Ich <b>habe</b> ein Buch <b>gelesen</b>. — Я прочитал книгу.<br>'
+          + 'Wir <b style="color:#a11">sind</b> nach Berlin <b>gefahren</b>. — Мы поехали в Берлин.</p>';
+    html += '</div></div>';
+
+    // ─── Правило 2: Когда haben, когда sein ──────────────────────────────
+    html += '<div class="section">';
+    html += '<div class="section-title">⚖️ haben vs sein</div>';
+    html += '<div class="rule-box">';
+    html += '<table style="margin-bottom:10px;width:100%">';
+    html += '<tr><th style="text-align:left;padding:6px 10px">Вспомогательный</th>'
+          + '<th style="text-align:left;padding:6px 10px">Когда использовать</th>'
+          + '<th style="text-align:left;padding:6px 10px">Пример</th></tr>';
+    html += '<tr><td style="padding:6px 10px"><b style="color:#0056b3">haben</b></td>'
+          + '<td style="padding:6px 10px">большинство глаголов (действия)</td>'
+          + '<td style="padding:6px 10px">Ich <b>habe</b> gegessen.</td></tr>';
+    html += '<tr><td style="padding:6px 10px"><b style="color:#a11">sein</b></td>'
+          + '<td style="padding:6px 10px">движение / изменение состояния<br>+ sein, bleiben, werden</td>'
+          + '<td style="padding:6px 10px">Er <b>ist</b> gefahren.</td></tr>';
+    html += '</table>';
+    html += '<p style="font-size:12px">💡 Со <b style="color:#a11">sein</b> запоминай: '
+          + '<i>gehen, kommen, fahren, fliegen, schwimmen, reiten, bleiben, werden, sein</i></p>';
+    html += '</div></div>';
+
+    // ─── Правило 3: Как образуется Partizip II ───────────────────────────
+    html += '<div class="section">';
+    html += '<div class="section-title">📐 Как образовать Partizip II</div>';
+    html += '<div class="rule-box">';
+    html += '<table style="margin-bottom:10px;width:100%">';
+    html += '<tr><th style="text-align:left;padding:6px 10px">Тип</th>'
+          + '<th style="text-align:left;padding:6px 10px">Правило</th>'
+          + '<th style="text-align:left;padding:6px 10px">Пример</th></tr>';
+    html += '<tr><td style="padding:6px 10px"><b>regelmäßig (стандарт)</b></td>'
+          + '<td style="padding:6px 10px">ge + основа + t</td>'
+          + '<td style="padding:6px 10px">machen → <b>gemacht</b></td></tr>';
+    html += '<tr><td style="padding:6px 10px">основа на -t/-d</td>'
+          + '<td style="padding:6px 10px">ge + основа + et</td>'
+          + '<td style="padding:6px 10px">arbeiten → <b>gearbeitet</b></td></tr>';
+    html += '<tr><td style="padding:6px 10px">на -ieren</td>'
+          + '<td style="padding:6px 10px">БЕЗ ge-, основа + t</td>'
+          + '<td style="padding:6px 10px">studieren → <b>studiert</b></td></tr>';
+    html += '<tr><td style="padding:6px 10px">неотделяемая приставка<br>(be-, ent-, er-, ge-, ver-, zer-)</td>'
+          + '<td style="padding:6px 10px">БЕЗ ge-</td>'
+          + '<td style="padding:6px 10px">besuchen → <b>besucht</b></td></tr>';
+    html += '<tr><td style="padding:6px 10px">отделяемая приставка<br>(auf-, ein-, mit-, ab- ...)</td>'
+          + '<td style="padding:6px 10px">приставка + ge + основа + t</td>'
+          + '<td style="padding:6px 10px">aufmachen → <b>aufgemacht</b></td></tr>';
+    html += '<tr><td style="padding:6px 10px"><b>unregelmäßig</b></td>'
+          + '<td style="padding:6px 10px">учить наизусть!</td>'
+          + '<td style="padding:6px 10px">essen → <b>gegessen</b><br>gehen → <b>gegangen</b></td></tr>';
+    html += '</table>';
+    html += '</div></div>';
+
+    // ─── Таблица всех unregel с Partizip II ──────────────────────────────
+    if (typeof CONJUGATIONS !== 'undefined' && CONJUGATIONS.length > 0) {
+      html += '<div class="section">';
+      html += '<div class="section-title">📋 Unregelmäßig — таблица Partizip II</div>';
+      html += '<table style="width:100%"><thead><tr>'
+            + '<th style="text-align:left;padding:6px 10px">Infinitiv</th>'
+            + '<th style="text-align:left;padding:6px 10px">Перевод</th>'
+            + '<th style="text-align:left;padding:6px 10px">Hilfsverb</th>'
+            + '<th style="text-align:left;padding:6px 10px">Partizip II</th>'
+            + '</tr></thead><tbody>';
+      const sorted = CONJUGATIONS.slice().sort((a, b) => a.verb.localeCompare(b.verb));
+      for (const c of sorted) {
+        if (!c.partizip2) continue;
+        const auxColor = c.aux === 'sein' ? '#a11' : '#0056b3';
+        html += '<tr>'
+              + '<td style="padding:5px 10px;border-bottom:1px solid var(--border-soft)"><b>' + escHtml(c.verb) + '</b></td>'
+              + '<td style="padding:5px 10px;border-bottom:1px solid var(--border-soft);color:var(--text-muted)">' + escHtml(c.ru || '') + '</td>'
+              + '<td style="padding:5px 10px;border-bottom:1px solid var(--border-soft)"><b style="color:' + auxColor + '">' + escHtml(c.aux || '') + '</b></td>'
+              + '<td style="padding:5px 10px;border-bottom:1px solid var(--border-soft)"><b>' + escHtml(c.partizip2) + '</b></td>'
+              + '</tr>';
+      }
+      html += '</tbody></table>';
+      html += '</div>';
+    }
+
+    panel.innerHTML = html;
   }
 
   // ─── Рендер: nouns ──────────────────────────────────────────────────────
@@ -2986,6 +3489,7 @@ function goToResult(index) {
   renderSounds();
   renderVerbs();
   renderUnregel();
+  renderPerfekt();
   renderNouns();
   renderAdj();
   renderAdv();

@@ -19,6 +19,7 @@
   --green-dark: #146e3f;
   --shadow: 0 2px 8px rgba(0,0,0,0.08);
   --shadow-hover: 0 4px 16px rgba(0,0,0,0.12);
+  --shadow-modal: 0 8px 32px rgba(0,0,0,0.15);
 }
 .theme-dark {
   --bg-body: #1a1a1a;
@@ -33,6 +34,7 @@
   --green-dark: #27a560;
   --shadow: 0 2px 8px rgba(0,0,0,0.3);
   --shadow-hover: 0 4px 16px rgba(0,0,0,0.4);
+  --shadow-modal: 0 8px 32px rgba(0,0,0,0.5);
 }
 @media (prefers-color-scheme: dark) {
   :root:not(.theme-light) {
@@ -48,6 +50,7 @@
     --green-dark: #27a560;
     --shadow: 0 2px 8px rgba(0,0,0,0.3);
     --shadow-hover: 0 4px 16px rgba(0,0,0,0.4);
+    --shadow-modal: 0 8px 32px rgba(0,0,0,0.5);
   }
 }
 
@@ -139,9 +142,17 @@ h1 {
   margin-top: 20px;
 }
 .footer a { color: var(--accent); text-decoration: none; }
-.theme-toggle {
+
+/* ─── Кнопки в правом верхнем углу ──────────── */
+.top-controls {
   position: absolute;
-  top: 16px; right: 16px;
+  top: 16px;
+  right: 16px;
+  display: flex;
+  gap: 8px;
+  z-index: 10;
+}
+.top-btn {
   padding: 8px 12px;
   background: var(--bg-card);
   border: 1px solid var(--border-soft);
@@ -149,6 +160,142 @@ h1 {
   cursor: pointer;
   font-size: 14px;
   color: var(--text-main);
+  position: relative;
+  line-height: 1;
+}
+.top-btn:hover { box-shadow: var(--shadow); }
+
+/* Красная точка непрочитанного */
+.bell-dot {
+  position: absolute;
+  top: 4px;
+  right: 4px;
+  width: 8px;
+  height: 8px;
+  background: #e74c3c;
+  border-radius: 50%;
+  display: none;
+}
+.bell-dot.active { display: block; }
+
+/* ─── Модалка changelog ──────────── */
+.changelog-modal {
+  position: absolute;
+  top: 60px;
+  right: 16px;
+  width: 360px;
+  max-width: calc(100vw - 32px);
+  background: var(--bg-card);
+  border: 1px solid var(--border-soft);
+  border-radius: 10px;
+  box-shadow: var(--shadow-modal);
+  z-index: 100;
+  display: none;
+  text-align: left;
+  overflow: hidden;
+}
+.changelog-modal.open { display: block; }
+.changelog-modal.expanded {
+  max-height: calc(100vh - 80px);
+  display: flex;
+  flex-direction: column;
+}
+.changelog-list {
+  padding: 4px 0;
+  overflow-y: auto;
+}
+.changelog-modal.expanded .changelog-list {
+  flex: 1;
+  min-height: 0;
+}
+.changelog-entry {
+  padding: 16px 18px;
+  border-bottom: 1px solid var(--border-soft);
+}
+.changelog-entry:last-child { border-bottom: none; }
+.changelog-date {
+  font-size: 12px;
+  color: var(--text-muted);
+  margin-bottom: 6px;
+}
+.changelog-title {
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--text-title);
+  margin-bottom: 8px;
+}
+.changelog-items {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.changelog-items li {
+  font-size: 13px;
+  color: var(--text-main);
+  line-height: 1.5;
+  padding-left: 12px;
+  position: relative;
+  margin-bottom: 4px;
+}
+.changelog-items li::before {
+  content: "—";
+  position: absolute;
+  left: 0;
+  color: var(--text-muted);
+}
+.changelog-more {
+  width: 100%;
+  padding: 10px;
+  background: transparent;
+  border: none;
+  border-top: 1px solid var(--border-soft);
+  color: var(--text-muted);
+  font-size: 13px;
+  cursor: pointer;
+  flex-shrink: 0;
+}
+.changelog-more:hover { color: var(--text-main); }
+.changelog-empty {
+  padding: 24px 18px;
+  color: var(--text-muted);
+  font-size: 13px;
+  text-align: center;
+}
+.changelog-close {
+  display: none;
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  width: 32px;
+  height: 32px;
+  background: transparent;
+  border: none;
+  color: var(--text-muted);
+  font-size: 22px;
+  cursor: pointer;
+  line-height: 1;
+  padding: 0;
+}
+
+/* Мобила: модалка на весь экран */
+@media (max-width: 600px) {
+  .changelog-modal {
+    position: fixed;
+    inset: 0;
+    top: 0;
+    right: 0;
+    width: 100%;
+    max-width: none;
+    border-radius: 0;
+    border: none;
+    max-height: 100vh;
+  }
+  .changelog-modal.open {
+    display: flex;
+    flex-direction: column;
+  }
+  .changelog-modal .changelog-list { flex: 1; min-height: 0; }
+  .changelog-close { display: block; }
 }
 </style>
 <script>
@@ -161,7 +308,18 @@ h1 {
 </head>
 <body>
 
-<button class="theme-toggle" onclick="cycleTheme()" title="Переключить тему">🌓</button>
+<div class="top-controls">
+  <button class="top-btn" id="bell-btn" onclick="toggleChangelog(event)" title="Что нового">
+    🔔<span class="bell-dot" id="bell-dot"></span>
+  </button>
+  <button class="top-btn" onclick="cycleTheme()" title="Переключить тему">🌓</button>
+</div>
+
+<div class="changelog-modal" id="changelog-modal" role="dialog" aria-label="История обновлений">
+  <button class="changelog-close" onclick="closeChangelog()" aria-label="Закрыть">×</button>
+  <div class="changelog-list" id="changelog-list"></div>
+  <button class="changelog-more" id="changelog-more" onclick="toggleExpand()" style="display:none;">more</button>
+</div>
 
 <div class="container">
   <div class="brand">r4-studio</div>
@@ -200,6 +358,132 @@ function cycleTheme() {
   if (next !== 'auto') html.classList.add('theme-' + next);
   localStorage.setItem('theme', next);
 }
+
+// ─── Changelog ──────────────────────────────────
+var CHANGELOG = [];
+var MODAL_EXPANDED = false;
+
+function formatDate(iso) {
+  var p = iso.split('-');
+  return p[2] + '.' + p[1] + '.' + p[0];
+}
+
+function escapeHtml(s) {
+  return String(s)
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#39;');
+}
+
+function renderEntry(e) {
+  var html = '<div class="changelog-entry">';
+  html += '<div class="changelog-date">' + escapeHtml(formatDate(e.date)) + '</div>';
+  if (e.title) html += '<div class="changelog-title">' + escapeHtml(e.title) + '</div>';
+  if (e.items && e.items.length) {
+    html += '<ul class="changelog-items">';
+    e.items.forEach(function(it) {
+      html += '<li>' + escapeHtml(it) + '</li>';
+    });
+    html += '</ul>';
+  }
+  html += '</div>';
+  return html;
+}
+
+function renderChangelog() {
+  var list = document.getElementById('changelog-list');
+  var moreBtn = document.getElementById('changelog-more');
+  if (!CHANGELOG.length) {
+    list.innerHTML = '<div class="changelog-empty">Пока ничего нового</div>';
+    moreBtn.style.display = 'none';
+    return;
+  }
+  if (MODAL_EXPANDED) {
+    list.innerHTML = CHANGELOG.map(renderEntry).join('');
+  } else {
+    list.innerHTML = renderEntry(CHANGELOG[0]);
+  }
+  // Показываем "more" только если есть что разворачивать
+  if (CHANGELOG.length > 1) {
+    moreBtn.style.display = 'block';
+    moreBtn.textContent = MODAL_EXPANDED ? 'свернуть' : 'more';
+  } else {
+    moreBtn.style.display = 'none';
+  }
+}
+
+function updateDot() {
+  var dot = document.getElementById('bell-dot');
+  if (!CHANGELOG.length) { dot.classList.remove('active'); return; }
+  var lastSeen = localStorage.getItem('last_seen_changelog_date');
+  if (!lastSeen || lastSeen < CHANGELOG[0].date) {
+    dot.classList.add('active');
+  } else {
+    dot.classList.remove('active');
+  }
+}
+
+function openChangelog() {
+  var modal = document.getElementById('changelog-modal');
+  MODAL_EXPANDED = false;
+  modal.classList.remove('expanded');
+  modal.classList.add('open');
+  renderChangelog();
+  if (CHANGELOG.length) {
+    localStorage.setItem('last_seen_changelog_date', CHANGELOG[0].date);
+    updateDot();
+  }
+}
+
+function closeChangelog() {
+  var modal = document.getElementById('changelog-modal');
+  modal.classList.remove('open', 'expanded');
+  MODAL_EXPANDED = false;
+}
+
+function toggleChangelog(ev) {
+  ev.stopPropagation();
+  var modal = document.getElementById('changelog-modal');
+  if (modal.classList.contains('open')) closeChangelog();
+  else openChangelog();
+}
+
+function toggleExpand() {
+  var modal = document.getElementById('changelog-modal');
+  MODAL_EXPANDED = !MODAL_EXPANDED;
+  if (MODAL_EXPANDED) modal.classList.add('expanded');
+  else modal.classList.remove('expanded');
+  renderChangelog();
+}
+
+// Клик вне модалки
+document.addEventListener('click', function(ev) {
+  var modal = document.getElementById('changelog-modal');
+  var bell = document.getElementById('bell-btn');
+  if (!modal.classList.contains('open')) return;
+  if (modal.contains(ev.target) || bell.contains(ev.target)) return;
+  closeChangelog();
+});
+
+// Esc
+document.addEventListener('keydown', function(ev) {
+  if (ev.key === 'Escape') closeChangelog();
+});
+
+// Загрузка changelog.js (работает и через file://, в отличие от fetch json)
+(function loadChangelog() {
+  var s = document.createElement('script');
+  s.src = 'changelog.js?v=' + Date.now();
+  s.onload = function() {
+    var data = window.CHANGELOG;
+    CHANGELOG = Array.isArray(data) ? data.slice(0, 10) : [];
+    updateDot();
+  };
+  s.onerror = function() { /* нет файла — без точки, без модалки */ };
+  document.head.appendChild(s);
+})();
 </script>
 
 </body>

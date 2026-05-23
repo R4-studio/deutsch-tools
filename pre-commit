@@ -1,0 +1,38 @@
+#!/bin/sh
+# pre-commit: проверка ?v=YYYYMMDD у data.js в HTML-файлах
+# Должен соответствовать сегодняшней дате.
+# Файлы, в которых нет data.js?v=NNN, пропускаются.
+
+TODAY=$(date +%Y%m%d)
+REPO_ROOT=$(git rev-parse --show-toplevel)
+FAIL=0
+BAD_FILES=""
+
+for f in "$REPO_ROOT"/*.html; do
+  [ -f "$f" ] || continue
+  # Ищем все вхождения data.js?v=XXXXXXXX
+  VERSIONS=$(grep -oE 'data\.js\?v=[0-9]{8}' "$f" | sed 's/data\.js?v=//' | sort -u)
+  [ -z "$VERSIONS" ] && continue
+  for V in $VERSIONS; do
+    if [ "$V" != "$TODAY" ]; then
+      NAME=$(basename "$f")
+      echo "  ✗ $NAME: data.js?v=$V  →  должно быть ?v=$TODAY"
+      BAD_FILES="$BAD_FILES $NAME"
+      FAIL=1
+    fi
+  done
+done
+
+if [ "$FAIL" = "1" ]; then
+  echo ""
+  echo "Версия data.js в HTML не совпадает с сегодняшней датой ($TODAY)."
+  echo ""
+  echo "Команда для починки (запусти в git bash из корня репо):"
+  echo ""
+  echo "  sed -i -E 's/data\\.js\\?v=[0-9]{8}/data.js?v=$TODAY/g'$BAD_FILES"
+  echo ""
+  echo "Или вручную найди и замени строку в указанных файлах."
+  exit 1
+fi
+
+exit 0
