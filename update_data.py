@@ -202,9 +202,23 @@ def process_nouns(rows):
     items = []
     seen = set()  # ключ: (de, topic) — позволяет одно слово в разных темах
     for r in rows:
-        de = r.get("de")
-        if not de: continue
-        de = str(de).strip()
+        de_raw = r.get("de")
+        if not de_raw: continue
+        de = str(de_raw).strip()
+
+        # altDe из двух источников:
+        # 1) явная колонка alt-de (приоритет — для будущих записей xlsx)
+        # 2) инлайн "X / Y" в поле de (legacy: 14 текущих записей)
+        alt_de = r.get("alt-de")
+        if alt_de is not None and str(alt_de).strip():
+            alt_de = str(alt_de).strip()
+        elif " / " in de:
+            parts = [p.strip() for p in de.split(" / ")]
+            de = parts[0]
+            alt_de = " / ".join(parts[1:]) if len(parts) > 1 else None
+        else:
+            alt_de = None
+
         topic = str(r.get("topic") or "").strip()
         key = (de, topic)
         if key in seen:
@@ -212,6 +226,7 @@ def process_nouns(rows):
             continue
         seen.add(key)
         item = {"de": de}
+        if alt_de: item["altDe"] = alt_de
         if r.get("gender"): item["gender"] = str(r["gender"]).strip()
         if r.get("ru"): item["ru"] = str(r["ru"]).strip()
         if r.get("plural"): item["plural"] = str(r["plural"]).strip()
@@ -660,7 +675,7 @@ add_ids(sounds, "s", width=3)
 # ═══════════════════════════════════════════════════════════════
 print("\n=== Собираю data.js ===")
 
-VOCAB_KEYS = ["id", "de", "ru", "pos", "gender", "plural", "level", "topics",
+VOCAB_KEYS = ["id", "de", "altDe", "ru", "pos", "gender", "plural", "level", "topics",
               "note", "new", "comparative", "superlative", "antonym",
               "kind", "case", "digit", "context"]
 REGEL_KEYS = ["id", "verb", "ru", "forms", "partizip2", "aux"]
