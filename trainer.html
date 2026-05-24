@@ -1876,6 +1876,356 @@ function buildPerfektQuestions(blockId) {
 }
 
 
+// ═══════════════════════════════════════════════════════════════
+// КОМБО-ТЕСТЫ: Partizip II / Präsens
+// ═══════════════════════════════════════════════════════════════
+
+// ─── Общий механизм квоты 30 вопросов (8/6/6/6/4 с каскадным добором) ───
+function applyQuota30(autoPool, manualPool) {
+  const QUOTA = { 1: 8, 2: 6, 3: 6, 4: 6, 5: 4 };
+  const manualSourceIds = new Set(manualPool.map(q => q.sourceId).filter(Boolean));
+  const autoFiltered = autoPool.filter(q => !q.sourceId || !manualSourceIds.has(q.sourceId));
+  const byLevel = { 1: [], 2: [], 3: [], 4: [], 5: [] };
+  for (const q of [...autoFiltered, ...manualPool]) {
+    const lvl = q.difficulty || 1;
+    if (byLevel[lvl]) byLevel[lvl].push(q);
+  }
+  const finalQuota = { ...QUOTA };
+  for (const lvl of [5, 4, 3, 2]) {
+    const available = byLevel[lvl].length;
+    if (available < finalQuota[lvl]) {
+      finalQuota[lvl - 1] += finalQuota[lvl] - available;
+      finalQuota[lvl] = available;
+    }
+  }
+  if (byLevel[1].length < finalQuota[1]) finalQuota[1] = byLevel[1].length;
+  const session = [];
+  for (const lvl of [1, 2, 3, 4, 5]) {
+    session.push(...shuffle(byLevel[lvl]).slice(0, finalQuota[lvl]));
+  }
+  return shuffleMC(session);
+}
+
+// ─── Пул вопросов Partizip II (для VOCAB-глаголов из подблока) ───────────
+const _PERF_COMBO_TMPLS = [
+  { tmpl: "Ich {AUX} gestern ___", who: "ich" },
+  { tmpl: "Wir {AUX} das schon ___", who: "wir" },
+  { tmpl: "Er {AUX} heute ___", who: "er" },
+  { tmpl: "{AUX} du das schon ___?", who: "du" },
+];
+const _AUX_FORMS = {
+  haben: { ich: "habe", du: "hast", er: "hat", wir: "haben", ihr: "habt", sie: "haben" },
+  sein:  { ich: "bin",  du: "bist", er: "ist", wir: "sind",  ihr: "seid", sie: "sind"  },
+};
+
+function buildPartizip2Pool(verbItems, conjugations) {
+  const validVerbs = verbItems.filter(v => !v.de.includes(" "));
+  if (validVerbs.length === 0) return [];
+
+  // Собрать все Partizip II текущего подблока
+  const allP2Entries = validVerbs.map(v => ({
+    verb: v.de, p2: getPartizip2(v.de, conjugations),
+    aux: getAux(v.de, conjugations), ru: v.ru, id: v.id,
+  }));
+
+  // ─── Глобальный пул дистракторов (весь CONJUGATIONS + VOCAB-глаголы) ─
+  // Используем все известные P2-формы, а не только текущий подблок.
+  // Это решает проблему: в маленьких подблоках (например modals, 8 глаголов)
+  // триграммный поиск внутри подблока даёт 0 результатов (все sim=0.00),
+  // и рандомный добор всегда берёт из того же кластера — дистракторы
+  // выглядят слишком очевидно.
+  const globalP2Set = new Map(); // p2 → true (дедупликация)
+  for (const c of conjugations) {
+    if (c.partizip2) globalP2Set.set(c.partizip2, true);
+  }
+  if (typeof VOCAB !== "undefined") {
+    for (const v of VOCAB) {
+      if (v.pos === "verb" && !v.de.includes(" ")) {
+        const p2 = getPartizip2(v.de, conjugations);
+        if (p2) globalP2Set.set(p2, true);
+      }
+    }
+  }
+  const globalP2List = Array.from(globalP2Set.keys());
+
+  // ─── Гибридный выбор 3 дистракторов для P2 mc-вопроса ────────────────
+  // 1. Псевдо-regel-форма (ловушка для unregel-глаголов)
+  // 2. Триграммно похожие P2 из глобального пула (не только подблока)
+  // 3. Рандом из глобального пула — добор
+  function pickP2Distractors(entry) {
+    const { verb, p2 } = entry;
+    const taken = new Set([p2]);
+    const result = [];
+    function tryAdd(f) {
+      if (!f || taken.has(f)) return;
+      taken.add(f); result.push(f);
+    }
+    // 1. Псевдо-regel (ловушка: выглядит правдоподобно для нерегулярных)
+    tryAdd(partizip2Regelmaessig(verb));
+    // 2. Триграммно похожие P2 из глобального пула
+    if (result.length < 3) {
+      const bySim = globalP2List
+        .filter(d => d !== p2)
+        .map(d => ({ p2: d, sim: trigramSimilarity(d, p2) }))
+        .filter(x => x.sim >= DIST_SIM_THRESHOLD)
+        .sort((a, b) => b.sim - a.sim);
+      for (const { p2: d } of bySim) {
+        if (result.length >= 3) break;
+        tryAdd(d);
+      }
+    }
+    // 3. Рандом из глобального пула — добор если меньше 3
+    if (result.length < 3) {
+      for (const d of shuffle(globalP2List.filter(d => d !== p2))) {
+        if (result.length >= 3) break;
+        tryAdd(d);
+      }
+    }
+    return result;
+  }
+
+  const pool = [];
+  for (const entry of allP2Entries) {
+    const { verb, p2, aux, ru, id } = entry;
+
+    // Ур.1 mc — «Partizip II от X?»
+    const distractors = pickP2Distractors(entry);
+    if (distractors.length >= 3) {
+      const opts = shuffle([p2, ...distractors]);
+      pool.push({
+        auto: true, level: "A1", difficulty: 1, type: "mc",
+        q: `Partizip II от «${verb}»${ru ? " (" + ru + ")" : ""}?`,
+        opts, ans: opts.indexOf(p2), sourceId: id,
+      });
+    }
+
+    // Ур.2 fill — «Введи Partizip II»
+    pool.push({
+      auto: true, level: "A1", difficulty: 2, type: "fill",
+      q: `Partizip II от «${verb}»${ru ? " — " + ru : ""}:`,
+      ans: p2, altAns: [],
+      hint: `ge…(t/en): ${verb}`,
+      sourceId: id,
+    });
+
+    // Ур.3 mc — «Какой aux?»
+    pool.push({
+      auto: true, level: "A2", difficulty: 3, type: "mc",
+      q: `С каким вспомогательным глаголом «${verb}» образует Perfekt?`,
+      opts: ["haben", "sein"], ans: aux === "sein" ? 1 : 0,
+      hint: ru || "", sourceId: id,
+    });
+
+    // Ур.4 fill — Perfekt-предложение
+    const tmpl = _PERF_COMBO_TMPLS[Math.floor(Math.random() * _PERF_COMBO_TMPLS.length)];
+    const auxForm = _AUX_FORMS[aux][tmpl.who];
+    pool.push({
+      auto: true, level: "A2", difficulty: 4, type: "fill",
+      q: `Впиши Partizip II от «${verb}»${ru ? " (" + ru + ")" : ""}:\n${tmpl.tmpl.replace("{AUX}", auxForm)}`,
+      ans: p2, altAns: [], hint: `aux: ${aux}`, sourceId: id,
+    });
+  }
+  return pool;
+}
+
+// ─── Пул вопросов Präsens (для VOCAB-глаголов, без Partizip II / Perfekt) ──
+function buildPraesensPool(verbItems, conjugations) {
+  const pool = [];
+
+  // Ур.1 — переводы
+  for (const item of verbItems) {
+    const q1a = genL1_translate_DE_RU(item, VOCAB);
+    if (q1a) pool.push(q1a);
+    const q1b = genL1_translate_RU_DE(item, VOCAB);
+    if (q1b) pool.push(q1b);
+  }
+
+  // Ур.2 — одна форма Präsens
+  for (const item of verbItems) {
+    if (item.de.includes(" ")) continue;
+    const conj = conjugations.find(c => c.verb === item.de);
+    if (conj) {
+      const q = genL2_unregel_one_form(conj);
+      if (q) pool.push(q);
+    } else {
+      const q = genL2_conj_regelmaessig(item, VOCAB, conjugations);
+      if (q) pool.push(q);
+    }
+  }
+
+  // Ур.3 — полное спряжение Präsens (таблица)
+  for (const item of verbItems) {
+    if (item.de.includes(" ")) continue;
+    const conj = conjugations.find(c => c.verb === item.de);
+    if (conj) {
+      pool.push(genL3_unregel_full_conj(conj));
+      continue;
+    }
+    if (typeof REGEL_VERBS !== "undefined") {
+      const reg = REGEL_VERBS.find(r => r.verb === item.de);
+      if (reg) {
+        pool.push({
+          auto: true, level: "A1", difficulty: 3, type: "conj",
+          q: `Проспрягай «${reg.verb}»${reg.ru ? " — " + reg.ru : ""} в Präsens:`,
+          verb: reg.verb, tense: "Präsens",
+          pronouns: ["ich", "du", "er/sie/es", "wir", "ihr", "sie/Sie"],
+          ans: reg.forms, sourceId: reg.id,
+        });
+        continue;
+      }
+    }
+    const generated = [0,1,2,3,4,5].map(i => getConjForm(item.de, i, conjugations));
+    pool.push({
+      auto: true, level: "A1", difficulty: 3, type: "conj",
+      q: `Проспрягай «${item.de}» — ${item.ru || item.de} в Präsens:`,
+      verb: item.de, tense: "Präsens",
+      pronouns: ["ich", "du", "er/sie/es", "wir", "ihr", "sie/Sie"],
+      ans: generated, sourceId: item.id,
+    });
+  }
+
+  // ─── Ур.4 — глагол в предложении (tiles) ─────────────────────────────
+  // Шаблоны Präsens-предложений. {VERB_ICH}, {VERB_DU}, {VERB_ER} — формы глагола.
+  // words: массив слов-плиток в правильном порядке.
+  const PRAESENS_TILES_TMPLS = [
+    {
+      build: (v, forms) => ({
+        ru: `Я ${v.ru}.`,
+        words: ["Ich", forms[0] + "."],
+      }),
+    },
+    {
+      build: (v, forms) => ({
+        ru: `Ты ${v.ru}?`,
+        words: [forms[1].charAt(0).toUpperCase() + forms[1].slice(1), "du?"],
+      }),
+    },
+    {
+      build: (v, forms) => ({
+        ru: `Он ${v.ru}.`,
+        words: ["Er", forms[2] + "."],
+      }),
+    },
+    {
+      build: (v, forms) => ({
+        ru: `Мы ${v.ru}.`,
+        words: ["Wir", forms[3] + "."],
+      }),
+    },
+    {
+      build: (v, forms) => ({
+        ru: `Я сейчас ${v.ru}.`,
+        words: ["Ich", forms[0], "gerade."],
+      }),
+    },
+    {
+      build: (v, forms) => ({
+        ru: `Ты сейчас ${v.ru}?`,
+        words: [forms[1].charAt(0).toUpperCase() + forms[1].slice(1), "du", "gerade?"],
+      }),
+    },
+    {
+      build: (v, forms) => ({
+        ru: `Они ${v.ru}.`,
+        words: ["Sie", forms[5] + "."],
+      }),
+    },
+  ];
+
+  // Для каждого глагола генерируем 1-2 tiles-вопроса (один на форму)
+  for (const item of verbItems) {
+    if (item.de.includes(" ")) continue;  // разделяемые — пропускаем
+    if (!item.ru) continue;
+
+    const forms = [0,1,2,3,4,5].map(i => getConjForm(item.de, i, conjugations));
+    // Берём 2 случайных шаблона для разнообразия
+    const chosen = shuffle(PRAESENS_TILES_TMPLS.slice()).slice(0, 2);
+    for (const tmpl of chosen) {
+      const built = tmpl.build(item, forms);
+      if (!built || built.words.length < 2) continue;
+      pool.push({
+        auto: true, level: "A2", difficulty: 4, type: "tiles",
+        q: `Составь: «${built.ru}»`,
+        words: built.words,
+        sourceId: item.id,
+      });
+    }
+  }
+
+  return pool;
+}
+
+// ─── Сборщик: Partizip II тест (30 вопросов) ─────────────────────────────
+function buildPartizip2TestSession(blockId, topics) {
+  let autoPool;
+  if (blockId === "unregel") {
+    // Для unregel — используем CONJUGATIONS с partizip2
+    autoPool = [];
+    for (const v of CONJUGATIONS) {
+      if (!v.partizip2) continue;
+      const q1a = genPerfL1_p2_to_ru(v, CONJUGATIONS);
+      if (q1a) autoPool.push(q1a);
+      const q1b = genPerfL1_p2_to_inf(v, CONJUGATIONS);
+      if (q1b) autoPool.push(q1b);
+      const q2 = genPerfL2_aux(v);
+      if (q2) autoPool.push(q2);
+      const q3 = genPerfL3_p2_fill(v);
+      if (q3) autoPool.push(q3);
+      const q4 = genPerfL4_sentence(v);
+      if (q4) autoPool.push(q4);
+    }
+  } else {
+    const verbItems = VOCAB.filter(v => v.pos === "verb" && (v.topics || []).some(t => topics.includes(t)));
+    autoPool = buildPartizip2Pool(verbItems, CONJUGATIONS);
+  }
+  // Ручные вопросы с тегом "partizip"
+  const trainerTopic = `trainer:${blockId}`;
+  const prefix = trainerTopic + ":";
+  const manualPool = QUESTIONS.filter(q =>
+    (q.topic === trainerTopic || (!blockId.includes(":") && q.topic.startsWith(prefix))) &&
+    (q.tags || []).includes("partizip")
+  );
+  return applyQuota30(autoPool, manualPool);
+}
+
+// ─── Сборщик: Präsens тест (30 вопросов, без Partizip II / Perfekt) ───────
+function buildPraesensTestSession(blockId, topics) {
+  let autoPool;
+  if (blockId === "unregel") {
+    autoPool = [];
+    for (const conj of CONJUGATIONS) {
+      const q1a = genL1_unregel_translate_DE_RU(conj, CONJUGATIONS);
+      if (q1a) autoPool.push(q1a);
+      const q1b = genL1_unregel_translate_RU_DE(conj, CONJUGATIONS);
+      if (q1b) autoPool.push(q1b);
+      autoPool.push(genL2_unregel_one_form(conj));
+      autoPool.push(genL3_unregel_full_conj(conj));
+    }
+  } else {
+    const verbItems = VOCAB.filter(v => v.pos === "verb" && (v.topics || []).some(t => topics.includes(t)));
+    autoPool = buildPraesensPool(verbItems, CONJUGATIONS);
+  }
+  // Ручные вопросы для этого блока (исключая partizip)
+  const trainerTopic = `trainer:${blockId}`;
+  const prefix = trainerTopic + ":";
+  const manualPool = QUESTIONS.filter(q =>
+    (q.topic === trainerTopic || (!blockId.includes(":") && q.topic.startsWith(prefix))) &&
+    !(q.tags || []).includes("partizip")
+  );
+  return applyQuota30(autoPool, manualPool);
+}
+
+// ─── Хелпер: проверить есть ли глаголы в пуле Partizip II ────────────────
+function countPartizip2Available(blockId, topics) {
+  if (blockId === "unregel") return CONJUGATIONS.filter(c => c.partizip2).length;
+  return VOCAB.filter(v => v.pos === "verb" && !v.de.includes(" ") &&
+    (v.topics || []).some(t => topics.includes(t))).length;
+}
+function countPraesensAvailable(blockId, topics) {
+  if (blockId === "unregel") return CONJUGATIONS.length;
+  return VOCAB.filter(v => v.pos === "verb" && (v.topics || []).some(t => topics.includes(t))).length;
+}
+
 // ─── Сборщик тестовой сессии: 30 вопросов по новой пропорции 8/6/6/6/4 ──
 function buildTestSession(topics, vocab, conjugations, manualQuestions, blockId, levelFilter) {
   // Новые пропорции (Ур 1=8, Ур 2=6, Ур 3=6, Ур 4=6, Ур 5=4)
@@ -2356,16 +2706,24 @@ function App() {
     );
   }
 
-  // ─── SELECT TEST TYPE (выбор общий тест / по уровню) ────────────────────
+  // ─── SELECT TEST TYPE (выбор комбо-теста / по уровню) ──────────────────
   function renderSelectTestType() {
-    // Подсчёт сколько вопросов доступно по каждому уровню
     const topics = activeSub
       ? activeSub.topics
       : (activeBlock.subblocks ? activeBlock.subblocks.flatMap(s => s.topics) : []);
     const blockId = activeSub ? `${activeBlock.id}:${activeSub.id}` : activeBlock.id;
 
-    // Используем тот же buildTestSession для подсчёта пула, но без обрезки
-    // Для оценки: считаем что есть в пуле для каждого уровня (без квот)
+    // Показывать ли кнопки Partizip II и Präsens
+    const showVerbCombos =
+      activeBlock.kind === "conjugations" ||
+      activeBlock.id === "verbs" ||
+      (activeSub && activeSub.id === "verbs");
+
+    // Счётчики для disabled-состояния
+    const p2Count  = showVerbCombos ? countPartizip2Available(blockId, topics) : 0;
+    const prCount  = showVerbCombos ? countPraesensAvailable(blockId, topics)  : 0;
+
+    // Подсчёт пула по уровням (для кнопок уровней внизу)
     let autoPool, manualPool;
     if (blockId === "unregel") {
       autoPool = buildUnregelQuestions(CONJUGATIONS);
@@ -2392,7 +2750,6 @@ function App() {
 
     const heading = activeSub ? activeSub.label : activeBlock.label;
 
-    // Цвета и подписи уровней
     const levelInfo = [
       { lvl: 1, color: "#1a7a4a", name: "Уровень 1", action: "Перевод" },
       { lvl: 2, color: "#3498db", name: "Уровень 2", action: "Базовая форма" },
@@ -2400,6 +2757,40 @@ function App() {
       { lvl: 4, color: "#9b59b6", name: "Уровень 4", action: "В предложении" },
       { lvl: 5, color: "#e74c3c", name: "Уровень 5", action: "Открытый ответ" },
     ];
+
+    // Запустить комбо-тест по типу
+    function startCombo(type) {
+      let session;
+      if (type === "partizip2") {
+        session = buildPartizip2TestSession(blockId, topics);
+      } else if (type === "praesens") {
+        session = buildPraesensTestSession(blockId, topics);
+      } else {
+        if (activeBlock.kind === "conjugations") session = buildTestSession([], VOCAB, CONJUGATIONS, QUESTIONS, "unregel", null);
+        else session = buildTestSession(topics, VOCAB, CONJUGATIONS, QUESTIONS, blockId, null);
+      }
+      setQuestions(session); setQIdx(0); setUserAns(""); setAnswered(false);
+      setCorrectCount(0); setHintVisible(false); setTiles([]); setChosen([]); setConjAnswers([]);
+      setUserAnswers([]); setLastVerdict(null);
+      setPhase("test-quiz");
+    }
+
+    // Стиль комбо-кнопки
+    function comboBtnStyle(disabled, bg) {
+      return {
+        background: disabled ? "var(--bg-soft)" : bg,
+        color: disabled ? "var(--text-muted)" : "white",
+        border: disabled ? "2px solid var(--border-soft)" : "none",
+        padding: "14px 8px",
+        borderRadius: 12,
+        cursor: disabled ? "not-allowed" : "pointer",
+        opacity: disabled ? 0.5 : 1,
+        fontFamily: "inherit",
+        textAlign: "center",
+        fontWeight: 700,
+        width: "100%",
+      };
+    }
 
     return (
       <div style={S.page}>
@@ -2424,20 +2815,54 @@ function App() {
           <h2 style={{ ...S.heading, textAlign: "center" }}>{heading}</h2>
           <p style={{ ...S.subheading, textAlign: "center" }}>Выбери тест</p>
 
-          {/* Большая кнопка — общий тест */}
-          <div style={{ textAlign: "center", marginBottom: 24 }}>
-            <button style={{ ...S.bigBtn, background: "#1a7a4a", minWidth: 280 }}
-                    onClick={() => {
-                      if (activeBlock.kind === "conjugations") startTestUnregel(null);
-                      else startTest(activeSub, null);
-                    }}>
-              🎯 Общий тест (30 вопросов)
+          {/* ── Комбо-кнопки ───────────────────────────────────────────── */}
+          <div style={{
+            display: "grid",
+            gridTemplateColumns: showVerbCombos ? "1fr 1fr 1fr" : "1fr",
+            gap: 10,
+            marginBottom: 24,
+          }}>
+            {showVerbCombos && (
+              <>
+                {/* Partizip II */}
+                <button
+                  disabled={p2Count === 0}
+                  style={comboBtnStyle(p2Count === 0, "#8e44ad")}
+                  onClick={() => startCombo("partizip2")}>
+                  <div style={{ fontSize: 20, marginBottom: 4 }}>⚙️</div>
+                  <div style={{ fontSize: 13 }}>Partizip II</div>
+                  <div style={{ fontSize: 11, marginTop: 4, opacity: 0.85 }}>
+                    {p2Count === 0 ? "0 вопросов" : "30 вопросов"}
+                  </div>
+                </button>
+                {/* Präsens */}
+                <button
+                  disabled={prCount === 0}
+                  style={comboBtnStyle(prCount === 0, "#2980b9")}
+                  onClick={() => startCombo("praesens")}>
+                  <div style={{ fontSize: 20, marginBottom: 4 }}>📝</div>
+                  <div style={{ fontSize: 13 }}>Präsens</div>
+                  <div style={{ fontSize: 11, marginTop: 4, opacity: 0.85 }}>
+                    {prCount === 0 ? "0 вопросов" : "30 вопросов"}
+                  </div>
+                </button>
+              </>
+            )}
+            {/* Общий тест */}
+            <button
+              style={comboBtnStyle(false, "#1a7a4a")}
+              onClick={() => startCombo("general")}>
+              <div style={{ fontSize: 20, marginBottom: 4 }}>🎯</div>
+              <div style={{ fontSize: 13 }}>Общий тест</div>
+              <div style={{ fontSize: 11, marginTop: 4, opacity: 0.85 }}>30 вопросов</div>
             </button>
           </div>
 
-          <div style={{ ...S.subheading, textAlign: "center", marginBottom: 12 }}>или по одному уровню</div>
+          <div style={{ ...S.subheading, textAlign: "center", marginBottom: 12 }}>
+            или по одному уровню
+          </div>
 
-          {/* Кнопки уровней */}
+          {/* ── Кнопки уровней ─────────────────────────────────────────── */}
           <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
             {levelInfo.map(li => {
               const count = countByLevel[li.lvl];
@@ -2465,9 +2890,7 @@ function App() {
                   <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
                     <span style={{
                       ...S.levelBadge(li.color),
-                      marginBottom: 0,
-                      padding: "4px 10px",
-                      fontSize: 12,
+                      marginBottom: 0, padding: "4px 10px", fontSize: 12,
                     }}>{li.name}</span>
                     <span style={{ fontSize: 14, fontWeight: 600 }}>{li.action}</span>
                   </div>
