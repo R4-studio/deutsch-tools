@@ -387,10 +387,11 @@ def process_numbers(rows):
         de = r.get("de")
         if not de: continue
         item = {"de": str(de).strip(), "pos": "num"}
-        item["topics"] = []  # для совместимости с кодом
+        kind = str(r.get("kind") or "").strip()
+        item["topics"] = ["nums:" + kind] if kind else ["nums:basic"]
         if r.get("digit") is not None: item["digit"] = str(r["digit"]).strip()
         if r.get("ru"): item["ru"] = str(r["ru"]).strip()
-        if r.get("kind"): item["kind"] = str(r["kind"]).strip()
+        if kind: item["kind"] = kind
         if r.get("level"): item["level"] = str(r["level"]).strip()
         if r.get("note"): item["note"] = str(r["note"]).strip()
         items.append(item)

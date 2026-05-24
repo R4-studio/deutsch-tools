@@ -13,7 +13,7 @@
 
 <script crossorigin src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
 <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
-<script src="data.js?v=20260523"></script>
+<script src="data.js?v=20260524"></script>
 <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
 
 <style>
@@ -201,6 +201,12 @@ const THEME_CSS = `
 .flip-face { position: absolute; width: 100%; height: 100%; backface-visibility: hidden; -webkit-backface-visibility: hidden; display: flex; align-items: center; justify-content: center; padding: 24px; border-radius: 14px; }
 .flip-face.back { transform: rotateY(180deg); }
 input:focus, button:focus { outline: 2px solid var(--accent); outline-offset: 1px; }
+.tb-btn { flex-shrink: 0; }
+.tb-row { flex-shrink: 0; }
+@media (max-width: 600px) {
+  .tb-btn { padding: 6px 8px !important; font-size: 16px !important; }
+  .tb-row { gap: 6px !important; }
+}
 `;
 
 
@@ -655,19 +661,22 @@ function useTheme() {
 // ═══════════════════════════════════════════════════════════════
 // КОМПОНЕНТ: ШАПКА С КНОПКОЙ ТЕМЫ И ДОМ
 // ═══════════════════════════════════════════════════════════════
-function TopBar({ left, right, icon, onTheme, onHome }) {
+function TopBar({ left, right, icon, onTheme, onHome, onBack }) {
   return (
     <div style={S.topBar}>
-      <div style={{ display: "flex", gap: 8, alignItems: "center" }}>
-        <a href="index.html" style={S.closeBtn} title="Выйти из тренажёра">❌</a>
+      <div className="tb-row" style={{ display: "flex", gap: 8, alignItems: "center" }}>
+        <a href="index.html" className="tb-btn" style={S.closeBtn} title="Выйти из тренажёра">❌</a>
+        {onBack && (
+          <button className="tb-btn" style={S.homeBtn} onClick={onBack} title="Уровень выше">🔙</button>
+        )}
         {onHome && (
-          <button style={S.homeBtn} onClick={onHome} title="На главную тренажёра">🏠</button>
+          <button className="tb-btn" style={S.homeBtn} onClick={onHome} title="На главную тренажёра">🏠</button>
         )}
         {left}
       </div>
-      <div style={{ display: "flex", gap: 8, alignItems: "center" }}>
+      <div className="tb-row" style={{ display: "flex", gap: 8, alignItems: "center" }}>
         {right}
-        <button style={S.themeBtn} onClick={onTheme} title="Переключить тему">
+        <button className="tb-btn" style={S.themeBtn} onClick={onTheme} title="Переключить тему">
           {icon}
         </button>
       </div>
@@ -1007,16 +1016,139 @@ function getConjForm(infinitive, pronounIdx, conjugations) {
   return conjRegelmaessig(infinitive, pronouns[pronounIdx]);
 }
 
+// ─── Похожесть по триграммам (для выбора правдоподобных дистракторов) ─────
+// Нормализация немецкого слова для сравнения: lower-case + убрать ведущий
+// артикль / неопр. артикль. Используем "сырой" lower-case (без преобразования
+// umlauts → ae/oe/ue) — нам важно сходство ПО НЕМЕЦКОМУ написанию.
+const _DIST_LEADING_ARTICLE = /^(der|die|das|den|dem|des|ein|eine|einen|einem|einer|eines)\s+/i;
+function normDeForSim(s) {
+  if (!s) return "";
+  return String(s).toLowerCase().replace(_DIST_LEADING_ARTICLE, "").trim();
+}
+function trigramsOf(s) {
+  const out = new Set();
+  if (!s || s.length < 3) return out;
+  for (let i = 0; i <= s.length - 3; i++) out.add(s.slice(i, i + 3));
+  return out;
+}
+function trigramSimilarity(de1, de2) {
+  const a = trigramsOf(normDeForSim(de1));
+  const b = trigramsOf(normDeForSim(de2));
+  if (a.size === 0 || b.size === 0) return 0;
+  let common = 0;
+  for (const t of a) if (b.has(t)) common++;
+  return common / Math.max(a.size, b.size);
+}
+const DIST_SIM_THRESHOLD = 0.2;
+
+// ─── Каскадный выбор дистракторов из VOCAB ────────────────────────────────
+// Каскад (с добором до `count`):
+//   1) тот же pos + общий topic (рандом)
+//   2) тот же pos + триграммная похожесть >= 0.2 (по убыванию)
+//   3) любой pos + триграммная похожесть >= 0.2 (по убыванию)
+//   4) тот же pos рандом (если совсем мало контента)
+//
+// Опции:
+//   acceptable(v): доп. предикат (например, v.ru !== item.ru)
+//   uniqueKey(v):  ключ уникальности (по умолчанию v.id).
+//                  Для перевода передаём v.ru или v.de, чтобы избежать
+//                  визуально одинаковых вариантов.
+//
+// Возвращает массив VOCAB-записей (до count). Если их меньше count —
+// генератор сам решит, отдавать null или нет.
+function pickDistractors(item, count, vocabPool, opts) {
+  opts = opts || {};
+  const acceptable = opts.acceptable || function() { return true; };
+  const uniqueKey  = opts.uniqueKey  || function(v) { return v.id; };
+
+  const taken = [];
+  const takenKeys = new Set([uniqueKey(item)]);
+
+  function tryAdd(v) {
+    if (v.id === item.id) return;
+    if (!acceptable(v)) return;
+    const k = uniqueKey(v);
+    if (k == null || takenKeys.has(k)) return;
+    taken.push(v);
+    takenKeys.add(k);
+  }
+
+  // Уровень 1: тот же pos + общий topic
+  if (taken.length < count) {
+    const itemTopics = new Set(item.topics || []);
+    if (itemTopics.size > 0) {
+      const level1 = vocabPool.filter(v =>
+        v.id !== item.id &&
+        v.pos === item.pos &&
+        (v.topics || []).some(t => itemTopics.has(t))
+      );
+      for (const v of shuffle(level1)) {
+        if (taken.length >= count) break;
+        tryAdd(v);
+      }
+    }
+  }
+
+  // Уровень 2: тот же pos + триграммная похожесть >= порога
+  if (taken.length < count) {
+    const level2 = vocabPool
+      .filter(v =>
+        v.id !== item.id &&
+        v.pos === item.pos &&
+        !takenKeys.has(uniqueKey(v))
+      )
+      .map(v => ({ v, sim: trigramSimilarity(v.de, item.de) }))
+      .filter(x => x.sim >= DIST_SIM_THRESHOLD)
+      .sort((a, b) => b.sim - a.sim);
+    for (const { v } of level2) {
+      if (taken.length >= count) break;
+      tryAdd(v);
+    }
+  }
+
+  // Уровень 3: любой pos + триграммная похожесть >= порога
+  if (taken.length < count) {
+    const level3 = vocabPool
+      .filter(v =>
+        v.id !== item.id &&
+        !takenKeys.has(uniqueKey(v))
+      )
+      .map(v => ({ v, sim: trigramSimilarity(v.de, item.de) }))
+      .filter(x => x.sim >= DIST_SIM_THRESHOLD)
+      .sort((a, b) => b.sim - a.sim);
+    for (const { v } of level3) {
+      if (taken.length >= count) break;
+      tryAdd(v);
+    }
+  }
+
+  // Уровень 4: рандом из всего pos
+  if (taken.length < count) {
+    const level4 = vocabPool.filter(v =>
+      v.id !== item.id &&
+      v.pos === item.pos &&
+      !takenKeys.has(uniqueKey(v))
+    );
+    for (const v of shuffle(level4)) {
+      if (taken.length >= count) break;
+      tryAdd(v);
+    }
+  }
+
+  return taken;
+}
+
 // ─── Генератор: Ур 1 — перевод DE→RU ─────────────────────────────────────
 function genL1_translate_DE_RU(item, vocabPool) {
-  // Дистракторы: 3 случайных слова того же pos с другим переводом
-  const samePos = vocabPool.filter(v =>
-    v.pos === item.pos && v.id !== item.id && v.ru !== item.ru
-  );
-  if (samePos.length < 3) return null;
-  const distractors = shuffle(samePos).slice(0, 3).map(v => v.ru);
+  // Дистракторы через каскад: тот же topic → похожие → рандом
+  const picks = pickDistractors(item, 3, vocabPool, {
+    acceptable: v => v.ru && v.ru !== item.ru,
+    uniqueKey:  v => v.ru,  // уникальность по русскому переводу (анти-дубль в опциях)
+  });
+  if (picks.length < 3) return null;
+  const distractors = picks.map(v => v.ru);
 
-  const de = item.pos === "noun" ? formatNounFull(item) : item.de;
+  const de = item.de;
   const opts = shuffle([item.ru, ...distractors]);
   const ans = opts.indexOf(item.ru);
 
@@ -1030,14 +1162,13 @@ function genL1_translate_DE_RU(item, vocabPool) {
 
 // ─── Генератор: Ур 1 — перевод RU→DE ─────────────────────────────────────
 function genL1_translate_RU_DE(item, vocabPool) {
-  const samePos = vocabPool.filter(v =>
-    v.pos === item.pos && v.id !== item.id && v.de !== item.de
-  );
-  if (samePos.length < 3) return null;
-  const distractors = shuffle(samePos).slice(0, 3).map(v =>
-    v.pos === "noun" ? formatNounFull(v) : v.de
-  );
-  const correct = item.pos === "noun" ? formatNounFull(item) : item.de;
+  const picks = pickDistractors(item, 3, vocabPool, {
+    acceptable: v => v.de && v.de !== item.de,
+    uniqueKey:  v => v.de,  // уникальность по немецкому написанию
+  });
+  if (picks.length < 3) return null;
+  const distractors = picks.map(v => v.de);
+  const correct = item.de;
   const opts = shuffle([correct, ...distractors]);
   const ans = opts.indexOf(correct);
 
@@ -2133,7 +2264,7 @@ function App() {
             icon={icon} onTheme={cycleTheme} onHome={goHome} />
           <h2 style={{ ...S.heading, textAlign: "center" }}>Выбери блок</h2>
           <div style={S.grid}>
-            {BLOCKS.map(b => (
+            {BLOCKS.filter(b => b.kind !== "sounds").map(b => (
               <div key={b.id}
                    style={{ ...S.card, borderLeft: `4px solid ${b.color}`, cursor: "pointer" }}
                    onClick={() => pickBlock(b)}>
@@ -2365,12 +2496,17 @@ function App() {
           <TopBar
             left={<button style={S.outlineBtn(activeBlock.color)} onClick={() => setPhase("block-start")}>← Назад</button>}
             right={<span style={S.muted}>{cardIdx + 1} / {vocab.length}</span>}
-            icon={icon} onTheme={cycleTheme} onHome={goHome} />
+            icon={icon} onTheme={cycleTheme} onHome={goHome} onBack={goBackToSubblocks} />
           <FlipCard item={item} flipped={flipped} onFlip={() => setFlipped(!flipped)} color={activeBlock.color} />
           <div style={{ display: "flex", gap: 12, justifyContent: "center", marginTop: 20 }}>
             <button style={S.outlineBtn()} onClick={prevCard} disabled={cardIdx === 0}>← Назад</button>
             <button style={S.primaryBtn(activeBlock.color)} onClick={nextCard}>
               {cardIdx + 1 >= vocab.length ? "К мини-тесту →" : "Дальше →"}
+            </button>
+          </div>
+          <div style={{ display: "flex", justifyContent: "center", marginTop: 12 }}>
+            <button style={S.outlineBtn("#888")} onClick={() => setPhase("learn-test")}>
+              🎯 Перейти к тесту
             </button>
           </div>
         </div>
@@ -2395,7 +2531,7 @@ function App() {
               </button>
             }
             right={<span style={S.muted}>{cardIdx + 1} / {CONJUGATIONS.length}</span>}
-            icon={icon} onTheme={cycleTheme} onHome={goHome} />
+            icon={icon} onTheme={cycleTheme} onHome={goHome} onBack={goBackToSubblocks} />
           <ConjFlipCard conj={conj} flipped={flipped}
                         onFlip={() => setFlipped(!flipped)}
                         color={activeBlock.color} />
@@ -2429,7 +2565,7 @@ function App() {
             <TopBar
               left={<button style={S.outlineBtn(activeBlock.color)} onClick={goBackToSubblocks}>← Назад</button>}
               right={<span style={S.muted}>{modeLabel}</span>}
-              icon={icon} onTheme={cycleTheme} onHome={goHome} />
+              icon={icon} onTheme={cycleTheme} onHome={goHome} onBack={goBackToSubblocks} />
             <div style={{ textAlign: "center", marginTop: 40 }}>
               <p>Нет вопросов для этого блока.</p>
               <button style={S.primaryBtn(activeBlock.color)} onClick={goBackToSubblocks}>Назад</button>
@@ -2465,7 +2601,7 @@ function App() {
               </button>
             }
             right={<span style={S.muted}>{qIdx + 1} / {questions.length} · ✓ {correctCount}</span>}
-            icon={icon} onTheme={cycleTheme} onHome={goHome} />
+            icon={icon} onTheme={cycleTheme} onHome={goHome} onBack={goBackToSubblocks} />
           <div style={{ textAlign: "center", color: "var(--text-muted)", fontSize: 13, marginBottom: 12 }}>
             {subLabel} · {modeLabel.includes("Тест") ? "Тестирование" : "Изучение"}
           </div>
@@ -2681,7 +2817,7 @@ function App() {
           <TopBar
             left={<button style={S.outlineBtn(activeBlock.color)} onClick={goHome}>← На главную</button>}
             right={<span style={S.muted}>{modeLabel}</span>}
-            icon={icon} onTheme={cycleTheme} onHome={goHome} />
+            icon={icon} onTheme={cycleTheme} onHome={goHome} onBack={goBackToSubblocks} />
           <div style={{ ...S.questionCard, textAlign: "center", padding: 40 }}>
             <div style={{ fontSize: 64, marginBottom: 16 }}>
               {pct >= 80 ? "🎉" : pct >= 50 ? "👍" : "💪"}
