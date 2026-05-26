@@ -233,7 +233,10 @@ def process_nouns(rows):
         item["topics"] = [topic] if topic else []
         if r.get("level"): item["level"] = str(r["level"]).strip()
         if r.get("note"): item["note"] = str(r["note"]).strip()
-        if is_true(r.get("new")): item["new"] = True
+        if is_true(r.get("new")):
+            item["new"] = True
+            if "new:new-nouns" not in item["topics"]:
+                item["topics"] = item["topics"] + ["new:new-nouns"]
         item["pos"] = "noun"
         items.append(item)
     return items
@@ -271,7 +274,10 @@ def process_verbs(rows):
         vi["topics"] = [str(r["topic"]).strip()] if r.get("topic") else []
         if r.get("level"): vi["level"] = str(r["level"]).strip()
         if r.get("note"): vi["note"] = str(r["note"]).strip()
-        if is_true(r.get("new")): vi["new"] = True
+        if is_true(r.get("new")):
+            vi["new"] = True
+            if "new:new-verbs" not in vi["topics"]:
+                vi["topics"] = vi["topics"] + ["new:new-verbs"]
         vocab_items.append(vi)
 
         # Composite (Fahrrad fahren) — только в VOCAB, не в REGEL/CONJUGATIONS
@@ -362,7 +368,10 @@ def process_adjectives(rows):
         if r.get("level"): item["level"] = str(r["level"]).strip()
         if r.get("antonym"): item["antonym"] = str(r["antonym"]).strip()
         if r.get("note"): item["note"] = str(r["note"]).strip()
-        if is_true(r.get("new")): item["new"] = True
+        if is_true(r.get("new")):
+            item["new"] = True
+            if "new:new-adj-adv" not in item["topics"]:
+                item["topics"] = item["topics"] + ["new:new-adj-adv"]
         items.append(item)
     return items
 
@@ -376,7 +385,10 @@ def process_adverbs(rows):
         item["topics"] = [str(r["topic"]).strip()] if r.get("topic") else []
         if r.get("level"): item["level"] = str(r["level"]).strip()
         if r.get("note"): item["note"] = str(r["note"]).strip()
-        if is_true(r.get("new")): item["new"] = True
+        if is_true(r.get("new")):
+            item["new"] = True
+            if "new:new-adj-adv" not in item["topics"]:
+                item["topics"] = item["topics"] + ["new:new-adj-adv"]
         items.append(item)
     return items
 

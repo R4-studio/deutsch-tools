@@ -1731,6 +1731,129 @@ function buildUnregelQuestions(conjugations) {
 }
 
 // ═══════════════════════════════════════════════════════════════
+// МИНИ-ТЕСТ ПОСЛЕ КАРТОЧЕК UNREGEL: 37 вопросов (19 P2 + 18 Präsens)
+// ═══════════════════════════════════════════════════════════════
+// pickP2Distractors определена внутри buildPartizip2Pool — переиспользуем
+// логику здесь автономно.
+function buildUnregelMiniTest(conjugations) {
+  const all = conjugations.slice(); // все 37
+
+  // Глобальный список P2 для дистракторов (такой же как в buildPartizip2Pool)
+  const globalP2Set = new Map();
+  for (const c of conjugations) {
+    if (c.partizip2) globalP2Set.set(c.partizip2, true);
+  }
+  if (typeof VOCAB !== "undefined") {
+    for (const v of VOCAB) {
+      if (v.pos === "verb" && !v.de.includes(" ")) {
+        const p2 = partizip2Regelmaessig(v.de);
+        if (p2) globalP2Set.set(p2, true);
+      }
+    }
+  }
+  const globalP2List = Array.from(globalP2Set.keys());
+
+  function pickP2DistractorsLocal(verb, p2) {
+    const taken = new Set([p2]);
+    const result = [];
+    function tryAdd(f) {
+      if (!f || taken.has(f)) return;
+      taken.add(f); result.push(f);
+    }
+    tryAdd(partizip2Regelmaessig(verb));
+    if (result.length < 3) {
+      const bySim = globalP2List
+        .filter(d => d !== p2)
+        .map(d => ({ p2: d, sim: trigramSimilarity(d, p2) }))
+        .filter(x => x.sim >= DIST_SIM_THRESHOLD)
+        .sort((a, b) => b.sim - a.sim);
+      for (const { p2: d } of bySim) {
+        if (result.length >= 3) break;
+        tryAdd(d);
+      }
+    }
+    if (result.length < 3) {
+      for (const d of shuffle(globalP2List.filter(d => d !== p2))) {
+        if (result.length >= 3) break;
+        tryAdd(d);
+      }
+    }
+    return result;
+  }
+
+  // ── ТИП 1: Partizip II (19 вопросов) ────────────────────────
+  const shuffled = shuffle(all.slice());
+  const p2Group = shuffled.slice(0, 19);
+  const praesensGroup = shuffled.slice(19); // оставшиеся 18
+
+  const PRONOUNS_IDX  = [0, 1, 2, 3, 4, 5]; // ich/du/er/wir/ihr/sie
+  const PRONOUNS_DISP = ["ich", "du", "er/sie/es", "wir", "ihr", "sie/Sie"];
+
+  const questions = [];
+
+  for (const c of p2Group) {
+    if (!c.partizip2) continue;
+    const distractors = pickP2DistractorsLocal(c.verb, c.partizip2);
+    if (distractors.length < 3) continue;
+    const opts = shuffle([c.partizip2, ...distractors]);
+    questions.push({
+      auto: true, level: "A1", difficulty: 1, type: "mc",
+      q: `Partizip II от «${c.verb}»${c.ru ? " — " + c.ru : ""}?`,
+      opts, ans: opts.indexOf(c.partizip2),
+      sourceId: c.id,
+    });
+  }
+
+  // ── ТИП 2: Präsens-форма (18 вопросов) ──────────────────────
+  for (const c of praesensGroup) {
+    // Случайное лицо
+    const pronounIdx = Math.floor(Math.random() * c.pronouns.length);
+    const pronoun = c.pronouns[pronounIdx];
+    const correctForm = c.forms[pronounIdx];
+    if (!correctForm) continue;
+
+    const taken = new Set([correctForm]);
+    const result = [];
+    function tryAdd(f) {
+      if (!f || taken.has(f)) return;
+      taken.add(f); result.push(f);
+    }
+
+    // 1. Другие формы того же глагола
+    for (const f of shuffle(c.forms.filter(f => f && f !== correctForm))) {
+      if (result.length >= 2) break;
+      tryAdd(f);
+    }
+
+    // 2. Псевдо-regel-форма (без умляута)
+    const pseudoRegelPronoun = ["ich", "du", "er", "wir", "ihr", "sie_pl"][pronounIdx] || "du";
+    const pseudoRegel = conjRegelmaessig(c.verb, pseudoRegelPronoun);
+    tryAdd(pseudoRegel);
+
+    // 3. Добор из других unregel-глаголов того же лица
+    if (result.length < 3) {
+      const others = shuffle(conjugations.filter(o => o.id !== c.id && o.forms && o.forms[pronounIdx]));
+      for (const o of others) {
+        if (result.length >= 3) break;
+        tryAdd(o.forms[pronounIdx]);
+      }
+    }
+
+    if (result.length < 3) continue;
+
+    const opts = shuffle([correctForm, ...result.slice(0, 3)]);
+    questions.push({
+      auto: true, level: "A1", difficulty: 1, type: "mc",
+      q: `Форма «${pronoun}» от «${c.verb}»${c.ru ? " — " + c.ru : ""}?`,
+      opts, ans: opts.indexOf(correctForm),
+      sourceId: c.id,
+    });
+  }
+
+  return shuffleMC(questions);
+}
+
+// ═══════════════════════════════════════════════════════════════
 // ГЕНЕРАТОРЫ ВОПРОСОВ ДЛЯ БЛОКА PERFEKT
 // ═══════════════════════════════════════════════════════════════
 
@@ -2353,6 +2476,8 @@ function App() {
   const [userAnswers, setUserAnswers] = useState([]);
   // Для текущей плашки ✓/✗
   const [lastVerdict, setLastVerdict] = useState(null); // true | false | null
+  // ─── Блок «Новые»: флаг перемешивания для «Общего изучения» ────────────
+  const [neuShuffle, setNeuShuffle] = useState(false);
 
   // ─── Вычисляемые ────────────────────────────────────────────────────────
   function getActiveTopics() {
@@ -2442,6 +2567,14 @@ function App() {
     setPhase("learn-conj-cards");
   }
 
+  function startLearnConjMiniTest() {
+    const session = buildUnregelMiniTest(CONJUGATIONS);
+    setQuestions(session); setQIdx(0); setUserAns(""); setAnswered(false);
+    setCorrectCount(0); setHintVisible(false); setTiles([]); setChosen([]); setConjAnswers([]);
+    setUserAnswers([]); setLastVerdict(null);
+    setPhase("learn-test");
+  }
+
   function startTestUnregel(levelFilter = null) {
     const session = buildTestSession([], VOCAB, CONJUGATIONS, QUESTIONS, "unregel", levelFilter);
     setQuestions(session); setQIdx(0); setUserAns(""); setAnswered(false);
@@ -2492,6 +2625,47 @@ function App() {
   function goBackToSubblocks() {
     if (blockHasSubblocks(activeBlock)) { setPhase("select-subblock"); setActiveSub(null); }
     else { setPhase("select-block"); setActiveBlock(null); }
+  }
+
+  // ─── Блок «🆕 Новые»: вспомогательные функции ───────────────────────────
+  // Все слова с topic new:new-* отсортированные: noun→verb→adj→adv, затем по topic внутри
+  function getNeuAllVocab() {
+    const POS_ORDER = ["noun", "verb", "adj", "adv"];
+    const allNew = VOCAB.filter(v =>
+      (v.topics || []).some(t => t.startsWith("new:new-"))
+    );
+    allNew.sort((a, b) => {
+      const ai = POS_ORDER.indexOf(a.pos), bi = POS_ORDER.indexOf(b.pos);
+      if (ai !== bi) return (ai === -1 ? 99 : ai) - (bi === -1 ? 99 : bi);
+      const at = (a.topics || []).find(t => !t.startsWith("new:new-")) || "";
+      const bt = (b.topics || []).find(t => !t.startsWith("new:new-")) || "";
+      return at.localeCompare(bt);
+    });
+    return allNew;
+  }
+
+  function startNeuLearnAll(doShuffle) {
+    setNeuShuffle(doShuffle);
+    setActiveSub({ id: "_all", label: "📚 Общее изучение", _neuAll: true });
+    setCardIdx(0); setFlipped(false);
+    setPhase("learn-cards-new");
+  }
+
+  function startNeuTestAll() {
+    const topics = ["new:new-nouns", "new:new-verbs", "new:new-adj-adv"];
+    const autoPool = buildAutoQuestions(topics, VOCAB, CONJUGATIONS);
+    const manualPool = QUESTIONS.filter(q =>
+      q.topic === "trainer:neu" || q.topic.startsWith("trainer:neu:")
+    );
+    const manualSourceIds = new Set(manualPool.map(q => q.sourceId).filter(Boolean));
+    const autoFiltered = autoPool.filter(q => !q.sourceId || !manualSourceIds.has(q.sourceId));
+    const allQ = [...autoFiltered, ...manualPool];
+    const session = shuffleMC(shuffle(allQ));
+    setActiveSub(null);
+    setQuestions(session); setQIdx(0); setUserAns(""); setAnswered(false);
+    setCorrectCount(0); setHintVisible(false); setTiles([]); setChosen([]); setConjAnswers([]);
+    setUserAnswers([]); setLastVerdict(null);
+    setPhase("test-quiz");
   }
 
   function nextCard() {
@@ -2635,6 +2809,8 @@ function App() {
 
   // ─── SELECT SUBBLOCK ────────────────────────────────────────────────────
   function renderSelectSubblock() {
+    const isNeu = activeBlock.id === "neu";
+    const neuAllCount = isNeu ? getNeuAllVocab().length : 0;
     return (
       <div style={S.page}>
         <div style={S.container}>
@@ -2650,11 +2826,31 @@ function App() {
           <h2 style={{ ...S.heading, textAlign: "center" }}>{activeBlock.label}</h2>
           <p style={{ ...S.subheading, textAlign: "center" }}>Выбери тему</p>
 
-          {mode === "test" && (
+          {!isNeu && mode === "test" && (
             <div style={{ textAlign: "center", marginBottom: 24 }}>
               <button style={S.outlineBtn(activeBlock.color)} onClick={startTestAll}>
                 🔥 Тест по всему блоку (без тем)
               </button>
+            </div>
+          )}
+
+          {isNeu && (
+            <div style={{ display: "flex", flexDirection: "column", gap: 10, marginBottom: 16 }}>
+              {mode === "learn" && (
+                <div style={{ ...S.card, borderLeft: `4px solid ${activeBlock.color}`, cursor: "pointer" }}
+                     onClick={() => startNeuLearnAll(false)}>
+                  <div style={S.cardTitle}>📚 Общее изучение</div>
+                  <div style={S.cardMeta}>{neuAllCount} слов · noun → verb → adj → adv</div>
+                </div>
+              )}
+              {mode === "test" && (
+                <div style={{ ...S.card, borderLeft: `4px solid ${activeBlock.color}`, cursor: "pointer" }}
+                     onClick={startNeuTestAll}>
+                  <div style={S.cardTitle}>🎯 Общий тест</div>
+                  <div style={S.cardMeta}>Все новые слова · все уровни вперемешку</div>
+                </div>
+              )}
+              <div style={{ borderTop: `1px solid var(--border)`, margin: "4px 0" }} />
             </div>
           )}
 
@@ -2937,6 +3133,69 @@ function App() {
     );
   }
 
+  // ─── LEARN CARDS NEW (📚 Общее изучение для блока «Новые») ───────────────
+  function renderLearnCardsNew() {
+    const base = getNeuAllVocab();
+    const vocab = neuShuffle ? shuffle([...base]) : base;
+    if (vocab.length === 0) {
+      return <div style={S.page}><div style={S.container}>Нет новых слов.</div></div>;
+    }
+    const item = vocab[cardIdx];
+    return (
+      <div style={S.page}>
+        <div style={S.container}>
+          <TopBar
+            left={<button style={S.outlineBtn(activeBlock.color)} onClick={() => { setPhase("select-subblock"); setActiveSub(null); }}>← Назад</button>}
+            right={<span style={S.muted}>{cardIdx + 1} / {vocab.length}</span>}
+            icon={icon} onTheme={cycleTheme} onHome={goHome} onBack={goBackToSubblocks} />
+          <h2 style={{ ...S.heading, textAlign: "center", marginBottom: 4 }}>📚 Общее изучение</h2>
+          <div style={{ textAlign: "center", marginBottom: 12 }}>
+            <button
+              style={{ ...S.outlineBtn(neuShuffle ? activeBlock.color : "#888"), fontSize: 13, padding: "4px 14px" }}
+              onClick={() => { setNeuShuffle(!neuShuffle); setCardIdx(0); setFlipped(false); }}>
+              🎲 Вперемешку {neuShuffle ? "✓" : ""}
+            </button>
+          </div>
+          <FlipCard item={item} flipped={flipped} onFlip={() => setFlipped(!flipped)} color={activeBlock.color} />
+          <div style={{ display: "flex", gap: 12, justifyContent: "center", marginTop: 20 }}>
+            <button style={S.outlineBtn()} onClick={() => { if (cardIdx > 0) { setCardIdx(cardIdx - 1); setFlipped(false); } }} disabled={cardIdx === 0}>← Назад</button>
+            <button style={S.primaryBtn(activeBlock.color)} onClick={() => {
+              if (cardIdx + 1 >= vocab.length) {
+                // Мини-тест по всем новым (все 3 подблока)
+                const topics = ["new:new-nouns", "new:new-verbs", "new:new-adj-adv"];
+                const autoPool = buildAutoQuestions(topics, VOCAB, CONJUGATIONS);
+                const session = shuffleMC(shuffle(autoPool)).slice(0, 10);
+                setActiveSub(null);
+                setQuestions(session); setQIdx(0); setUserAns(""); setAnswered(false);
+                setCorrectCount(0); setHintVisible(false); setTiles([]); setChosen([]); setConjAnswers([]);
+                setUserAnswers([]); setLastVerdict(null);
+                setPhase("learn-test");
+              } else {
+                setCardIdx(cardIdx + 1); setFlipped(false);
+              }
+            }}>
+              {cardIdx + 1 >= vocab.length ? "К мини-тесту →" : "Дальше →"}
+            </button>
+          </div>
+          <div style={{ display: "flex", justifyContent: "center", marginTop: 12 }}>
+            <button style={S.outlineBtn("#888")} onClick={() => {
+              const topics = ["new:new-nouns", "new:new-verbs", "new:new-adj-adv"];
+              const autoPool = buildAutoQuestions(topics, VOCAB, CONJUGATIONS);
+              const session = shuffleMC(shuffle(autoPool)).slice(0, 10);
+              setActiveSub(null);
+              setQuestions(session); setQIdx(0); setUserAns(""); setAnswered(false);
+              setCorrectCount(0); setHintVisible(false); setTiles([]); setChosen([]); setConjAnswers([]);
+              setUserAnswers([]); setLastVerdict(null);
+              setPhase("learn-test");
+            }}>
+              🎯 Перейти к тесту
+            </button>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
   // ─── LEARN CONJ CARDS (для unregel) ─────────────────────────────────────
   function renderLearnConjCards() {
     if (CONJUGATIONS.length === 0) {
@@ -2963,15 +3222,18 @@ function App() {
             <button style={S.primaryBtn(activeBlock.color)}
                     onClick={() => {
                       if (cardIdx + 1 >= CONJUGATIONS.length) {
-                        // Конец карточек: возврат к блокам
-                        setPhase("select-block");
-                        setActiveBlock(null);
+                        startLearnConjMiniTest();
                       } else {
                         setCardIdx(cardIdx + 1);
                         setFlipped(false);
                       }
                     }}>
-              {cardIdx + 1 >= CONJUGATIONS.length ? "Готово →" : "Дальше →"}
+              {cardIdx + 1 >= CONJUGATIONS.length ? "К мини-тесту →" : "Дальше →"}
+            </button>
+          </div>
+          <div style={{ display: "flex", justifyContent: "center", marginTop: 12 }}>
+            <button style={S.outlineBtn("#888")} onClick={startLearnConjMiniTest}>
+              🎯 Перейти к тесту
             </button>
           </div>
         </div>
@@ -3252,8 +3514,14 @@ function App() {
             <div style={{ marginTop: 24, display: "flex", gap: 12, justifyContent: "center", flexWrap: "wrap" }}>
               <button style={S.outlineBtn(activeBlock.color)} onClick={goBackToSubblocks}>К темам</button>
               <button style={S.primaryBtn(activeBlock.color)}
-                      onClick={() => { if (mode === "learn") startLearnMiniTest();
-                                       else startTest(activeSub); }}>
+                      onClick={() => {
+                        if (mode === "learn") {
+                          if (activeBlock && activeBlock.kind === "conjugations") startLearnConjMiniTest();
+                          else startLearnMiniTest();
+                        } else {
+                          startTest(activeSub);
+                        }
+                      }}>
                 Ещё раз →
               </button>
             </div>
@@ -3327,6 +3595,7 @@ function App() {
       {phase === "select-test-type" && activeBlock && renderSelectTestType()}
       {phase === "block-start" && activeBlock && renderBlockStart()}
       {phase === "learn-cards" && activeBlock && renderLearnCards()}
+      {phase === "learn-cards-new" && activeBlock && renderLearnCardsNew()}
       {phase === "learn-conj-cards" && activeBlock && renderLearnConjCards()}
       {(phase === "learn-test" || phase === "test-quiz") && activeBlock && renderQuiz()}
       {phase === "results" && activeBlock && renderResults()}
