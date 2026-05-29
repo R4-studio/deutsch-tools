@@ -4,35 +4,48 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Тренажёр — Deutsch Tools</title>
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🇩🇪</text></svg>">
+<meta property="og:title" content="Тренажёр — Deutsch Tools">
+<meta property="og:description" content="Тренажёр по немецкому: тесты, карточки, спряжения">
+<meta property="og:type" content="website">
 <script>
 (function() {
   var saved = localStorage.getItem('theme') || 'auto';
   document.documentElement.classList.add('theme-' + saved);
 })();
 </script>
+<link rel="stylesheet" href="theme.css?v=20260529">
 
 <script crossorigin src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
 <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
-<script src="data.js?v=20260524"></script>
+<script src="data.js?v=20260529"></script>
 <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
 
 <style>
 html, body {
   margin: 0; padding: 0;
-  background: #f0f2f5;
   font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-}
-.theme-dark body { background: #1a1a1a; }
-@media (prefers-color-scheme: dark) {
-  html:not(.theme-light) body { background: #1a1a1a; }
 }
 #root { min-height: 100vh; }
 .loader {
   position: fixed;
   top: 50%; left: 50%;
   transform: translate(-50%, -50%);
-  color: #888;
+  color: var(--text-muted, #888);
   font-size: 14px;
+}
+/* ─── Flip-карточки ─────────────────────────────────────── */
+.flip-card-inner { transition: transform 0.6s; transform-style: preserve-3d; position: relative; width: 100%; height: 100%; }
+.flip-card-inner.flipped { transform: rotateY(180deg); }
+.flip-face { position: absolute; width: 100%; height: 100%; backface-visibility: hidden; -webkit-backface-visibility: hidden; display: flex; align-items: center; justify-content: center; padding: 24px; border-radius: 14px; }
+.flip-face.back { transform: rotateY(180deg); }
+input:focus, button:focus { outline: 2px solid var(--accent); outline-offset: 1px; }
+/* ─── TopBar кнопки ─────────────────────────────────────── */
+.tb-btn { flex-shrink: 0; }
+.tb-row { flex-shrink: 0; }
+@media (max-width: 600px) {
+  .tb-btn { padding: 6px 8px !important; font-size: 16px !important; }
+  .tb-row { gap: 6px !important; }
 }
 </style>
 </head>
@@ -103,111 +116,7 @@ function arrangeByLevel(questions) {
 // ═══════════════════════════════════════════════════════════════
 
 
-// ТЕМИЗАЦИЯ — CSS-переменные (взято из шпоры v30)
-// ═══════════════════════════════════════════════════════════════
-const THEME_CSS = `
-:root {
-  --bg-body: #f0f2f5;
-  --bg-panel: #fff;
-  --bg-card: #fff;
-  --bg-tab: #eee;
-  --bg-input: #fff;
-  --bg-rule-box: #fdfdfe;
-  --bg-row-hover: #f9fdff;
-  --bg-warning: #fff5f5;
-  --bg-highlight: #ffeaa7;
-  --bg-soft: #f7f8fa;
-  --text-main: #333;
-  --text-muted: #888;
-  --text-title: #2c3e50;
-  --border-soft: #e0e4ed;
-  --border-input: #ccc;
-  --accent: #3498db;
-  --accent-dark: #2c80b4;
-  --green: #1a7a4a;
-  --green-bg: #d5f0e3;
-  --red: #c0392b;
-  --red-bg: #fde8e8;
-  --badge-m-bg: #d1e9ff; --badge-m-fg: #0056b3;
-  --badge-f-bg: #ffd1dc; --badge-f-fg: #a11;
-  --badge-n-bg: #d1ffd1; --badge-n-fg: #006400;
-  --badge-pl-bg: #fff3cd; --badge-pl-fg: #856404;
-  --shadow: 0 2px 5px rgba(0,0,0,0.05);
-  --shadow-card: 0 2px 12px rgba(0,0,0,0.07);
-}
-.theme-dark {
-  --bg-body: #0e0e10;
-  --bg-panel: #17171a;
-  --bg-card: #17171a;
-  --bg-tab: #1f1f23;
-  --bg-input: #1a1a1d;
-  --bg-rule-box: #1c1c20;
-  --bg-row-hover: #202028;
-  --bg-warning: #2a1818;
-  --bg-highlight: #5a4a1f;
-  --bg-soft: #1a1a1d;
-  --text-main: #e6e6e8;
-  --text-muted: #a0a0a8;
-  --text-title: #cfd6e0;
-  --border-soft: #2a2a2e;
-  --border-input: #333338;
-  --accent: #4ade80;
-  --accent-dark: #22c55e;
-  --green: #4ade80;
-  --green-bg: #1a3a26;
-  --red: #ff8a7a;
-  --red-bg: #3a1818;
-  --badge-m-bg: #1a3a5c; --badge-m-fg: #8ec5ff;
-  --badge-f-bg: #4a1a26; --badge-f-fg: #ffa3b8;
-  --badge-n-bg: #1a3a1a; --badge-n-fg: #8eff8e;
-  --badge-pl-bg: #4a3a14; --badge-pl-fg: #ffd966;
-  --shadow: 0 2px 5px rgba(0,0,0,0.4);
-  --shadow-card: 0 2px 12px rgba(0,0,0,0.4);
-}
-@media (prefers-color-scheme: dark) {
-  .theme-auto {
-    --bg-body: #0e0e10;
-    --bg-panel: #17171a;
-    --bg-card: #17171a;
-    --bg-tab: #1f1f23;
-    --bg-input: #1a1a1d;
-    --bg-rule-box: #1c1c20;
-    --bg-row-hover: #202028;
-    --bg-warning: #2a1818;
-    --bg-highlight: #5a4a1f;
-    --bg-soft: #1a1a1d;
-    --text-main: #e6e6e8;
-    --text-muted: #a0a0a8;
-    --text-title: #cfd6e0;
-    --border-soft: #2a2a2e;
-    --border-input: #333338;
-    --accent: #4ade80;
-    --accent-dark: #22c55e;
-    --green: #4ade80;
-    --green-bg: #1a3a26;
-    --red: #ff8a7a;
-    --red-bg: #3a1818;
-    --badge-m-bg: #1a3a5c; --badge-m-fg: #8ec5ff;
-    --badge-f-bg: #4a1a26; --badge-f-fg: #ffa3b8;
-    --badge-n-bg: #1a3a1a; --badge-n-fg: #8eff8e;
-    --badge-pl-bg: #4a3a14; --badge-pl-fg: #ffd966;
-    --shadow: 0 2px 5px rgba(0,0,0,0.4);
-    --shadow-card: 0 2px 12px rgba(0,0,0,0.4);
-  }
-}
-* { box-sizing: border-box; }
-.flip-card-inner { transition: transform 0.6s; transform-style: preserve-3d; position: relative; width: 100%; height: 100%; }
-.flip-card-inner.flipped { transform: rotateY(180deg); }
-.flip-face { position: absolute; width: 100%; height: 100%; backface-visibility: hidden; -webkit-backface-visibility: hidden; display: flex; align-items: center; justify-content: center; padding: 24px; border-radius: 14px; }
-.flip-face.back { transform: rotateY(180deg); }
-input:focus, button:focus { outline: 2px solid var(--accent); outline-offset: 1px; }
-.tb-btn { flex-shrink: 0; }
-.tb-row { flex-shrink: 0; }
-@media (max-width: 600px) {
-  .tb-btn { padding: 6px 8px !important; font-size: 16px !important; }
-  .tb-row { gap: 6px !important; }
-}
-`;
+
 
 
 const S = {
@@ -216,7 +125,7 @@ const S = {
     background: "var(--bg-body)",
     color: "var(--text-main)",
     fontFamily: "system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif",
-    padding: "20px 16px",
+    padding: "20px 16px 60px 16px",
   },
   container: { maxWidth: 760, margin: "0 auto" },
   card: {
@@ -661,14 +570,11 @@ function useTheme() {
 // ═══════════════════════════════════════════════════════════════
 // КОМПОНЕНТ: ШАПКА С КНОПКОЙ ТЕМЫ И ДОМ
 // ═══════════════════════════════════════════════════════════════
-function TopBar({ left, right, icon, onTheme, onHome, onBack }) {
+function TopBar({ left, right, icon, onTheme, onHome }) {
   return (
     <div style={S.topBar}>
       <div className="tb-row" style={{ display: "flex", gap: 8, alignItems: "center" }}>
         <a href="index.html" className="tb-btn" style={S.closeBtn} title="Выйти из тренажёра">❌</a>
-        {onBack && (
-          <button className="tb-btn" style={S.homeBtn} onClick={onBack} title="Уровень выше">🔙</button>
-        )}
         {onHome && (
           <button className="tb-btn" style={S.homeBtn} onClick={onHome} title="На главную тренажёра">🏠</button>
         )}
@@ -691,7 +597,7 @@ function ConjFlipCard({ conj, flipped, onFlip, color }) {
   return (
     <div
       onClick={onFlip}
-      style={{ perspective: 1000, cursor: "pointer", height: 280, marginBottom: 14 }}
+      style={{ perspective: 1000, cursor: "pointer", height: 280, marginBottom: 14, position: "relative", zIndex: 1 }}
     >
       <div className={"flip-card-inner" + (flipped ? " flipped" : "")}>
         <div className="flip-face front"
@@ -760,6 +666,8 @@ function FlipCard({ item, flipped, onFlip, color }) {
         cursor: "pointer",
         height: 280,
         marginBottom: 14,
+        position: "relative",
+        zIndex: 1,
       }}
     >
       <div className={"flip-card-inner" + (flipped ? " flipped" : "")}>
@@ -857,6 +765,18 @@ function nounStem(article_de) {
 //   5. -eln: stem - "n", ich теряет -e-           (sammeln → ich sammle, wir sammeln)
 //   6. -ern: stem - "n", wir/Sie добавляют "n"    (wandern → ich wandere, wir wandern)
 function conjRegelmaessig(infinitive, pronoun) {
+  // Защита: эти глаголы должны браться из CONJUGATIONS, а не из автогенератора
+  const UNREGEL = new Set([
+    "sein", "haben", "werden", "wissen", "mögen", "müssen", "können",
+    "dürfen", "sollen", "wollen", "lassen", "fahren", "laufen", "schlafen",
+    "lesen", "sehen", "geben", "nehmen", "kommen", "gehen", "stehen",
+    "tragen", "waschen", "fallen", "halten", "schreiben",
+  ]);
+  if (UNREGEL.has(infinitive)) {
+    console.warn(`conjRegelmaessig: «${infinitive}» — нерегулярный, должен браться из CONJUGATIONS`);
+    return infinitive;  // вернём инфинитив, лучше чем мусор
+  }
+
   const isEln = infinitive.endsWith("eln");
   const isErn = infinitive.endsWith("ern");
   const isElNorRN = isEln || isErn;
@@ -2478,7 +2398,29 @@ function App() {
   const [lastVerdict, setLastVerdict] = useState(null); // true | false | null
   // ─── Блок «Новые»: флаг перемешивания для «Общего изучения» ────────────
   const [neuShuffle, setNeuShuffle] = useState(false);
+  const [lastTestLevel, setLastTestLevel] = useState(null); // last selected level (1-5)
+  const [lastTestType, setLastTestType] = useState(null);   // last combo: 'partizip2'|'praesens'|'general'
+  const [lastTestBlockId, setLastTestBlockId] = useState(null); // block/sub the choice belongs to
 
+// ─── Dev-режим ──────────────────────────────────────────────────────────
+  const [devMode, setDevMode] = useState(false);
+  const [devTapCount, setDevTapCount] = useState(0);
+  const [devModalPool, setDevModalPool] = useState(null); // null = закрыто
+
+  function handleDevTap() {
+    const next = devTapCount + 1;
+    if (next >= 5) {
+      setDevMode(prev => {
+        const newVal = !prev;
+        if (!newVal) setDevModalPool(null);
+        return newVal;
+      });
+      setDevTapCount(0);
+    } else {
+      setDevTapCount(next);
+    }
+  }
+  
   // ─── Вычисляемые ────────────────────────────────────────────────────────
   function getActiveTopics() {
     if (!activeBlock) return [];
@@ -2547,14 +2489,14 @@ function App() {
         setPhase("select-subblock");
       } else {
         // В learn-режиме пока нет карточек для Perfekt — отправляем в шпору
-        alert("Карточки для Прошедшего времени пока в шпаргалке. Используй тест!");
+        console.warn("Карточки для Прошедшего времени пока в шпаргалке. Используй тест!");
         setActiveBlock(null);
         setPhase("select-block");
       }
       return;
     }
     if (b.kind) {
-      alert("Блок «" + b.label + "» — пока только в шпоре. В тренажёре появится позже.");
+      console.warn("Блок «" + b.label + "» — пока только в шпоре. В тренажёре появится позже.");
       return;
     }
     if (blockHasSubblocks(b)) setPhase("select-subblock");
@@ -2660,8 +2602,15 @@ function App() {
     const manualSourceIds = new Set(manualPool.map(q => q.sourceId).filter(Boolean));
     const autoFiltered = autoPool.filter(q => !q.sourceId || !manualSourceIds.has(q.sourceId));
     const allQ = [...autoFiltered, ...manualPool];
+    if (allQ.length === 0) {
+      alert("Нет вопросов для новых слов. Добавь слова в буфер «Neu».");
+      return;
+    }
     const session = shuffleMC(shuffle(allQ));
     setActiveSub(null);
+    setLastTestType("general");
+    setLastTestLevel(null);
+    setLastTestBlockId("neu");
     setQuestions(session); setQIdx(0); setUserAns(""); setAnswered(false);
     setCorrectCount(0); setHintVisible(false); setTiles([]); setChosen([]); setConjAnswers([]);
     setUserAnswers([]); setLastVerdict(null);
@@ -2744,13 +2693,87 @@ function App() {
   }
 
   // ─── HOME ──────────────────────────────────────────────────────────────
+  // ─── DEV MODAL (универсальная) ──────────────────────────────────────────
+  function renderDevModal() {
+    if (!devModalPool) return null;
+    const devPool = [...devModalPool].sort((a, b) => (a.difficulty||1) - (b.difficulty||1));
+    const byLvl = [1,2,3,4,5].map(lvl => ({
+      lvl,
+      qs: devPool.filter(q => (q.difficulty||1) === lvl)
+    }));
+    const TYPE_COLOR = { mc: "#1a7a4a", fill: "#3498db", tiles: "#9b59b6", conj: "#e67e22" };
+    return (
+      <div style={{
+        position: "fixed", inset: 0, background: "var(--bg-overlay)",
+        zIndex: 1000, overflowY: "auto", padding: "16px"
+      }}>
+        <div style={{
+          background: "var(--bg-card)", borderRadius: 14,
+          padding: "20px", maxWidth: 760, margin: "0 auto"
+        }}>
+          <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 16 }}>
+            <div style={{ fontWeight: 700, fontSize: 18 }}>
+              🛠 Dev: все вопросы · {devPool.length} шт
+            </div>
+            <button style={S.outlineBtn("#888")} onClick={() => setDevModalPool(null)}>✕ Закрыть</button>
+          </div>
+          {byLvl.map(({ lvl, qs }) => {
+            if (qs.length === 0) return null;
+            const lvlInfo = LEVEL_LABELS[lvl] || LEVEL_LABELS[1];
+            return (
+              <div key={lvl} style={{ marginBottom: 24 }}>
+                <div style={{ fontWeight: 700, color: lvlInfo.color, marginBottom: 8, fontSize: 15 }}>
+                  {lvlInfo.name} · {qs.length} вопросов
+                </div>
+                {qs.map((q, i) => {
+                  const typeColor = TYPE_COLOR[q.type] || "#888";
+                  const correct = formatCorrectAnswer(q);
+                  return (
+                    <div key={i} style={{
+                      borderLeft: `3px solid ${typeColor}`,
+                      padding: "8px 12px", marginBottom: 8,
+                      background: "var(--bg-soft)", borderRadius: "0 8px 8px 0"
+                    }}>
+                      <div style={{ display: "flex", gap: 8, marginBottom: 4, flexWrap: "wrap" }}>
+                        <span style={{ background: typeColor, color: "white", borderRadius: 4, padding: "1px 7px", fontSize: 11, fontWeight: 700 }}>
+                          {q.type}
+                        </span>
+                        <span style={{ fontSize: 11, color: "var(--text-muted)" }}>
+                          {q.auto ? "auto" : "manual"}
+                        </span>
+                        {q.topic && <span style={{ fontSize: 11, color: "var(--text-muted)" }}>{q.topic}</span>}
+                        {q.sourceId && <span style={{ fontSize: 11, color: "var(--text-muted)" }}>id:{q.sourceId}</span>}
+                      </div>
+                      <div style={{ fontSize: 14, marginBottom: 4, color: "var(--text-main)" }}>{q.q}</div>
+                      {correct && (
+                        <div style={{ fontSize: 13, color: "var(--text-main)", opacity: 0.7 }}>
+                          ✓ {correct}
+                        </div>
+                      )}
+                    </div>
+                  );
+                })}
+              </div>
+            );
+          })}
+        </div>
+      </div>
+    );
+  }
+
   function renderHome() {
     return (
       <div style={S.page}>
         <div style={S.container}>
           <TopBar left={null} right={null} icon={icon} onTheme={cycleTheme} />
           <div style={{ textAlign: "center", marginBottom: 28 }}>
-            <div style={{ fontSize: 52, marginBottom: 6 }}>🇩🇪</div>
+            <div
+              style={{ fontSize: 52, marginBottom: 6, cursor: "default", userSelect: "none" }}
+              onClick={handleDevTap}
+              title=""
+  >
+              🇩🇪{devMode && <span style={{ fontSize: 12, color: "var(--text-muted)", marginLeft: 6 }}>DEV</span>}
+          </div>
             <h1 style={S.heading}>Тренажёр немецкого</h1>
             <p style={S.subheading}>Выбери режим</p>
           </div>
@@ -2827,12 +2850,31 @@ function App() {
           <p style={{ ...S.subheading, textAlign: "center" }}>Выбери тему</p>
 
           {!isNeu && mode === "test" && (
-            <div style={{ textAlign: "center", marginBottom: 24 }}>
-              <button style={S.outlineBtn(activeBlock.color)} onClick={startTestAll}>
-                🔥 Тест по всему блоку (без тем)
-              </button>
+            <div style={{ marginBottom: 16 }}>
+              <div style={{ ...S.card, borderLeft: `4px solid ${activeBlock.color}`, cursor: "pointer" }}
+                   onClick={startTestAll}>
+                <div style={S.cardTitle}>🔥 Тест по всему блоку</div>
+                <div style={S.cardMeta}>Все темы вперемешку · без разбивки</div>
+              </div>
             </div>
           )}
+
+
+          
+          {devMode && isNeu && (() => {
+            const neuTopics = ["new:new-nouns", "new:new-verbs", "new:new-adj-adv"];
+            const neuPool = [
+              ...buildAutoQuestions(neuTopics, VOCAB, CONJUGATIONS),
+              ...QUESTIONS.filter(q => q.topic === "trainer:neu" || q.topic.startsWith("trainer:neu:"))
+            ];
+            return (
+              <button
+                style={{ ...S.outlineBtn("#888"), width: "100%", marginBottom: 12, fontSize: 13 }}
+                onClick={() => setDevModalPool(neuPool)}>
+                🛠 Dev: показать все вопросы Neu ({neuPool.length})
+              </button>
+            );
+          })()}
 
           {isNeu && (
             <div style={{ display: "flex", flexDirection: "column", gap: 10, marginBottom: 16 }}>
@@ -2844,11 +2886,24 @@ function App() {
                 </div>
               )}
               {mode === "test" && (
-                <div style={{ ...S.card, borderLeft: `4px solid ${activeBlock.color}`, cursor: "pointer" }}
-                     onClick={startNeuTestAll}>
-                  <div style={S.cardTitle}>🎯 Общий тест</div>
-                  <div style={S.cardMeta}>Все новые слова · все уровни вперемешку</div>
-                </div>
+                <button
+                  style={{
+                    background: activeBlock.color,
+                    color: "white",
+                    border: "none",
+                    padding: "20px 16px",
+                    borderRadius: 14,
+                    cursor: "pointer",
+                    fontFamily: "inherit",
+                    textAlign: "center",
+                    fontWeight: 700,
+                    width: "100%",
+                  }}
+                  onClick={startNeuTestAll}>
+                  <div style={{ fontSize: 26, marginBottom: 4 }}>🎯</div>
+                  <div style={{ fontSize: 18, marginBottom: 2 }}>Тест по блоку</div>
+                  <div style={{ fontSize: 13, opacity: 0.85 }}>Все новые слова · все уровни вперемешку</div>
+                </button>
               )}
               <div style={{ borderTop: `1px solid var(--border)`, margin: "4px 0" }} />
             </div>
@@ -2910,10 +2965,13 @@ function App() {
     const blockId = activeSub ? `${activeBlock.id}:${activeSub.id}` : activeBlock.id;
 
     // Показывать ли кнопки Partizip II и Präsens
+    // Для блока «Neu» не показываем — только общий тест
     const showVerbCombos =
-      activeBlock.kind === "conjugations" ||
-      activeBlock.id === "verbs" ||
-      (activeSub && activeSub.id === "verbs");
+      activeBlock.id !== "neu" && (
+        activeBlock.kind === "conjugations" ||
+        activeBlock.id === "verbs" ||
+        (activeSub && activeSub.id === "verbs")
+      );
 
     // Счётчики для disabled-состояния
     const p2Count  = showVerbCombos ? countPartizip2Available(blockId, topics) : 0;
@@ -2956,6 +3014,9 @@ function App() {
 
     // Запустить комбо-тест по типу
     function startCombo(type) {
+      setLastTestType(type);
+      setLastTestLevel(null);
+      setLastTestBlockId(blockId);
       let session;
       if (type === "partizip2") {
         session = buildPartizip2TestSession(blockId, topics);
@@ -2987,6 +3048,8 @@ function App() {
         width: "100%",
       };
     }
+    
+
 
     return (
       <div style={S.page}>
@@ -3008,51 +3071,72 @@ function App() {
             }
             right={<span style={S.muted}>{modeLabel}</span>}
             icon={icon} onTheme={cycleTheme} onHome={goHome} />
-          <h2 style={{ ...S.heading, textAlign: "center" }}>{heading}</h2>
+          
+          {devMode && (
+            <button
+              style={{ ...S.outlineBtn("#888"), width: "100%", marginBottom: 12, fontSize: 13 }}
+              onClick={() => setDevModalPool(allPool)}>
+              🛠 Dev: показать все вопросы ({allPool.length})
+            </button>
+          )}
+            
+            <h2 style={{ ...S.heading, textAlign: "center" }}>{heading}</h2>
           <p style={{ ...S.subheading, textAlign: "center" }}>Выбери тест</p>
 
-          {/* ── Комбо-кнопки ───────────────────────────────────────────── */}
-          <div style={{
-            display: "grid",
-            gridTemplateColumns: showVerbCombos ? "1fr 1fr 1fr" : "1fr",
-            gap: 10,
-            marginBottom: 24,
-          }}>
-            {showVerbCombos && (
-              <>
-                {/* Partizip II */}
-                <button
-                  disabled={p2Count === 0}
-                  style={comboBtnStyle(p2Count === 0, "#8e44ad")}
-                  onClick={() => startCombo("partizip2")}>
-                  <div style={{ fontSize: 20, marginBottom: 4 }}>⚙️</div>
-                  <div style={{ fontSize: 13 }}>Partizip II</div>
-                  <div style={{ fontSize: 11, marginTop: 4, opacity: 0.85 }}>
-                    {p2Count === 0 ? "0 вопросов" : "30 вопросов"}
-                  </div>
-                </button>
-                {/* Präsens */}
-                <button
-                  disabled={prCount === 0}
-                  style={comboBtnStyle(prCount === 0, "#2980b9")}
-                  onClick={() => startCombo("praesens")}>
-                  <div style={{ fontSize: 20, marginBottom: 4 }}>📝</div>
-                  <div style={{ fontSize: 13 }}>Präsens</div>
-                  <div style={{ fontSize: 11, marginTop: 4, opacity: 0.85 }}>
-                    {prCount === 0 ? "0 вопросов" : "30 вопросов"}
-                  </div>
-                </button>
-              </>
-            )}
-            {/* Общий тест */}
-            <button
-              style={comboBtnStyle(false, "#1a7a4a")}
-              onClick={() => startCombo("general")}>
-              <div style={{ fontSize: 20, marginBottom: 4 }}>🎯</div>
-              <div style={{ fontSize: 13 }}>Общий тест</div>
-              <div style={{ fontSize: 11, marginTop: 4, opacity: 0.85 }}>30 вопросов</div>
-            </button>
-          </div>
+          {/* ── Главная кнопка: Тест по блоку ──────────────────────────── */}
+          <button
+            style={{
+              background: activeBlock.color,
+              color: "white",
+              border: "none",
+              padding: "20px 16px",
+              borderRadius: 14,
+              cursor: "pointer",
+              fontFamily: "inherit",
+              textAlign: "center",
+              fontWeight: 700,
+              width: "100%",
+              marginBottom: 16,
+            }}
+            onClick={() => startCombo("general")}>
+            <div style={{ fontSize: 26, marginBottom: 4 }}>🎯</div>
+            <div style={{ fontSize: 18, marginBottom: 2 }}>Тест по блоку</div>
+            <div style={{ fontSize: 13, opacity: 0.85 }}>30 вопросов</div>
+          </button>
+
+          {/* ── Комбо-кнопки (Partizip / Präsens) ───────────────────────── */}
+          {showVerbCombos && (
+            <div style={{
+              display: "grid",
+              gridTemplateColumns: "1fr 1fr",
+              gap: 10,
+              marginBottom: 24,
+            }}>
+              {/* Partizip II */}
+              <button
+                disabled={p2Count === 0}
+                style={comboBtnStyle(p2Count === 0, "#8e44ad")}
+                onClick={() => startCombo("partizip2")}>
+                <div style={{ fontSize: 20, marginBottom: 4 }}>⚙️</div>
+                <div style={{ fontSize: 13 }}>Partizip II</div>
+                <div style={{ fontSize: 11, marginTop: 4, opacity: 0.85 }}>
+                  {p2Count === 0 ? "0 вопросов" : "30 вопросов"}
+                </div>
+              </button>
+              {/* Präsens */}
+              <button
+                disabled={prCount === 0}
+                style={comboBtnStyle(prCount === 0, "#2980b9")}
+                onClick={() => startCombo("praesens")}>
+                <div style={{ fontSize: 20, marginBottom: 4 }}>📝</div>
+                <div style={{ fontSize: 13 }}>Präsens</div>
+                <div style={{ fontSize: 11, marginTop: 4, opacity: 0.85 }}>
+                  {prCount === 0 ? "0 вопросов" : "30 вопросов"}
+                </div>
+              </button>
+            </div>
+          )}
+          {!showVerbCombos && <div style={{ marginBottom: 8 }} />}
 
           <div style={{ ...S.subheading, textAlign: "center", marginBottom: 12 }}>
             или по одному уровню
@@ -3068,18 +3152,20 @@ function App() {
                   key={li.lvl}
                   disabled={!hasAny}
                   onClick={() => {
+                    setLastTestLevel(li.lvl);
+                    setLastTestBlockId(activeSub ? `${activeBlock.id}:${activeSub.id}` : activeBlock.id);
                     if (activeBlock.kind === "conjugations") startTestUnregel(li.lvl);
                     else startTest(activeSub, li.lvl);
                   }}
                   style={{
                     display: "flex", alignItems: "center", justifyContent: "space-between",
                     padding: "14px 18px",
-                    background: hasAny ? "var(--bg-card)" : "var(--bg-soft)",
+                    background: (lastTestLevel === li.lvl && lastTestBlockId === blockId) ? li.color : (hasAny ? "var(--bg-card)" : "var(--bg-soft)"),
                     border: `2px solid ${hasAny ? li.color : "var(--border-soft)"}`,
                     borderRadius: 12,
                     cursor: hasAny ? "pointer" : "not-allowed",
                     opacity: hasAny ? 1 : 0.5,
-                    color: "var(--text-main)",
+                    color: (lastTestLevel === li.lvl && lastTestBlockId === blockId) ? "white" : "var(--text-main)",
                     fontFamily: "inherit",
                     textAlign: "left",
                   }}>
@@ -3115,7 +3201,7 @@ function App() {
           <TopBar
             left={<button style={S.outlineBtn(activeBlock.color)} onClick={() => setPhase("block-start")}>← Назад</button>}
             right={<span style={S.muted}>{cardIdx + 1} / {vocab.length}</span>}
-            icon={icon} onTheme={cycleTheme} onHome={goHome} onBack={goBackToSubblocks} />
+            icon={icon} onTheme={cycleTheme} onHome={goHome} />
           <FlipCard item={item} flipped={flipped} onFlip={() => setFlipped(!flipped)} color={activeBlock.color} />
           <div style={{ display: "flex", gap: 12, justifyContent: "center", marginTop: 20 }}>
             <button style={S.outlineBtn()} onClick={prevCard} disabled={cardIdx === 0}>← Назад</button>
@@ -3147,7 +3233,7 @@ function App() {
           <TopBar
             left={<button style={S.outlineBtn(activeBlock.color)} onClick={() => { setPhase("select-subblock"); setActiveSub(null); }}>← Назад</button>}
             right={<span style={S.muted}>{cardIdx + 1} / {vocab.length}</span>}
-            icon={icon} onTheme={cycleTheme} onHome={goHome} onBack={goBackToSubblocks} />
+            icon={icon} onTheme={cycleTheme} onHome={goHome} />
           <h2 style={{ ...S.heading, textAlign: "center", marginBottom: 4 }}>📚 Общее изучение</h2>
           <div style={{ textAlign: "center", marginBottom: 12 }}>
             <button
@@ -3213,7 +3299,7 @@ function App() {
               </button>
             }
             right={<span style={S.muted}>{cardIdx + 1} / {CONJUGATIONS.length}</span>}
-            icon={icon} onTheme={cycleTheme} onHome={goHome} onBack={goBackToSubblocks} />
+            icon={icon} onTheme={cycleTheme} onHome={goHome} />
           <ConjFlipCard conj={conj} flipped={flipped}
                         onFlip={() => setFlipped(!flipped)}
                         color={activeBlock.color} />
@@ -3250,7 +3336,7 @@ function App() {
             <TopBar
               left={<button style={S.outlineBtn(activeBlock.color)} onClick={goBackToSubblocks}>← Назад</button>}
               right={<span style={S.muted}>{modeLabel}</span>}
-              icon={icon} onTheme={cycleTheme} onHome={goHome} onBack={goBackToSubblocks} />
+              icon={icon} onTheme={cycleTheme} onHome={goHome} />
             <div style={{ textAlign: "center", marginTop: 40 }}>
               <p>Нет вопросов для этого блока.</p>
               <button style={S.primaryBtn(activeBlock.color)} onClick={goBackToSubblocks}>Назад</button>
@@ -3286,7 +3372,7 @@ function App() {
               </button>
             }
             right={<span style={S.muted}>{qIdx + 1} / {questions.length} · ✓ {correctCount}</span>}
-            icon={icon} onTheme={cycleTheme} onHome={goHome} onBack={goBackToSubblocks} />
+            icon={icon} onTheme={cycleTheme} onHome={goHome} />
           <div style={{ textAlign: "center", color: "var(--text-muted)", fontSize: 13, marginBottom: 12 }}>
             {subLabel} · {modeLabel.includes("Тест") ? "Тестирование" : "Изучение"}
           </div>
@@ -3502,7 +3588,7 @@ function App() {
           <TopBar
             left={<button style={S.outlineBtn(activeBlock.color)} onClick={goHome}>← На главную</button>}
             right={<span style={S.muted}>{modeLabel}</span>}
-            icon={icon} onTheme={cycleTheme} onHome={goHome} onBack={goBackToSubblocks} />
+            icon={icon} onTheme={cycleTheme} onHome={goHome} />
           <div style={{ ...S.questionCard, textAlign: "center", padding: 40 }}>
             <div style={{ fontSize: 64, marginBottom: 16 }}>
               {pct >= 80 ? "🎉" : pct >= 50 ? "👍" : "💪"}
@@ -3587,8 +3673,6 @@ function App() {
   // ─── MAIN SWITCH ────────────────────────────────────────────────────────
   return (
     <>
-      <style>{THEME_CSS}</style>
-
       {phase === "home" && renderHome()}
       {phase === "select-block" && renderSelectBlock()}
       {phase === "select-subblock" && activeBlock && blockHasSubblocks(activeBlock) && renderSelectSubblock()}
@@ -3599,6 +3683,7 @@ function App() {
       {phase === "learn-conj-cards" && activeBlock && renderLearnConjCards()}
       {(phase === "learn-test" || phase === "test-quiz") && activeBlock && renderQuiz()}
       {phase === "results" && activeBlock && renderResults()}
+      {renderDevModal()}
     </>
   );
 }

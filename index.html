@@ -4,57 +4,12 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Deutsch Tools — Шпаргалка и тренажёр по немецкому</title>
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🇩🇪</text></svg>">
+<meta property="og:title" content="Deutsch Tools — Шпаргалка и тренажёр по немецкому">
+<meta property="og:description" content="Бесплатные инструменты для изучения немецкого: шпаргалка и тренажёр">
+<meta property="og:type" content="website">
+<link rel="stylesheet" href="theme.css?v=1">
 <style>
-/* ─── Переменные тем (синхронизированы со шпорой) ──────────── */
-:root {
-  --bg-body: #f0f2f5;
-  --bg-card: #fff;
-  --text-main: #333;
-  --text-muted: #888;
-  --text-title: #2c3e50;
-  --border-soft: #e0e4ed;
-  --accent: #3498db;
-  --accent-dark: #2c80b4;
-  --green: #1a7a4a;
-  --green-dark: #146e3f;
-  --shadow: 0 2px 8px rgba(0,0,0,0.08);
-  --shadow-hover: 0 4px 16px rgba(0,0,0,0.12);
-  --shadow-modal: 0 8px 32px rgba(0,0,0,0.15);
-}
-.theme-dark {
-  --bg-body: #1a1a1a;
-  --bg-card: #2a2a2a;
-  --text-main: #e0e0e0;
-  --text-muted: #888;
-  --text-title: #d0d0d0;
-  --border-soft: #3a3a3a;
-  --accent: #5dade2;
-  --accent-dark: #4a8cba;
-  --green: #2ecc71;
-  --green-dark: #27a560;
-  --shadow: 0 2px 8px rgba(0,0,0,0.3);
-  --shadow-hover: 0 4px 16px rgba(0,0,0,0.4);
-  --shadow-modal: 0 8px 32px rgba(0,0,0,0.5);
-}
-@media (prefers-color-scheme: dark) {
-  :root:not(.theme-light) {
-    --bg-body: #1a1a1a;
-    --bg-card: #2a2a2a;
-    --text-main: #e0e0e0;
-    --text-muted: #888;
-    --text-title: #d0d0d0;
-    --border-soft: #3a3a3a;
-    --accent: #5dade2;
-    --accent-dark: #4a8cba;
-    --green: #2ecc71;
-    --green-dark: #27a560;
-    --shadow: 0 2px 8px rgba(0,0,0,0.3);
-    --shadow-hover: 0 4px 16px rgba(0,0,0,0.4);
-    --shadow-modal: 0 8px 32px rgba(0,0,0,0.5);
-  }
-}
-
-* { box-sizing: border-box; }
 html, body {
   margin: 0; padding: 0;
   background: var(--bg-body);
@@ -318,7 +273,7 @@ h1 {
 <div class="changelog-modal" id="changelog-modal" role="dialog" aria-label="История обновлений">
   <button class="changelog-close" onclick="closeChangelog()" aria-label="Закрыть">×</button>
   <div class="changelog-list" id="changelog-list"></div>
-  <button class="changelog-more" id="changelog-more" onclick="toggleExpand()" style="display:none;">more</button>
+  <button class="changelog-more" id="changelog-more" onclick="toggleExpand()" style="display:none;">ещё</button>
 </div>
 
 <div class="container">
@@ -408,7 +363,7 @@ function renderChangelog() {
   // Показываем "more" только если есть что разворачивать
   if (CHANGELOG.length > 1) {
     moreBtn.style.display = 'block';
-    moreBtn.textContent = MODAL_EXPANDED ? 'свернуть' : 'more';
+    moreBtn.textContent = MODAL_EXPANDED ? 'свернуть' : 'ещё';
   } else {
     moreBtn.style.display = 'none';
   }

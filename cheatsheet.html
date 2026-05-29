@@ -1,118 +1,15 @@
-<html><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8"><style>
-/* ===== ТЕМЫ через CSS-переменные ===== */
-:root {
-  --bg-body: #f0f2f5;
-  --bg-panel: #fff;
-  --bg-tab: #eee;
-  --bg-tab-active: #fff;
-  --bg-th: #f8f9fa;
-  --bg-rule-box: #fdfdfe;
-  --bg-row-hover: #f9fdff;
-  --bg-warning: #fff5f5;
-  --bg-highlight: #ffeaa7;
-  --text-main: #333;
-  --text-muted: #555;
-  --text-th: #7f8c8d;
-  --text-title: #2c3e50;
-  --text-tab-active: #000;
-  --border-soft: #eee;
-  --border-row: #f1f1f1;
-  --border-tab: #ccc;
-  --border-input: #ccc;
-  --accent: #3498db;
-  --accent-dark: #2c80b4;
-  --warning-border: #e74c3c;
-  --shadow: 0 2px 5px rgba(0,0,0,0.05);
-  --shadow-bar: 0 4px 12px rgba(0,0,0,0.2);
-  --badge-m-bg: #d1e9ff; --badge-m-fg: #0056b3;
-  --badge-f-bg: #ffd1dc; --badge-f-fg: #a11;
-  --badge-n-bg: #d1ffd1; --badge-n-fg: #006400;
-  --badge-pl-bg: #fff3cd; --badge-pl-fg: #856404;
-  /* Акценты для правил/выделений */
-  --accent-blue: #0056b3;
-  --accent-red: #a11;
-  --accent-red-bright: #c0392b;
-  --tip-bg: #fff8e1;
-  --tip-border: #f39c12;
-}
-
-/* Тёмная тема — глубокий чёрный (Telegram-style) */
-.theme-dark {
-  --bg-body: #0e0e10;
-  --bg-panel: #17171a;
-  --bg-tab: #1f1f23;
-  --bg-tab-active: #17171a;
-  --bg-th: #1a1a1d;
-  --bg-rule-box: #1c1c20;
-  --bg-row-hover: #202028;
-  --bg-warning: #2a1818;
-  --bg-highlight: #5a4a1f;
-  --text-main: #e6e6e8;
-  --text-muted: #b8b8bd;
-  --text-th: #a0a0a8;
-  --text-title: #cfd6e0;
-  --text-tab-active: #fff;
-  --border-soft: #2a2a2e;
-  --border-row: #232327;
-  --border-tab: #333338;
-  --border-input: #333338;
-  --accent: #4ade80;
-  --accent-dark: #22c55e;
-  --warning-border: #ff6b6b;
-  --shadow: 0 2px 5px rgba(0,0,0,0.4);
-  --shadow-bar: 0 4px 12px rgba(0,0,0,0.6);
-  --badge-m-bg: #1a3a5c; --badge-m-fg: #8ec5ff;
-  --badge-f-bg: #4a1a26; --badge-f-fg: #ffa3b8;
-  --badge-n-bg: #1a3a1a; --badge-n-fg: #8eff8e;
-  --badge-pl-bg: #4a3a14; --badge-pl-fg: #ffd966;
-  /* Акценты для правил/выделений (адаптированы под тёмный) */
-  --accent-blue: #8ec5ff;
-  --accent-red: #ffa3b8;
-  --accent-red-bright: #ff8a7a;
-  --tip-bg: #2a2418;
-  --tip-border: #d4a44a;
-}
-
-/* Авто-тема по системе (если пользователь не выбрал явно) */
-@media (prefers-color-scheme: dark) {
-  .theme-auto {
-    --bg-body: #0e0e10;
-    --bg-panel: #17171a;
-    --bg-tab: #1f1f23;
-    --bg-tab-active: #17171a;
-    --bg-th: #1a1a1d;
-    --bg-rule-box: #1c1c20;
-    --bg-row-hover: #202028;
-    --bg-warning: #2a1818;
-    --bg-highlight: #5a4a1f;
-    --text-main: #e6e6e8;
-    --text-muted: #b8b8bd;
-  --text-th: #a0a0a8;
-    --text-title: #cfd6e0;
-    --text-tab-active: #fff;
-    --border-soft: #2a2a2e;
-    --border-row: #232327;
-    --border-tab: #333338;
-    --border-input: #333338;
-    --accent: #4ade80;
-  --accent-dark: #22c55e;
-    --warning-border: #ff6b6b;
-    --shadow: 0 2px 5px rgba(0,0,0,0.4);
-    --shadow-bar: 0 4px 12px rgba(0,0,0,0.6);
-    --badge-m-bg: #1a3a5c; --badge-m-fg: #8ec5ff;
-    --badge-f-bg: #4a1a26; --badge-f-fg: #ffa3b8;
-    --badge-n-bg: #1a3a1a; --badge-n-fg: #8eff8e;
-    --badge-pl-bg: #4a3a14; --badge-pl-fg: #ffd966;
-    --accent-blue: #8ec5ff;
-    --accent-red: #ffa3b8;
-    --accent-red-bright: #ff8a7a;
-    --tip-bg: #2a2418;
-    --tip-border: #d4a44a;
-  }
-}
-
+<!DOCTYPE html>
+<html lang="ru"><head><meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Шпаргалка — Deutsch Tools</title>
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🇩🇪</text></svg>">
+<meta property="og:title" content="Шпаргалка — Deutsch Tools">
+<meta property="og:description" content="Интерактивная шпаргалка по немецкому: слова, правила, произношение">
+<meta property="og:type" content="website">
+<link rel="stylesheet" href="theme.css?v=20260529">
+<style>
 *{box-sizing:border-box;margin:0;padding:0}
-body{font-family:sans-serif;font-size:13px;color:var(--text-main);line-height:1.4;background:var(--bg-body)}
+body{font-family:sans-serif;font-size:13px;color:var(--text-main);line-height:1.4;background:var(--bg-body);overflow-x:hidden}
 @media (max-width: 768px){
   .tabs{
      margin-top: 80px;
@@ -139,6 +36,8 @@ body{font-family:sans-serif;font-size:13px;color:var(--text-main);line-height:1.
 .panel.active{display:block}
 .section{margin-bottom:25px}
 .section-title{font-size:14px;font-weight:bold;color:var(--text-title);margin-bottom:10px;padding-bottom:5px;border-bottom:2px solid var(--accent);display:flex;align-items:center;gap:8px}
+
+
 table {
   width: 100%;
   border-collapse: collapse;
@@ -147,18 +46,15 @@ table {
 }
 
 /* Ширины колонок задаются через классы; добавляются автоматически JS */
-table.noun-table th:nth-child(1), table.noun-table td:nth-child(1) { width: 30%; }
-table.noun-table th:nth-child(2), table.noun-table td:nth-child(2) { width: 14%; text-align: center; white-space: nowrap; }
-table.noun-table th:nth-child(3), table.noun-table td:nth-child(3) { width: 56%; }
-table.vocab-table th:nth-child(1), table.vocab-table td:nth-child(1) { width: 28%; }
-table.vocab-table th:nth-child(2), table.vocab-table td:nth-child(2) { width: 27%; }
-table.vocab-table th:nth-child(3), table.vocab-table td:nth-child(3) { width: 45%; }
+/* таблицы: ширина колонок по содержимому, padding 10px */
+table.noun-table, table.vocab-table { table-layout: auto; width: 100%; }
+table.noun-table th:nth-child(2), table.noun-table td:nth-child(2) { text-align: center; white-space: nowrap; width: 1%; padding-left: 8px; padding-right: 8px; }
 
 /* Бэйджи не должны разрываться, даже в узких ячейках */
 .badge { white-space: nowrap; }
 
-th{background:var(--bg-th);padding:8px;text-align:left;font-size:11px;color:var(--text-th);border-bottom:1px solid var(--border-soft)}
-td{padding:8px;border-bottom:1px solid var(--border-row);vertical-align:top}
+th{background:var(--bg-th);padding:6px 10px;text-align:left;font-size:11px;color:var(--text-th);border-bottom:1px solid var(--border-soft)}
+td{padding:6px 10px;border-bottom:1px solid var(--border-row);vertical-align:top}
 tr:hover td{background:var(--bg-row-hover)}
 .badge{display:inline-block;font-size:10px;padding:2px 5px;border-radius:3px;font-weight:bold;margin-right:5px}
 .m{background:var(--badge-m-bg);color:var(--badge-m-fg)} .f{background:var(--badge-f-bg);color:var(--badge-f-fg)} .n{background:var(--badge-n-bg);color:var(--badge-n-fg)} .pl{background:var(--badge-pl-bg);color:var(--badge-pl-fg)}
@@ -175,14 +71,12 @@ tr:hover td{background:var(--bg-row-hover)}
   background:var(--bg-panel);
   color:var(--text-main);
 }
+.table-wrap {
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  width: 100%;
+}
 @media (max-width: 768px){
-  table{
-    display:table;
-    width: 100%;
-    overflow-x:auto;
-    white-space: normal;
-  }
-
   td, th{
     font-size: 11px;
     padding:6px;
@@ -215,6 +109,18 @@ tr:hover td{background:var(--bg-row-hover)}
   transition: transform 0.2s, opacity 0.2s;
 }
 
+.to-top-fixed {
+  position: fixed;
+  bottom: 20px;
+  left: 20px;
+  width: auto;
+  padding: 10px 18px;
+  border-radius: 50px;
+  opacity: 0.85;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+  z-index: 999;
+}
+
 .to-top:active{
   transform: scale(0.98);
   background: var(--accent-dark);
@@ -235,6 +141,17 @@ tr:hover td{background:var(--bg-row-hover)}
   opacity: 0.95;
   box-shadow: var(--shadow-bar);
   transition: transform 0.3s ease;
+}
+.search-bar-inner {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px;
+  min-width: 0;
+}
+.search-bar-inner input {
+  flex: 1;
+  min-width: 0;
 }
 
 /* ─── Дропдаун результатов поиска ──────────── */
@@ -447,9 +364,58 @@ tr:hover td{background:var(--bg-row-hover)}
   .burger-btn { display: block; }
   .tabs { display: none; }
   .panel { padding-top: 70px; }
+  .search-bar-inner { gap: 6px; padding: 8px 6px; }
+  .search-count-label { display: none; }
+  #searchBtn { padding: 8px 10px; font-size: 12px; }
 }
+/* Клик по строке слова → модалка */
+tr[data-vid] { cursor: pointer; }
+
+.word-modal {
+  position: fixed; inset: 0;
+  background: var(--bg-overlay);
+  display: none; align-items: center; justify-content: center;
+  z-index: 1000; padding: 20px;
+}
+.word-modal.open { display: flex; }
+.word-modal-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border-soft);
+  border-radius: 12px;
+  box-shadow: var(--shadow-modal);
+  max-width: 520px; width: 100%;
+  max-height: 80vh; overflow-y: auto;
+  padding: 28px 24px 20px;
+  position: relative;
+}
+.word-modal-title {
+  font-size: 26px; font-weight: 700;
+  color: var(--text-title);
+  margin-bottom: 4px;
+}
+.word-modal-subtitle {
+  font-size: 16px; color: var(--text-muted);
+  margin-bottom: 18px;
+}
+.word-modal-body { display: flex; flex-direction: column; }
+.modal-row {
+  display: flex; gap: 12px;
+  padding: 8px 0;
+  border-bottom: 1px solid var(--border-row);
+  font-size: 14px;
+}
+.modal-row:last-child { border-bottom: none; }
+.modal-label { flex: 0 0 140px; color: var(--text-muted); }
+.modal-value { flex: 1; color: var(--text-main); word-break: break-word; }
+.word-modal-close {
+  position: absolute; top: 8px; right: 8px;
+  width: 36px; height: 36px;
+  background: transparent; border: none;
+  color: var(--text-muted); font-size: 26px;
+  cursor: pointer; line-height: 1;
+}
+.word-modal-close:hover { color: var(--text-main); }
 </style>
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <script>
 // Инициализация темы ДО рендера — чтобы не было вспышки светлой темы при загрузке
 (function() {
@@ -457,15 +423,28 @@ tr:hover td{background:var(--bg-row-hover)}
   document.documentElement.classList.add('theme-' + saved);
 })();
 </script>
-<script src="data.js?v=20260524"></script>
+<script src="data.js?v=20260529"></script>
+<script>
+// ─── Версия приложения (обновлять вместе с ?v= выше) ─────────
+var APP_VERSION = 'v31';
+</script>
+<script>
+// ─── Глобальный хелпер экранирования HTML ────────────────────────────────
+function escHtml(s) {
+  if (s === null || s === undefined) return '';
+  return String(s)
+    .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;');
+}
+</script>
 </head><body>
   <div class="search-bar">
-  <div style="display:flex;align-items:center;gap:8px;padding:10px;">
+  <div class="search-bar-inner">
   <a href="index.html" class="home-btn" title="На главную">❌</a>
   <button class="burger-btn" onclick="openMenu()" title="Меню">☰</button>
   <input type="text" id="searchInput" placeholder="Поиск...">
   <button id="searchBtn" style="padding:8px 14px;font-size:13px;border-radius:6px;background:var(--accent);color:white;border:none;cursor:pointer;font-weight:600;white-space:nowrap;">Найти</button>
-  <span id="searchCount" style="font-size:12px;color:var(--text-muted);white-space:nowrap;"></span>
+  <span id="searchCount" class="search-count-label" style="font-size:12px;color:var(--text-muted);white-space:nowrap;"></span>
   <button class="theme-toggle" id="themeToggle" onclick="cycleTheme()" title="Переключить тему">🌓</button>
 </div>
 </div>
@@ -482,33 +461,33 @@ tr:hover td{background:var(--bg-row-hover)}
     <span>Разделы</span>
     <button class="side-menu-close" onclick="closeMenu()">×</button>
   </div>
-  <div class="side-menu-item" onclick="goTo('new')">🆕 Новые</div>
-  <div class="side-menu-item" onclick="goTo('nums')">🔢 Числа</div>
-  <div class="side-menu-item" onclick="goTo('sounds')">🔤 Звуки</div>
-  <div class="side-menu-item" onclick="goTo('verbs')">⚡ Глаголы</div>
-  <div class="side-menu-item" onclick="goTo('unregel')">🔥 Спряжение Unregelmäßig</div>
-  <div class="side-menu-item" onclick="goTo('nouns')">📦 Существительные</div>
-  <div class="side-menu-item" onclick="goTo('adj')">🎨 Прилагательные</div>
-  <div class="side-menu-item" onclick="goTo('adv')">🔄 Наречия</div>
-  <div class="side-menu-item" onclick="goTo('mestoim')">👤 Местоимения</div>
-  <div class="side-menu-item" onclick="goTo('termin')">📋 Термины</div>
-  <div class="side-menu-item" onclick="goTo('rules')">📐 Правила</div>
-  <div class="side-menu-item" onclick="goTo('phrases')">💬 Фразы</div>
+ <div class="side-menu-item" data-tab="new" onclick="goTo('new')">🆕 Neu</div>
+ <div class="side-menu-item" data-tab="nums" onclick="goTo('nums')">🔢 Zahlen</div>
+ <div class="side-menu-item" data-tab="sounds" onclick="goTo('sounds')">🔤 Laute</div>
+ <div class="side-menu-item" data-tab="verbs" onclick="goTo('verbs')">⚡ Verben</div>
+ <div class="side-menu-item" data-tab="unregel" onclick="goTo('unregel')">🔥 Unregelmäßige Konjugation</div>
+ <div class="side-menu-item" data-tab="nouns" onclick="goTo('nouns')">📦 Substantive</div>
+ <div class="side-menu-item" data-tab="adj" onclick="goTo('adj')">🎨 Adjektive</div>
+ <div class="side-menu-item" data-tab="adv" onclick="goTo('adv')">🔄 Adverbien</div>
+ <div class="side-menu-item" data-tab="mestoim" onclick="goTo('mestoim')">👤 Pronomen</div>
+ <div class="side-menu-item" data-tab="termin" onclick="goTo('termin')">📋 Begriffe</div>
+ <div class="side-menu-item" data-tab="rules" onclick="goTo('rules')">📐 Regeln</div>
+ <div class="side-menu-item" data-tab="phrases" onclick="goTo('phrases')">💬 Phrasen</div>
 </div>
-  <div class="tabs">
-  <div class="tab active" onclick="show('new')">🆕 Новые</div>
-  <div class="tab" onclick="show('nums')">🔢 Числа</div>
-  <div class="tab" onclick="show('sounds')">🔤 Звуки</div>
-  <div class="tab" onclick="show('verbs')">⚡ Глаголы</div>
-  <div class="tab" onclick="show('unregel')">🔥 Спряжение Unregelmäßig</div>
-  <div class="tab" onclick="show('perfekt')">🕰️ Прошедшее время</div>
-  <div class="tab" onclick="show('nouns')">📦 Существительные</div>
-  <div class="tab" onclick="show('adj')">🎨 Прилагательные</div>
-  <div class="tab" onclick="show('adv')">🔄 Наречия</div>
-  <div class="tab" onclick="show('mestoim')">👤 Местоимения</div>
-  <div class="tab" onclick="show('termin')">📋 Термины</div>
-  <div class="tab" onclick="show('rules')">📐 Правила</div>
-  <div class="tab" onclick="show('phrases')">💬 Фразы</div>
+ <div class="tabs">
+ <div class="tab active" data-tab="new" onclick="show('new')">🆕 Neu</div>
+ <div class="tab" data-tab="nums" onclick="show('nums')">🔢 Zahlen</div>
+ <div class="tab" data-tab="sounds" onclick="show('sounds')">🔤 Laute</div>
+ <div class="tab" data-tab="verbs" onclick="show('verbs')">⚡ Verben</div>
+ <div class="tab" data-tab="unregel" onclick="show('unregel')">🔥 Unregelmäßige Konjugation</div>
+ <div class="tab" data-tab="perfekt" onclick="show('perfekt')">🕰️ Vergangenheit</div>
+ <div class="tab" data-tab="nouns" onclick="show('nouns')">📦 Substantive</div>
+ <div class="tab" data-tab="adj" onclick="show('adj')">🎨 Adjektive</div>
+ <div class="tab" data-tab="adv" onclick="show('adv')">🔄 Adverbien</div>
+ <div class="tab" data-tab="mestoim" onclick="show('mestoim')">👤 Pronomen</div>
+ <div class="tab" data-tab="termin" onclick="show('termin')">📋 Begriffe</div>
+ <div class="tab" data-tab="rules" onclick="show('rules')">📐 Regeln</div>
+ <div class="tab" data-tab="phrases" onclick="show('phrases')">💬 Phrasen</div>
 </div>
 
 <!-- ЧИСЛА -->
@@ -2591,8 +2570,7 @@ function syncMenuActive() {
   if (!active) return;
   var id = active.id.replace('tab-', '');
   document.querySelectorAll('.side-menu-item').forEach(function(el) {
-    el.classList.toggle('active',
-      (el.getAttribute('onclick') || '').includes("'" + id + "'"));
+    el.classList.toggle('active', el.dataset.tab === id);
   });
 }
 document.addEventListener('keydown', function(e) {
@@ -2600,6 +2578,7 @@ document.addEventListener('keydown', function(e) {
 });
 
 // Автомаркировка таблиц: с бэйджем → noun-table, иначе 3-колоночная → vocab-table
+// + оборачиваем каждую таблицу в .table-wrap для горизонтального скролла на мобилке
 document.querySelectorAll('table').forEach(t => {
   if (t.classList.contains('conj-table')) return;
   const firstRow = t.rows[0];
@@ -2609,16 +2588,24 @@ document.querySelectorAll('table').forEach(t => {
   } else if (firstRow.cells.length === 3) {
     t.classList.add('vocab-table');
   }
+  // Wrap in scroll container if not already wrapped
+  if (!t.parentElement.classList.contains('table-wrap')) {
+    const wrap = document.createElement('div');
+    wrap.className = 'table-wrap';
+    t.parentNode.insertBefore(wrap, t);
+    wrap.appendChild(t);
+  }
 });
 
 function show(id){
   document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
   document.querySelectorAll('.panel').forEach(p=>p.classList.remove('active'));
 
-  document.getElementById('tab-'+id).classList.add('active');
+  var panel = document.getElementById('tab-'+id);
+  if (panel) panel.classList.add('active');
 
   document.querySelectorAll('.tab').forEach(tab => {
-    if (tab.getAttribute('onclick')?.includes(id)) {
+    if (tab.dataset.tab === id) {
       tab.classList.add('active');
     }
   });
@@ -2877,13 +2864,7 @@ function show(id){
     }, 80);
   }
 
-  // ─── Рендер дропдауна ──────────────────────────────────────────────
-  function escHtml(s) {
-    return String(s || '')
-      .replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')
-      .replace(/"/g,'&quot;');
-  }
-
+  // ─── Рендер дропдауна ────────────────────────────────────────────────
   function renderDropdown(results, total) {
     const dd = document.getElementById('searchDropdown');
     if (!results.length) {
@@ -2990,12 +2971,27 @@ function show(id){
 })();
 </script>
 
-<div class="to-top" onclick="window.scrollTo({top:0, behavior:'smooth'})" style="position:fixed;bottom:20px;left:20px;width:auto;padding:10px 18px;border-radius:50px;opacity:0.85;box-shadow:0 4px 12px rgba(0,0,0,0.2);z-index:999;">
-  ↑ To Top
+<div class="to-top to-top-fixed" onclick="window.scrollTo({top:0, behavior:'smooth'})">
+  ↑ Наверх
 </div>
-<div style="text-align:center;font-size:11px;color:var(--text-muted);padding:6px;">
-  Update: 18.05.2026 | v31
-</div>
+<div id="footer-version" style="text-align:center;font-size:11px;color:var(--text-muted);padding:6px;"></div>
+<script>
+(function() {
+  var el = document.getElementById('footer-version');
+  if (!el) return;
+  // Берём версию из атрибута src тега data.js
+  var scripts = document.querySelectorAll('script[src*="data.js"]');
+  var ver = '';
+  if (scripts.length) {
+    var m = scripts[0].getAttribute('src').match(/\?v=(\d+)/);
+    if (m) {
+      var v = m[1]; // напр. 20260524
+      ver = v.slice(0,4) + '-' + v.slice(4,6) + '-' + v.slice(6,8);
+    }
+  }
+  if (ver) el.textContent = 'Update: ' + ver + ' | ' + (window.APP_VERSION || '');
+})();
+</script>
 
 
 <!-- Рендер шпоры из data.js -->
@@ -3013,13 +3009,6 @@ function show(id){
     return;
   }
 
-  function escHtml(s) {
-    if (s === null || s === undefined) return '';
-    return String(s)
-      .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
-      .replace(/"/g, '&quot;');
-  }
-
   // ─── Рендер таблицы существительных ──────────────────────────────────────
   function renderNounsRow(item) {
     const badge = item.gender
@@ -3029,45 +3018,28 @@ function show(id){
     if (item.plural) noteParts.push('Pl: ' + item.plural);
     if (item.note) noteParts.push(item.note);
     const noteCol = noteParts.join(' | ');
-    return '<tr><td>' + escHtml(item.de) + '</td>'
+    return '<tr data-vid="' + escHtml(item.id) + '"><td>' + escHtml(item.de) + '</td>'
          + '<td>' + badge + '</td>'
          + '<td>' + escHtml(item.ru) + (noteCol ? ' | ' + escHtml(noteCol) : '') + '</td></tr>';
   }
 
   // ─── Рендер обычной таблицы (verb/adj/adv/pron/phrase) ──────────────────
   function renderSimpleRow(item) {
-    return '<tr><td>' + escHtml(item.de) + '</td>'
+    return '<tr data-vid="' + escHtml(item.id) + '"><td>' + escHtml(item.de) + '</td>'
          + '<td>' + escHtml(item.ru) + '</td>'
          + '<td>' + escHtml(item.note || '') + '</td></tr>';
   }
 
   // ─── Рендер строки глагола с Partizip II ────────────────────────────────
   function renderVerbRow(item) {
-    // Ищем Partizip II и aux: сначала в CONJUGATIONS, потом в REGEL_VERBS
-    let p2 = '', aux = '';
-    if (typeof CONJUGATIONS !== 'undefined') {
-      const c = CONJUGATIONS.find(c => c.verb === item.de);
-      if (c) { p2 = c.partizip2 || ''; aux = c.aux || ''; }
-    }
-    if (!p2 && typeof REGEL_VERBS !== 'undefined') {
-      const r = REGEL_VERBS.find(r => r.verb === item.de);
-      if (r) { p2 = r.partizip2 || ''; aux = r.aux || ''; }
-    }
-    // Форматирование колонки Partizip II
-    const auxColor = aux === 'sein' ? '#a11' : '#0056b3';
-    const p2Col = p2
-      ? '<span style="color:' + auxColor + ';font-weight:500">' + escHtml(aux) + '</span> '
-        + '<b>' + escHtml(p2) + '</b>'
-      : '<span style="color:var(--text-muted)">—</span>';
-    return '<tr><td>' + escHtml(item.de) + '</td>'
+    return '<tr data-vid="' + escHtml(item.id) + '"><td>' + escHtml(item.de) + '</td>'
          + '<td>' + escHtml(item.ru) + '</td>'
-         + '<td>' + p2Col + '</td>'
          + '<td>' + escHtml(item.note || '') + '</td></tr>';
   }
 
   // ─── Рендер строки чисел (cifra | de | произношение) ────────────────────
   function renderNumRow(item) {
-    return '<tr><td>' + escHtml(item.ru) + '</td>'
+    return '<tr data-vid="' + escHtml(item.id) + '"><td>' + escHtml(item.ru) + '</td>'
          + '<td>' + escHtml(item.de) + '</td>'
          + '<td>' + escHtml(item.note || '') + '</td></tr>';
   }
@@ -3096,13 +3068,14 @@ function show(id){
 
   // ─── Сгенерировать секции для таба ───────────────────────────────────────
   function renderSections(tabId, posFilter, rowFn, headers) {
-    const items = VOCAB.filter(v =>
-      posFilter.includes(v.pos) &&
-      (v.topics || []).some(t => t.startsWith(tabId + ':'))
-    );
+    // Фильтр по pos; topics теперь domen:group, без префикса pos
+    const items = VOCAB.filter(v => posFilter.includes(v.pos));
     const groups = groupByTopic(items);
-    // Берём только topics этого таба
-    const topicsInTab = Object.keys(groups).filter(t => t.startsWith(tabId + ':'));
+    // Вкладка "Новые" показывает только new:* topics; остальные — без new:*
+    const isNeu = tabId === "neu" || tabId === "new";
+    const topicsInTab = Object.keys(groups).filter(t =>
+      isNeu ? t.startsWith("new:") : !t.startsWith("new:")
+    );
     if (topicsInTab.length === 0) return '';
 
     return topicsInTab.map(topic => {
@@ -3143,7 +3116,7 @@ function show(id){
     const panel = document.getElementById('tab-verbs');
     if (!panel) return;
     panel.innerHTML = renderSections('verbs', ['verb'], renderVerbRow,
-      ['Глагол', 'Перевод', 'Perfekt', 'Примечание']);
+      ['Глагол', 'Перевод', 'Примечание']);
   }
 
   // ─── Рендер: unregel (спряжения) ────────────────────────────────────────
@@ -3300,13 +3273,13 @@ function show(id){
     if (!panel) return;
     let html = renderSections('mestoim', ['pron'], renderSimpleRow,
       ['Местоимение', 'Перевод', 'Примечание']);
-    // Добавляем правила склонения местоимений (из RULES с topic rules:pronouns)
+    // Добавляем правила склонения местоимений (из RULES с topic grammar:pronouns)
     if (typeof RULES !== 'undefined') {
-      const pronounRules = RULES.filter(r => r.topic === 'rules:pronouns');
+      const pronounRules = RULES.filter(r => r.topic === 'grammar:pronouns');
       for (const r of pronounRules) {
         html += '<div class="rule-box" style="margin-top:12px">';
         if (r.title) {
-          html += '<div class="section-title" style="margin-bottom:8px">' + escapeHtml(r.title) + '</div>';
+          html += '<div class="section-title" style="margin-bottom:8px">' + escHtml(r.title) + '</div>';
         }
         html += renderRuleContent(r.content_md || '');
         html += '</div>';
@@ -3345,28 +3318,36 @@ function show(id){
   function renderRules() {
     const panel = document.getElementById('tab-rules');
     if (!panel || typeof RULES === 'undefined') return;
-    const rules = RULES.filter(r => r.topic === 'rules:grammar');
+    // Группируем все правила по topic (domen:group), заголовок — из TOPIC_TITLES
+    const groups = {};
+    for (const r of RULES) {
+      const key = r.topic || 'misc';
+      if (!groups[key]) groups[key] = [];
+      groups[key].push(r);
+    }
     let html = '';
-    for (const r of rules) {
-      html += '<div class="rule-box" style="margin-bottom:18px">';
-      if (r.title) {
-        html += '<div class="section-title" style="margin-bottom:8px">' + escapeHtml(r.title) + '</div>';
+    for (const topic of Object.keys(groups)) {
+      const groupTitle = (typeof TOPIC_TITLES !== 'undefined' && TOPIC_TITLES[topic]) || topic;
+      html += '<div class="section" style="margin-bottom:24px">';
+      html += '<div class="section-title" style="font-size:16px;margin-bottom:12px">' + escHtml(groupTitle) + '</div>';
+      for (const r of groups[topic]) {
+        html += '<div class="rule-box" style="margin-bottom:18px">';
+        if (r.title) {
+          html += '<div class="section-title" style="margin-bottom:8px">' + escHtml(r.title) + '</div>';
+        }
+        html += renderRuleContent(r.content_md || '');
+        html += '</div>';
       }
-      html += renderRuleContent(r.content_md || '');
       html += '</div>';
     }
-    panel.innerHTML = '<div class="section">' + html + '</div>';
+    panel.innerHTML = html;
   }
 
   // ─── Утилиты для рендера правил ────────────────────────────────────────
-  function escapeHtml(s) {
-    return String(s || '')
-      .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
-  }
 
   // Превращает inline-разметку **жирное** в HTML
   function renderInline(s) {
-    return escapeHtml(s)
+    return escHtml(s)
       .replace(/\*\*([^*]+)\*\*/g, '<b>$1</b>')
       .replace(/__([^_]+)__/g, '<b>$1</b>');
   }
@@ -3446,41 +3427,40 @@ function show(id){
   function renderNew() {
     const panel = document.getElementById('tab-new');
     if (!panel) return;
-    // Берём все слова с new: true
-    const newItems = VOCAB.filter(v => v.new);
-    // Группируем по pos
-    const byPos = { noun: [], verb: [], adj: [], adv: [] };
-    for (const item of newItems) {
-      if (byPos[item.pos]) byPos[item.pos].push(item);
-    }
-    const POS_LABELS = {
-      noun: '📦 Существительные',
-      verb: '⚡ Глаголы',
-      adj: '🎨 Прилагательные / Наречия',
-    };
+
+    // Используем renderSections — так же как другие вкладки.
+    // Слова попадают в таб через topics (new:new-nouns, new:new-verbs и т.д.)
     let html = '';
-    for (const pos of ['noun', 'verb', 'adj']) {
-      const items = pos === 'adj' ? [...byPos.adj, ...byPos.adv] : byPos[pos];
-      if (items.length === 0) continue;
-      const rowFn = pos === 'noun' ? renderNounsRow : renderSimpleRow;
-      const headers = pos === 'noun'
-        ? ['Существительное', 'Род', 'Перевод / Примечание']
-        : ['Слово', 'Перевод', 'Примечание'];
-      html += '<div class="section">'
-            + '<div class="section-title">' + POS_LABELS[pos] + '</div>'
-            + tableHTML(items, rowFn, headers)
-            + '</div>';
-    }
-    // Новые правила
+    html += renderSections('new', ['noun'], renderNounsRow,
+      ['Существительное', 'Род', 'Перевод / Примечание']);
+    html += renderSections('new', ['verb'], renderVerbRow,
+      ['Глагол', 'Перевод', 'Примечание']);
+    html += renderSections('new', ['adj', 'adv'], renderSimpleRow,
+      ['Слово', 'Перевод', 'Примечание']);
+
+    // Новые правила (new: true)
     if (typeof RULES !== 'undefined') {
-      const newRules = RULES.filter(r => r.new);
+      const newRules = RULES.filter(r => r.new === true);
       if (newRules.length > 0) {
-        html += '<div class="section">'
-              + '<div class="section-title">📐 Правила</div>'
-              + newRules.map(r => r.html).join('')
-              + '</div>';
+        html += '<div class="section" style="margin-bottom:24px">';
+        html += '<div class="section-title" style="font-size:15px;margin-bottom:12px">📐 Новые правила</div>';
+        for (const r of newRules) {
+          html += '<div class="rule-box" style="margin-bottom:18px">';
+          if (r.title) {
+            html += '<div class="section-title" style="margin-bottom:8px">' + escHtml(r.title) + '</div>';
+          }
+          html += renderRuleContent(r.content_md || '');
+          html += '</div>';
+        }
+        html += '</div>';
       }
     }
+
+    // Если совсем ничего нет — показываем заглушку
+    if (!html.trim()) {
+      html = '<div style="padding:24px;color:var(--text-muted);font-size:13px;text-align:center;">Новых слов пока нет</div>';
+    }
+
     panel.innerHTML = html;
   }
 
@@ -3499,8 +3479,148 @@ function show(id){
   renderPhrases();
   renderNew();
 
-  console.log('✓ Шпора отрендерена из data.js');
+  // Оборачиваем динамически созданные таблицы в .table-wrap
+  document.querySelectorAll('table').forEach(t => {
+    if (!t.parentElement.classList.contains('table-wrap')) {
+      const wrap = document.createElement('div');
+      wrap.className = 'table-wrap';
+      t.parentNode.insertBefore(wrap, t);
+      wrap.appendChild(t);
+    }
+  });
+
+
+
+
 })();
 
 </script>
+<div class="word-modal" id="word-modal">
+  <div class="word-modal-card">
+    <button class="word-modal-close" onclick="closeWordModal()" aria-label="Закрыть">×</button>
+    <div class="word-modal-title" id="word-modal-title"></div>
+    <div class="word-modal-subtitle" id="word-modal-subtitle"></div>
+    <div class="word-modal-body" id="word-modal-body"></div>
+  </div>
+</div>
+
+<script>
+  // ─── Модалка по клику на слово ────────────────────────────
+  const VOCAB_BY_ID = Object.fromEntries(VOCAB.map(v => [v.id, v]));
+
+  const FIELD_LABELS = {
+    altDe: "Альт. форма", altRu: "Альт. перевод",
+    gender: "Род", plural: "Множественное", altPlural: "Альт. множ.",
+    antonym: "Антоним",
+    comparative: "Сравн. степень", superlative: "Превосх. степень",
+    derivedFrom: "От слова",
+    kind: "Тип", case: "Падеж", digit: "Цифра",
+    transcription: "Транскрипция", context: "Контекст",
+    type: "Тип глагола", aux: "Hilfsverb",
+    partizip2: "Partizip II", praeteritum: "Präteritum",
+    separable: "Trennbar", prefix: "Приставка",
+    reflexive: "Reflexiv", impersonal: "Безличный", modal: "Modal",
+    exampleDe: "Пример", exampleRu: "Перевод примера",
+    level: "Уровень", priority: "Приоритет", source: "Источник",
+    warning: "⚠ Внимание", label: "Метка", note: "Заметка",
+  };
+  const HIDDEN_FIELDS = new Set([
+    "id", "de", "ru", "pos", "topics", "domen", "group",
+    "new", "quizUse", "strictOrder"
+  ]);
+
+  function showWordModal(id) {
+    const v = VOCAB_BY_ID[id];
+    if (!v) return;
+    const article = v.gender === 'm' ? 'der ' :
+                    v.gender === 'f' ? 'die ' :
+                    v.gender === 'n' ? 'das ' :
+                    v.gender === 'pl' ? 'die ' : '';
+    document.getElementById('word-modal-title').textContent = article + (v.de || '');
+    document.getElementById('word-modal-subtitle').textContent = v.ru || '';
+
+    const lines = [];
+
+    // Категория
+    if (v.topics && v.topics.length) {
+      const cat = TOPIC_TITLES[v.topics[0]] || v.topics[0];
+      lines.push('<div class="modal-row"><span class="modal-label">Категория:</span><span class="modal-value">' + escHtml(cat) + '</span></div>');
+    }
+
+    // Основные поля (кроме примера и спряжения — они отдельно)
+    const SKIP_IN_LOOP = new Set([...HIDDEN_FIELDS, 'exampleDe', 'exampleRu']);
+    for (const key of Object.keys(v)) {
+      if (SKIP_IN_LOOP.has(key)) continue;
+      let val = v[key];
+      if (val === null || val === undefined || val === '') continue;
+      if (typeof val === 'boolean') val = val ? 'ja' : '—';
+      if (Array.isArray(val)) val = val.join(', ');
+      const label = FIELD_LABELS[key] || key;
+      lines.push('<div class="modal-row"><span class="modal-label">' + escHtml(label) + ':</span><span class="modal-value">' + escHtml(String(val)) + '</span></div>');
+    }
+
+    // Пример использования
+    if (v.exampleDe) {
+      lines.push('<div class="modal-row" style="flex-direction:column;gap:2px">'
+        + '<span class="modal-label" style="flex:none;margin-bottom:4px">Пример:</span>'
+        + '<span class="modal-value" style="font-style:italic">' + escHtml(v.exampleDe) + '</span>'
+        + (v.exampleRu ? '<span class="modal-value" style="color:var(--text-muted);font-size:12px">' + escHtml(v.exampleRu) + '</span>' : '')
+        + '</div>');
+    }
+
+    // Спряжение (только для глаголов)
+    if (v.pos === 'verb') {
+      const pronouns = ['ich', 'du', 'er/sie/es', 'wir', 'ihr', 'sie/Sie'];
+      let conjData = null;
+
+      // Ищем в CONJUGATIONS (unregelmäßig)
+      if (typeof CONJUGATIONS !== 'undefined') {
+        conjData = CONJUGATIONS.find(c => c.verb === v.de);
+      }
+      // Ищем в REGEL_VERBS (regelmäßig)
+      if (!conjData && typeof REGEL_VERBS !== 'undefined') {
+        conjData = REGEL_VERBS.find(r => r.verb === v.de);
+      }
+
+      if (conjData && conjData.forms && conjData.forms.length) {
+        let table = '<div class="modal-row" style="flex-direction:column;gap:6px">'
+          + '<span class="modal-label" style="flex:none;margin-bottom:4px">Спряжение (Präsens):</span>'
+          + '<table style="border-collapse:collapse;width:100%;font-size:12px">';
+        conjData.pronouns.forEach(function(pr, i) {
+          const form = conjData.forms[i] || '';
+          table += '<tr>'
+            + '<td style="padding:3px 8px;color:var(--text-muted);width:90px">' + escHtml(pr) + '</td>'
+            + '<td style="padding:3px 8px;font-weight:600">' + escHtml(form) + '</td>'
+            + '</tr>';
+        });
+        table += '</table></div>';
+        lines.push(table);
+      } else {
+        // Нет данных — показываем заглушку
+        lines.push('<div class="modal-row"><span class="modal-label">Спряжение:</span><span class="modal-value" style="color:var(--text-muted)">— нет данных</span></div>');
+      }
+    }
+
+    document.getElementById('word-modal-body').innerHTML = lines.join('');
+    document.getElementById('word-modal').classList.add('open');
+    document.body.style.overflow = 'hidden';
+  }
+  function closeWordModal() {
+    document.getElementById('word-modal').classList.remove('open');
+    document.body.style.overflow = '';
+  }
+
+  document.addEventListener('click', function(ev) {
+    const tr = ev.target.closest('tr[data-vid]');
+    if (tr) { showWordModal(tr.getAttribute('data-vid')); return; }
+    const modal = document.getElementById('word-modal');
+    if (modal && modal.classList.contains('open') && ev.target === modal) {
+      closeWordModal();
+    }
+  });
+  document.addEventListener('keydown', function(ev) {
+    if (ev.key === 'Escape') closeWordModal();
+  });
+</script>
+
 </body></html>
