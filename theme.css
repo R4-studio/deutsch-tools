@@ -1,0 +1,188 @@
+/* ═══════════════════════════════════════════════════════════════
+   theme.css — единая палитра Deutsch Tools
+   Подключается в index.html, cheatsheet.html, trainer.html
+   Переменные используются и шпорой, и тренажёром.
+   ═══════════════════════════════════════════════════════════════ */
+
+/* ─── Глобальный сброс ────────────────────────────────────────── */
+* { box-sizing: border-box; }
+
+/* ─── Светлая тема (по умолчанию) ─────────────────────────────── */
+:root {
+  /* фон */
+  --bg-body: #f0f2f5;
+  --bg-panel: #fff;
+  --bg-card: #fff;
+  --bg-tab: #eee;
+  --bg-tab-active: #fff;
+  --bg-th: #f8f9fa;
+  --bg-input: #fff;
+  --bg-rule-box: #fdfdfe;
+  --bg-row-hover: #f9fdff;
+  --bg-warning: #fff5f5;
+  --bg-highlight: #ffeaa7;
+  --bg-soft: #f7f8fa;
+  --bg-overlay: rgba(0, 0, 0, 0.5);
+
+  /* текст */
+  --text-main: #333;
+  --text-muted: #555;
+  --text-th: #7f8c8d;
+  --text-title: #2c3e50;
+  --text-tab-active: #000;
+
+  /* границы */
+  --border-soft: #e0e4ed;
+  --border-row: #f1f1f1;
+  --border-tab: #ccc;
+  --border-input: #ccc;
+
+  /* акценты */
+  --accent: #3498db;
+  --accent-dark: #2c80b4;
+  --accent-blue: #0056b3;
+  --accent-red: #a11;
+  --accent-red-bright: #c0392b;
+  --warning-border: #e74c3c;
+
+  /* успех / ошибка */
+  --green: #1a7a4a;
+  --green-bg: #d5f0e3;
+  --red: #c0392b;
+  --red-bg: #fde8e8;
+
+  /* подсказки */
+  --tip-bg: #fff8e1;
+  --tip-border: #f39c12;
+
+  /* бэйджи родов */
+  --badge-m-bg: #d1e9ff;  --badge-m-fg: #0056b3;
+  --badge-f-bg: #ffd1dc;  --badge-f-fg: #a11;
+  --badge-n-bg: #d1ffd1;  --badge-n-fg: #006400;
+  --badge-pl-bg: #fff3cd; --badge-pl-fg: #856404;
+
+  /* тени */
+  --shadow: 0 2px 5px rgba(0,0,0,0.05);
+  --shadow-bar: 0 4px 12px rgba(0,0,0,0.2);
+  --shadow-card: 0 2px 12px rgba(0,0,0,0.07);
+  --shadow-hover: 0 4px 16px rgba(0,0,0,0.12);
+  --shadow-modal: 0 8px 32px rgba(0,0,0,0.15);
+}
+
+/* ─── Тёмная тема ─────────────────────────────────────────────── */
+.theme-dark {
+  /* фон */
+  --bg-body: #0e0e10;
+  --bg-panel: #17171a;
+  --bg-card: #17171a;
+  --bg-tab: #1f1f23;
+  --bg-tab-active: #17171a;
+  --bg-th: #1a1a1d;
+  --bg-input: #1a1a1d;
+  --bg-rule-box: #1c1c20;
+  --bg-row-hover: #202028;
+  --bg-warning: #2a1818;
+  --bg-highlight: #5a4a1f;
+  --bg-soft: #1a1a1d;
+  --bg-overlay: rgba(0, 0, 0, 0.7);
+
+  /* текст */
+  --text-main: #e6e6e8;
+  --text-muted: #b8b8bd;
+  --text-th: #a0a0a8;
+  --text-title: #cfd6e0;
+  --text-tab-active: #fff;
+
+  /* границы */
+  --border-soft: #2a2a2e;
+  --border-row: #232327;
+  --border-tab: #333338;
+  --border-input: #333338;
+
+  /* акценты */
+  --accent: #4ade80;
+  --accent-dark: #22c55e;
+  --accent-blue: #8ec5ff;
+  --accent-red: #ffa3b8;
+  --accent-red-bright: #ff8a7a;
+  --warning-border: #ff6b6b;
+
+  /* успех / ошибка */
+  --green: #4ade80;
+  --green-bg: #1a3a26;
+  --red: #ff8a7a;
+  --red-bg: #3a1818;
+
+  /* подсказки */
+  --tip-bg: #2a2418;
+  --tip-border: #d4a44a;
+
+  /* бэйджи родов */
+  --badge-m-bg: #1a3a5c;  --badge-m-fg: #8ec5ff;
+  --badge-f-bg: #4a1a26;  --badge-f-fg: #ffa3b8;
+  --badge-n-bg: #1a3a1a;  --badge-n-fg: #8eff8e;
+  --badge-pl-bg: #4a3a14; --badge-pl-fg: #ffd966;
+
+  /* тени */
+  --shadow: 0 2px 5px rgba(0,0,0,0.4);
+  --shadow-bar: 0 4px 12px rgba(0,0,0,0.6);
+  --shadow-card: 0 2px 12px rgba(0,0,0,0.4);
+  --shadow-hover: 0 4px 16px rgba(0,0,0,0.5);
+  --shadow-modal: 0 8px 32px rgba(0,0,0,0.6);
+}
+
+/* ─── Авто-тема по системе (если не выбрана явно) ──────────────── */
+@media (prefers-color-scheme: dark) {
+  :root:not(.theme-light), .theme-auto {
+    --bg-body: #0e0e10;
+    --bg-panel: #17171a;
+    --bg-card: #17171a;
+    --bg-tab: #1f1f23;
+    --bg-tab-active: #17171a;
+    --bg-th: #1a1a1d;
+    --bg-input: #1a1a1d;
+    --bg-rule-box: #1c1c20;
+    --bg-row-hover: #202028;
+    --bg-warning: #2a1818;
+    --bg-highlight: #5a4a1f;
+    --bg-soft: #1a1a1d;
+    --bg-overlay: rgba(0, 0, 0, 0.7);
+
+    --text-main: #e6e6e8;
+    --text-muted: #b8b8bd;
+    --text-th: #a0a0a8;
+    --text-title: #cfd6e0;
+    --text-tab-active: #fff;
+
+    --border-soft: #2a2a2e;
+    --border-row: #232327;
+    --border-tab: #333338;
+    --border-input: #333338;
+
+    --accent: #4ade80;
+    --accent-dark: #22c55e;
+    --accent-blue: #8ec5ff;
+    --accent-red: #ffa3b8;
+    --accent-red-bright: #ff8a7a;
+    --warning-border: #ff6b6b;
+
+    --green: #4ade80;
+    --green-bg: #1a3a26;
+    --red: #ff8a7a;
+    --red-bg: #3a1818;
+
+    --tip-bg: #2a2418;
+    --tip-border: #d4a44a;
+
+    --badge-m-bg: #1a3a5c;  --badge-m-fg: #8ec5ff;
+    --badge-f-bg: #4a1a26;  --badge-f-fg: #ffa3b8;
+    --badge-n-bg: #1a3a1a;  --badge-n-fg: #8eff8e;
+    --badge-pl-bg: #4a3a14; --badge-pl-fg: #ffd966;
+
+    --shadow: 0 2px 5px rgba(0,0,0,0.4);
+    --shadow-bar: 0 4px 12px rgba(0,0,0,0.6);
+    --shadow-card: 0 2px 12px rgba(0,0,0,0.4);
+    --shadow-hover: 0 4px 16px rgba(0,0,0,0.5);
+    --shadow-modal: 0 8px 32px rgba(0,0,0,0.6);
+  }
+}
