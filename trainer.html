@@ -130,6 +130,7 @@ const S = {
   container: { maxWidth: 760, margin: "0 auto" },
   card: {
     background: "var(--bg-card)",
+    color: "var(--text-main)",
     borderRadius: 14,
     boxShadow: "var(--shadow-card)",
     padding: "20px 22px",
@@ -597,7 +598,7 @@ function ConjFlipCard({ conj, flipped, onFlip, color }) {
   return (
     <div
       onClick={onFlip}
-      style={{ perspective: 1000, cursor: "pointer", height: 280, marginBottom: 14, position: "relative", zIndex: 1 }}
+      style={{ perspective: 1000, cursor: "pointer", height: 400, marginBottom: 14, position: "relative", zIndex: 1 }}
     >
       <div className={"flip-card-inner" + (flipped ? " flipped" : "")}>
         <div className="flip-face front"
@@ -646,6 +647,81 @@ function ConjFlipCard({ conj, flipped, onFlip, color }) {
                 ))}
               </tbody>
             </table>
+            {(conj.praeteritum || conj.partizip2) && (
+              <div style={{
+                marginTop: 14, paddingTop: 12,
+                borderTop: "1px solid rgba(255,255,255,0.25)",
+                display: "flex", flexDirection: "column", gap: 4,
+                fontSize: 14,
+              }}>
+                {conj.praeteritum && (
+                  <div>
+                    <span style={{ opacity: 0.85 }}>Präteritum: </span>
+                    <span style={{ fontWeight: 700 }}>{conj.praeteritum}</span>
+                    <span style={{ opacity: 0.7, fontSize: 12 }}> (er/sie/es)</span>
+                  </div>
+                )}
+                {conj.partizip2 && (
+                  <div>
+                    <span style={{ opacity: 0.85 }}>Perfekt: </span>
+                    <span style={{ fontWeight: 700 }}>
+                      {conj.aux === "sein" ? "ist" : "hat"} {conj.partizip2}
+                    </span>
+                  </div>
+                )}
+              </div>
+            )}
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+
+// ═══════════════════════════════════════════════════════════════
+// КОМПОНЕНТ: КАРТОЧКА PRÄTERITUM (FLIP)
+// ═══════════════════════════════════════════════════════════════
+function PraeteritumFlipCard({ conj, flipped, onFlip, color }) {
+  return (
+    <div
+      onClick={onFlip}
+      style={{ perspective: 1000, cursor: "pointer", height: 280, marginBottom: 14, position: "relative", zIndex: 1 }}
+    >
+      <div className={"flip-card-inner" + (flipped ? " flipped" : "")}>
+        <div className="flip-face front"
+             style={{
+               background: "var(--bg-card)",
+               border: `2px solid ${color}`,
+               boxShadow: "var(--shadow-card)",
+               textAlign: "center",
+             }}>
+          <div>
+            <div style={{ fontSize: 32, fontWeight: 700, color: "var(--text-title)", marginBottom: 8 }}>
+              {conj.verb}
+            </div>
+            {conj.ru && (
+              <div style={{ fontSize: 16, color: "var(--text-muted)", marginBottom: 14 }}>
+                — {conj.ru}
+              </div>
+            )}
+            <div style={{ fontSize: 12, color: "var(--text-muted)" }}>
+              Нажми, чтобы увидеть Präteritum
+            </div>
+          </div>
+        </div>
+        <div className="flip-face back"
+             style={{ background: color, color: "white", textAlign: "center" }}>
+          <div style={{ padding: "0 20px" }}>
+            <div style={{ fontSize: 14, opacity: 0.85, marginBottom: 8 }}>Präteritum · er/sie/es</div>
+            <div style={{ fontSize: 36, fontWeight: 700, marginBottom: 16 }}>
+              {conj.praeteritum || "—"}
+            </div>
+            {conj.aux && (
+              <div style={{ fontSize: 13, opacity: 0.85 }}>
+                Perfekt: {conj.aux === "sein" ? "ist" : "hat"} {conj.partizip2 || "..."}
+              </div>
+            )}
           </div>
         </div>
       </div>
@@ -1565,6 +1641,29 @@ function genL2_unregel_one_form(conj) {
   };
 }
 
+// ─── unregel-блок: Ур 2 — выбор формы Präsens (mc) ───────────────────────
+// Дистракторы — другие формы ТОГО ЖЕ глагола (проверяем окончание для лица).
+// Если различимых форм < 4 (heißen, sitzen и т.п.) — вопрос не создаётся (остаётся fill).
+function genL2_unregel_one_form_mc(conj) {
+  if (!conj || !conj.forms) return null;
+  // Берём осмысленное лицо: du / er / ihr (ich тривиально, wir/sie часто = инфинитиву)
+  const cand = [1, 2, 4].filter(i => conj.forms[i]);
+  if (cand.length === 0) return null;
+  const pronounIdx = cand[Math.floor(Math.random() * cand.length)];
+  const correctForm = conj.forms[pronounIdx];
+  const wrongForms = [...new Set(conj.forms.filter(f => f && f !== correctForm))];
+  if (wrongForms.length < 3) return null;
+  const distractors = shuffle(wrongForms).slice(0, 3);
+  const opts = shuffle([correctForm, ...distractors]);
+  const ans = opts.indexOf(correctForm);
+  return {
+    auto: true, level: "A1", difficulty: 2, type: "mc",
+    q: `Спряги «${conj.verb}»${conj.ru ? " — " + conj.ru : ""} для «${conj.pronouns[pronounIdx]}»:`,
+    opts, ans,
+    sourceId: conj.id,
+  };
+}
+
 // ─── unregel-блок: Ур 3 — conj на все 6 форм ─────────────────────────────
 function genL3_unregel_full_conj(conj) {
   return {
@@ -1645,6 +1744,7 @@ function buildUnregelQuestions(conjugations) {
     const q1b = genL1_unregel_translate_RU_DE(c, conjugations);
     if (q1b) pool.push(q1b);
     pool.push(genL2_unregel_one_form(c));
+    { const qmc = genL2_unregel_one_form_mc(c); if (qmc) pool.push(qmc); }
     pool.push(genL3_unregel_full_conj(c));
   }
   return pool;
@@ -2090,6 +2190,8 @@ function buildPraesensPool(verbItems, conjugations) {
     if (conj) {
       const q = genL2_unregel_one_form(conj);
       if (q) pool.push(q);
+      const qmc = genL2_unregel_one_form_mc(conj);
+      if (qmc) pool.push(qmc);
     } else {
       const q = genL2_conj_regelmaessig(item, VOCAB, conjugations);
       if (q) pool.push(q);
@@ -2242,6 +2344,7 @@ function buildPraesensTestSession(blockId, topics) {
       const q1b = genL1_unregel_translate_RU_DE(conj, CONJUGATIONS);
       if (q1b) autoPool.push(q1b);
       autoPool.push(genL2_unregel_one_form(conj));
+      { const qmc = genL2_unregel_one_form_mc(conj); if (qmc) autoPool.push(qmc); }
       autoPool.push(genL3_unregel_full_conj(conj));
     }
   } else {
@@ -2267,6 +2370,193 @@ function countPartizip2Available(blockId, topics) {
 function countPraesensAvailable(blockId, topics) {
   if (blockId === "unregel") return CONJUGATIONS.length;
   return VOCAB.filter(v => v.pos === "verb" && (v.topics || []).some(t => topics.includes(t))).length;
+}
+
+// ─── Сборщик: Präteritum тест (30 вопросов) ──────────────────────────────
+function buildPraeteritumTestSession(blockId, topics) {
+  // Глаголы с praeteritum: сначала из CONJUGATIONS, потом из REGEL_VERBS
+  let pool = [];
+
+  // Глобальный список Präteritum-форм для дистракторов
+  const allPraetForms = [];
+  for (const c of CONJUGATIONS) {
+    if (c.praeteritum) allPraetForms.push(c.praeteritum);
+  }
+
+  // Фильтр по теме (если не unregel — берём глаголы из topics)
+  let conjList;
+  if (blockId === "unregel") {
+    conjList = CONJUGATIONS.filter(c => c.praeteritum);
+  } else {
+    const verbDe = new Set(
+      VOCAB.filter(v => v.pos === "verb" && (v.topics || []).some(t => topics.includes(t)))
+           .map(v => v.de)
+    );
+    conjList = CONJUGATIONS.filter(c => c.praeteritum && verbDe.has(c.verb));
+  }
+
+  for (const c of conjList) {
+    const praet = c.praeteritum;
+
+    // Тип 1: MC — выбрать Präteritum по инфинитиву
+    const distractors = shuffle(allPraetForms.filter(f => f !== praet)).slice(0, 3);
+    if (distractors.length >= 2) {
+      const opts = shuffle([praet, ...distractors.slice(0, 3)]);
+      pool.push({
+        auto: true, level: c.level || "A2", difficulty: 2, type: "mc",
+        q: `Präteritum от «${c.verb}»${c.ru ? " — " + c.ru : ""}?\n(er/sie/es)`,
+        opts, ans: opts.indexOf(praet),
+        sourceId: c.id,
+      });
+    }
+
+    // Тип 2: fill — вписать Präteritum
+    pool.push({
+      auto: true, level: c.level || "A2", difficulty: 4, type: "fill",
+      q: `Präteritum: er ___ (${c.verb}${c.ru ? " — " + c.ru : ""})`,
+      ans: praet,
+      hint: `Präteritum от ${c.verb}`,
+      sourceId: c.id,
+    });
+
+    // Тип 3: перевод инфинитива DE→RU (чтоб знали что это за глагол)
+    const otherRu = shuffle(CONJUGATIONS.filter(o => o.id !== c.id && o.ru).map(o => o.ru)).slice(0, 3);
+    if (c.ru && otherRu.length >= 2) {
+      const opts2 = shuffle([c.ru, ...otherRu.slice(0, 3)]);
+      pool.push({
+        auto: true, level: c.level || "A2", difficulty: 1, type: "mc",
+        q: `«${c.verb}» в Präteritum: «${praet}» — что значит?`,
+        opts: opts2, ans: opts2.indexOf(c.ru),
+        sourceId: c.id,
+      });
+    }
+  }
+
+  return applyQuota30(pool, []);
+}
+
+
+// ─── Полный пул без квоты (для dev-аудита) ───────────────────────────────
+function buildFullPool(blockId, topics, type, vocab, conjugations, manualQuestions) {
+  vocab = vocab || VOCAB;
+  conjugations = conjugations || CONJUGATIONS;
+  manualQuestions = manualQuestions || QUESTIONS;
+
+  let autoPool;
+  if (type === "partizip2") {
+    if (blockId === "unregel") {
+      autoPool = [];
+      for (const v of conjugations) {
+        if (!v.partizip2) continue;
+        const q1a = genPerfL1_p2_to_ru(v, conjugations); if (q1a) autoPool.push(q1a);
+        const q1b = genPerfL1_p2_to_inf(v, conjugations); if (q1b) autoPool.push(q1b);
+        const q2 = genPerfL2_aux(v); if (q2) autoPool.push(q2);
+        const q3 = genPerfL3_p2_fill(v); if (q3) autoPool.push(q3);
+        const q4 = genPerfL4_sentence(v); if (q4) autoPool.push(q4);
+      }
+    } else {
+      const verbItems = vocab.filter(v => v.pos === "verb" && (v.topics || []).some(t => topics.includes(t)));
+      autoPool = buildPartizip2Pool(verbItems, conjugations);
+    }
+  } else if (type === "praesens") {
+    if (blockId === "unregel") {
+      autoPool = [];
+      for (const conj of conjugations) {
+        const q1a = genPerfL1_p2_to_ru(conj, conjugations); if (q1a) autoPool.push(q1a);
+        const q1b = genPerfL1_p2_to_inf(conj, conjugations); if (q1b) autoPool.push(q1b);
+        autoPool.push(genL2_unregel_one_form(conj));
+        { const qmc = genL2_unregel_one_form_mc(conj); if (qmc) autoPool.push(qmc); }
+        autoPool.push(genL3_unregel_full_conj(conj));
+      }
+    } else {
+      const verbItems = vocab.filter(v => v.pos === "verb" && (v.topics || []).some(t => topics.includes(t)));
+      autoPool = buildPraesensPool(verbItems, conjugations);
+    }
+  } else if (type === "praeteritum") {
+    autoPool = [];
+    let conjList;
+    if (blockId === "unregel") {
+      conjList = conjugations.filter(c => c.praeteritum);
+    } else {
+      const verbDe = new Set(vocab.filter(v => v.pos === "verb" && (v.topics||[]).some(t => topics.includes(t))).map(v => v.de));
+      conjList = conjugations.filter(c => c.praeteritum && verbDe.has(c.verb));
+    }
+    const allPraetForms = conjugations.filter(c => c.praeteritum).map(c => c.praeteritum);
+    for (const c of conjList) {
+      const praet = c.praeteritum;
+      const dist = shuffle(allPraetForms.filter(f => f !== praet)).slice(0, 3);
+      if (dist.length >= 2) {
+        const opts = shuffle([praet, ...dist]);
+        autoPool.push({ auto: true, level: c.level||"A2", difficulty: 2, type: "mc",
+          q: `Präteritum от «${c.verb}»${c.ru ? " — "+c.ru : ""}?
+(er/sie/es)`,
+          opts, ans: opts.indexOf(praet), sourceId: c.id });
+      }
+      autoPool.push({ auto: true, level: c.level||"A2", difficulty: 4, type: "fill",
+        q: `Präteritum: er ___ (${c.verb}${c.ru ? " — "+c.ru : ""})`,
+        ans: praet, hint: `Präteritum от ${c.verb}`, sourceId: c.id });
+      const otherRu = shuffle(conjugations.filter(o => o.id !== c.id && o.ru).map(o => o.ru)).slice(0, 3);
+      if (c.ru && otherRu.length >= 2) {
+        const opts2 = shuffle([c.ru, ...otherRu]);
+        autoPool.push({ auto: true, level: c.level||"A2", difficulty: 1, type: "mc",
+          q: `«${c.verb}» в Präteritum: «${praet}» — что значит?`,
+          opts: opts2, ans: opts2.indexOf(c.ru), sourceId: c.id });
+      }
+    }
+  } else {
+    // general
+    if (blockId === "unregel") {
+      autoPool = buildUnregelQuestions(conjugations);
+    } else if (blockId === "perfekt" || blockId.startsWith("perfekt:")) {
+      autoPool = buildPerfektQuestions(blockId);
+    } else {
+      autoPool = buildAutoQuestions(topics, vocab, conjugations);
+    }
+  }
+
+  // Ручные вопросы
+  const trainerTopic = `trainer:${blockId}`;
+  const prefix = trainerTopic + ":";
+  let manualPool;
+  if (type === "partizip2") {
+    manualPool = manualQuestions.filter(q =>
+      (q.topic === trainerTopic || q.topic.startsWith(prefix)) && (q.tags||[]).includes("partizip"));
+  } else if (type === "praesens") {
+    manualPool = manualQuestions.filter(q =>
+      (q.topic === trainerTopic || q.topic.startsWith(prefix)) && !(q.tags||[]).includes("partizip"));
+  } else {
+    manualPool = blockId.includes(":")
+      ? manualQuestions.filter(q => q.topic === trainerTopic)
+      : manualQuestions.filter(q => q.topic === trainerTopic || q.topic.startsWith(prefix));
+  }
+
+  // Дедупликация manual vs auto
+  const manualSourceIds = new Set(manualPool.map(q => q.sourceId).filter(Boolean));
+  const autoFiltered = (autoPool||[]).filter(q => !q.sourceId || !manualSourceIds.has(q.sourceId));
+
+  return [...autoFiltered, ...manualPool];
+}
+
+function countPraeteritumAvailable(blockId, topics) {
+  if (blockId === "unregel") return CONJUGATIONS.filter(c => c.praeteritum).length;
+  const verbDe = new Set(
+    VOCAB.filter(v => v.pos === "verb" && (v.topics || []).some(t => topics.includes(t)))
+         .map(v => v.de)
+  );
+  return CONJUGATIONS.filter(c => c.praeteritum && verbDe.has(c.verb)).length;
+}
+
+
+// ─── Полный тест Präteritum: один вопрос на каждый глагол ────────────────
+function buildPraeteritumFullSession() {
+  const list = CONJUGATIONS.filter(c => c.praeteritum);
+  return shuffle(list).map(c => ({
+    auto: true, level: c.level || "A2", difficulty: 4, type: "fill",
+    q: `Präteritum: er ___ (${c.verb}${c.ru ? " — " + c.ru : ""})`,
+    ans: c.praeteritum,
+    hint: `Präteritum от ${c.verb}`,
+    sourceId: c.id,
+  }));
 }
 
 // ─── Сборщик тестовой сессии: 30 вопросов по новой пропорции 8/6/6/6/4 ──
@@ -2406,6 +2696,7 @@ function App() {
   const [devMode, setDevMode] = useState(false);
   const [devTapCount, setDevTapCount] = useState(0);
   const [devModalPool, setDevModalPool] = useState(null); // null = закрыто
+  const [devIsFullPool, setDevIsFullPool] = useState(false); // true = весь пул
 
   function handleDevTap() {
     const next = devTapCount + 1;
@@ -2475,11 +2766,12 @@ function App() {
     if (b.kind === "conjugations") {
       // unregel-блок: свой поток
       if (mode === "test") {
-        // Через выбор типа теста (общий / по уровню)
         setPhase("select-test-type");
       } else {
-        // learn → сразу карточки спряжений
-        startLearnConj();
+        // learn → сразу карточки (Präsens + Präteritum + Perfekt на одной карте)
+        setCardIdx(0);
+        setFlipped(false);
+        setPhase("learn-conj-cards");
       }
       return;
     }
@@ -2488,10 +2780,15 @@ function App() {
       if (mode === "test") {
         setPhase("select-subblock");
       } else {
-        // В learn-режиме пока нет карточек для Perfekt — отправляем в шпору
+        // В learn-режиме пока нет карточек для Perfekt — возвращаемся туда, откуда пришли
         console.warn("Карточки для Прошедшего времени пока в шпаргалке. Используй тест!");
-        setActiveBlock(null);
-        setPhase("select-block");
+        if (b._parent) {
+          setActiveBlock(b._parent); setActiveSub(null);
+          setPhase("select-subblock");
+        } else {
+          setActiveBlock(null);
+          setPhase("select-block");
+        }
       }
       return;
     }
@@ -2516,6 +2813,33 @@ function App() {
     setUserAnswers([]); setLastVerdict(null);
     setPhase("learn-test");
   }
+  function startLearnPraeteritum() {
+    // Только глаголы у которых есть praeteritum
+    const praetList = CONJUGATIONS.filter(c => c.praeteritum);
+    if (praetList.length === 0) return;
+    setCardIdx(0);
+    setFlipped(false);
+    setPhase("learn-praeteritum-cards");
+  }
+
+  function startLearnPraeteritumTest() {
+    const session = buildPraeteritumTestSession("unregel", []);
+    setQuestions(session); setQIdx(0); setUserAns(""); setAnswered(false);
+    setCorrectCount(0); setHintVisible(false); setTiles([]); setChosen([]); setConjAnswers([]);
+    setUserAnswers([]); setLastVerdict(null);
+    setPhase("learn-test");
+  }
+
+
+
+
+  function startLearnPraeteritumFullTest() {
+    const session = buildPraeteritumFullSession();
+    setQuestions(session); setQIdx(0); setUserAns(""); setAnswered(false);
+    setCorrectCount(0); setHintVisible(false); setTiles([]); setChosen([]); setConjAnswers([]);
+    setUserAnswers([]); setLastVerdict(null);
+    setPhase("learn-test");
+  }
 
   function startTestUnregel(levelFilter = null) {
     const session = buildTestSession([], VOCAB, CONJUGATIONS, QUESTIONS, "unregel", levelFilter);
@@ -2525,6 +2849,13 @@ function App() {
     setPhase("test-quiz");
   }
   function pickSub(s) {
+    // Сабблок со своим kind (Unregel/Perfekt, перенесённые внутрь Verben)
+    // переиспользует поток верхнеуровневого блока. _parent позволяет вернуться
+    // в список тем родителя по кнопке «Назад».
+    if (s.kind) {
+      pickBlock({ ...s, _parent: activeBlock });
+      return;
+    }
     setActiveSub(s);
     pickAction(s);
   }
@@ -2565,6 +2896,14 @@ function App() {
     setPhase("learn-test");
   }
   function goBackToSubblocks() {
+    // Если у блока есть _parent (Unregel/Perfekt внутри Verben) — возвращаемся
+    // на список тем родителя, а не сразу в общий список блоков.
+    if (activeBlock && activeBlock._parent) {
+      setActiveBlock(activeBlock._parent);
+      setActiveSub(null);
+      setPhase("select-subblock");
+      return;
+    }
     if (blockHasSubblocks(activeBlock)) { setPhase("select-subblock"); setActiveSub(null); }
     else { setPhase("select-block"); setActiveBlock(null); }
   }
@@ -2696,12 +3035,12 @@ function App() {
   // ─── DEV MODAL (универсальная) ──────────────────────────────────────────
   function renderDevModal() {
     if (!devModalPool) return null;
-    const devPool = [...devModalPool].sort((a, b) => (a.difficulty||1) - (b.difficulty||1));
-    const byLvl = [1,2,3,4,5].map(lvl => ({
-      lvl,
-      qs: devPool.filter(q => (q.difficulty||1) === lvl)
-    }));
-    const TYPE_COLOR = { mc: "#1a7a4a", fill: "#3498db", tiles: "#9b59b6", conj: "#e67e22" };
+    const devPool = devModalPool;
+    const currentIdx = (!devIsFullPool && devModalPool === questions) ? qIdx : -1;
+    const TYPE_COLOR = { mc: "#1a7a4a", fill: "#3498db", tiles: "#9b59b6", conj: "#e67e22", open: "#e74c3c" };
+    const autoCount = devPool.filter(q => q.auto).length;
+    const typeStat = {};
+    for (const q of devPool) typeStat[q.type] = (typeStat[q.type] || 0) + 1;
     return (
       <div style={{
         position: "fixed", inset: 0, background: "var(--bg-overlay)",
@@ -2711,55 +3050,108 @@ function App() {
           background: "var(--bg-card)", borderRadius: 14,
           padding: "20px", maxWidth: 760, margin: "0 auto"
         }}>
-          <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 16 }}>
+          <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 12 }}>
             <div style={{ fontWeight: 700, fontSize: 18 }}>
-              🛠 Dev: все вопросы · {devPool.length} шт
+              🛠 Dev · {devPool.length} вопросов
+              {devIsFullPool && <span style={{ fontSize: 12, color: "#e67e22", marginLeft: 8, fontWeight: 400 }}>весь пул</span>}
+              {!devIsFullPool && <span style={{ fontSize: 12, color: "var(--text-muted)", marginLeft: 8, fontWeight: 400 }}>текущая сессия</span>}
             </div>
-            <button style={S.outlineBtn("#888")} onClick={() => setDevModalPool(null)}>✕ Закрыть</button>
+            <div style={{ display: "flex", gap: 8 }}>
+              {!devIsFullPool && activeBlock && (
+                <button style={{ ...S.outlineBtn("#e67e22"), fontSize: 12, padding: "4px 10px" }}
+                  onClick={() => {
+                    const blockId = activeSub ? activeSub.id : activeBlock.id;
+                    const topics = activeSub ? (activeSub.topics || []) : (activeBlock.topics || []);
+                    const type = lastTestType || "general";
+                    const pool = buildFullPool(blockId, topics, type, VOCAB, CONJUGATIONS, QUESTIONS);
+                    setDevIsFullPool(true);
+                    setDevModalPool(pool);
+                  }}>
+                  📦 Весь пул
+                </button>
+              )}
+              {devIsFullPool && (
+                <button style={{ ...S.outlineBtn("#888"), fontSize: 12, padding: "4px 10px" }}
+                  onClick={() => { setDevIsFullPool(false); setDevModalPool(questions); }}>
+                  ↩ Сессия
+                </button>
+              )}
+              <button style={S.outlineBtn("#888")} onClick={() => { setDevModalPool(null); setDevIsFullPool(false); }}>✕</button>
+            </div>
           </div>
-          {byLvl.map(({ lvl, qs }) => {
-            if (qs.length === 0) return null;
-            const lvlInfo = LEVEL_LABELS[lvl] || LEVEL_LABELS[1];
+          <div style={{ display: "flex", gap: 6, flexWrap: "wrap", marginBottom: 16, fontSize: 12 }}>
+            <span style={{ background: "#444", color: "white", borderRadius: 4, padding: "2px 8px" }}>
+              auto: {autoCount} / manual: {devPool.length - autoCount}
+            </span>
+            {Object.entries(typeStat).map(([t, n]) => (
+              <span key={t} style={{ background: TYPE_COLOR[t] || "#888", color: "white", borderRadius: 4, padding: "2px 8px" }}>
+                {t}: {n}
+              </span>
+            ))}
+            {currentIdx >= 0 && (
+              <span style={{ background: "#c0392b", color: "white", borderRadius: 4, padding: "2px 8px" }}>
+                сейчас: #{currentIdx + 1}
+              </span>
+            )}
+          </div>
+          {devPool.map((q, i) => {
+            const typeColor = TYPE_COLOR[q.type] || "#888";
+            const isCurrent = i === currentIdx;
             return (
-              <div key={lvl} style={{ marginBottom: 24 }}>
-                <div style={{ fontWeight: 700, color: lvlInfo.color, marginBottom: 8, fontSize: 15 }}>
-                  {lvlInfo.name} · {qs.length} вопросов
+              <div key={i} style={{
+                borderLeft: `3px solid ${isCurrent ? "#c0392b" : typeColor}`,
+                padding: "10px 12px", marginBottom: 8,
+                background: isCurrent ? "rgba(192,57,43,0.08)" : "var(--bg-soft)",
+                borderRadius: "0 8px 8px 0",
+                outline: isCurrent ? "2px solid #c0392b" : "none",
+              }}>
+                <div style={{ display: "flex", gap: 6, marginBottom: 6, flexWrap: "wrap", alignItems: "center" }}>
+                  <span style={{ background: "#555", color: "white", borderRadius: 4, padding: "1px 6px", fontSize: 11, fontWeight: 700 }}>#{i+1}</span>
+                  <span style={{ background: typeColor, color: "white", borderRadius: 4, padding: "1px 6px", fontSize: 11, fontWeight: 700 }}>{q.type}</span>
+                  <span style={{ background: q.auto ? "#1a7a4a" : "#8e44ad", color: "white", borderRadius: 4, padding: "1px 6px", fontSize: 11 }}>
+                    {q.auto ? "auto" : "manual"}
+                  </span>
+                  {q.level && <span style={{ fontSize: 11, color: "var(--text-muted)", border: "1px solid var(--border-soft)", borderRadius: 4, padding: "1px 5px" }}>{q.level}</span>}
+                  {!q.auto && q.id && <span style={{ fontSize: 11, color: "var(--text-muted)" }}>id:{q.id}</span>}
+                  {q.sourceId && <span style={{ fontSize: 11, color: "var(--text-muted)" }}>src:{q.sourceId}</span>}
+                  {q.topic && <span style={{ fontSize: 11, color: "var(--text-muted)" }}>{q.topic}</span>}
+                  {isCurrent && <span style={{ fontSize: 11, color: "#c0392b", fontWeight: 700 }}>← сейчас</span>}
                 </div>
-                {qs.map((q, i) => {
-                  const typeColor = TYPE_COLOR[q.type] || "#888";
-                  const correct = formatCorrectAnswer(q);
-                  return (
-                    <div key={i} style={{
-                      borderLeft: `3px solid ${typeColor}`,
-                      padding: "8px 12px", marginBottom: 8,
-                      background: "var(--bg-soft)", borderRadius: "0 8px 8px 0"
-                    }}>
-                      <div style={{ display: "flex", gap: 8, marginBottom: 4, flexWrap: "wrap" }}>
-                        <span style={{ background: typeColor, color: "white", borderRadius: 4, padding: "1px 7px", fontSize: 11, fontWeight: 700 }}>
-                          {q.type}
-                        </span>
-                        <span style={{ fontSize: 11, color: "var(--text-muted)" }}>
-                          {q.auto ? "auto" : "manual"}
-                        </span>
-                        {q.topic && <span style={{ fontSize: 11, color: "var(--text-muted)" }}>{q.topic}</span>}
-                        {q.sourceId && <span style={{ fontSize: 11, color: "var(--text-muted)" }}>id:{q.sourceId}</span>}
-                      </div>
-                      <div style={{ fontSize: 14, marginBottom: 4, color: "var(--text-main)" }}>{q.q}</div>
-                      {correct && (
-                        <div style={{ fontSize: 13, color: "var(--text-main)", opacity: 0.7 }}>
-                          ✓ {correct}
-                        </div>
-                      )}
-                    </div>
-                  );
-                })}
+                <div style={{ fontSize: 14, marginBottom: 6, color: "var(--text-main)", whiteSpace: "pre-wrap" }}>{q.q}</div>
+                {q.type === "mc" && q.opts && (
+                  <div style={{ fontSize: 13, marginBottom: 4 }}>
+                    {q.opts.map((opt, oi) => (
+                      <span key={oi} style={{ display: "inline-block", marginRight: 10,
+                        color: oi === q.ans ? "#1a7a4a" : "var(--text-muted)",
+                        fontWeight: oi === q.ans ? 700 : 400 }}>
+                        {oi === q.ans ? "✓ " : "· "}{opt}
+                      </span>
+                    ))}
+                  </div>
+                )}
+                {q.type === "fill" && (
+                  <div style={{ fontSize: 13, color: "#1a7a4a", marginBottom: 2 }}>
+                    ✓ <strong>{q.ans}</strong>
+                    {q.altAns && q.altAns.length > 0 && (
+                      <span style={{ color: "var(--text-muted)", marginLeft: 8 }}>также: {q.altAns.join(", ")}</span>
+                    )}
+                  </div>
+                )}
+                {q.type === "tiles" && q.words && (
+                  <div style={{ fontSize: 13, color: "#1a7a4a" }}>✓ {q.words.join(" ")}</div>
+                )}
+                {q.type === "conj" && q.pronouns && q.ans && (
+                  <div style={{ fontSize: 13, color: "#1a7a4a" }}>
+                    {q.pronouns.map((p, pi) => `${p} → ${q.ans[pi]}`).join(" · ")}
+                  </div>
+                )}
+                {q.hint && <div style={{ fontSize: 12, color: "var(--text-muted)", marginTop: 4 }}>💡 {q.hint}</div>}
               </div>
             );
           })}
         </div>
       </div>
-    );
-  }
+    );  }
 
   function renderHome() {
     return (
@@ -2911,16 +3303,25 @@ function App() {
 
           <div style={S.grid}>
             {activeBlock.subblocks.map(sub => {
-              const wc = countWords(sub.topics);
-              const qc = countQuestions(sub.topics, `${activeBlock.id}:${sub.id}`);
+              // Особый сабблок Unregel (kind=conjugations) внутри Verben:
+              // у него нет topics, источник — массив CONJUGATIONS.
+              // В обоих режимах показываем количество глаголов (как было на
+              // главной до перемещения).
+              let metaText;
+              if (sub.kind === "conjugations") {
+                metaText = `${CONJUGATIONS.length} глаголов`;
+              } else {
+                const wc = countWords(sub.topics);
+                const qc = countQuestions(sub.topics, `${activeBlock.id}:${sub.id}`);
+                metaText = mode === "learn" ? `${wc} слов` : `${qc} заданий`;
+              }
               return (
                 <div key={sub.id}
                      style={{ ...S.card, borderLeft: `4px solid ${activeBlock.color}`, cursor: "pointer" }}
                      onClick={() => pickSub(sub)}>
                   <div style={S.cardTitle}>{sub.label}</div>
-                  <div style={S.cardMeta}>
-                    {mode === "learn" ? `${wc} слов` : `${qc} заданий`}
-                  </div>
+                  {sub.desc && <div style={S.cardDesc}>{sub.desc}</div>}
+                  <div style={S.cardMeta}>{metaText}</div>
                 </div>
               );
             })}
@@ -2974,8 +3375,9 @@ function App() {
       );
 
     // Счётчики для disabled-состояния
-    const p2Count  = showVerbCombos ? countPartizip2Available(blockId, topics) : 0;
-    const prCount  = showVerbCombos ? countPraesensAvailable(blockId, topics)  : 0;
+    const p2Count  = showVerbCombos ? countPartizip2Available(blockId, topics)   : 0;
+    const prCount  = showVerbCombos ? countPraesensAvailable(blockId, topics)    : 0;
+    const praetCount = showVerbCombos ? countPraeteritumAvailable(blockId, topics) : 0;
 
     // Подсчёт пула по уровням (для кнопок уровней внизу)
     let autoPool, manualPool;
@@ -3022,6 +3424,8 @@ function App() {
         session = buildPartizip2TestSession(blockId, topics);
       } else if (type === "praesens") {
         session = buildPraesensTestSession(blockId, topics);
+      } else if (type === "praeteritum") {
+        session = buildPraeteritumTestSession(blockId, topics);
       } else {
         if (activeBlock.kind === "conjugations") session = buildTestSession([], VOCAB, CONJUGATIONS, QUESTIONS, "unregel", null);
         else session = buildTestSession(topics, VOCAB, CONJUGATIONS, QUESTIONS, blockId, null);
@@ -3057,30 +3461,14 @@ function App() {
           <TopBar
             left={
               <button style={S.outlineBtn(activeBlock.color)}
-                      onClick={() => {
-                        if (activeBlock.kind === "conjugations") {
-                          setPhase("select-block"); setActiveBlock(null);
-                        } else if (blockHasSubblocks(activeBlock)) {
-                          setPhase("select-subblock"); setActiveSub(null);
-                        } else {
-                          setPhase("select-block"); setActiveBlock(null);
-                        }
-                      }}>
+                      onClick={goBackToSubblocks}>
                 ← Назад
               </button>
             }
             right={<span style={S.muted}>{modeLabel}</span>}
             icon={icon} onTheme={cycleTheme} onHome={goHome} />
           
-          {devMode && (
-            <button
-              style={{ ...S.outlineBtn("#888"), width: "100%", marginBottom: 12, fontSize: 13 }}
-              onClick={() => setDevModalPool(allPool)}>
-              🛠 Dev: показать все вопросы ({allPool.length})
-            </button>
-          )}
-            
-            <h2 style={{ ...S.heading, textAlign: "center" }}>{heading}</h2>
+          <h2 style={{ ...S.heading, textAlign: "center" }}>{heading}</h2>
           <p style={{ ...S.subheading, textAlign: "center" }}>Выбери тест</p>
 
           {/* ── Главная кнопка: Тест по блоку ──────────────────────────── */}
@@ -3108,7 +3496,7 @@ function App() {
           {showVerbCombos && (
             <div style={{
               display: "grid",
-              gridTemplateColumns: "1fr 1fr",
+              gridTemplateColumns: "1fr 1fr 1fr",
               gap: 10,
               marginBottom: 24,
             }}>
@@ -3132,6 +3520,17 @@ function App() {
                 <div style={{ fontSize: 13 }}>Präsens</div>
                 <div style={{ fontSize: 11, marginTop: 4, opacity: 0.85 }}>
                   {prCount === 0 ? "0 вопросов" : "30 вопросов"}
+                </div>
+              </button>
+              {/* Präteritum */}
+              <button
+                disabled={praetCount === 0}
+                style={comboBtnStyle(praetCount === 0, "#c0392b")}
+                onClick={() => startCombo("praeteritum")}>
+                <div style={{ fontSize: 20, marginBottom: 4 }}>⏮️</div>
+                <div style={{ fontSize: 13 }}>Präteritum</div>
+                <div style={{ fontSize: 11, marginTop: 4, opacity: 0.85 }}>
+                  {praetCount === 0 ? "0 вопросов" : "30 вопросов"}
                 </div>
               </button>
             </div>
@@ -3283,6 +3682,101 @@ function App() {
   }
 
   // ─── LEARN CONJ CARDS (для unregel) ─────────────────────────────────────
+  // ─── ВЫБОР РЕЖИМА ИЗУЧЕНИЯ (Präsens / Präteritum) ──────────────────────────
+  function renderLearnConjSelect() {
+    const praetCount = CONJUGATIONS.filter(c => c.praeteritum).length;
+    return (
+      <div style={S.page}>
+        <div style={S.container}>
+          <TopBar
+            left={<button style={S.outlineBtn("#888")} onClick={goBackToSubblocks}>← Назад</button>}
+            right={<span style={S.muted}>🧠 Изучение</span>}
+            icon={icon} onTheme={cycleTheme} onHome={goHome} />
+          <h2 style={{ ...S.heading, textAlign: "center" }}>Что изучаем?</h2>
+          <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
+            <button
+              style={{ ...S.card, borderLeft: `4px solid ${activeBlock.color}`, cursor: "pointer", textAlign: "left" }}
+              onClick={startLearnConj}>
+              <div style={{ fontWeight: 700, fontSize: 16, marginBottom: 4 }}>📝 Präsens</div>
+              <div style={{ fontSize: 13, color: "var(--text-muted)" }}>
+                Карточки спряжений · {CONJUGATIONS.length} глаголов
+              </div>
+            </button>
+            <button
+              disabled={praetCount === 0}
+              style={{ ...S.card, borderLeft: `4px solid #c0392b`, cursor: praetCount > 0 ? "pointer" : "not-allowed", textAlign: "left", opacity: praetCount > 0 ? 1 : 0.5 }}
+              onClick={startLearnPraeteritum}>
+              <div style={{ fontWeight: 700, fontSize: 16, marginBottom: 4 }}>⏮️ Präteritum — карточки</div>
+              <div style={{ fontSize: 13, color: "var(--text-muted)" }}>
+                Карточки прошедшего времени · {praetCount} глаголов
+              </div>
+            </button>
+            <button
+              disabled={praetCount === 0}
+              style={{ ...S.card, borderLeft: `4px solid #c0392b`, cursor: praetCount > 0 ? "pointer" : "not-allowed", textAlign: "left", opacity: praetCount > 0 ? 1 : 0.5 }}
+              onClick={startLearnPraeteritumFullTest}>
+              <div style={{ fontWeight: 700, fontSize: 16, marginBottom: 4 }}>⏮️ Präteritum — полный тест</div>
+              <div style={{ fontSize: 13, color: "var(--text-muted)" }}>
+                Все {praetCount} глаголов · один проход · fill
+              </div>
+            </button>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  // ─── КАРТОЧКИ PRÄTERITUM ─────────────────────────────────────────────────
+  function renderLearnPraeteritumCards() {
+    const praetList = CONJUGATIONS.filter(c => c.praeteritum);
+    if (praetList.length === 0) {
+      return <div style={S.page}><div style={S.container}>Нет данных по Präteritum.</div></div>;
+    }
+    const conj = praetList[cardIdx] || praetList[0];
+    return (
+      <div style={S.page}>
+        <div style={S.container}>
+          <TopBar
+            left={
+              <button style={S.outlineBtn(activeBlock.color)}
+                      onClick={() => setPhase("select-learn-conj")}>
+                ← Назад
+              </button>
+            }
+            right={<span style={S.muted}>{cardIdx + 1} / {praetList.length}</span>}
+            icon={icon} onTheme={cycleTheme} onHome={goHome} />
+          <PraeteritumFlipCard conj={conj} flipped={flipped}
+                               onFlip={() => setFlipped(!flipped)}
+                               color="#c0392b" />
+          <div style={{ display: "flex", gap: 12, justifyContent: "center", marginTop: 20 }}>
+            <button style={S.outlineBtn()} onClick={() => { setCardIdx(Math.max(0, cardIdx-1)); setFlipped(false); }} disabled={cardIdx === 0}>← Назад</button>
+            <button style={S.primaryBtn("#c0392b")}
+                    onClick={() => {
+                      if (cardIdx + 1 >= praetList.length) {
+                        startLearnPraeteritumTest();
+                      } else {
+                        setCardIdx(cardIdx + 1);
+                        setFlipped(false);
+                      }
+                    }}>
+              {cardIdx + 1 >= praetList.length ? "К тесту →" : "Дальше →"}
+            </button>
+          </div>
+          <div style={{ display: "flex", justifyContent: "center", marginTop: 12 }}>
+            <div style={{ display: "flex", gap: 10, justifyContent: "center" }}>
+              <button style={S.outlineBtn("#888")} onClick={startLearnPraeteritumTest}>
+                🎯 Тест (30)
+              </button>
+              <button style={S.outlineBtn("#c0392b")} onClick={startLearnPraeteritumFullTest}>
+                🎯 Полный тест
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
   function renderLearnConjCards() {
     if (CONJUGATIONS.length === 0) {
       return <div style={S.page}><div style={S.container}>Нет данных по спряжениям.</div></div>;
@@ -3294,8 +3788,8 @@ function App() {
           <TopBar
             left={
               <button style={S.outlineBtn(activeBlock.color)}
-                      onClick={() => { setPhase("select-block"); setActiveBlock(null); }}>
-                ← Блоки
+                      onClick={goBackToSubblocks}>
+                ← Назад
               </button>
             }
             right={<span style={S.muted}>{cardIdx + 1} / {CONJUGATIONS.length}</span>}
@@ -3317,9 +3811,12 @@ function App() {
               {cardIdx + 1 >= CONJUGATIONS.length ? "К мини-тесту →" : "Дальше →"}
             </button>
           </div>
-          <div style={{ display: "flex", justifyContent: "center", marginTop: 12 }}>
+          <div style={{ display: "flex", justifyContent: "center", marginTop: 12, gap: 10, flexWrap: "wrap" }}>
             <button style={S.outlineBtn("#888")} onClick={startLearnConjMiniTest}>
-              🎯 Перейти к тесту
+              🎯 Mini-тест (37)
+            </button>
+            <button style={S.outlineBtn("#c0392b")} onClick={startLearnPraeteritumFullTest}>
+              ⏮ Полный тест Präteritum (131)
             </button>
           </div>
         </div>
@@ -3371,7 +3868,16 @@ function App() {
                 ← Назад
               </button>
             }
-            right={<span style={S.muted}>{qIdx + 1} / {questions.length} · ✓ {correctCount}</span>}
+            right={<span style={S.muted}>
+              {devMode && (
+                <button
+                  style={{ ...S.outlineBtn("#888"), padding: "4px 8px", fontSize: 12, marginRight: 8 }}
+                  onClick={() => { setDevIsFullPool(false); setDevModalPool(questions); }}>
+                  🛠
+                </button>
+              )}
+              {qIdx + 1} / {questions.length} · ✓ {correctCount}
+            </span>}
             icon={icon} onTheme={cycleTheme} onHome={goHome} />
           <div style={{ textAlign: "center", color: "var(--text-muted)", fontSize: 13, marginBottom: 12 }}>
             {subLabel} · {modeLabel.includes("Тест") ? "Тестирование" : "Изучение"}
@@ -3681,6 +4187,8 @@ function App() {
       {phase === "learn-cards" && activeBlock && renderLearnCards()}
       {phase === "learn-cards-new" && activeBlock && renderLearnCardsNew()}
       {phase === "learn-conj-cards" && activeBlock && renderLearnConjCards()}
+      {phase === "select-learn-conj" && activeBlock && renderLearnConjSelect()}
+      {phase === "learn-praeteritum-cards" && activeBlock && renderLearnPraeteritumCards()}
       {(phase === "learn-test" || phase === "test-quiz") && activeBlock && renderQuiz()}
       {phase === "results" && activeBlock && renderResults()}
       {renderDevModal()}

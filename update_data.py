@@ -624,8 +624,33 @@ def collect_used_topics_by_pos(vocab):
 
 def build_blocks(taxonomy, vocab=None):
     """BLOCKS строится из Settings-XLSX + спец. блоков. Порядок важен (UI).
-    Если передан vocab — отфильтровываем пустые подблоки."""
+    Если передан vocab — отфильтровываем пустые подблоки.
+
+    Архитектура:
+    - В тренажёре 7 блоков: Neu, Verben (+Unregel внутри), Substantive,
+      Adjektive, Adverbien, Pronomen, Redewendungen.
+    - Sounds остаётся в массиве (kind=sounds), но тренажёр его фильтрует —
+      используется только в шпоре.
+    - Unregel — сабблок Verben (kind=conjugations).
+      trainer.html распознаёт sub.kind и роутит его в свой поток.
+    - Блок Perfekt удалён: его функционал (тренировка Partizip II) полностью
+      дублируется комбо-кнопкой «Partizip II» на экране select-test-type.
+      Контекст задаёт фильтр автоматически: в Verben — все глаголы (regel+unregel),
+      в Unregel-сабблоке — только unregel.
+    """
     used = collect_used_topics_by_pos(vocab or [])
+
+    # Verben + спец. сабблок Unregel в начале
+    verbs_block = build_block_from_pairs("verbs", taxonomy.get("verbs", []), used.get("verb"))
+    unregel_sub = {
+        "id": "unregel",
+        "label": BLOCK_META["unregel"]["label"],
+        "color": BLOCK_META["unregel"]["color"],
+        "desc": BLOCK_META["unregel"].get("desc", ""),
+        "kind": "conjugations",
+    }
+    verbs_block["subblocks"] = [unregel_sub] + verbs_block.get("subblocks", [])
+
     return [
         # 1. Neu (буфер новых)
         build_special_block("neu", subblocks=[
@@ -633,34 +658,19 @@ def build_blocks(taxonomy, vocab=None):
             {"id": "verbs", "label": "⚡ Verben",                "topics": ["new:new-verbs"]},
             {"id": "adj",   "label": "🎨 Adjektive / Adverbien", "topics": ["new:new-adj-adv"]},
         ]),
-        # 2. Zahlen
-        build_block_from_pairs("nums",
-            taxonomy.get("numbers") or [{"domen": "quantity", "group": "cardinal"}],
-            used.get("num")),
-        # 3. Aussprache (kind=sounds, рендер из SOUNDS)
+        # 2. Aussprache (kind=sounds, только для шпоры; trainer фильтрует)
         build_special_block("sounds"),
-        # 4. Verben
-        build_block_from_pairs("verbs", taxonomy.get("verbs", []), used.get("verb")),
-        # 5. Unregel — без подблоков (рендер из CONJUGATIONS)
-        build_special_block("unregel"),
-        # 6. Perfekt
-        build_special_block("perfekt", subblocks=[
-            {"id": "regel",   "label": "📘 Regelmäßig",   "topics": ["perfekt:regel"]},
-            {"id": "unregel", "label": "🔥 Unregelmäßig", "topics": ["perfekt:unregel"]},
-        ]),
-        # 7. Substantive
+        # 3. Verben (+ Unregel-сабблок в начале)
+        verbs_block,
+        # 4. Substantive
         build_block_from_pairs("nouns", taxonomy.get("nouns", []), used.get("noun")),
-        # 8. Adjektive
+        # 5. Adjektive
         build_block_from_pairs("adj", taxonomy.get("adjectives", []), used.get("adj")),
-        # 9. Adverbien
+        # 6. Adverbien
         build_block_from_pairs("adv", taxonomy.get("adverbs", []), used.get("adv")),
-        # 10. Pronomen
+        # 7. Pronomen
         build_block_from_pairs("mestoim", taxonomy.get("pronouns", []), used.get("pron")),
-        # 11. Begriffe (kind=terms, рендер из TERMS)
-        build_special_block("termin"),
-        # 12. Regeln (kind=rules, рендер из RULES)
-        build_special_block("rules"),
-        # 13. Redewendungen
+        # 8. Redewendungen
         build_block_from_pairs("phrases", taxonomy.get("phrases", []), used.get("phrase")),
     ]
 

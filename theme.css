@@ -3,6 +3,7 @@
    Подключается в index.html, cheatsheet.html, trainer.html
    Переменные используются и шпорой, и тренажёром.
    ═══════════════════════════════════════════════════════════════ */
+@import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&display=swap');
 
 /* ─── Глобальный сброс ────────────────────────────────────────── */
 * { box-sizing: border-box; }
@@ -186,3 +187,49 @@
     --shadow-modal: 0 8px 32px rgba(0,0,0,0.6);
   }
 }
+
+/* ═══════════════════════════════════════════════════════════════
+   КНОПКИ — dt-btn система
+   Использование:
+     <button className="dt-btn">
+       <div className="dt-btn__body">
+         <div className="dt-btn__head">
+           <div className="dt-btn__icon" />
+           <span className="dt-btn__title">Заголовок</span>
+         </div>
+         <span className="dt-btn__subtitle">Подзаголовок</span>
+         <span className="dt-btn__counter">3 themen</span>
+       </div>
+       <div className="dt-btn__marker" />
+     </button>
+   Ширина контролируется снаружи обёрткой.
+   ═══════════════════════════════════════════════════════════════ */
+
+.dt-btn {
+  width: 100%;
+  height: 230px;
+  padding: 30px;
+  background: var(--bg-panel);
+  box-shadow: 0px 2px 8px rgba(0,0,0,0.04);
+  border-radius: 40px;
+  outline: 4px solid white;
+  outline-offset: -4px;
+  display: inline-flex;
+  justify-content: space-between;
+  align-items: center;
+  cursor: pointer;
+  border: none;
+  font-family: 'Orbitron', sans-serif;
+  text-transform: capitalize;
+  transition: opacity 0.15s, transform 0.1s;
+}
+.dt-btn:hover  { opacity: 0.85; }
+.dt-btn:active { transform: scale(0.98); }
+
+.dt-btn__body     { display: inline-flex; flex-direction: column; align-items: flex-start; gap: 20px; }
+.dt-btn__head     { display: inline-flex; align-items: center; gap: 10px; }
+.dt-btn__icon     { width: 40px; height: 38px; background: white; flex-shrink: 0; }
+.dt-btn__title    { font-size: 40px; font-weight: 700; color: white; }
+.dt-btn__subtitle { font-size: 24px; font-weight: 400; color: white; }
+.dt-btn__counter  { font-size: 20px; font-weight: 400; color: white; }
+.dt-btn__marker   { width: 96px; height: 99px; background: white; flex-shrink: 0; }
