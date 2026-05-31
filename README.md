@@ -56,7 +56,7 @@ database.xlsx  ──[update_data.py]──>  data.js  ──>  cheatsheet.html
 В `cheatsheet.html` и `trainer.html` подключение `data.js` идёт с параметром версии:
 
 ```html
-<script src="data.js?v=20260524"></script>
+<script src="data.js?v=20260531"></script>
 ```
 
 Этот параметр **нужно обновлять при каждом коммите** на текущую дату — иначе у юзеров останется старый кеш браузера.
