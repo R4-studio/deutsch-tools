@@ -2686,11 +2686,41 @@ function show(id){
     UNREGEL_VERBS = new Set(
       (typeof CONJUGATIONS !== 'undefined' ? CONJUGATIONS : []).map(c => c.verb)
     );
+    // Доступ к таблицам спряжений для расширения форм глаголов в индексе
+    const CONJ = (typeof CONJUGATIONS !== 'undefined') ? CONJUGATIONS : [];
+    const REGEL = (typeof REGEL_VERBS !== 'undefined') ? REGEL_VERBS : [];
+    const conjByVerb = {};
+    for (const c of CONJ) conjByVerb[c.verb] = c;
+    const regelByVerb = {};
+    for (const r of REGEL) regelByVerb[r.verb] = r;
     const idx = [];
 
     // VOCAB: noun, verb, adj, adv, pron, num, phrase
     for (const v of VOCAB) {
       const parts = [v.de || '', v.ru || '', v.note || ''];
+      // ─── Расширение словоформ ─────────────────────────────────────
+      // Цель: при вводе склонённой формы (sitzt, Häuser, schöner) находить
+      // соответствующее слово. Формы добавляем к searchSrc, но в primary
+      // оставляем только базовую — чтобы в выдаче показывался инфинитив.
+      const forms = [];
+      if (v.pos === 'verb') {
+        const c = conjByVerb[v.de] || regelByVerb[v.de];
+        if (c && Array.isArray(c.forms)) forms.push(...c.forms);
+        if (v.praeteritum) forms.push(v.praeteritum);
+        if (v.partizip2)   forms.push(v.partizip2);
+      } else if (v.pos === 'noun') {
+        if (v.plural) {
+          // Plural хранится в формате "die Häuser" — берём само слово
+          forms.push(v.plural.replace(/^(der|die|das)\s+/i, ''));
+        }
+      } else if (v.pos === 'adj') {
+        if (v.comparative) forms.push(v.comparative);
+        if (v.superlative) {
+          // "am schönsten" → добавим и без "am "
+          forms.push(v.superlative.replace(/^am\s+/i, ''));
+        }
+      }
+      parts.push(...forms);
       const searchSrc = parts.filter(Boolean).join(' ');
       const normText = norm(searchSrc);
       idx.push({
@@ -2774,24 +2804,34 @@ function show(id){
       scored.push({ entry: e, score: score });
     }
 
+    // ── Добивка похожими по триграммам (даже если уже есть точные) ──
+    // Это даёт показ "setzen→sitzen" и других похожих, не только при опечатке.
+    // Добавляем со score ниже точных — они окажутся в конце выдачи.
+    const takenIds = new Set(scored.map(s => s.entry.item && (s.entry.item.id || s.entry.primary)));
+    const qgrams = trigrams(q);
+    const qSize = qgrams.size;
+    if (qSize > 0) {
+      const SIM_THRESHOLD = scored.length > 0 ? 0.5 : 0.5;  // одинаковый порог
+      for (const e of INDEX) {
+        const eid = e.item && (e.item.id || e.primary);
+        if (takenIds.has(eid)) continue;
+        let common = 0;
+        for (const g of qgrams) if (e.ngrams.has(g)) common++;
+        const sim = common / qSize;
+        if (sim < SIM_THRESHOLD) continue;
+        // Похожие по триграммам — score в диапазоне 0..100,
+        // чтобы они шли ПОСЛЕ всех точных (минимальный точный score ≈ 200)
+        scored.push({ entry: e, score: sim * 100 });
+        takenIds.add(eid);
+      }
+    }
+
     if (scored.length > 0) {
       scored.sort((a, b) => b.score - a.score || a.entry.primary.localeCompare(b.entry.primary));
       return { results: scored.map(s => s.entry), total: scored.length };
     }
 
-    // ── Fallback: триграммы (для опечаток) ──
-    const qgrams = trigrams(q);
-    const qSize = qgrams.size;
-    if (qSize === 0) return { results: [], total: 0 };
-    for (const e of INDEX) {
-      let common = 0;
-      for (const g of qgrams) if (e.ngrams.has(g)) common++;
-      const sim = common / qSize;
-      if (sim < 0.5) continue;  // выше порог для fuzzy
-      scored.push({ entry: e, score: sim });
-    }
-    scored.sort((a, b) => b.score - a.score || a.entry.primary.localeCompare(b.entry.primary));
-    return { results: scored.map(s => s.entry), total: scored.length };
+    return { results: [], total: 0 };
   }
 
   function search(rawQuery) {
@@ -3135,7 +3175,7 @@ function show(id){
     for (const c of CONJUGATIONS) {
       const vid = verbToVid[c.verb] || '';
       const vidAttr = vid ? ' data-vid="' + escHtml(vid) + '"' : '';
-      const modalTag = c.modal ? ' <span style="background:#fff3cd;padding:2px 8px;border-radius:6px;font-size:12px;color:#856404">Modalverb</span>' : '';
+      const modalTag = c.modal ? ' <span style="background:var(--c-modal-tag-bg);padding:2px 8px;border-radius:6px;font-size:12px;color:var(--c-modal-tag-fg)">Modalverb</span>' : '';
       html += '<div class="rule-box conj-card"' + vidAttr + ' style="cursor:' + (vid ? 'pointer' : 'default') + '"><h3>' + escHtml(c.verb)
             + (c.ru ? ' — ' + escHtml(c.ru) : '') + modalTag + '</h3>'
             + '<table class="conj-table"><tbody>';
@@ -3148,7 +3188,7 @@ function show(id){
       if (c.partizip2 || c.aux) {
         html += '<div style="margin-top:10px;padding-top:8px;border-top:1px solid var(--border-soft);font-size:13px">';
         if (c.aux) {
-          const auxColor = c.aux === 'sein' ? '#a11' : '#0056b3';
+          const auxColor = c.aux === 'sein' ? 'var(--accent-red)' : 'var(--accent-blue)';
           html += '<div style="margin-bottom:4px"><span style="color:var(--text-muted)">Perfekt mit:</span> '
                 + '<b style="color:' + auxColor + '">' + escHtml(c.aux) + '</b></div>';
         }
@@ -3175,10 +3215,10 @@ function show(id){
     html += '<div class="rule-box">';
     html += '<p>Прошедшее время в разговорной речи. Образуется по схеме:</p>';
     html += '<p style="text-align:center;font-size:18px;margin:14px 0;padding:10px;background:var(--bg-th);border-radius:8px">'
-          + '<b>haben</b> или <b style="color:#a11">sein</b> (в Präsens) + <b>Partizip II</b></p>';
+          + '<b>haben</b> или <b style="color:var(--accent-red)">sein</b> (в Präsens) + <b>Partizip II</b></p>';
     html += '<p style="font-size:13px"><b>Пример:</b><br>'
           + 'Ich <b>habe</b> ein Buch <b>gelesen</b>. — Я прочитал книгу.<br>'
-          + 'Wir <b style="color:#a11">sind</b> nach Berlin <b>gefahren</b>. — Мы поехали в Берлин.</p>';
+          + 'Wir <b style="color:var(--accent-red)">sind</b> nach Berlin <b>gefahren</b>. — Мы поехали в Берлин.</p>';
     html += '</div></div>';
 
     // ─── Правило 2: Когда haben, когда sein ──────────────────────────────
@@ -3189,14 +3229,14 @@ function show(id){
     html += '<tr><th style="text-align:left;padding:6px 10px">Вспомогательный</th>'
           + '<th style="text-align:left;padding:6px 10px">Когда использовать</th>'
           + '<th style="text-align:left;padding:6px 10px">Пример</th></tr>';
-    html += '<tr><td style="padding:6px 10px"><b style="color:#0056b3">haben</b></td>'
+    html += '<tr><td style="padding:6px 10px"><b style="color:var(--accent-blue)">haben</b></td>'
           + '<td style="padding:6px 10px">большинство глаголов (действия)</td>'
           + '<td style="padding:6px 10px">Ich <b>habe</b> gegessen.</td></tr>';
-    html += '<tr><td style="padding:6px 10px"><b style="color:#a11">sein</b></td>'
+    html += '<tr><td style="padding:6px 10px"><b style="color:var(--accent-red)">sein</b></td>'
           + '<td style="padding:6px 10px">движение / изменение состояния<br>+ sein, bleiben, werden</td>'
           + '<td style="padding:6px 10px">Er <b>ist</b> gefahren.</td></tr>';
     html += '</table>';
-    html += '<p style="font-size:12px">💡 Со <b style="color:#a11">sein</b> запоминай: '
+    html += '<p style="font-size:12px">💡 Со <b style="color:var(--accent-red)">sein</b> запоминай: '
           + '<i>gehen, kommen, fahren, fliegen, schwimmen, reiten, bleiben, werden, sein</i></p>';
     html += '</div></div>';
 
@@ -3251,7 +3291,7 @@ function show(id){
         if (!c.partizip2) continue;
         const vid = verbToVid[c.verb] || '';
         const vidAttr = vid ? ' data-vid="' + escHtml(vid) + '"' : '';
-        const auxColor = c.aux === 'sein' ? '#a11' : '#0056b3';
+        const auxColor = c.aux === 'sein' ? 'var(--accent-red)' : 'var(--accent-blue)';
         html += '<tr' + vidAttr + '>'
               + '<td style="padding:5px 10px;border-bottom:1px solid var(--border-soft)"><b>' + escHtml(c.verb) + '</b></td>'
               + '<td style="padding:5px 10px;border-bottom:1px solid var(--border-soft);color:var(--text-muted)">' + escHtml(c.ru || '') + '</td>'

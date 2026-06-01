@@ -167,7 +167,7 @@ const S = {
     boxShadow: "var(--shadow-card)",
     transition: "transform 0.15s, box-shadow 0.15s",
   },
-  primaryBtn: (color = "#3498db") => ({
+  primaryBtn: (color = "var(--c-level-2)") => ({
     background: color,
     color: "white",
     border: "none",
@@ -178,7 +178,7 @@ const S = {
     fontWeight: 600,
     fontFamily: "inherit",
   }),
-  outlineBtn: (color = "#3498db") => ({
+  outlineBtn: (color = "var(--c-level-2)") => ({
     background: "transparent",
     color: color,
     border: `2px solid ${color}`,
@@ -612,7 +612,7 @@ function ConjFlipCard({ conj, flipped, onFlip, color }) {
             {conj.modal && (
               <span style={{
                 display: "inline-block", padding: "3px 10px", borderRadius: 12,
-                background: "#fff3cd", color: "#856404",
+                background: "var(--c-modal-tag-bg)", color: "var(--c-modal-tag-fg)",
                 fontSize: 12, fontWeight: 700, marginBottom: 12,
               }}>Modalverb</span>
             )}
@@ -3105,16 +3105,16 @@ function App() {
   }, [qIdx, questions]);
 
   // ─── Цвета режимов ──────────────────────────────────────────────────────
-  const modeColor = mode === "learn" ? "#7c5cbf" : "#1a7a4a";
+  const modeColor = mode === "learn" ? "var(--c-mode-learn)" : "var(--c-level-1)";
   const modeLabel = mode === "learn" ? "🧠 Изучение" : "🎯 Тестирование";
 
   // ─── Подписи уровней (для пользователя — без сокращений) ────────────────
   const LEVEL_LABELS = {
-    1: { name: "Уровень 1", action: "Выбор", color: "#1a7a4a" },     // зелёный
-    2: { name: "Уровень 2", action: "Артикль / Спряжение", color: "#3498db" }, // синий
-    3: { name: "Уровень 3", action: "Вставь / Заполни", color: "#e67e22" },  // оранжевый
-    4: { name: "Уровень 4", action: "Составь предложение", color: "#9b59b6" }, // фиолетовый
-    5: { name: "Уровень 5", action: "Открытый ответ", color: "#e74c3c" },     // красный
+    1: { name: "Уровень 1", action: "Выбор", color: "var(--c-level-1)" },     // зелёный
+    2: { name: "Уровень 2", action: "Артикль / Спряжение", color: "var(--c-level-2)" }, // синий
+    3: { name: "Уровень 3", action: "Вставь / Заполни", color: "var(--c-level-3)" },  // оранжевый
+    4: { name: "Уровень 4", action: "Составь предложение", color: "var(--c-level-4)" }, // фиолетовый
+    5: { name: "Уровень 5", action: "Открытый ответ", color: "var(--c-level-5)" },     // красный
   };
 
   // ─── Названия типов вопросов (полные, для пользователя) ─────────────────
@@ -3143,7 +3143,7 @@ function App() {
     if (!devModalPool) return null;
     const devPool = devModalPool;
     const currentIdx = (!devIsFullPool && devModalPool === questions) ? qIdx : -1;
-    const TYPE_COLOR = { mc: "#1a7a4a", fill: "#3498db", tiles: "#9b59b6", conj: "#e67e22", open: "#e74c3c" };
+    const TYPE_COLOR = { mc: "var(--c-level-1)", fill: "var(--c-level-2)", tiles: "var(--c-level-4)", conj: "var(--c-level-3)", open: "var(--c-level-5)" };
     const autoCount = devPool.filter(q => q.auto).length;
     const typeStat = {};
     for (const q of devPool) typeStat[q.type] = (typeStat[q.type] || 0) + 1;
@@ -3159,12 +3159,12 @@ function App() {
           <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 12 }}>
             <div style={{ fontWeight: 700, fontSize: 18 }}>
               🛠 Dev · {devPool.length} вопросов
-              {devIsFullPool && <span style={{ fontSize: 12, color: "#e67e22", marginLeft: 8, fontWeight: 400 }}>весь пул</span>}
+              {devIsFullPool && <span style={{ fontSize: 12, color: "var(--c-level-3)", marginLeft: 8, fontWeight: 400 }}>весь пул</span>}
               {!devIsFullPool && <span style={{ fontSize: 12, color: "var(--text-muted)", marginLeft: 8, fontWeight: 400 }}>текущая сессия</span>}
             </div>
             <div style={{ display: "flex", gap: 8 }}>
               {!devIsFullPool && activeBlock && (
-                <button style={{ ...S.outlineBtn("#e67e22"), fontSize: 12, padding: "4px 10px" }}
+                <button style={{ ...S.outlineBtn("var(--c-level-3)"), fontSize: 12, padding: "4px 10px" }}
                   onClick={() => {
                     const blockId = activeSub ? activeSub.id : activeBlock.id;
                     const topics = activeSub ? (activeSub.topics || []) : (activeBlock.topics || []);
@@ -3177,58 +3177,58 @@ function App() {
                 </button>
               )}
               {devIsFullPool && (
-                <button style={{ ...S.outlineBtn("#888"), fontSize: 12, padding: "4px 10px" }}
+                <button style={{ ...S.outlineBtn("var(--c-outline-grey)"), fontSize: 12, padding: "4px 10px" }}
                   onClick={() => { setDevIsFullPool(false); setDevModalPool(questions); }}>
                   ↩ Сессия
                 </button>
               )}
-              <button style={S.outlineBtn("#888")} onClick={() => { setDevModalPool(null); setDevIsFullPool(false); }}>✕</button>
+              <button style={S.outlineBtn("var(--c-outline-grey)")} onClick={() => { setDevModalPool(null); setDevIsFullPool(false); }}>✕</button>
             </div>
           </div>
           <div style={{ display: "flex", gap: 6, flexWrap: "wrap", marginBottom: 16, fontSize: 12 }}>
-            <span style={{ background: "#444", color: "white", borderRadius: 4, padding: "2px 8px" }}>
+            <span style={{ background: "var(--c-text-grey-dark)", color: "white", borderRadius: 4, padding: "2px 8px" }}>
               auto: {autoCount} / manual: {devPool.length - autoCount}
             </span>
             {Object.entries(typeStat).map(([t, n]) => (
-              <span key={t} style={{ background: TYPE_COLOR[t] || "#888", color: "white", borderRadius: 4, padding: "2px 8px" }}>
+              <span key={t} style={{ background: TYPE_COLOR[t] || "var(--c-outline-grey)", color: "white", borderRadius: 4, padding: "2px 8px" }}>
                 {t}: {n}
               </span>
             ))}
             {currentIdx >= 0 && (
-              <span style={{ background: "#c0392b", color: "white", borderRadius: 4, padding: "2px 8px" }}>
+              <span style={{ background: "var(--c-praeteritum)", color: "white", borderRadius: 4, padding: "2px 8px" }}>
                 сейчас: #{currentIdx + 1}
               </span>
             )}
           </div>
           {devPool.map((q, i) => {
-            const typeColor = TYPE_COLOR[q.type] || "#888";
+            const typeColor = TYPE_COLOR[q.type] || "var(--c-outline-grey)";
             const isCurrent = i === currentIdx;
             return (
               <div key={i} style={{
-                borderLeft: `3px solid ${isCurrent ? "#c0392b" : typeColor}`,
+                borderLeft: `3px solid ${isCurrent ? "var(--c-praeteritum)" : typeColor}`,
                 padding: "10px 12px", marginBottom: 8,
                 background: isCurrent ? "rgba(192,57,43,0.08)" : "var(--bg-soft)",
                 borderRadius: "0 8px 8px 0",
                 outline: isCurrent ? "2px solid #c0392b" : "none",
               }}>
                 <div style={{ display: "flex", gap: 6, marginBottom: 6, flexWrap: "wrap", alignItems: "center" }}>
-                  <span style={{ background: "#555", color: "white", borderRadius: 4, padding: "1px 6px", fontSize: 11, fontWeight: 700 }}>#{i+1}</span>
+                  <span style={{ background: "var(--c-text-grey-medium)", color: "white", borderRadius: 4, padding: "1px 6px", fontSize: 11, fontWeight: 700 }}>#{i+1}</span>
                   <span style={{ background: typeColor, color: "white", borderRadius: 4, padding: "1px 6px", fontSize: 11, fontWeight: 700 }}>{q.type}</span>
-                  <span style={{ background: q.auto ? "#1a7a4a" : "#8e44ad", color: "white", borderRadius: 4, padding: "1px 6px", fontSize: 11 }}>
+                  <span style={{ background: q.auto ? "var(--c-level-1)" : "var(--c-combo-p2)", color: "white", borderRadius: 4, padding: "1px 6px", fontSize: 11 }}>
                     {q.auto ? "auto" : "manual"}
                   </span>
                   {q.level && <span style={{ fontSize: 11, color: "var(--text-muted)", border: "1px solid var(--border-soft)", borderRadius: 4, padding: "1px 5px" }}>{q.level}</span>}
                   {!q.auto && q.id && <span style={{ fontSize: 11, color: "var(--text-muted)" }}>id:{q.id}</span>}
                   {q.sourceId && <span style={{ fontSize: 11, color: "var(--text-muted)" }}>src:{q.sourceId}</span>}
                   {q.topic && <span style={{ fontSize: 11, color: "var(--text-muted)" }}>{q.topic}</span>}
-                  {isCurrent && <span style={{ fontSize: 11, color: "#c0392b", fontWeight: 700 }}>← сейчас</span>}
+                  {isCurrent && <span style={{ fontSize: 11, color: "var(--c-praeteritum)", fontWeight: 700 }}>← сейчас</span>}
                 </div>
                 <div style={{ fontSize: 14, marginBottom: 6, color: "var(--text-main)", whiteSpace: "pre-wrap" }}>{q.q}</div>
                 {q.type === "mc" && q.opts && (
                   <div style={{ fontSize: 13, marginBottom: 4 }}>
                     {q.opts.map((opt, oi) => (
                       <span key={oi} style={{ display: "inline-block", marginRight: 10,
-                        color: oi === q.ans ? "#1a7a4a" : "var(--text-muted)",
+                        color: oi === q.ans ? "var(--c-level-1)" : "var(--text-muted)",
                         fontWeight: oi === q.ans ? 700 : 400 }}>
                         {oi === q.ans ? "✓ " : "· "}{opt}
                       </span>
@@ -3236,7 +3236,7 @@ function App() {
                   </div>
                 )}
                 {q.type === "fill" && (
-                  <div style={{ fontSize: 13, color: "#1a7a4a", marginBottom: 2 }}>
+                  <div style={{ fontSize: 13, color: "var(--c-level-1)", marginBottom: 2 }}>
                     ✓ <strong>{q.ans}</strong>
                     {q.altAns && q.altAns.length > 0 && (
                       <span style={{ color: "var(--text-muted)", marginLeft: 8 }}>также: {q.altAns.join(", ")}</span>
@@ -3244,10 +3244,10 @@ function App() {
                   </div>
                 )}
                 {q.type === "tiles" && q.words && (
-                  <div style={{ fontSize: 13, color: "#1a7a4a" }}>✓ {q.words.join(" ")}</div>
+                  <div style={{ fontSize: 13, color: "var(--c-level-1)" }}>✓ {q.words.join(" ")}</div>
                 )}
                 {q.type === "conj" && q.pronouns && q.ans && (
-                  <div style={{ fontSize: 13, color: "#1a7a4a" }}>
+                  <div style={{ fontSize: 13, color: "var(--c-level-1)" }}>
                     {q.pronouns.map((p, pi) => `${p} → ${q.ans[pi]}`).join(" · ")}
                   </div>
                 )}
@@ -3276,7 +3276,7 @@ function App() {
             <p style={S.subheading}>Выбери режим</p>
           </div>
           <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 14 }}>
-            <div style={{ ...S.modeCard, borderColor: "#7c5cbf" }}
+            <div style={{ ...S.modeCard, borderColor: "var(--c-mode-learn)" }}
                  onClick={() => pickMode("learn")}>
               <div style={{ fontSize: 42, marginBottom: 6 }}>🧠</div>
               <div style={{ fontSize: 18, fontWeight: 700, marginBottom: 4, color: "var(--text-title)" }}>
@@ -3284,7 +3284,7 @@ function App() {
               </div>
               <div style={S.muted}>Карточки + мини-тест на перевод</div>
             </div>
-            <div style={{ ...S.modeCard, borderColor: "#1a7a4a" }}
+            <div style={{ ...S.modeCard, borderColor: "var(--c-level-1)" }}
                  onClick={() => pickMode("test")}>
               <div style={{ fontSize: 42, marginBottom: 6 }}>🎯</div>
               <div style={{ fontSize: 18, fontWeight: 700, marginBottom: 4, color: "var(--text-title)" }}>
@@ -3304,7 +3304,7 @@ function App() {
       <div style={S.page}>
         <div style={S.container}>
           <TopBar
-            left={<button style={S.outlineBtn("#888")} onClick={goHome}>← Назад</button>}
+            left={<button style={S.outlineBtn("var(--c-outline-grey)")} onClick={goHome}>← Назад</button>}
             right={<span style={S.muted}>{modeLabel}</span>}
             icon={icon} onTheme={cycleTheme} onHome={goHome} />
           <h2 style={{ ...S.heading, textAlign: "center" }}>Выбери блок</h2>
@@ -3367,7 +3367,7 @@ function App() {
             ];
             return (
               <button
-                style={{ ...S.outlineBtn("#888"), width: "100%", marginBottom: 12, fontSize: 13 }}
+                style={{ ...S.outlineBtn("var(--c-outline-grey)"), width: "100%", marginBottom: 12, fontSize: 13 }}
                 onClick={() => setDevModalPool(neuPool)}>
                 🛠 Dev: показать все вопросы Neu ({neuPool.length})
               </button>
@@ -3455,7 +3455,7 @@ function App() {
             <button style={{ ...S.bigBtn, background: activeBlock.color }} onClick={startLearnCards}>
               📖 Карточки
             </button>
-            <button style={{ ...S.bigBtn, background: "#888" }} onClick={startLearnMiniTest}>
+            <button style={{ ...S.bigBtn, background: "var(--c-outline-grey)" }} onClick={startLearnMiniTest}>
               ⚡ Сразу к мини-тесту
             </button>
           </div>
@@ -3513,11 +3513,11 @@ function App() {
     const heading = activeSub ? activeSub.label : activeBlock.label;
 
     const levelInfo = [
-      { lvl: 1, color: "#1a7a4a", name: "Уровень 1", action: "Перевод" },
-      { lvl: 2, color: "#3498db", name: "Уровень 2", action: "Базовая форма" },
-      { lvl: 3, color: "#e67e22", name: "Уровень 3", action: "Склонение" },
-      { lvl: 4, color: "#9b59b6", name: "Уровень 4", action: "В предложении" },
-      { lvl: 5, color: "#e74c3c", name: "Уровень 5", action: "Открытый ответ" },
+      { lvl: 1, color: "var(--c-level-1)", name: "Уровень 1", action: "Перевод" },
+      { lvl: 2, color: "var(--c-level-2)", name: "Уровень 2", action: "Базовая форма" },
+      { lvl: 3, color: "var(--c-level-3)", name: "Уровень 3", action: "Склонение" },
+      { lvl: 4, color: "var(--c-level-4)", name: "Уровень 4", action: "В предложении" },
+      { lvl: 5, color: "var(--c-level-5)", name: "Уровень 5", action: "Открытый ответ" },
     ];
 
     // Запустить комбо-тест по типу
@@ -3609,7 +3609,7 @@ function App() {
               {/* Partizip II */}
               <button
                 disabled={p2Count === 0}
-                style={comboBtnStyle(p2Count === 0, "#8e44ad")}
+                style={comboBtnStyle(p2Count === 0, "var(--c-combo-p2)")}
                 onClick={() => startCombo("partizip2")}>
                 <div style={{ fontSize: 20, marginBottom: 4 }}>⚙️</div>
                 <div style={{ fontSize: 13 }}>Partizip II</div>
@@ -3620,7 +3620,7 @@ function App() {
               {/* Präsens */}
               <button
                 disabled={prCount === 0}
-                style={comboBtnStyle(prCount === 0, "#2980b9")}
+                style={comboBtnStyle(prCount === 0, "var(--c-combo-pr)")}
                 onClick={() => startCombo("praesens")}>
                 <div style={{ fontSize: 20, marginBottom: 4 }}>📝</div>
                 <div style={{ fontSize: 13 }}>Präsens</div>
@@ -3631,7 +3631,7 @@ function App() {
               {/* Präteritum */}
               <button
                 disabled={praetCount === 0}
-                style={comboBtnStyle(praetCount === 0, "#c0392b")}
+                style={comboBtnStyle(praetCount === 0, "var(--c-praeteritum)")}
                 onClick={() => startCombo("praeteritum")}>
                 <div style={{ fontSize: 20, marginBottom: 4 }}>⏮️</div>
                 <div style={{ fontSize: 13 }}>Präteritum</div>
@@ -3715,7 +3715,7 @@ function App() {
             </button>
           </div>
           <div style={{ display: "flex", justifyContent: "center", marginTop: 12 }}>
-            <button style={S.outlineBtn("#888")} onClick={() => setPhase("learn-test")}>
+            <button style={S.outlineBtn("var(--c-outline-grey)")} onClick={() => setPhase("learn-test")}>
               🎯 Перейти к тесту
             </button>
           </div>
@@ -3742,7 +3742,7 @@ function App() {
           <h2 style={{ ...S.heading, textAlign: "center", marginBottom: 4 }}>📚 Общее изучение</h2>
           <div style={{ textAlign: "center", marginBottom: 12 }}>
             <button
-              style={{ ...S.outlineBtn(neuShuffle ? activeBlock.color : "#888"), fontSize: 13, padding: "4px 14px" }}
+              style={{ ...S.outlineBtn(neuShuffle ? activeBlock.color : "var(--c-outline-grey)"), fontSize: 13, padding: "4px 14px" }}
               onClick={() => { setNeuShuffle(!neuShuffle); setCardIdx(0); setFlipped(false); }}>
               🎲 Вперемешку {neuShuffle ? "✓" : ""}
             </button>
@@ -3769,7 +3769,7 @@ function App() {
             </button>
           </div>
           <div style={{ display: "flex", justifyContent: "center", marginTop: 12 }}>
-            <button style={S.outlineBtn("#888")} onClick={() => {
+            <button style={S.outlineBtn("var(--c-outline-grey)")} onClick={() => {
               const topics = ["new:new-nouns", "new:new-verbs", "new:new-adj-adv"];
               const autoPool = buildAutoQuestions(topics, VOCAB, CONJUGATIONS);
               const session = shuffleMC(shuffle(autoPool)).slice(0, 10);
@@ -3795,7 +3795,7 @@ function App() {
       <div style={S.page}>
         <div style={S.container}>
           <TopBar
-            left={<button style={S.outlineBtn("#888")} onClick={goBackToSubblocks}>← Назад</button>}
+            left={<button style={S.outlineBtn("var(--c-outline-grey)")} onClick={goBackToSubblocks}>← Назад</button>}
             right={<span style={S.muted}>🧠 Изучение</span>}
             icon={icon} onTheme={cycleTheme} onHome={goHome} />
           <h2 style={{ ...S.heading, textAlign: "center" }}>Что изучаем?</h2>
@@ -3853,10 +3853,10 @@ function App() {
             icon={icon} onTheme={cycleTheme} onHome={goHome} />
           <PraeteritumFlipCard conj={conj} flipped={flipped}
                                onFlip={() => setFlipped(!flipped)}
-                               color="#c0392b" />
+                               color="var(--c-praeteritum)" />
           <div style={{ display: "flex", gap: 12, justifyContent: "center", marginTop: 20 }}>
             <button style={S.outlineBtn()} onClick={() => { setCardIdx(Math.max(0, cardIdx-1)); setFlipped(false); }} disabled={cardIdx === 0}>← Назад</button>
-            <button style={S.primaryBtn("#c0392b")}
+            <button style={S.primaryBtn("var(--c-praeteritum)")}
                     onClick={() => {
                       if (cardIdx + 1 >= praetList.length) {
                         startLearnPraeteritumTest();
@@ -3870,10 +3870,10 @@ function App() {
           </div>
           <div style={{ display: "flex", justifyContent: "center", marginTop: 12 }}>
             <div style={{ display: "flex", gap: 10, justifyContent: "center" }}>
-              <button style={S.outlineBtn("#888")} onClick={startLearnPraeteritumTest}>
+              <button style={S.outlineBtn("var(--c-outline-grey)")} onClick={startLearnPraeteritumTest}>
                 🎯 Тест (30)
               </button>
-              <button style={S.outlineBtn("#c0392b")} onClick={startLearnPraeteritumFullTest}>
+              <button style={S.outlineBtn("var(--c-praeteritum)")} onClick={startLearnPraeteritumFullTest}>
                 🎯 Полный тест
               </button>
             </div>
@@ -3918,10 +3918,10 @@ function App() {
             </button>
           </div>
           <div style={{ display: "flex", justifyContent: "center", marginTop: 12, gap: 10, flexWrap: "wrap" }}>
-            <button style={S.outlineBtn("#888")} onClick={startLearnConjMiniTest}>
+            <button style={S.outlineBtn("var(--c-outline-grey)")} onClick={startLearnConjMiniTest}>
               🎯 Mini-тест (37)
             </button>
-            <button style={S.outlineBtn("#c0392b")} onClick={startLearnPraeteritumFullTest}>
+            <button style={S.outlineBtn("var(--c-praeteritum)")} onClick={startLearnPraeteritumFullTest}>
               ⏮ Полный тест Präteritum (131)
             </button>
           </div>
@@ -3977,7 +3977,7 @@ function App() {
             right={<span style={S.muted}>
               {devMode && (
                 <button
-                  style={{ ...S.outlineBtn("#888"), padding: "4px 8px", fontSize: 12, marginRight: 8 }}
+                  style={{ ...S.outlineBtn("var(--c-outline-grey)"), padding: "4px 8px", fontSize: 12, marginRight: 8 }}
                   onClick={() => { setDevIsFullPool(false); setDevModalPool(questions); }}>
                   🛠
                 </button>

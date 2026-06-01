@@ -68,9 +68,56 @@
   --shadow-card: 0 2px 12px rgba(0,0,0,0.07);
   --shadow-hover: 0 4px 16px rgba(0,0,0,0.12);
   --shadow-modal: 0 8px 32px rgba(0,0,0,0.15);
-}
 
-/* ─── Тёмная тема ─────────────────────────────────────────────── */
+  /* ═══════════════════════════════════════════════════════════════
+     АКЦЕНТНЫЕ ЦВЕТА (вынесено из trainer.html и data.js)
+     При смене палитры менять ТОЛЬКО ЗДЕСЬ — пробрасывается везде
+     ═══════════════════════════════════════════════════════════════ */
+
+  /* — Цвета блоков (рамки карточек на главной тренажёра) — */
+  --c-block-neu:      #b03030;
+  --c-block-sounds:   #9b59b6;
+  --c-block-verbs:    #1a7a4a;
+  --c-block-nouns:    #2980b9;
+  --c-block-adj:      #e91e63;
+  --c-block-adv:      #f39c12;
+  --c-block-mestoim:  #8e44ad;
+  --c-block-phrases:  #27ae60;
+
+  /* — Цвета внутри блока Verben (Unregel и комбо-кнопки) — */
+  --c-unregel:        #e67e22;        /* Unregelmäßig + Präteritum-кнопки */
+  --c-praeteritum:    #c0392b;        /* Полный тест Präteritum */
+
+  /* — Цвета уровней (L1–L5 на select-test-type) — */
+  --c-level-1:        #1a7a4a;        /* L1 — Перевод */
+  --c-level-2:        #3498db;        /* L2 — Базовая форма */
+  --c-level-3:        #e67e22;        /* L3 — Склонение */
+  --c-level-4:        #9b59b6;        /* L4 — В предложении */
+  --c-level-5:        #e74c3c;        /* L5 — Открытый ответ */
+
+  /* — Утилитарные (контуры кнопок «Назад», подписи и т.п.) — */
+  --c-outline-grey:   #888;            /* серая обводка кнопок */
+  --c-text-grey-medium: #555;
+  --c-text-grey-dark:   #444;
+
+  /* — Цвета общего теста (большая зелёная кнопка «Тест по блоку») — */
+  --c-test-all:       #1a7a4a;
+  --c-test-all-dark:  #155f3a;        /* акцент при ховере */
+
+  /* — Подсказка про Modalverb — */
+  /* — Цвета режима (Изучение vs Тестирование) — */
+  --c-mode-learn:     #7c5cbf;        /* Изучение (фиолетовый акцент) */
+  --c-mode-test:      var(--c-level-1); /* Тестирование (зелёный) */
+
+  /* — Комбо-кнопки на select-test-type — */
+  --c-combo-p2:       #8e44ad;        /* Partizip II */
+  --c-combo-pr:       #2980b9;        /* Präsens */
+  /* Präteritum комбо-кнопка использует --c-praeteritum выше */
+
+  /* — Признак авто-сгенерированного вопроса в dev-модалке — */
+  --c-dev-auto:       var(--c-level-1);
+  --c-dev-manual:     #8e44ad;
+}
 .theme-dark {
   /* фон */
   --bg-body: #0e0e10;
@@ -130,6 +177,44 @@
   --shadow-card: 0 2px 12px rgba(0,0,0,0.4);
   --shadow-hover: 0 4px 16px rgba(0,0,0,0.5);
   --shadow-modal: 0 8px 32px rgba(0,0,0,0.6);
+
+  /* ═══ Акцентные цвета (тёмная тема) ═════════════════════════════
+     По умолчанию = светлая. Меняй здесь чтобы развести тёмную палитру.
+     ═══════════════════════════════════════════════════════════════ */
+  --c-block-neu:      #b03030;
+  --c-block-sounds:   #9b59b6;
+  --c-block-verbs:    #1a7a4a;
+  --c-block-nouns:    #2980b9;
+  --c-block-adj:      #e91e63;
+  --c-block-adv:      #f39c12;
+  --c-block-mestoim:  #8e44ad;
+  --c-block-phrases:  #27ae60;
+
+  --c-unregel:        #e67e22;
+  --c-praeteritum:    #c0392b;
+
+  --c-level-1:        #1a7a4a;
+  --c-level-2:        #3498db;
+  --c-level-3:        #e67e22;
+  --c-level-4:        #9b59b6;
+  --c-level-5:        #e74c3c;
+
+  --c-outline-grey:   #888;
+  --c-text-grey-medium: #555;
+  --c-text-grey-dark:   #444;
+
+  --c-test-all:       #1a7a4a;
+  --c-test-all-dark:  #155f3a;
+
+  --c-modal-tag-bg:   #fff3cd;
+  --c-modal-tag-fg:   #856404;
+
+  --c-mode-learn:     #7c5cbf;
+  --c-mode-test:      var(--c-level-1);
+  --c-combo-p2:       #8e44ad;
+  --c-combo-pr:       #2980b9;
+  --c-dev-auto:       var(--c-level-1);
+  --c-dev-manual:     #8e44ad;
 }
 
 /* ─── Авто-тема по системе (если не выбрана явно) ──────────────── */
