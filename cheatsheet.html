@@ -369,7 +369,8 @@ tr:hover td{background:var(--bg-row-hover)}
   #searchBtn { padding: 8px 10px; font-size: 12px; }
 }
 /* Клик по строке слова → модалка */
-tr[data-vid] { cursor: pointer; }
+tr[data-vid], [data-vid].conj-card { cursor: pointer; }
+[data-vid].conj-card:hover { box-shadow: var(--shadow-hover); transition: box-shadow 0.15s; }
 
 .word-modal {
   position: fixed; inset: 0;
@@ -3123,10 +3124,19 @@ function show(id){
   function renderUnregel() {
     const panel = document.getElementById('tab-unregel');
     if (!panel || typeof CONJUGATIONS === 'undefined') return;
+    // Индекс: имя глагола → vid из VOCAB (для модалки)
+    const verbToVid = {};
+    if (typeof VOCAB !== 'undefined') {
+      for (const v of VOCAB) {
+        if (v.pos === 'verb') verbToVid[v.de] = v.id;
+      }
+    }
     let html = '';
     for (const c of CONJUGATIONS) {
+      const vid = verbToVid[c.verb] || '';
+      const vidAttr = vid ? ' data-vid="' + escHtml(vid) + '"' : '';
       const modalTag = c.modal ? ' <span style="background:#fff3cd;padding:2px 8px;border-radius:6px;font-size:12px;color:#856404">Modalverb</span>' : '';
-      html += '<div class="rule-box"><h3>' + escHtml(c.verb)
+      html += '<div class="rule-box conj-card"' + vidAttr + ' style="cursor:' + (vid ? 'pointer' : 'default') + '"><h3>' + escHtml(c.verb)
             + (c.ru ? ' — ' + escHtml(c.ru) : '') + modalTag + '</h3>'
             + '<table class="conj-table"><tbody>';
       for (let i = 0; i < c.pronouns.length; i++) {
@@ -3221,6 +3231,13 @@ function show(id){
 
     // ─── Таблица всех unregel с Partizip II ──────────────────────────────
     if (typeof CONJUGATIONS !== 'undefined' && CONJUGATIONS.length > 0) {
+      // Индекс verb → vid для модалки
+      const verbToVid = {};
+      if (typeof VOCAB !== 'undefined') {
+        for (const v of VOCAB) {
+          if (v.pos === 'verb') verbToVid[v.de] = v.id;
+        }
+      }
       html += '<div class="section">';
       html += '<div class="section-title">📋 Unregelmäßig — таблица Partizip II</div>';
       html += '<table style="width:100%"><thead><tr>'
@@ -3232,8 +3249,10 @@ function show(id){
       const sorted = CONJUGATIONS.slice().sort((a, b) => a.verb.localeCompare(b.verb));
       for (const c of sorted) {
         if (!c.partizip2) continue;
+        const vid = verbToVid[c.verb] || '';
+        const vidAttr = vid ? ' data-vid="' + escHtml(vid) + '"' : '';
         const auxColor = c.aux === 'sein' ? '#a11' : '#0056b3';
-        html += '<tr>'
+        html += '<tr' + vidAttr + '>'
               + '<td style="padding:5px 10px;border-bottom:1px solid var(--border-soft)"><b>' + escHtml(c.verb) + '</b></td>'
               + '<td style="padding:5px 10px;border-bottom:1px solid var(--border-soft);color:var(--text-muted)">' + escHtml(c.ru || '') + '</td>'
               + '<td style="padding:5px 10px;border-bottom:1px solid var(--border-soft)"><b style="color:' + auxColor + '">' + escHtml(c.aux || '') + '</b></td>'
@@ -3611,8 +3630,8 @@ function show(id){
   }
 
   document.addEventListener('click', function(ev) {
-    const tr = ev.target.closest('tr[data-vid]');
-    if (tr) { showWordModal(tr.getAttribute('data-vid')); return; }
+    const el = ev.target.closest('[data-vid]');
+    if (el) { showWordModal(el.getAttribute('data-vid')); return; }
     const modal = document.getElementById('word-modal');
     if (modal && modal.classList.contains('open') && ev.target === modal) {
       closeWordModal();

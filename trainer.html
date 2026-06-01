@@ -734,13 +734,18 @@ function PraeteritumFlipCard({ conj, flipped, onFlip, color }) {
 // ═══════════════════════════════════════════════════════════════
 function FlipCard({ item, flipped, onFlip, color }) {
   const badge = item.gender ? S.badge(item.gender) : null;
+  const isVerb = item.pos === "verb";
+  // Для глаголов карточка выше — нужно влезть 6 строк Präsens + Präteritum + Perfekt
+  const cardHeight = isVerb ? 400 : 280;
+  // Резолвим формы только если глагол (избегаем расчёта для существительных)
+  const forms = isVerb ? resolveVerbForms(item, (typeof CONJUGATIONS !== "undefined" ? CONJUGATIONS : [])) : null;
   return (
     <div
       onClick={onFlip}
       style={{
         perspective: 1000,
         cursor: "pointer",
-        height: 280,
+        height: cardHeight,
         marginBottom: 14,
         position: "relative",
         zIndex: 1,
@@ -794,12 +799,57 @@ function FlipCard({ item, flipped, onFlip, color }) {
             textAlign: "center",
           }}
         >
-          <div>
-            <div style={{ fontSize: 24, fontWeight: 700, marginBottom: 10 }}>{item.ru}</div>
-            {item.note && (
-              <div style={{ fontSize: 13, opacity: 0.9, lineHeight: 1.5, padding: "0 20px" }}>{item.note}</div>
-            )}
-          </div>
+          {isVerb ? (
+            <div style={{ padding: "0 16px", width: "100%" }}>
+              <div style={{ fontSize: 16, fontWeight: 700, marginBottom: 4 }}>
+                {item.de} · <span style={{ opacity: 0.9, fontWeight: 400 }}>{item.ru}</span>
+              </div>
+              <div style={{ fontSize: 13, opacity: 0.85, marginBottom: 10 }}>Präsens</div>
+              <table style={{ margin: "0 auto", fontSize: 14 }}>
+                <tbody>
+                  {forms.pronouns.map((p, i) => (
+                    <tr key={i}>
+                      <td style={{ padding: "2px 12px", textAlign: "right", opacity: 0.85 }}>{p}</td>
+                      <td style={{ padding: "2px 12px", textAlign: "left", fontWeight: 700 }}>
+                        {forms.praesens[i]}
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+              {(forms.praeteritum || forms.partizip2) && (
+                <div style={{
+                  marginTop: 12, paddingTop: 10,
+                  borderTop: "1px solid rgba(255,255,255,0.25)",
+                  display: "flex", flexDirection: "column", gap: 3,
+                  fontSize: 13,
+                }}>
+                  {forms.praeteritum && (
+                    <div>
+                      <span style={{ opacity: 0.85 }}>Präteritum: </span>
+                      <span style={{ fontWeight: 700 }}>{forms.praeteritum}</span>
+                      <span style={{ opacity: 0.7, fontSize: 11 }}> (er/sie/es)</span>
+                    </div>
+                  )}
+                  {forms.partizip2 && (
+                    <div>
+                      <span style={{ opacity: 0.85 }}>Perfekt: </span>
+                      <span style={{ fontWeight: 700 }}>
+                        {forms.aux === "sein" ? "ist" : "hat"} {forms.partizip2}
+                      </span>
+                    </div>
+                  )}
+                </div>
+              )}
+            </div>
+          ) : (
+            <div>
+              <div style={{ fontSize: 24, fontWeight: 700, marginBottom: 10 }}>{item.ru}</div>
+              {item.note && (
+                <div style={{ fontSize: 13, opacity: 0.9, lineHeight: 1.5, padding: "0 20px" }}>{item.note}</div>
+              )}
+            </div>
+          )}
         </div>
       </div>
     </div>
@@ -976,6 +1026,62 @@ function getPartizip2(infinitive, conjugations) {
     if (reg && reg.partizip2) return reg.partizip2;
   }
   return partizip2Regelmaessig(infinitive);
+}
+
+// ─── Автогенератор Präteritum для regelmäßig ──────────────────────────────
+// Правило: stem + "te" (для er/sie/es), для основ на -t/-d/(chn|ffn|tm|dm|gn) → -ete
+// Отделяемая приставка остаётся в конце (как в Präsens): "kaufte ein"
+// Возвратные местоимения не подставляются — это делает рендерер
+function praeteritumRegelmaessig(infinitive) {
+  // -ieren: studieren → studierte (без особенностей)
+  // отделяемые приставки
+  for (const prefix of SEPARABLE_PREFIXES_P2) {
+    if (infinitive.startsWith(prefix) && infinitive.length > prefix.length + 2) {
+      const subInf = infinitive.slice(prefix.length);
+      return praeteritumRegelmaessig(subInf) + " " + prefix;
+    }
+  }
+  let stem;
+  if (infinitive.endsWith("en")) stem = infinitive.slice(0, -2);
+  else if (infinitive.endsWith("n")) stem = infinitive.slice(0, -1);
+  else stem = infinitive;
+  const needsE = /[td]$/.test(stem) || /(chn|ffn|tm|dm|gn)$/.test(stem);
+  return stem + (needsE ? "ete" : "te");
+}
+
+// Резолвер форм глагола для FlipCard: возвращает 6 форм Präsens + Präteritum + Perfekt
+// Источники по приоритету:
+//   1. CONJUGATIONS (для unregel — там полные формы)
+//   2. Поля самой записи VOCAB (.praeteritum, .partizip2, .aux)
+//   3. Автогенерация (conjRegelmaessig / praeteritumRegelmaessig / partizip2Regelmaessig)
+function resolveVerbForms(item, conjugations) {
+  // 1. unregel — пробуем взять из CONJUGATIONS
+  const conj = conjugations.find(c => c.verb === item.de);
+  if (conj) {
+    return {
+      pronouns: conj.pronouns,
+      praesens: conj.forms,
+      praeteritum: conj.praeteritum || null,
+      partizip2: conj.partizip2 || null,
+      aux: conj.aux || item.aux || "haben",
+    };
+  }
+  // 2/3. regel или unregel вне CONJUGATIONS — спрягаем + читаем поля
+  const pronouns = ["ich", "du", "er/sie/es", "wir", "ihr", "sie/Sie"];
+  const praesens = [
+    conjRegelmaessig(item.de, "ich"),
+    conjRegelmaessig(item.de, "du"),
+    conjRegelmaessig(item.de, "er"),
+    conjRegelmaessig(item.de, "wir"),
+    conjRegelmaessig(item.de, "ihr"),
+    conjRegelmaessig(item.de, "Sie"),
+  ];
+  return {
+    pronouns, praesens,
+    praeteritum: item.praeteritum || praeteritumRegelmaessig(item.de),
+    partizip2:   item.partizip2  || partizip2Regelmaessig(item.de),
+    aux: item.aux || "haben",
+  };
 }
 
 // Получить aux (haben/sein) для глагола
