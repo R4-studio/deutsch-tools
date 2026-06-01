@@ -3602,10 +3602,12 @@ function show(id){
       }
 
       if (conjData && conjData.forms && conjData.forms.length) {
+        // REGEL_VERBS не хранит pronouns (они везде одинаковые), CONJUGATIONS — хранит
+        const pronouns = conjData.pronouns || ['ich', 'du', 'er/sie/es', 'wir', 'ihr', 'sie/Sie'];
         let table = '<div class="modal-row" style="flex-direction:column;gap:6px">'
           + '<span class="modal-label" style="flex:none;margin-bottom:4px">Спряжение (Präsens):</span>'
           + '<table style="border-collapse:collapse;width:100%;font-size:12px">';
-        conjData.pronouns.forEach(function(pr, i) {
+        pronouns.forEach(function(pr, i) {
           const form = conjData.forms[i] || '';
           table += '<tr>'
             + '<td style="padding:3px 8px;color:var(--text-muted);width:90px">' + escHtml(pr) + '</td>'
