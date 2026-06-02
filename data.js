@@ -2,7 +2,7 @@
 // data.js — единый источник правды для шпоры и тренажёра
 // Собрано автоматически из database.xlsx (см. update_data.py)
 // ═══════════════════════════════════════════════════════════════
-// VOCAB: 857 | REGEL: 79 | CONJ: 138
+// VOCAB: 858 | REGEL: 80 | CONJ: 138
 // QUESTIONS: 99 | RULES: 23 | TERMS: 37 | SOUNDS: 17
 
 const VOCAB = [
@@ -434,7 +434,7 @@ const VOCAB = [
   { id: "n0091", de: "Fragezeichen", ru: "вопросительный знак", altRu: "\"?\"", pos: "noun", gender: "n", plural: "die Fragezeichen", level: "A1", topics: ["study:writing"], domen: "study", group: "writing", source: "my" },
   { id: "n0092", de: "Komma", ru: "запятая", altRu: "\",\"", pos: "noun", gender: "n", plural: "die Kommas", level: "A1", topics: ["study:writing"], domen: "study", group: "writing", source: "my" },
   { id: "n0093", de: "Tipp", ru: "совет", altRu: "подсказка", pos: "noun", gender: "m", plural: "die Tipps", level: "A1", topics: ["study:writing"], domen: "study", group: "writing", source: "my" },
-  // ─── Глаголы (217) ─────────────
+  // ─── Глаголы (218) ─────────────
   { id: "v0001", de: "bekommen", ru: "получать", pos: "verb", level: "A1", topics: ["work:general", "new:new-verbs"], domen: "work", group: "general", new: true, type: "unregel", aux: "haben", partizip2: "bekommen", praeteritum: "bekam", source: "my" },
   { id: "v0002", de: "benutzen", ru: "использовать", altRu: "пользоваться", pos: "verb", level: "A1", topics: ["work:general"], domen: "work", group: "general", type: "regel", aux: "haben", partizip2: "benutzt", praeteritum: "benutzen", source: "my" },
   { id: "v0003", de: "besuchen", ru: "посещать", pos: "verb", level: "A1", topics: ["work:general"], domen: "work", group: "general", type: "regel", aux: "haben", partizip2: "besucht", praeteritum: "besuchen", source: "my" },
@@ -652,6 +652,7 @@ const VOCAB = [
   { id: "v0215", de: "verschwinden", ru: "исчезать", pos: "verb", level: "A2", topics: ["movement:general", "new:new-verbs"], domen: "movement", group: "general", new: true, type: "unregel", aux: "sein", partizip2: "verschwunden", praeteritum: "verschwand", source: "my" },
   { id: "v0216", de: "vorstellen", ru: "представлять", altRu: "знакомить", pos: "verb", level: "A2", topics: ["communication:general", "new:new-verbs"], domen: "communication", group: "general", note: "sich vorstellen — представляться", new: true, type: "unregel", separable: true, prefix: "vor", aux: "haben", partizip2: "vorgestellt", praeteritum: "stellte vor", source: "my" },
   { id: "v0217", de: "verkaufen", ru: "продавать", pos: "verb", level: "A1", topics: ["products:general", "new:new-verbs"], domen: "products", group: "general", note: "↔ kaufen", new: true, type: "regel", aux: "haben", partizip2: "verkauft", praeteritum: "verkaufte", source: "my" },
+  { id: "v0218", de: "auspacken", ru: "распаковывать", pos: "verb", level: "A2", topics: ["home:chores", "new:new-verbs"], domen: "home", group: "chores", note: "↔ einpacken", new: true, type: "regel", separable: true, prefix: "aus", aux: "haben", partizip2: "ausgepackt", praeteritum: "packte aus", source: "my" },
   // ─── Прилагательные (76) ─────────────
   { id: "a0001", de: "rot", ru: "красный", pos: "adj", level: "A1", topics: ["state:colors"], domen: "state", group: "colors", source: "my" },
   { id: "a0002", de: "schwarz", ru: "чёрный", pos: "adj", level: "A1", topics: ["state:colors"], domen: "state", group: "colors", source: "my" },
@@ -1093,6 +1094,7 @@ const REGEL_VERBS = [
   { id: "r077", verb: "explodieren", ru: "взрываться", forms: ["explodiere", "explodierst", "explodiert", "explodieren", "explodiert", "explodieren"], partizip2: "explodiert", aux: "sein", praeteritum: "explodierte" },
   { id: "r078", verb: "passieren", ru: "происходить", forms: ["passiere", "passierst", "passiert", "passieren", "passiert", "passieren"], partizip2: "passiert", aux: "sein", praeteritum: "passierte" },
   { id: "r079", verb: "verkaufen", ru: "продавать", forms: ["verkaufe", "verkaufst", "verkauft", "verkaufen", "verkauft", "verkaufen"], partizip2: "verkauft", aux: "haben", praeteritum: "verkaufte" },
+  { id: "r080", verb: "auspacken", ru: "распаковывать", forms: ["packe aus", "packst aus", "packt aus", "packen aus", "packt aus", "packen aus"], partizip2: "ausgepackt", aux: "haben", praeteritum: "packte aus", separable: true },
 ];
 
 const QUESTIONS = [
