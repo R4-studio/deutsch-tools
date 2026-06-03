@@ -184,13 +184,13 @@
 
   /* — Цвета блоков (рамки карточек на главной тренажёра) — */
   --c-block-neu:      var(--red-700);
-  --c-block-sounds:   var(--violet-500);
-  --c-block-verbs:    var(--green-700);
-  --c-block-nouns:    var(--cyan-700);
+  --c-block-verben:    var(--green-700);
+  --c-block-substantive:    var(--cyan-700);
   --c-block-adj:      var(--pink-500);
   --c-block-adv:      var(--orange-400);
-  --c-block-mestoim:  var(--violet-700);
-  --c-block-phrases:  var(--green-500);
+  --c-block-pronomen:  var(--violet-700);
+  --c-block-redewendungen:  var(--green-500);
+  --c-block-unregel:  var(--green-700);
 
   /* — Цвета внутри блока Verben (Unregel и комбо-кнопки) — */
   --c-unregel:        var(--orange-500);
@@ -263,7 +263,7 @@
   --text-title:      var(--grey-200);
   --text-tab-active: #fff;
   /* в тёмной теме все подложки светлые (*-300) → текст тёмный */
-  --on-color:        var(--grey-950);
+  --on-color:        var(--grey-800);
 
   /* границы */
   --border-soft:  var(--grey-800);
@@ -297,13 +297,14 @@
 
   /* Блоки */
   --c-block-neu:      var(--red-300);
-  --c-block-sounds:   var(--violet-300);
-  --c-block-verbs:    var(--green-300);
-  --c-block-nouns:    var(--cyan-300);
+  --c-block-sounds:   var(--violet-100);
+  --c-block-verben:    var(--orange-300);
+  --c-block-substantive:    var(--green-300);
   --c-block-adj:      var(--pink-300);
-  --c-block-adv:      var(--orange-300);
-  --c-block-mestoim:  var(--violet-300);
-  --c-block-phrases:  var(--green-300);
+  --c-block-adv:      var(--violet-300);
+  --c-block-pronomen:  var(--lime-300);
+  --c-block-redewendungen:  var(--cyan-300);
+  --c-block-unregel:  var(--orange-300);
 
   /* Внутри Verben */
   --c-unregel:        var(--orange-300);

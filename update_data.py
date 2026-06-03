@@ -554,19 +554,17 @@ BLOCK_META_RU = {
 
 # Подписи и цвета верхнеуровневых блоков (POS / спец.).
 BLOCK_META = {
-    "neu":     {"label": "🆕 Neu",            "color": "#b03030", "desc": "Frische Wörter (Puffer)"},
+    "neu":     {"label": "🆕 Neu",            "color": "var(--c-block-neu)", "desc": "Frische Wörter (Puffer)"},
+    "verbs":   {"label": "⚡ Verben",         "color": "var(--c-block-verben)"},
+    "nouns":   {"label": "📦 Substantive",    "color": "var(--c-block-substantive)"},
+    "adj":     {"label": "🎨 Adjektive",      "color": "var(--c-block-adj)"},
+    "adv":     {"label": "🔄 Adverbien",      "color": "var(--c-block-adv)"},
+    "mestoim": {"label": "👤 Pronomen",       "color": "var(--c-block-pronomen)"},
+    "phrases": {"label": "💬 Redewendungen",  "color": "var(--c-block-redewendungen)"},
+    "unregel": {"label": "🔥 Unregelmäßig", "color": "var(--c-block-unregel)", "desc": "Unregelmäßige Verben in Präsens", "kind": "conjugations"},
     "nums":    {"label": "🔢 Zahlen",         "color": "#16a085"},
     "sounds":  {"label": "🔤 Aussprache",     "color": "#9b59b6", "desc": "Ausspracheregeln", "kind": "sounds"},
-    "verbs":   {"label": "⚡ Verben",         "color": "#1a7a4a"},
-    "unregel": {"label": "🔥 Unregelmäßig",   "color": "#e67e22", "desc": "Unregelmäßige Verben in Präsens", "kind": "conjugations"},
-    "perfekt": {"label": "🕰 Perfekt",        "color": "#8e44ad", "desc": "haben/sein + Partizip II", "kind": "perfekt"},
-    "nouns":   {"label": "📦 Substantive",    "color": "#2980b9"},
-    "adj":     {"label": "🎨 Adjektive",      "color": "#e91e63"},
-    "adv":     {"label": "🔄 Adverbien",      "color": "#f39c12"},
-    "mestoim": {"label": "👤 Pronomen",       "color": "#8e44ad"},
-    "termin":  {"label": "📋 Begriffe",       "color": "#34495e", "desc": "Grammatikbegriffe", "kind": "terms"},
-    "rules":   {"label": "📐 Regeln",         "color": "#7c5cbf", "desc": "Grammatikregeln und Tabellen", "kind": "rules"},
-    "phrases": {"label": "💬 Redewendungen",  "color": "#27ae60"},
+    
 }
 
 def label_for_pair(domen, group, taxonomy_entry=None):
