@@ -169,7 +169,7 @@ const S = {
   },
   primaryBtn: (color = "var(--c-level-2)") => ({
     background: color,
-    color: "white",
+    color: "var(--on-color)",
     border: "none",
     padding: "10px 22px",
     borderRadius: 10,
@@ -282,7 +282,7 @@ const S = {
     marginTop: 4,
   },
   bigBtn: {
-    color: "white",
+    color: "var(--on-color)",
     border: "none",
     padding: "16px 28px",
     borderRadius: 12,
@@ -318,7 +318,7 @@ const S = {
   levelBadge: (color) => ({
     display: "inline-block",
     background: color,
-    color: "white",
+    color: "var(--on-color)",
     padding: "6px 14px",
     borderRadius: 18,
     fontSize: 13,
@@ -504,7 +504,7 @@ const S = {
   },
   tile: {
     background: "var(--accent)",
-    color: "white",
+    color: "var(--on-color)",
     padding: "8px 14px",
     borderRadius: 8,
     fontSize: 14,
@@ -555,11 +555,28 @@ function useTheme() {
     }
   });
   useEffect(() => {
+    // При 'auto' резолвим через системную настройку (matchMedia)
+    // и ставим конкретный класс — палитра живёт только в :root и .theme-dark
+    let resolved = theme;
+    if (theme === "auto" && window.matchMedia) {
+      resolved = window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light";
+    }
     document.documentElement.classList.remove("theme-auto", "theme-light", "theme-dark");
-    document.documentElement.classList.add("theme-" + theme);
+    document.documentElement.classList.add("theme-" + resolved);
     try {
       localStorage.setItem("theme", theme);
     } catch (e) {}
+
+    // Если выбран 'auto' — подписываемся на изменение системной темы
+    if (theme === "auto" && window.matchMedia) {
+      const mq = window.matchMedia("(prefers-color-scheme: dark)");
+      const handler = () => {
+        document.documentElement.classList.remove("theme-light", "theme-dark");
+        document.documentElement.classList.add("theme-" + (mq.matches ? "dark" : "light"));
+      };
+      mq.addEventListener("change", handler);
+      return () => mq.removeEventListener("change", handler);
+    }
   }, [theme]);
   function cycleTheme() {
     setTheme((t) => (t === "auto" ? "light" : t === "light" ? "dark" : "auto"));
@@ -630,7 +647,7 @@ function ConjFlipCard({ conj, flipped, onFlip, color }) {
           </div>
         </div>
         <div className="flip-face back"
-             style={{ background: color, color: "white", textAlign: "center" }}>
+             style={{ background: color, color: "var(--on-color)", textAlign: "center" }}>
           <div style={{ padding: "0 20px" }}>
             <div style={{ fontSize: 18, fontWeight: 700, marginBottom: 10 }}>
               {conj.verb} · Präsens
@@ -711,7 +728,7 @@ function PraeteritumFlipCard({ conj, flipped, onFlip, color }) {
           </div>
         </div>
         <div className="flip-face back"
-             style={{ background: color, color: "white", textAlign: "center" }}>
+             style={{ background: color, color: "var(--on-color)", textAlign: "center" }}>
           <div style={{ padding: "0 20px" }}>
             <div style={{ fontSize: 14, opacity: 0.85, marginBottom: 8 }}>Präteritum · er/sie/es</div>
             <div style={{ fontSize: 36, fontWeight: 700, marginBottom: 16 }}>
@@ -795,7 +812,7 @@ function FlipCard({ item, flipped, onFlip, color }) {
           className="flip-face back"
           style={{
             background: color,
-            color: "white",
+            color: "var(--on-color)",
             textAlign: "center",
           }}
         >
@@ -3186,16 +3203,16 @@ function App() {
             </div>
           </div>
           <div style={{ display: "flex", gap: 6, flexWrap: "wrap", marginBottom: 16, fontSize: 12 }}>
-            <span style={{ background: "var(--c-text-grey-dark)", color: "white", borderRadius: 4, padding: "2px 8px" }}>
+            <span style={{ background: "var(--c-text-grey-dark)", color: "var(--on-color)", borderRadius: 4, padding: "2px 8px" }}>
               auto: {autoCount} / manual: {devPool.length - autoCount}
             </span>
             {Object.entries(typeStat).map(([t, n]) => (
-              <span key={t} style={{ background: TYPE_COLOR[t] || "var(--c-outline-grey)", color: "white", borderRadius: 4, padding: "2px 8px" }}>
+              <span key={t} style={{ background: TYPE_COLOR[t] || "var(--c-outline-grey)", color: "var(--on-color)", borderRadius: 4, padding: "2px 8px" }}>
                 {t}: {n}
               </span>
             ))}
             {currentIdx >= 0 && (
-              <span style={{ background: "var(--c-praeteritum)", color: "white", borderRadius: 4, padding: "2px 8px" }}>
+              <span style={{ background: "var(--c-praeteritum)", color: "var(--on-color)", borderRadius: 4, padding: "2px 8px" }}>
                 сейчас: #{currentIdx + 1}
               </span>
             )}
@@ -3209,12 +3226,12 @@ function App() {
                 padding: "10px 12px", marginBottom: 8,
                 background: isCurrent ? "rgba(192,57,43,0.08)" : "var(--bg-soft)",
                 borderRadius: "0 8px 8px 0",
-                outline: isCurrent ? "2px solid #c0392b" : "none",
+                outline: isCurrent ? "2px solid var(--c-praeteritum)" : "none",
               }}>
                 <div style={{ display: "flex", gap: 6, marginBottom: 6, flexWrap: "wrap", alignItems: "center" }}>
-                  <span style={{ background: "var(--c-text-grey-medium)", color: "white", borderRadius: 4, padding: "1px 6px", fontSize: 11, fontWeight: 700 }}>#{i+1}</span>
-                  <span style={{ background: typeColor, color: "white", borderRadius: 4, padding: "1px 6px", fontSize: 11, fontWeight: 700 }}>{q.type}</span>
-                  <span style={{ background: q.auto ? "var(--c-level-1)" : "var(--c-combo-p2)", color: "white", borderRadius: 4, padding: "1px 6px", fontSize: 11 }}>
+                  <span style={{ background: "var(--c-text-grey-medium)", color: "var(--on-color)", borderRadius: 4, padding: "1px 6px", fontSize: 11, fontWeight: 700 }}>#{i+1}</span>
+                  <span style={{ background: typeColor, color: "var(--on-color)", borderRadius: 4, padding: "1px 6px", fontSize: 11, fontWeight: 700 }}>{q.type}</span>
+                  <span style={{ background: q.auto ? "var(--c-level-1)" : "var(--c-combo-p2)", color: "var(--on-color)", borderRadius: 4, padding: "1px 6px", fontSize: 11 }}>
                     {q.auto ? "auto" : "manual"}
                   </span>
                   {q.level && <span style={{ fontSize: 11, color: "var(--text-muted)", border: "1px solid var(--border-soft)", borderRadius: 4, padding: "1px 5px" }}>{q.level}</span>}
@@ -3387,7 +3404,7 @@ function App() {
                 <button
                   style={{
                     background: activeBlock.color,
-                    color: "white",
+                    color: "var(--on-color)",
                     border: "none",
                     padding: "20px 16px",
                     borderRadius: 14,
@@ -3581,7 +3598,7 @@ function App() {
           <button
             style={{
               background: activeBlock.color,
-              color: "white",
+              color: "var(--on-color)",
               border: "none",
               padding: "20px 16px",
               borderRadius: 14,
@@ -3810,7 +3827,7 @@ function App() {
             </button>
             <button
               disabled={praetCount === 0}
-              style={{ ...S.card, borderLeft: `4px solid #c0392b`, cursor: praetCount > 0 ? "pointer" : "not-allowed", textAlign: "left", opacity: praetCount > 0 ? 1 : 0.5 }}
+              style={{ ...S.card, borderLeft: `4px solid var(--c-praeteritum)`, cursor: praetCount > 0 ? "pointer" : "not-allowed", textAlign: "left", opacity: praetCount > 0 ? 1 : 0.5 }}
               onClick={startLearnPraeteritum}>
               <div style={{ fontWeight: 700, fontSize: 16, marginBottom: 4 }}>⏮️ Präteritum — карточки</div>
               <div style={{ fontSize: 13, color: "var(--text-muted)" }}>
@@ -3819,7 +3836,7 @@ function App() {
             </button>
             <button
               disabled={praetCount === 0}
-              style={{ ...S.card, borderLeft: `4px solid #c0392b`, cursor: praetCount > 0 ? "pointer" : "not-allowed", textAlign: "left", opacity: praetCount > 0 ? 1 : 0.5 }}
+              style={{ ...S.card, borderLeft: `4px solid var(--c-praeteritum)`, cursor: praetCount > 0 ? "pointer" : "not-allowed", textAlign: "left", opacity: praetCount > 0 ? 1 : 0.5 }}
               onClick={startLearnPraeteritumFullTest}>
               <div style={{ fontWeight: 700, fontSize: 16, marginBottom: 4 }}>⏮️ Präteritum — полный тест</div>
               <div style={{ fontSize: 13, color: "var(--text-muted)" }}>
@@ -3969,7 +3986,18 @@ function App() {
             left={
               <button style={S.outlineBtn(activeBlock.color)}
                       onClick={phase === "learn-test"
-                                 ? () => setPhase("block-start")
+                                 ? () => {
+                                     // Если мы в блоке спряжений (Unregel внутри Verben) —
+                                     // возврат должен быть в карточки спряжений, иначе
+                                     // block-start покажет «0 слов» (у блока с kind:
+                                     // 'conjugations' нет topics).
+                                     if (activeBlock && activeBlock.kind === "conjugations") {
+                                       setCardIdx(0); setFlipped(false);
+                                       setPhase("learn-conj-cards");
+                                     } else {
+                                       setPhase("block-start");
+                                     }
+                                   }
                                  : goBackToSubblocks}>
                 ← Назад
               </button>

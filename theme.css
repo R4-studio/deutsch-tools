@@ -11,56 +11,50 @@
 /* ─── Светлая тема (по умолчанию) ─────────────────────────────── */
 :root {
   /* фон */
-  --bg-body: #f0f2f5;
-  --bg-panel: #fff;
-  --bg-card: #fff;
-  --bg-tab: #eee;
-  --bg-tab-active: #fff;
-  --bg-th: #f8f9fa;
-  --bg-input: #fff;
-  --bg-rule-box: #fdfdfe;
-  --bg-row-hover: #f9fdff;
-  --bg-warning: #fff5f5;
-  --bg-highlight: #ffeaa7;
-  --bg-soft: #f7f8fa;
-  --bg-overlay: rgba(0, 0, 0, 0.5);
+  --bg-body:       var(--grey-100);
+  --bg-panel:      var(--grey-50);
+  --bg-card:       var(--grey-50);
+  --bg-tab:        var(--grey-200);
+  --bg-tab-active: var(--grey-50);
+  --bg-th:         var(--grey-100);
+  --bg-input:      var(--grey-50);
+  --bg-rule-box:   var(--grey-50);
+  --bg-row-hover:  var(--grey-100);
+  --bg-warning:    var(--red-50);
+  --bg-highlight:  var(--cyan-200);
+  --bg-soft:       var(--grey-100);
+  --bg-overlay:    rgba(0, 0, 0, 0.5);
 
   /* текст */
-  --text-main: #333;
-  --text-muted: #555;
-  --text-th: #7f8c8d;
-  --text-title: #2c3e50;
-  --text-tab-active: #000;
+  --text-main:       var(--grey-800);
+  --text-muted:      var(--grey-600);
+  --text-th:         var(--grey-500);
+  --text-title:      var(--grey-900);
+  --text-tab-active: #fff;
+  /* текст поверх цветной подложки (badge, кнопки с цветом, выделенные карточки).
+     В светлой теме подложки тёмные (*-500..700) → текст светлый.
+     В тёмной теме переопределяется на тёмный (в .theme-dark). */
+  --on-color:        var(--grey-50);
 
   /* границы */
-  --border-soft: #e0e4ed;
-  --border-row: #f1f1f1;
-  --border-tab: #ccc;
-  --border-input: #ccc;
+  --border-soft:  var(--grey-200);
+  --border-row:   var(--grey-100);
+  --border-tab:   var(--grey-300);
+  --border-input: var(--grey-300);
 
-  /* акценты */
-  --accent: #3498db;
-  --accent-dark: #2c80b4;
-  --accent-blue: #0056b3;
-  --accent-red: #a11;
-  --accent-red-bright: #c0392b;
-  --warning-border: #e74c3c;
+  /* акценты — определяются в блоке "ПРИВЯЗКА" ниже, через ссылки на палитру */
 
-  /* успех / ошибка */
-  --green: #1a7a4a;
-  --green-bg: #d5f0e3;
-  --red: #c0392b;
-  --red-bg: #fde8e8;
+  /* успех / ошибка — определяются в блоке "ПРИВЯЗКА" ниже */
 
   /* подсказки */
-  --tip-bg: #fff8e1;
-  --tip-border: #f39c12;
+  --tip-bg:     var(--orange-100);
+  --tip-border: var(--orange-500);
 
   /* бэйджи родов */
-  --badge-m-bg: #d1e9ff;  --badge-m-fg: #0056b3;
-  --badge-f-bg: #ffd1dc;  --badge-f-fg: #a11;
-  --badge-n-bg: #d1ffd1;  --badge-n-fg: #006400;
-  --badge-pl-bg: #fff3cd; --badge-pl-fg: #856404;
+  --badge-m-bg:  var(--cyan-100);   --badge-m-fg:  var(--cyan-700);
+  --badge-f-bg:  var(--red-100);    --badge-f-fg:  var(--red-700);
+  --badge-n-bg:  var(--green-100);  --badge-n-fg:  var(--green-700);
+  --badge-pl-bg: var(--orange-100); --badge-pl-fg: var(--orange-700);
 
   /* тени */
   --shadow: 0 2px 5px rgba(0,0,0,0.05);
@@ -70,106 +64,224 @@
   --shadow-modal: 0 8px 32px rgba(0,0,0,0.15);
 
   /* ═══════════════════════════════════════════════════════════════
-     АКЦЕНТНЫЕ ЦВЕТА (вынесено из trainer.html и data.js)
-     При смене палитры менять ТОЛЬКО ЗДЕСЬ — пробрасывается везде
+     ПАЛИТРА (Huetone, Tailwind 3.0 style)
+     Базовый слой — настоящая физика цвета. Менять только тут.
+     ═══════════════════════════════════════════════════════════════ */
+
+  /* Grey (Neutral) — bg, text, borders в обеих темах */
+  --grey-50:  #fafafa;
+  --grey-100: #f5f5f5;
+  --grey-200: #e5e5e5;
+  --grey-300: #d4d4d4;
+  --grey-400: #a3a3a3;
+  --grey-500: #737373;
+  --grey-600: #525252;
+  --grey-700: #404040;
+  --grey-800: #262626;
+  --grey-900: #171717;
+  --grey-950: #0e0e0e;
+
+  /* Red */
+  --red-50:  #fef2f2;
+  --red-100: #fee2e3;
+  --red-200: #fecacd;
+  --red-300: #fba4ab;
+  --red-400: #ff8794;
+  --red-500: #ee4163;
+  --red-600: #da2050;
+  --red-700: #b81742;
+  --red-800: #981837;
+  --red-900: #7e1b30;
+
+  /* Orange */
+  --orange-50:  #fff7ee;
+  --orange-100: #ffedd9;
+  --orange-200: #ffd7aa;
+  --orange-300: #fabc72;
+  --orange-400: #f39b00;
+  --orange-500: #dc8c00;
+  --orange-600: #c47c00;
+  --orange-700: #9f6400;
+  --orange-800: #7f4f00;
+  --orange-900: #684000;
+
+  /* Lime */
+  --lime-50:  #f7fee7;
+  --lime-100: #eefbca;
+  --lime-200: #e0f799;
+  --lime-300: #ceee55;
+  --lime-400: #a4c02d;
+  --lime-500: #8ca600;
+  --lime-600: #839b00;
+  --lime-700: #637600;
+  --lime-800: #4f5e00;
+  --lime-900: #435001;
+
+  /* Green */
+  --green-50:  #f1fdf3;
+  --green-100: #defce4;
+  --green-200: #bff6cc;
+  --green-300: #8beea8;
+  --green-400: #4cce7a;
+  --green-500: #00c665;
+  --green-600: #00a352;
+  --green-700: #078040;
+  --green-800: #146535;
+  --green-900: #15532c;
+
+  /* Cyan */
+  --cyan-50:  #f3fcff;
+  --cyan-100: #dcf6ff;
+  --cyan-200: #bbedff;
+  --cyan-300: #8ae1ff;
+  --cyan-400: #00c4f1;
+  --cyan-500: #23b4db;
+  --cyan-600: #0a91b2;
+  --cyan-700: #0b748f;
+  --cyan-800: #125e74;
+  --cyan-900: #114f61;
+
+  /* Indigo */
+  --indigo-50:  #f0f1ff;
+  --indigo-100: #e3e6ff;
+  --indigo-200: #cbd0fd;
+  --indigo-300: #acb2fb;
+  --indigo-400: #a2a8ff;
+  --indigo-500: #6a64f0;
+  --indigo-600: #5743e4;
+  --indigo-700: #4a35c9;
+  --indigo-800: #3c2ea2;
+  --indigo-900: #332d81;
+
+  /* Violet */
+  --violet-50:  #f9f2fd;
+  --violet-100: #f4e7fa;
+  --violet-200: #ead2f6;
+  --violet-300: #daaeef;
+  --violet-400: #d88ef9;
+  --violet-500: #b14bda;
+  --violet-600: #a121ce;
+  --violet-700: #9002bb;
+  --violet-800: #79049d;
+  --violet-900: #640b81;
+
+  /* Pink */
+  --pink-50:  #fcf2fa;
+  --pink-100: #fae8f6;
+  --pink-200: #f6d0f0;
+  --pink-300: #efabe5;
+  --pink-400: #ec86e0;
+  --pink-500: #d653ca;
+  --pink-600: #c23ab7;
+  --pink-700: #a62c9c;
+  --pink-800: #892681;
+  --pink-900: #73226c;
+
+  /* ═══════════════════════════════════════════════════════════════
+     ПРИВЯЗКА (где какой цвет используется)
+     Менять ссылки чтобы поменять смысловые роли.
      ═══════════════════════════════════════════════════════════════ */
 
   /* — Цвета блоков (рамки карточек на главной тренажёра) — */
-  --c-block-neu:      #b03030;
-  --c-block-sounds:   #9b59b6;
-  --c-block-verbs:    #1a7a4a;
-  --c-block-nouns:    #2980b9;
-  --c-block-adj:      #e91e63;
-  --c-block-adv:      #f39c12;
-  --c-block-mestoim:  #8e44ad;
-  --c-block-phrases:  #27ae60;
+  --c-block-neu:      var(--red-700);
+  --c-block-sounds:   var(--violet-500);
+  --c-block-verbs:    var(--green-700);
+  --c-block-nouns:    var(--cyan-700);
+  --c-block-adj:      var(--pink-500);
+  --c-block-adv:      var(--orange-400);
+  --c-block-mestoim:  var(--violet-700);
+  --c-block-phrases:  var(--green-500);
 
   /* — Цвета внутри блока Verben (Unregel и комбо-кнопки) — */
-  --c-unregel:        #e67e22;        /* Unregelmäßig + Präteritum-кнопки */
-  --c-praeteritum:    #c0392b;        /* Полный тест Präteritum */
+  --c-unregel:        var(--orange-500);
+  --c-praeteritum:    var(--red-600);
 
   /* — Цвета уровней (L1–L5 на select-test-type) — */
-  --c-level-1:        #1a7a4a;        /* L1 — Перевод */
-  --c-level-2:        #3498db;        /* L2 — Базовая форма */
-  --c-level-3:        #e67e22;        /* L3 — Склонение */
-  --c-level-4:        #9b59b6;        /* L4 — В предложении */
-  --c-level-5:        #e74c3c;        /* L5 — Открытый ответ */
+  --c-level-1:        var(--green-700);
+  --c-level-2:        var(--cyan-600);
+  --c-level-3:        var(--orange-500);
+  --c-level-4:        var(--violet-500);
+  --c-level-5:        var(--red-500);
 
   /* — Утилитарные (контуры кнопок «Назад», подписи и т.п.) — */
-  --c-outline-grey:   #888;            /* серая обводка кнопок */
-  --c-text-grey-medium: #555;
-  --c-text-grey-dark:   #444;
+  --c-outline-grey:     var(--grey-400);
+  --c-text-grey-medium: var(--grey-600);
+  --c-text-grey-dark:   var(--grey-700);
 
   /* — Цвета общего теста (большая зелёная кнопка «Тест по блоку») — */
-  --c-test-all:       #1a7a4a;
-  --c-test-all-dark:  #155f3a;        /* акцент при ховере */
+  --c-test-all:       var(--green-700);
+  --c-test-all-dark:  var(--green-800);
 
   /* — Подсказка про Modalverb — */
+  --c-modal-tag-bg:   var(--orange-100);
+  --c-modal-tag-fg:   var(--orange-800);
+
   /* — Цвета режима (Изучение vs Тестирование) — */
-  --c-mode-learn:     #7c5cbf;        /* Изучение (фиолетовый акцент) */
-  --c-mode-test:      var(--c-level-1); /* Тестирование (зелёный) */
+  --c-mode-learn:     var(--violet-500);
+  --c-mode-test:      var(--c-level-1);
 
   /* — Комбо-кнопки на select-test-type — */
-  --c-combo-p2:       #8e44ad;        /* Partizip II */
-  --c-combo-pr:       #2980b9;        /* Präsens */
-  /* Präteritum комбо-кнопка использует --c-praeteritum выше */
+  --c-combo-p2:       var(--violet-700);
+  --c-combo-pr:       var(--cyan-600);
 
   /* — Признак авто-сгенерированного вопроса в dev-модалке — */
   --c-dev-auto:       var(--c-level-1);
-  --c-dev-manual:     #8e44ad;
+  --c-dev-manual:     var(--violet-700);
+
+  /* — Старые семантические переменные (используются в trainer и шпоре) — */
+  --accent-red:        var(--red-700);
+  --red:               var(--red-700);
+  --accent-red-bright: var(--red-600);
+  --warning-border:    var(--red-500);
+  --accent-blue:       var(--cyan-700);
+  --accent-dark:       var(--green-700);
+  --accent:            var(--cyan-500);
+  --green:             var(--green-700);
+  --green-bg:          var(--green-100);
+  --red-bg:            var(--red-100);
 }
 .theme-dark {
   /* фон */
-  --bg-body: #0e0e10;
-  --bg-panel: #17171a;
-  --bg-card: #17171a;
-  --bg-tab: #1f1f23;
-  --bg-tab-active: #17171a;
-  --bg-th: #1a1a1d;
-  --bg-input: #1a1a1d;
-  --bg-rule-box: #1c1c20;
-  --bg-row-hover: #202028;
-  --bg-warning: #2a1818;
-  --bg-highlight: #5a4a1f;
-  --bg-soft: #1a1a1d;
-  --bg-overlay: rgba(0, 0, 0, 0.7);
+  --bg-body:       var(--grey-950);
+  --bg-panel:      var(--grey-900);
+  --bg-card:       var(--grey-900);
+  --bg-tab:        var(--grey-800);
+  --bg-tab-active: var(--grey-900);
+  --bg-th:         var(--grey-900);
+  --bg-input:      var(--grey-900);
+  --bg-rule-box:   var(--grey-900);
+  --bg-row-hover:  var(--grey-800);
+  --bg-warning:    var(--red-900);
+  --bg-highlight:  var(--green-800);
+  --bg-soft:       var(--grey-900);
+  --bg-overlay:    rgba(0, 0, 0, 0.7);
 
   /* текст */
-  --text-main: #e6e6e8;
-  --text-muted: #b8b8bd;
-  --text-th: #a0a0a8;
-  --text-title: #cfd6e0;
+  --text-main:       var(--grey-100);
+  --text-muted:      var(--grey-400);
+  --text-th:         var(--grey-400);
+  --text-title:      var(--grey-200);
   --text-tab-active: #fff;
+  /* в тёмной теме все подложки светлые (*-300) → текст тёмный */
+  --on-color:        var(--grey-950);
 
   /* границы */
-  --border-soft: #2a2a2e;
-  --border-row: #232327;
-  --border-tab: #333338;
-  --border-input: #333338;
+  --border-soft:  var(--grey-800);
+  --border-row:   var(--grey-800);
+  --border-tab:   var(--grey-700);
+  --border-input: var(--grey-700);
 
-  /* акценты */
-  --accent: #4ade80;
-  --accent-dark: #22c55e;
-  --accent-blue: #8ec5ff;
-  --accent-red: #ffa3b8;
-  --accent-red-bright: #ff8a7a;
-  --warning-border: #ff6b6b;
-
-  /* успех / ошибка */
-  --green: #4ade80;
-  --green-bg: #1a3a26;
-  --red: #ff8a7a;
-  --red-bg: #3a1818;
-
-  /* подсказки */
-  --tip-bg: #2a2418;
-  --tip-border: #d4a44a;
+  /* акценты (см. ниже — все привязаны к палитре) */
 
   /* бэйджи родов */
-  --badge-m-bg: #1a3a5c;  --badge-m-fg: #8ec5ff;
-  --badge-f-bg: #4a1a26;  --badge-f-fg: #ffa3b8;
-  --badge-n-bg: #1a3a1a;  --badge-n-fg: #8eff8e;
-  --badge-pl-bg: #4a3a14; --badge-pl-fg: #ffd966;
+  --badge-m-bg:  var(--cyan-900);   --badge-m-fg:  var(--cyan-300);
+  --badge-f-bg:  var(--red-900);    --badge-f-fg:  var(--red-300);
+  --badge-n-bg:  var(--green-900);  --badge-n-fg:  var(--green-300);
+  --badge-pl-bg: var(--orange-900); --badge-pl-fg: var(--orange-300);
+
+  /* подсказки */
+  --tip-bg:     var(--orange-900);
+  --tip-border: var(--orange-400);
 
   /* тени */
   --shadow: 0 2px 5px rgba(0,0,0,0.4);
@@ -178,100 +290,79 @@
   --shadow-hover: 0 4px 16px rgba(0,0,0,0.5);
   --shadow-modal: 0 8px 32px rgba(0,0,0,0.6);
 
-  /* ═══ Акцентные цвета (тёмная тема) ═════════════════════════════
-     По умолчанию = светлая. Меняй здесь чтобы развести тёмную палитру.
+  /* ═══ Привязка для тёмной темы ═══════════════════════════════════
+     На тёмном фоне используем светлые ступени палитры (300),
+     для фонов плашек — глубокие (800–900).
      ═══════════════════════════════════════════════════════════════ */
-  --c-block-neu:      #b03030;
-  --c-block-sounds:   #9b59b6;
-  --c-block-verbs:    #1a7a4a;
-  --c-block-nouns:    #2980b9;
-  --c-block-adj:      #e91e63;
-  --c-block-adv:      #f39c12;
-  --c-block-mestoim:  #8e44ad;
-  --c-block-phrases:  #27ae60;
 
-  --c-unregel:        #e67e22;
-  --c-praeteritum:    #c0392b;
+  /* Блоки */
+  --c-block-neu:      var(--red-300);
+  --c-block-sounds:   var(--violet-300);
+  --c-block-verbs:    var(--green-300);
+  --c-block-nouns:    var(--cyan-300);
+  --c-block-adj:      var(--pink-300);
+  --c-block-adv:      var(--orange-300);
+  --c-block-mestoim:  var(--violet-300);
+  --c-block-phrases:  var(--green-300);
 
-  --c-level-1:        #1a7a4a;
-  --c-level-2:        #3498db;
-  --c-level-3:        #e67e22;
-  --c-level-4:        #9b59b6;
-  --c-level-5:        #e74c3c;
+  /* Внутри Verben */
+  --c-unregel:        var(--orange-300);
+  --c-praeteritum:    var(--red-300);
 
-  --c-outline-grey:   #888;
-  --c-text-grey-medium: #555;
-  --c-text-grey-dark:   #444;
+  /* Уровни */
+  --c-level-1:        var(--green-300);
+  --c-level-2:        var(--cyan-300);
+  --c-level-3:        var(--orange-300);
+  --c-level-4:        var(--violet-300);
+  --c-level-5:        var(--red-300);
 
-  --c-test-all:       #1a7a4a;
-  --c-test-all-dark:  #155f3a;
+  /* Серые */
+  --c-outline-grey:     var(--grey-500);
+  --c-text-grey-medium: var(--grey-400);
+  --c-text-grey-dark:   var(--grey-300);
 
-  --c-modal-tag-bg:   #fff3cd;
-  --c-modal-tag-fg:   #856404;
+  /* Test all */
+  --c-test-all:       var(--green-500);
+  --c-test-all-dark:  var(--green-600);
 
-  --c-mode-learn:     #7c5cbf;
+  /* Modal tag */
+  --c-modal-tag-bg:   var(--orange-900);
+  --c-modal-tag-fg:   var(--orange-200);
+
+  /* Режимы */
+  --c-mode-learn:     var(--violet-300);
   --c-mode-test:      var(--c-level-1);
-  --c-combo-p2:       #8e44ad;
-  --c-combo-pr:       #2980b9;
+
+  /* Комбо */
+  --c-combo-p2:       var(--violet-300);
+  --c-combo-pr:       var(--cyan-300);
+
+  /* Dev */
   --c-dev-auto:       var(--c-level-1);
-  --c-dev-manual:     #8e44ad;
+  --c-dev-manual:     var(--violet-300);
+
+  /* Семантические (используются в коде) */
+  --accent:            var(--green-300);
+  --accent-dark:       var(--green-400);
+  --accent-blue:       var(--cyan-300);
+  --accent-red:        var(--red-300);
+  --accent-red-bright: var(--red-300);
+  --warning-border:    var(--red-300);
+
+  --green:    var(--green-300);
+  --green-bg: var(--green-900);
+  --red:      var(--red-300);
+  --red-bg:   var(--red-900);
 }
 
-/* ─── Авто-тема по системе (если не выбрана явно) ──────────────── */
-@media (prefers-color-scheme: dark) {
-  :root:not(.theme-light), .theme-auto {
-    --bg-body: #0e0e10;
-    --bg-panel: #17171a;
-    --bg-card: #17171a;
-    --bg-tab: #1f1f23;
-    --bg-tab-active: #17171a;
-    --bg-th: #1a1a1d;
-    --bg-input: #1a1a1d;
-    --bg-rule-box: #1c1c20;
-    --bg-row-hover: #202028;
-    --bg-warning: #2a1818;
-    --bg-highlight: #5a4a1f;
-    --bg-soft: #1a1a1d;
-    --bg-overlay: rgba(0, 0, 0, 0.7);
+/* ─── Авто-тема ────────────────────────────────────────────────
+   JS (applyTheme в cheatsheet.html и useTheme в trainer.html) сам
+   резолвит 'auto' через matchMedia и ставит конкретный класс
+   .theme-light / .theme-dark. Блок @media (prefers-color-scheme: dark)
+   больше не нужен — палитра живёт только в :root и .theme-dark.
+   ─────────────────────────────────────────────────────────────── */
 
-    --text-main: #e6e6e8;
-    --text-muted: #b8b8bd;
-    --text-th: #a0a0a8;
-    --text-title: #cfd6e0;
-    --text-tab-active: #fff;
 
-    --border-soft: #2a2a2e;
-    --border-row: #232327;
-    --border-tab: #333338;
-    --border-input: #333338;
-
-    --accent: #4ade80;
-    --accent-dark: #22c55e;
-    --accent-blue: #8ec5ff;
-    --accent-red: #ffa3b8;
-    --accent-red-bright: #ff8a7a;
-    --warning-border: #ff6b6b;
-
-    --green: #4ade80;
-    --green-bg: #1a3a26;
-    --red: #ff8a7a;
-    --red-bg: #3a1818;
-
-    --tip-bg: #2a2418;
-    --tip-border: #d4a44a;
-
-    --badge-m-bg: #1a3a5c;  --badge-m-fg: #8ec5ff;
-    --badge-f-bg: #4a1a26;  --badge-f-fg: #ffa3b8;
-    --badge-n-bg: #1a3a1a;  --badge-n-fg: #8eff8e;
-    --badge-pl-bg: #4a3a14; --badge-pl-fg: #ffd966;
-
-    --shadow: 0 2px 5px rgba(0,0,0,0.4);
-    --shadow-bar: 0 4px 12px rgba(0,0,0,0.6);
-    --shadow-card: 0 2px 12px rgba(0,0,0,0.4);
-    --shadow-hover: 0 4px 16px rgba(0,0,0,0.5);
-    --shadow-modal: 0 8px 32px rgba(0,0,0,0.6);
-  }
-}
 
 /* ═══════════════════════════════════════════════════════════════
    КНОПКИ — dt-btn система

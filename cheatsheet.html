@@ -100,7 +100,7 @@ tr:hover td{background:var(--bg-row-hover)}
   margin-top: 20px;
   text-align: center;
   background: var(--accent);
-  color: white;
+  color: var(--on-color);
   font-weight: 600;
   font-size: 14px;
   cursor: pointer;
@@ -444,7 +444,7 @@ function escHtml(s) {
   <a href="index.html" class="home-btn" title="На главную">❌</a>
   <button class="burger-btn" onclick="openMenu()" title="Меню">☰</button>
   <input type="text" id="searchInput" placeholder="Поиск...">
-  <button id="searchBtn" style="padding:8px 14px;font-size:13px;border-radius:6px;background:var(--accent);color:white;border:none;cursor:pointer;font-weight:600;white-space:nowrap;">Найти</button>
+  <button id="searchBtn" style="padding:8px 14px;font-size:13px;border-radius:6px;background:var(--accent);color:var(--on-color);border:none;cursor:pointer;font-weight:600;white-space:nowrap;">Найти</button>
   <span id="searchCount" class="search-count-label" style="font-size:12px;color:var(--text-muted);white-space:nowrap;"></span>
   <button class="theme-toggle" id="themeToggle" onclick="cycleTheme()" title="Переключить тему">🌓</button>
 </div>
@@ -2527,7 +2527,15 @@ Akk vs Dat: <b>Ich wasche mich</b> (я моюсь — себя, Akk) | <b>Ich wa
 function applyTheme(theme) {
   var html = document.documentElement;
   html.classList.remove('theme-auto', 'theme-dark', 'theme-light');
-  html.classList.add('theme-' + theme);
+  // При 'auto' резолвим через системную настройку и ставим конкретный класс.
+  // Так не нужно дублировать палитру в @media (prefers-color-scheme: dark).
+  var resolved = theme;
+  if (theme === 'auto') {
+    var sysDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+    resolved = sysDark ? 'dark' : 'light';
+  }
+  html.classList.add('theme-' + resolved);
+  // Запомним «исходную» хотелку (auto/dark/light), а не resolved
   localStorage.setItem('theme', theme);
   var btn = document.getElementById('themeToggle');
   if (btn) {
@@ -2541,6 +2549,13 @@ function applyTheme(theme) {
     void activePanel.offsetHeight; // чтение свойства = принудительный reflow
     activePanel.style.display = '';
   }
+}
+
+// Если выбран 'auto' и система меняет тему — перерисовываемся
+if (window.matchMedia) {
+  window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', function() {
+    if ((localStorage.getItem('theme') || 'auto') === 'auto') applyTheme('auto');
+  });
 }
 function cycleTheme() {
   var current = localStorage.getItem('theme') || 'auto';
