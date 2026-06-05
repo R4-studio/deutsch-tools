@@ -3032,9 +3032,9 @@ function App() {
   }
 
   // ─── Блок «🆕 Новые»: вспомогательные функции ───────────────────────────
-  // Все слова с topic new:new-* отсортированные: noun→verb→adj→adv, затем по topic внутри
+  // Все слова с topic new:new-* отсортированные: noun→verb→adj→adv→pron→phrase→num→term→sound, затем по topic внутри
   function getNeuAllVocab() {
-    const POS_ORDER = ["noun", "verb", "adj", "adv"];
+    const POS_ORDER = ["noun", "verb", "adj", "adv", "pron", "phrase", "num", "term", "sound"];
     const allNew = VOCAB.filter(v =>
       (v.topics || []).some(t => t.startsWith("new:new-"))
     );
@@ -3056,7 +3056,7 @@ function App() {
   }
 
   function startNeuTestAll() {
-    const topics = ["new:new-nouns", "new:new-verbs", "new:new-adj-adv"];
+    const topics = ["new:new-nouns", "new:new-verbs", "new:new-adj", "new:new-adv", "new:new-pron", "new:new-phrases", "new:new-nums", "new:new-terms", "new:new-sounds"];
     const autoPool = buildAutoQuestions(topics, VOCAB, CONJUGATIONS);
     const manualPool = QUESTIONS.filter(q =>
       q.topic === "trainer:neu" || q.topic.startsWith("trainer:neu:")
@@ -3377,7 +3377,7 @@ function App() {
 
           
           {devMode && isNeu && (() => {
-            const neuTopics = ["new:new-nouns", "new:new-verbs", "new:new-adj-adv"];
+            const neuTopics = ["new:new-nouns", "new:new-verbs", "new:new-adj", "new:new-adv", "new:new-pron", "new:new-phrases", "new:new-nums", "new:new-terms", "new:new-sounds"];
             const neuPool = [
               ...buildAutoQuestions(neuTopics, VOCAB, CONJUGATIONS),
               ...QUESTIONS.filter(q => q.topic === "trainer:neu" || q.topic.startsWith("trainer:neu:"))
@@ -3770,7 +3770,7 @@ function App() {
             <button style={S.primaryBtn(activeBlock.color)} onClick={() => {
               if (cardIdx + 1 >= vocab.length) {
                 // Мини-тест по всем новым (все 3 подблока)
-                const topics = ["new:new-nouns", "new:new-verbs", "new:new-adj-adv"];
+                const topics = ["new:new-nouns", "new:new-verbs", "new:new-adj", "new:new-adv", "new:new-pron", "new:new-phrases", "new:new-nums", "new:new-terms", "new:new-sounds"];
                 const autoPool = buildAutoQuestions(topics, VOCAB, CONJUGATIONS);
                 const session = shuffleMC(shuffle(autoPool)).slice(0, 10);
                 setActiveSub(null);
@@ -3787,7 +3787,7 @@ function App() {
           </div>
           <div style={{ display: "flex", justifyContent: "center", marginTop: 12 }}>
             <button style={S.outlineBtn("var(--c-outline-grey)")} onClick={() => {
-              const topics = ["new:new-nouns", "new:new-verbs", "new:new-adj-adv"];
+              const topics = ["new:new-nouns", "new:new-verbs", "new:new-adj", "new:new-adv", "new:new-pron", "new:new-phrases", "new:new-nums", "new:new-terms", "new:new-sounds"];
               const autoPool = buildAutoQuestions(topics, VOCAB, CONJUGATIONS);
               const session = shuffleMC(shuffle(autoPool)).slice(0, 10);
               setActiveSub(null);

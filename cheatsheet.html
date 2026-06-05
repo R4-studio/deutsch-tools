@@ -3410,6 +3410,10 @@ function show(id){
           html += '<div class="section-title" style="margin-bottom:8px">' + escHtml(r.title) + '</div>';
         }
         html += renderRuleContent(r.content_md || '');
+        if (r.note) {
+          html += '<div style="margin-top:10px;padding:8px 12px;background:var(--tip-bg);border-left:3px solid var(--tip-border);border-radius:4px;font-size:13px;color:var(--text-muted)">'
+               + '💡 ' + renderInline(r.note) + '</div>';
+        }
         html += '</div>';
       }
       html += '</div>';
@@ -3509,8 +3513,48 @@ function show(id){
       ['Существительное', 'Род', 'Перевод / Примечание']);
     html += renderSections('new', ['verb'], renderVerbRow,
       ['Глагол', 'Перевод', 'Примечание']);
-    html += renderSections('new', ['adj', 'adv'], renderSimpleRow,
-      ['Слово', 'Перевод', 'Примечание']);
+    html += renderSections('new', ['adj'], renderSimpleRow,
+      ['Прилагательное', 'Перевод', 'Примечание']);
+    html += renderSections('new', ['adv'], renderSimpleRow,
+      ['Наречие', 'Перевод', 'Примечание']);
+    html += renderSections('new', ['pron'], renderSimpleRow,
+      ['Местоимение', 'Перевод', 'Примечание']);
+    html += renderSections('new', ['phrase'], renderSimpleRow,
+      ['Фраза', 'Перевод', 'Примечание']);
+    html += renderSections('new', ['num'], renderNumRow,
+      ['Цифра', 'Немецкий', 'Произношение']);
+
+    // Новые термины (TERMS лежат отдельно от VOCAB, фильтруем по new:new-terms в topics)
+    if (typeof TERMS !== 'undefined') {
+      const newTerms = TERMS.filter(t => (t.topics || []).some(x => x === 'new:new-terms'));
+      if (newTerms.length > 0) {
+        html += '<div class="section">'
+              + '<div class="section-title">📖 Новые термины</div>'
+              + '<table><thead><tr><th>Термин</th><th>Перевод</th><th>Примечание</th></tr></thead><tbody>';
+        for (const t of newTerms) {
+          html += '<tr><td>' + escHtml(t.term || '') + '</td>'
+                + '<td>' + escHtml(t.ru || '') + '</td>'
+                + '<td>' + escHtml(t.note || '') + '</td></tr>';
+        }
+        html += '</tbody></table></div>';
+      }
+    }
+
+    // Новые звуки (SOUNDS лежат отдельно от VOCAB)
+    if (typeof SOUNDS !== 'undefined') {
+      const newSounds = SOUNDS.filter(s => (s.topics || []).some(x => x === 'new:new-sounds'));
+      if (newSounds.length > 0) {
+        html += '<div class="section">'
+              + '<div class="section-title">🔤 Новые звуки</div>'
+              + '<table><thead><tr><th>Буква/сочетание</th><th>Произношение</th><th>Пример</th></tr></thead><tbody>';
+        for (const s of newSounds) {
+          html += '<tr><td>' + escHtml(s.combo || '') + '</td>'
+                + '<td>' + escHtml(s.pronunciation || '') + '</td>'
+                + '<td>' + escHtml(s.example || '') + '</td></tr>';
+        }
+        html += '</tbody></table></div>';
+      }
+    }
 
     // Новые правила (new: true)
     if (typeof RULES !== 'undefined') {
@@ -3524,6 +3568,10 @@ function show(id){
             html += '<div class="section-title" style="margin-bottom:8px">' + escHtml(r.title) + '</div>';
           }
           html += renderRuleContent(r.content_md || '');
+          if (r.note) {
+            html += '<div style="margin-top:10px;padding:8px 12px;background:var(--tip-bg);border-left:3px solid var(--tip-border);border-radius:4px;font-size:13px;color:var(--text-muted)">'
+                 + '💡 ' + renderInline(r.note) + '</div>';
+          }
           html += '</div>';
         }
         html += '</div>';

@@ -424,8 +424,15 @@ GERMAN_LABELS = {
     "pron:personal":            ("👤", "Personalpronomen"),
     "pron:negation":            ("🚫", "Negation"),
     "new:new-nouns":            ("📦", "Neue Substantive"),
-    "new:new-verbs":            ("⚡", "Neue Verben"),
-    "new:new-adj-adv":          ("🎨", "Neue Adjektive / Adverbien"),
+    "new:new-verbs":             ("⚡", "Neue Verben"),
+    "new:new-adj":               ("🎨", "Neue Adjektive"),
+    "new:new-adv":               ("⏱", "Neue Adverbien"),
+    "new:new-phrases":           ("💬", "Neue Phrasen"),
+    "new:new-pron":              ("👤", "Neue Pronomen"),
+    "new:new-nums":              ("🔢", "Neue Zahlen"),
+    "new:new-terms":             ("📖", "Neue Begriffe"),
+    "new:new-sounds":            ("🔤", "Neue Laute"),
+    "new:new-rules":             ("📐", "Neue Regeln"),
     "perfekt:regel":            ("📘", "Regelmäßig"),
     "perfekt:unregel":          ("🔥", "Unregelmäßig"),
 }
@@ -531,7 +538,14 @@ RUSSIAN_LABELS = {
     "pron:negation":            "Отрицание",
     "new:new-nouns":            "Новые существительные",
     "new:new-verbs":            "Новые глаголы",
-    "new:new-adj-adv":          "Новые прилагательные / наречия",
+    "new:new-adj":              "Новые прилагательные",
+    "new:new-adv":              "Новые наречия",
+    "new:new-phrases":          "Новые фразы",
+    "new:new-pron":             "Новые местоимения",
+    "new:new-nums":             "Новые числа",
+    "new:new-terms":            "Новые термины",
+    "new:new-sounds":           "Новые звуки",
+    "new:new-rules":            "Новые правила",
     "perfekt:regel":            "Регулярные глаголы",
     "perfekt:unregel":          "Нерегулярные глаголы",
 }
@@ -652,9 +666,10 @@ def build_blocks(taxonomy, vocab=None):
     return [
         # 1. Neu (буфер новых)
         build_special_block("neu", subblocks=[
-            {"id": "nouns", "label": "📦 Substantive",           "topics": ["new:new-nouns"]},
-            {"id": "verbs", "label": "⚡ Verben",                "topics": ["new:new-verbs"]},
-            {"id": "adj",   "label": "🎨 Adjektive / Adverbien", "topics": ["new:new-adj-adv"]},
+            {"id": "nouns", "label": "📦 Substantive",  "topics": ["new:new-nouns"]},
+            {"id": "verbs", "label": "⚡ Verben",       "topics": ["new:new-verbs"]},
+            {"id": "adj",   "label": "🎨 Adjektive",   "topics": ["new:new-adj"]},
+            {"id": "adv",   "label": "⏱ Adverbien",   "topics": ["new:new-adv"]},
         ]),
         # 2. Aussprache (kind=sounds, только для шпоры; trainer фильтрует)
         build_special_block("sounds"),
@@ -681,7 +696,9 @@ def build_topic_titles(taxonomy):
             if not (d and g): continue
             out[f"{d}:{g}"] = label_for_pair(d, g, p)
     for k in ("quantity:cardinal", "pron:personal", "pron:negation",
-              "new:new-nouns", "new:new-verbs", "new:new-adj-adv",
+              "new:new-nouns", "new:new-verbs", "new:new-adj", "new:new-adv",
+              "new:new-phrases", "new:new-pron", "new:new-nums",
+              "new:new-terms", "new:new-sounds", "new:new-rules",
               "perfekt:regel", "perfekt:unregel"):
         emoji, name = GERMAN_LABELS.get(k, ("", k))
         out[k] = f"{emoji} {name}".strip() if emoji else k
@@ -702,7 +719,9 @@ def build_ru_titles(taxonomy):
                 topic_ru[key] = RUSSIAN_LABELS[key]
     # специальные ключи
     for k in ("quantity:cardinal", "pron:personal", "pron:negation",
-              "new:new-nouns", "new:new-verbs", "new:new-adj-adv",
+              "new:new-nouns", "new:new-verbs", "new:new-adj", "new:new-adv",
+              "new:new-phrases", "new:new-pron", "new:new-nums",
+              "new:new-terms", "new:new-sounds", "new:new-rules",
               "perfekt:regel", "perfekt:unregel"):
         if k in RUSSIAN_LABELS:
             topic_ru[k] = RUSSIAN_LABELS[k]
@@ -725,8 +744,16 @@ def topic_key(domen, group):
 # ОБРАБОТКА ЛИСТОВ
 # ═══════════════════════════════════════════════════════════════
 NEW_TOPIC = {  # буфер «Новые» по pos
-    "noun": "new:new-nouns", "verb": "new:new-verbs",
-    "adj": "new:new-adj-adv", "adv": "new:new-adj-adv",
+    "noun":   "new:new-nouns",
+    "verb":   "new:new-verbs",
+    "adj":    "new:new-adj",
+    "adv":    "new:new-adv",
+    "phrase": "new:new-phrases",
+    "pron":   "new:new-pron",
+    "num":    "new:new-nums",
+    "term":   "new:new-terms",
+    "sound":  "new:new-sounds",
+    "rule":   "new:new-rules",
 }
 
 def attach_common(item, r, pos):
@@ -914,6 +941,12 @@ def process_numbers(rows):
             topics.append(tk)
         else:
             topics.append("nums:" + kind if kind else "nums:basic")
+        # буфер «Новые»
+        if is_true(r.get("new")):
+            item["new"] = True
+            nt = NEW_TOPIC.get("num")
+            if nt and nt not in topics:
+                topics.append(nt)
         item["topics"] = topics
         if domen: item["domen"] = domen
         if group: item["group"] = group
@@ -932,6 +965,16 @@ def process_sounds(rows):
         domen, group = dg(r)
         if domen: item["domen"] = domen
         if group: item["group"] = group
+        # буфер «Новые»
+        topics = []
+        tk = topic_key(domen, group)
+        if tk: topics.append(tk)
+        if is_true(r.get("new")):
+            item["new"] = True
+            nt = NEW_TOPIC.get("sound")
+            if nt and nt not in topics:
+                topics.append(nt)
+        if topics: item["topics"] = topics
         items.append(item)
     return items
 
@@ -949,6 +992,15 @@ def process_terms(rows):
         if tk: item["topic"] = tk
         if domen: item["domen"] = domen
         if group: item["group"] = group
+        # буфер «Новые»
+        topics = []
+        if tk: topics.append(tk)
+        if is_true(r.get("new")):
+            item["new"] = True
+            nt = NEW_TOPIC.get("term")
+            if nt and nt not in topics:
+                topics.append(nt)
+        if topics: item["topics"] = topics
         items.append(item)
     return items
 
@@ -969,8 +1021,15 @@ def process_rules(rows, warn):
             warn.append(f"rules: нет topic (пустые domen/group) — «{title[:40]}»")
         if domen: item["domen"] = domen
         if group: item["group"] = group
+        # буфер «Новые» — кладём и флаг, и topic (для рендера на вкладке Neu)
+        topics = []
+        if tk: topics.append(tk)
         if is_true(r.get("new")):
             item["new"] = True
+            nt = NEW_TOPIC.get("rule")
+            if nt and nt not in topics:
+                topics.append(nt)
+        if topics: item["topics"] = topics
         items.append(item)
     return items
 
