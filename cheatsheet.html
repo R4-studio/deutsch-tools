@@ -58,6 +58,11 @@ td{padding:6px 10px;border-bottom:1px solid var(--border-row);vertical-align:top
 tr:hover td{background:var(--bg-row-hover)}
 .badge{display:inline-block;font-size:10px;padding:2px 5px;border-radius:3px;font-weight:bold;margin-right:5px}
 .m{background:var(--badge-m-bg);color:var(--badge-m-fg)} .f{background:var(--badge-f-bg);color:var(--badge-f-fg)} .n{background:var(--badge-n-bg);color:var(--badge-n-fg)} .pl{background:var(--badge-pl-bg);color:var(--badge-pl-fg)}
+/* Inline-окраска родов для текста внутри правил (артикли в примерах) */
+.g-m{color:var(--badge-m-fg);font-weight:600}
+.g-f{color:var(--badge-f-fg);font-weight:600}
+.g-n{color:var(--badge-n-fg);font-weight:600}
+.g-pl{color:var(--badge-pl-fg);font-weight:600}
 .rule-box{background:var(--bg-rule-box);padding:12px;border-radius:4px;margin-bottom:15px;border-left:4px solid var(--accent);box-shadow:var(--shadow)}
 .warning{background:var(--bg-warning);border-left:4px solid var(--warning-border);padding:10px;margin:10px 0;font-size:12px}
 .grid-2{display:grid;grid-template-columns:1fr 1fr;gap:15px}
@@ -3427,7 +3432,11 @@ function show(id){
   function renderInline(s) {
     return escHtml(s)
       .replace(/\*\*([^*]+)\*\*/g, '<b>$1</b>')
-      .replace(/__([^_]+)__/g, '<b>$1</b>');
+      .replace(/__([^_]+)__/g, '<b>$1</b>')
+      // Разрешаем inline-окраску родов: <span class="g-m">текст</span>
+      // (после escHtml теги превратились в &lt;span...&gt; — возвращаем обратно)
+      .replace(/&lt;span class=&quot;(g-(?:m|f|n|pl))&quot;&gt;([\s\S]*?)&lt;\/span&gt;/g,
+               '<span class="$1">$2</span>');
   }
 
   // Минимальный парсер контента правил
