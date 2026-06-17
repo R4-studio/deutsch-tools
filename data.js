@@ -1570,10 +1570,3 @@ const PHRASE_UNITS = [
 ];
 
 const SENTENCE_TEMPLATES = [];
-
-if (typeof module !== 'undefined' && module.exports) {
-  module.exports = { VOCAB, CONJUGATIONS, REGEL_VERBS, QUESTIONS,
-    SOUNDS, TERMS, RULES, TAXONOMY, BLOCKS, TOPIC_TITLES, TAB_TITLES,
-    TOPIC_TITLES_RU, TAB_TITLES_RU,
-    PHRASE_UNITS, SENTENCE_TEMPLATES };
-}

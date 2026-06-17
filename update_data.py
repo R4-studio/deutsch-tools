@@ -1382,13 +1382,7 @@ if __name__ == '__main__':
         out.append("const SENTENCE_TEMPLATES = [];")
     out.append("")
 
-    out.append("if (typeof module !== 'undefined' && module.exports) {")
-    out.append("  module.exports = { VOCAB, CONJUGATIONS, REGEL_VERBS, QUESTIONS,")
-    out.append("    SOUNDS, TERMS, RULES, TAXONOMY, BLOCKS, TOPIC_TITLES, TAB_TITLES,")
-    out.append("    TOPIC_TITLES_RU, TAB_TITLES_RU,")
-    out.append("    PHRASE_UNITS, SENTENCE_TEMPLATES };")
-    out.append("}")
-    out.append("")
+
 
     OUT_DATA_JS.write_text("\n".join(out), encoding="utf-8")
 
