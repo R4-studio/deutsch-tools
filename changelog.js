@@ -1,14 +1,4 @@
 window.CHANGELOG = [
-{
-  "date": "2026-06-05",
-  "title": "Обновление базы:",
-  "items": [
-    "База: +8 новых существительных (Vermieter, Haustier, Altstadt, Hand, Arm, Grund, Umzugsfirma и др.)",
-    "База: +6 новых глаголов (runterbringen, runtertragen, mieten, erhöhen, zusammenwohnen, rollen)",
-    "База: +2 новых прилагательных (arm, zufrieden)",
-    "База: +5 новых фраз-аббревиатур (usw., z.B., d.h., bzw., ca.)"
-  ]
-},
   {
   "date": "2026-05-31",
   "title": "Тренажёр: перестановка блоков и карточек",
