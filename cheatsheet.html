@@ -6,36 +6,68 @@
 <meta property="og:title" content="Шпаргалка — Deutsch Tools">
 <meta property="og:description" content="Интерактивная шпаргалка по немецкому: слова, правила, произношение">
 <meta property="og:type" content="website">
-<link rel="stylesheet" href="theme.css?v=20260718">
+<link rel="stylesheet" href="theme.css?v=20260719">
 <style>
 *{box-sizing:border-box;margin:0;padding:0}
 body{font-family:sans-serif;font-size:13px;color:var(--text-main);line-height:1.4;background:var(--bg-body);overflow-x:hidden}
+.tabs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 92px;
+  padding: 0 12px;
+}
+.tab {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 16px;
+  border-radius: 999px;
+  cursor: pointer;
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--text-muted);
+  border: 1px solid var(--border-soft);
+  background: var(--bg-tab);
+  white-space: nowrap;
+  transition: background 0.2s var(--ease-dt), color 0.2s var(--ease-dt), border-color 0.2s var(--ease-dt), transform 0.15s var(--ease-dt);
+}
+.tab svg { flex-shrink: 0; }
+.tab:active { transform: scale(0.95); }
+.tab.active {
+  background: var(--text-title);
+  border-color: var(--text-title);
+  color: var(--bg-card);
+}
 @media (max-width: 768px){
   .tabs{
-     margin-top: 80px;
+    margin-top: 92px;
     flex-wrap: nowrap;
     overflow-x: auto;
     -webkit-overflow-scrolling: touch;
-    white-space: nowrap;
   }
-
   .tab{
     flex: 0 0 auto;
-    font-size: 10px;
-    padding: 10px 12px;
+    font-size: 11px;
+    padding: 8px 14px;
     touch-action: manipulation;
-}
   }
-
-.tab{padding:10px 12px;border-radius:5px 5px 0 0;cursor:pointer;font-size:11px;font-weight:600;color:var(--text-muted);border:1px solid transparent;background:var(--bg-tab)}
-.tabs {
-  margin-top: 80px;
 }
-.tab.active{background:var(--bg-tab-active);border-color:var(--border-tab);border-bottom-color:var(--bg-tab-active);color:var(--text-tab-active);margin-bottom:-1px}
 .panel{display:none;padding:15px 15px 80px 15px;background:var(--bg-panel);}
 .panel.active{display:block}
 .section{margin-bottom:25px}
-.section-title{font-size:14px;font-weight:bold;color:var(--text-title);margin-bottom:10px;padding-bottom:5px;border-bottom:2px solid var(--accent);display:flex;align-items:center;gap:8px}
+.section-title{font-size:14px;font-weight:700;color:var(--text-title);margin-bottom:12px;display:flex;align-items:center;gap:8px}
+/* Секции, содержащие таблицу (списки слов) — оформляем карточкой, как на главной.
+   :has() специально ограничивает эффект только табличными секциями — иначе
+   .section с несколькими .rule-box внутри (вкладка Regeln) получил бы «карточку
+   в карточке». */
+.section:has(table) {
+  background: var(--bg-card);
+  border: 1px solid var(--border-soft);
+  border-radius: 18px;
+  box-shadow: var(--shadow-card);
+  padding: 16px 18px;
+}
 
 
 table {
@@ -63,18 +95,25 @@ tr:hover td{background:var(--bg-row-hover)}
 .g-f{color:var(--badge-f-fg);font-weight:600}
 .g-n{color:var(--badge-n-fg);font-weight:600}
 .g-pl{color:var(--badge-pl-fg);font-weight:600}
-.rule-box{background:var(--bg-rule-box);padding:12px;border-radius:4px;margin-bottom:15px;border-left:4px solid var(--accent);box-shadow:var(--shadow)}
-.warning{background:var(--bg-warning);border-left:4px solid var(--warning-border);padding:10px;margin:10px 0;font-size:12px}
+.rule-box{background:var(--bg-rule-box);padding:14px 16px;border-radius:14px;margin-bottom:15px;border-left:4px solid var(--accent);box-shadow:var(--shadow-card)}
+.warning{background:var(--bg-warning);border-left:4px solid var(--warning-border);padding:10px 14px;margin:10px 0;font-size:12px;border-radius:10px}
 .grid-2{display:grid;grid-template-columns:1fr 1fr;gap:15px}
 @media(max-width:768px){.grid-2{grid-template-columns:1fr}}
 #searchInput{
   flex:1;
-  padding:8px;
+  padding:9px 16px;
   font-size:13px;
-  border-radius:6px;
+  border-radius:999px;
   border:1px solid var(--border-input);
   background:var(--bg-panel);
   color:var(--text-main);
+}
+#searchBtn {
+  transition: transform 0.15s var(--ease-dt), filter 0.15s var(--ease-dt);
+}
+#searchBtn:active { transform: scale(0.96); }
+@media (hover: hover) {
+  #searchBtn:hover { filter: brightness(1.08); }
 }
 .table-wrap {
   overflow-x: auto;
@@ -109,9 +148,12 @@ tr:hover td{background:var(--bg-row-hover)}
   font-weight: 600;
   font-size: 14px;
   cursor: pointer;
-  border-radius: 6px;
+  border-radius: 999px;
   user-select: none;
-  transition: transform 0.2s, opacity 0.2s;
+  transition: transform 0.2s var(--ease-dt), opacity 0.2s var(--ease-dt), filter 0.2s var(--ease-dt);
+}
+@media (hover: hover) {
+  .to-top:hover { filter: brightness(1.08); }
 }
 
 .to-top-fixed {
@@ -137,21 +179,23 @@ tr:hover td{background:var(--bg-row-hover)}
 }
 .search-bar {
   position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  background: var(--bg-body);
+  top: 12px;
+  left: 12px;
+  right: 12px;
+  max-width: 900px;
+  margin: 0 auto;
+  background: var(--bg-card);
   z-index: 1000;
-  border-radius: 6px;
-  opacity: 0.95;
+  border-radius: 999px;
+  border: 1px solid var(--border-soft);
   box-shadow: var(--shadow-bar);
-  transition: transform 0.3s ease;
+  transition: transform 0.3s var(--ease-dt);
 }
 .search-bar-inner {
   display: flex;
   align-items: center;
   gap: 8px;
-  padding: 10px;
+  padding: 6px 6px 6px 10px;
   min-width: 0;
 }
 .search-bar-inner input {
@@ -343,9 +387,9 @@ tr:hover td{background:var(--bg-row-hover)}
 }
 
 @media (max-width: 768px) {
-  .burger-btn { display: block; }
+  .burger-btn { display: inline-flex; }
   .tabs { display: none; }
-  .panel { padding-top: 70px; }
+  .panel { padding-top: 82px; }
   .search-bar-inner { gap: 6px; padding: 8px 6px; }
   .search-count-label { display: none; }
   #searchBtn { padding: 8px 10px; font-size: 12px; }
@@ -364,7 +408,7 @@ tr[data-vid], [data-vid].conj-card { cursor: pointer; }
 .word-modal-card {
   background: var(--bg-card);
   border: 1px solid var(--border-soft);
-  border-radius: 12px;
+  border-radius: 18px;
   box-shadow: var(--shadow-modal);
   max-width: 520px; width: 100%;
   max-height: 80vh; overflow-y: auto;
@@ -406,7 +450,7 @@ tr[data-vid], [data-vid].conj-card { cursor: pointer; }
   document.documentElement.classList.add('theme-' + saved);
 })();
 </script>
-<script src="data.js?v=20260718"></script>
+<script src="data.js?v=20260719"></script>
 <script>
 // ─── Версия приложения (обновлять вместе с ?v= выше) ─────────
 var APP_VERSION = 'v68';
@@ -426,7 +470,7 @@ function escHtml(s) {
   <a href="index.html" class="home-btn" title="На главную"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9.5 12 3l9 6.5"/><path d="M5 8v11a1 1 0 0 0 1 1h4v-6h4v6h4a1 1 0 0 0 1-1V8"/></svg></a>
   <button class="burger-btn" onclick="openMenu()" title="Меню"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 6h16M4 12h16M4 18h16"/></svg></button>
   <input type="text" id="searchInput" placeholder="Поиск...">
-  <button id="searchBtn" style="padding:8px 14px;font-size:13px;border-radius:6px;background:var(--accent);color:var(--on-color);border:none;cursor:pointer;font-weight:600;white-space:nowrap;">Найти</button>
+  <button id="searchBtn" style="padding:9px 16px;font-size:13px;border-radius:999px;background:var(--accent);color:var(--on-color);border:none;cursor:pointer;font-weight:600;white-space:nowrap;">Найти</button>
   <span id="searchCount" class="search-count-label" style="font-size:12px;color:var(--text-muted);white-space:nowrap;"></span>
   <button class="theme-toggle" id="themeToggle" onclick="cycleTheme()" title="Переключить тему"></button>
 </div>

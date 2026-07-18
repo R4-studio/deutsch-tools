@@ -14,11 +14,11 @@
   document.documentElement.classList.add('theme-' + saved);
 })();
 </script>
-<link rel="stylesheet" href="theme.css?v=20260718">
+<link rel="stylesheet" href="theme.css?v=20260719">
 
 <script crossorigin src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
 <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
-<script src="data.js?v=20260718"></script>
+<script src="data.js?v=20260719"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/7.25.6/babel.min.js"></script>
 
 <style>
@@ -35,11 +35,35 @@ html, body {
   font-size: 14px;
 }
 /* ─── Flip-карточки ─────────────────────────────────────── */
+/* «Вытеснение» при пролистывании: карточка получает key={id текущего слова/
+   глагола} на месте использования — React пересоздаёт DOM-узел при смене
+   карточки, и анимация проигрывается заново на каждой новой карточке. */
+@keyframes card-slide-in {
+  from { opacity: 0; transform: translateX(18px) scale(0.97); }
+  to { opacity: 1; transform: translateX(0) scale(1); }
+}
+.flip-card-outer { animation: card-slide-in 0.35s var(--ease-dt); }
 .flip-card-inner { transition: transform 0.6s; transform-style: preserve-3d; position: relative; width: 100%; height: 100%; }
 .flip-card-inner.flipped { transform: rotateY(180deg); }
 .flip-face { position: absolute; width: 100%; height: 100%; backface-visibility: hidden; -webkit-backface-visibility: hidden; display: flex; align-items: center; justify-content: center; padding: 24px; border-radius: 14px; }
 .flip-face.back { transform: rotateY(180deg); }
 input:focus, button:focus { outline: 2px solid var(--accent); outline-offset: 1px; }
+/* ─── Универсальная tap/hover обратная связь для всех кнопок ───────────────
+   :active работает и на тач-устройствах (тап), и при клике мышью — это
+   основной, всегда срабатывающий сигнал. :hover — только там, где реально
+   есть указатель мыши (@media(hover:hover)), чтобы не залипало на тач. */
+button { transition: transform 0.15s var(--ease-dt), filter 0.15s var(--ease-dt); }
+button:active { transform: scale(0.96); }
+@media (hover: hover) {
+  button:hover { filter: brightness(1.08); }
+}
+/* Кликабельные div-карточки (режимы/блоки/темы/комбо) — та же обратная связь,
+   но т.к. это не <button>, hover ещё и приподнимает карточку (как .card на главной). */
+.dt-tap-card { transition: transform 0.15s var(--ease-dt), box-shadow 0.15s var(--ease-dt); }
+.dt-tap-card:active { transform: scale(0.98); }
+@media (hover: hover) {
+  .dt-tap-card:hover { transform: translateY(-2px); box-shadow: var(--shadow-hover); }
+}
 /* ─── TopBar кнопки ─────────────────────────────────────── */
 .tb-btn { flex-shrink: 0; }
 .tb-row { flex-shrink: 0; }
@@ -142,7 +166,7 @@ const S = {
   card: {
     background: "var(--bg-card)",
     color: "var(--text-main)",
-    borderRadius: 14,
+    borderRadius: 18,
     boxShadow: "var(--shadow-card)",
     padding: "20px 22px",
     marginBottom: 14,
@@ -153,28 +177,28 @@ const S = {
   topBar: { display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 16 },
   modeCard: {
     background: "var(--bg-card)",
-    borderRadius: 16,
+    borderRadius: 18,
     padding: "24px 20px",
     cursor: "pointer",
     boxShadow: "var(--shadow-card)",
     textAlign: "center",
-    transition: "transform 0.15s, box-shadow 0.15s",
+    transition: "transform 0.15s var(--ease-dt), box-shadow 0.15s var(--ease-dt)",
     border: "2px solid transparent",
   },
   blockCard: {
     background: "var(--bg-card)",
-    borderRadius: 14,
+    borderRadius: 16,
     padding: "16px 16px",
     cursor: "pointer",
     boxShadow: "var(--shadow-card)",
-    transition: "transform 0.15s, box-shadow 0.15s",
+    transition: "transform 0.15s var(--ease-dt), box-shadow 0.15s var(--ease-dt)",
   },
   primaryBtn: (color = "var(--c-level-2)") => ({
     background: color,
     color: "var(--on-color)",
     border: "none",
     padding: "10px 22px",
-    borderRadius: 10,
+    borderRadius: 999,
     cursor: "pointer",
     fontSize: 14,
     fontWeight: 600,
@@ -185,7 +209,7 @@ const S = {
     color: color,
     border: `2px solid ${color}`,
     padding: "8px 18px",
-    borderRadius: 10,
+    borderRadius: 999,
     cursor: "pointer",
     fontSize: 14,
     fontWeight: 600,
@@ -259,7 +283,7 @@ const S = {
     color: "var(--on-color)",
     border: "none",
     padding: "16px 28px",
-    borderRadius: 12,
+    borderRadius: 999,
     cursor: "pointer",
     fontSize: 16,
     fontWeight: 700,
@@ -268,7 +292,7 @@ const S = {
   },
   questionCard: {
     background: "var(--bg-card)",
-    borderRadius: 14,
+    borderRadius: 18,
     boxShadow: "var(--shadow-card)",
     padding: "24px",
     marginBottom: 14,
@@ -565,8 +589,12 @@ function useTheme() {
 const ICON_X = (
   <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M18 6 6 18M6 6l12 12" /></svg>
 );
-const ICON_HOME = (
-  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M3 9.5 12 3l9 6.5" /><path d="M5 8v11a1 1 0 0 0 1 1h4v-6h4v6h4a1 1 0 0 0 1-1V8" /></svg>
+// Иконка «на главную тренажёра» (mode-select), НЕ иконка дома — в шпаргалке
+// иконка дома ведёт на index.html (реальный "дом" сайта), а тут кнопка ведёт
+// на внутренний старт тренажёра. Специально другая иконка (цель), чтобы не
+// путать пользователя одинаковым значком с разным смыслом в двух файлах.
+const ICON_TRAINER_HOME = (
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="9" /><circle cx="12" cy="12" r="5" /><circle cx="12" cy="12" r="1" /></svg>
 );
 const ICON_AUTO = (
   <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="10" /><path d="M12 2a10 10 0 0 0 0 20z" fill="currentColor" stroke="none" /></svg>
@@ -602,7 +630,7 @@ function TopBar({ left, right, icon, onTheme, onHome }) {
       <div className="tb-row" style={{ display: "flex", gap: 8, alignItems: "center" }}>
         <a href="index.html" className="tb-btn dt-icon-btn" title="Выйти из тренажёра">{ICON_X}</a>
         {onHome && (
-          <button className="tb-btn dt-icon-btn" onClick={onHome} title="На главную тренажёра">{ICON_HOME}</button>
+          <button className="tb-btn dt-icon-btn" onClick={onHome} title="На главную тренажёра">{ICON_TRAINER_HOME}</button>
         )}
         {left}
       </div>
@@ -622,6 +650,7 @@ function TopBar({ left, right, icon, onTheme, onHome }) {
 function ConjFlipCard({ conj, flipped, onFlip, color }) {
   return (
     <div
+      className="flip-card-outer"
       onClick={onFlip}
       style={{ perspective: 1000, cursor: "pointer", height: 400, marginBottom: 14, position: "relative", zIndex: 1 }}
     >
@@ -710,6 +739,7 @@ function ConjFlipCard({ conj, flipped, onFlip, color }) {
 function PraeteritumFlipCard({ conj, flipped, onFlip, color }) {
   return (
     <div
+      className="flip-card-outer"
       onClick={onFlip}
       style={{ perspective: 1000, cursor: "pointer", height: 280, marginBottom: 14, position: "relative", zIndex: 1 }}
     >
@@ -766,6 +796,7 @@ function FlipCard({ item, flipped, onFlip, color }) {
   const forms = isVerb ? resolveVerbForms(item, (typeof CONJUGATIONS !== "undefined" ? CONJUGATIONS : [])) : null;
   return (
     <div
+      className="flip-card-outer"
       onClick={onFlip}
       style={{
         perspective: 1000,
@@ -2818,7 +2849,12 @@ function App() {
   // Для текущей плашки ✓/✗
   const [lastVerdict, setLastVerdict] = useState(null); // true | false | null
   // ─── Блок «Новые»: флаг перемешивания для «Общего изучения» ────────────
+  // neuVocabOrder — зафиксированный на момент включения перемешки порядок слов.
+  // Раньше shuffle() вызывался прямо в рендере (пересчитывался на каждый re-render,
+  // напр. при перевороте карточки) — из-за этого при флипе показывался перевод
+  // случайно другого слова. Теперь порядок фиксируется один раз при переключении.
   const [neuShuffle, setNeuShuffle] = useState(false);
+  const [neuVocabOrder, setNeuVocabOrder] = useState(null);
   const [lastTestLevel, setLastTestLevel] = useState(null); // last selected level (1-5)
   const [lastTestType, setLastTestType] = useState(null);   // last combo: 'partizip2'|'praesens'|'general'
   const [lastTestBlockId, setLastTestBlockId] = useState(null); // block/sub the choice belongs to
@@ -3131,7 +3167,7 @@ function App() {
 
   // ─── Цвета режимов ──────────────────────────────────────────────────────
   const modeColor = mode === "learn" ? "var(--c-mode-learn)" : "var(--c-level-1)";
-  const modeLabel = mode === "learn" ? (<><Icon name="brain" /> Изучение</>) : (<><Icon name="target" /> Тестирование</>);
+  const modeLabel = mode === "learn" ? (<><Icon name="brain" /> Изучение</>) : (<><Icon name="clipboard" /> Тестирование</>);
 
   // ─── Подписи уровней (для пользователя — без сокращений) ────────────────
   const LEVEL_LABELS = {
@@ -3302,7 +3338,7 @@ function App() {
             <p style={S.subheading}>Выбери режим</p>
           </div>
           <div className="mode-grid">
-            <div style={{ ...S.modeCard, borderColor: "var(--c-mode-learn)" }}
+            <div className="dt-tap-card" style={{ ...S.modeCard, borderColor: "var(--c-mode-learn)" }}
                  onClick={() => pickMode("learn")}>
               <Icon name="brain" className="mode-card-icon" />
               <div style={{ fontSize: 18, fontWeight: 700, marginBottom: 4, color: "var(--text-title)" }}>
@@ -3310,9 +3346,9 @@ function App() {
               </div>
               <div style={S.muted}>Карточки + мини-тест на перевод</div>
             </div>
-            <div style={{ ...S.modeCard, borderColor: "var(--c-level-1)" }}
+            <div className="dt-tap-card" style={{ ...S.modeCard, borderColor: "var(--c-level-1)" }}
                  onClick={() => pickMode("test")}>
-              <Icon name="target" className="mode-card-icon" />
+              <Icon name="clipboard" className="mode-card-icon" />
               <div style={{ fontSize: 18, fontWeight: 700, marginBottom: 4, color: "var(--text-title)" }}>
                 Тестирование
               </div>
@@ -3336,7 +3372,7 @@ function App() {
           <h2 style={{ ...S.heading, textAlign: "center" }}>Выбери блок</h2>
           <div style={S.grid}>
             {BLOCKS.filter(b => b.kind !== "sounds").map(b => (
-              <div key={b.id}
+              <div key={b.id} className="dt-tap-card"
                    style={{ ...S.card, borderLeft: `4px solid ${b.color}`, cursor: "pointer" }}
                    onClick={() => pickBlock(b)}>
                 <div style={S.cardTitle}><Icon name={b.icon} size={18} /> {b.label}</div>
@@ -3375,7 +3411,7 @@ function App() {
 
           {!isNeu && mode === "test" && (
             <div style={{ marginBottom: 16 }}>
-              <div style={{ ...S.card, borderLeft: `4px solid ${activeBlock.color}`, cursor: "pointer" }}
+              <div className="dt-tap-card" style={{ ...S.card, borderLeft: `4px solid ${activeBlock.color}`, cursor: "pointer" }}
                    onClick={startTestAll}>
                 <div style={S.cardTitle}><Icon name="flame" size={18} /> Тест по всему блоку</div>
                 <div style={S.cardMeta}>Все темы вперемешку · без разбивки</div>
@@ -3403,7 +3439,7 @@ function App() {
           {isNeu && (
             <div style={{ display: "flex", flexDirection: "column", gap: 10, marginBottom: 16 }}>
               {mode === "learn" && (
-                <div style={{ ...S.card, borderLeft: `4px solid ${activeBlock.color}`, cursor: "pointer" }}
+                <div className="dt-tap-card" style={{ ...S.card, borderLeft: `4px solid ${activeBlock.color}`, cursor: "pointer" }}
                      onClick={() => startNeuLearnAll(false)}>
                   <div style={S.cardTitle}><Icon name="book" size={18} /> Общее изучение</div>
                   <div style={S.cardMeta}>{neuAllCount} слов · noun → verb → adj → adv</div>
@@ -3424,7 +3460,7 @@ function App() {
                     width: "100%",
                   }}
                   onClick={startNeuTestAll}>
-                  <div style={{ display: "flex", justifyContent: "center", marginBottom: 4 }}><Icon name="target" size={26} /></div>
+                  <div style={{ display: "flex", justifyContent: "center", marginBottom: 4 }}><Icon name="clipboard" size={26} /></div>
                   <div style={{ fontSize: 18, marginBottom: 2 }}>Тест по блоку</div>
                   <div style={{ fontSize: 13, opacity: 0.85 }}>Все новые слова · все уровни вперемешку</div>
                 </button>
@@ -3448,7 +3484,7 @@ function App() {
                 metaText = mode === "learn" ? `${wc} слов` : `${qc} заданий`;
               }
               return (
-                <div key={sub.id}
+                <div key={sub.id} className="dt-tap-card"
                      style={{ ...S.card, borderLeft: `4px solid ${activeBlock.color}`, cursor: "pointer" }}
                      onClick={() => pickSub(sub)}>
                   <div style={S.cardTitle}><Icon name={sub.icon} size={18} /> {sub.label}</div>
@@ -3577,13 +3613,14 @@ function App() {
         color: disabled ? "var(--text-muted)" : "white",
         border: disabled ? "2px solid var(--border-soft)" : "none",
         padding: "14px 8px",
-        borderRadius: 12,
+        borderRadius: 16,
         cursor: disabled ? "not-allowed" : "pointer",
         opacity: disabled ? 0.5 : 1,
         fontFamily: "inherit",
         textAlign: "center",
         fontWeight: 700,
         width: "100%",
+        transition: "transform 0.15s var(--ease-dt), box-shadow 0.15s var(--ease-dt)",
       };
     }
     
@@ -3621,7 +3658,7 @@ function App() {
               marginBottom: 16,
             }}
             onClick={() => startCombo("general")}>
-            <div style={{ display: "flex", justifyContent: "center", marginBottom: 4 }}><Icon name="target" size={26} /></div>
+            <div style={{ display: "flex", justifyContent: "center", marginBottom: 4 }}><Icon name="clipboard" size={26} /></div>
             <div style={{ fontSize: 18, marginBottom: 2 }}>Тест по блоку</div>
             <div style={{ fontSize: 13, opacity: 0.85 }}>30 вопросов</div>
           </button>
@@ -3735,7 +3772,7 @@ function App() {
             left={<button style={S.outlineBtn(activeBlock.color)} onClick={() => setPhase("block-start")}>← Назад</button>}
             right={<span style={S.muted}>{cardIdx + 1} / {vocab.length}</span>}
             icon={icon} onTheme={cycleTheme} onHome={goHome} />
-          <FlipCard item={item} flipped={flipped} onFlip={() => setFlipped(!flipped)} color={activeBlock.color} />
+          <FlipCard key={item.id} item={item} flipped={flipped} onFlip={() => setFlipped(!flipped)} color={activeBlock.color} />
           <div style={{ display: "flex", gap: 12, justifyContent: "center", marginTop: 20 }}>
             <button style={S.outlineBtn()} onClick={prevCard} disabled={cardIdx === 0}>← Назад</button>
             <button style={S.primaryBtn(activeBlock.color)} onClick={nextCard}>
@@ -3744,7 +3781,7 @@ function App() {
           </div>
           <div style={{ display: "flex", justifyContent: "center", marginTop: 12 }}>
             <button style={S.outlineBtn("var(--c-outline-grey)")} onClick={() => setPhase("learn-test")}>
-              <Icon name="target" /> Перейти к тесту
+              <Icon name="clipboard" /> Перейти к тесту
             </button>
           </div>
         </div>
@@ -3755,7 +3792,7 @@ function App() {
   // ─── LEARN CARDS NEW (📚 Общее изучение для блока «Новые») ───────────────
   function renderLearnCardsNew() {
     const base = getNeuAllVocab();
-    const vocab = neuShuffle ? shuffle([...base]) : base;
+    const vocab = neuShuffle && neuVocabOrder ? neuVocabOrder : base;
     if (vocab.length === 0) {
       return <div style={S.page}><div style={S.container}>Нет новых слов.</div></div>;
     }
@@ -3771,11 +3808,16 @@ function App() {
           <div style={{ textAlign: "center", marginBottom: 12 }}>
             <button
               style={{ ...S.outlineBtn(neuShuffle ? activeBlock.color : "var(--c-outline-grey)"), fontSize: 13, padding: "4px 14px" }}
-              onClick={() => { setNeuShuffle(!neuShuffle); setCardIdx(0); setFlipped(false); }}>
+              onClick={() => {
+                const next = !neuShuffle;
+                setNeuShuffle(next);
+                setNeuVocabOrder(next ? shuffle([...base]) : null);
+                setCardIdx(0); setFlipped(false);
+              }}>
               <Icon name="dice" /> Вперемешку {neuShuffle ? <Icon name="check" size={12} /> : ""}
             </button>
           </div>
-          <FlipCard item={item} flipped={flipped} onFlip={() => setFlipped(!flipped)} color={activeBlock.color} />
+          <FlipCard key={item.id} item={item} flipped={flipped} onFlip={() => setFlipped(!flipped)} color={activeBlock.color} />
           <div style={{ display: "flex", gap: 12, justifyContent: "center", marginTop: 20 }}>
             <button style={S.outlineBtn()} onClick={() => { if (cardIdx > 0) { setCardIdx(cardIdx - 1); setFlipped(false); } }} disabled={cardIdx === 0}>← Назад</button>
             <button style={S.primaryBtn(activeBlock.color)} onClick={() => {
@@ -3807,7 +3849,7 @@ function App() {
               setUserAnswers([]); setLastVerdict(null);
               setPhase("learn-test");
             }}>
-              <Icon name="target" /> Перейти к тесту
+              <Icon name="clipboard" /> Перейти к тесту
             </button>
           </div>
         </div>
@@ -3879,7 +3921,7 @@ function App() {
             }
             right={<span style={S.muted}>{cardIdx + 1} / {praetList.length}</span>}
             icon={icon} onTheme={cycleTheme} onHome={goHome} />
-          <PraeteritumFlipCard conj={conj} flipped={flipped}
+          <PraeteritumFlipCard key={conj.id || conj.verb} conj={conj} flipped={flipped}
                                onFlip={() => setFlipped(!flipped)}
                                color="var(--c-praeteritum)" />
           <div style={{ display: "flex", gap: 12, justifyContent: "center", marginTop: 20 }}>
@@ -3899,10 +3941,10 @@ function App() {
           <div style={{ display: "flex", justifyContent: "center", marginTop: 12 }}>
             <div style={{ display: "flex", gap: 10, justifyContent: "center" }}>
               <button style={S.outlineBtn("var(--c-outline-grey)")} onClick={startLearnPraeteritumTest}>
-                <Icon name="target" /> Тест (30)
+                <Icon name="clipboard" /> Тест (30)
               </button>
               <button style={S.outlineBtn("var(--c-praeteritum)")} onClick={startLearnPraeteritumFullTest}>
-                <Icon name="target" /> Полный тест
+                <Icon name="clipboard" /> Полный тест
               </button>
             </div>
           </div>
@@ -3928,7 +3970,7 @@ function App() {
             }
             right={<span style={S.muted}>{cardIdx + 1} / {CONJUGATIONS.length}</span>}
             icon={icon} onTheme={cycleTheme} onHome={goHome} />
-          <ConjFlipCard conj={conj} flipped={flipped}
+          <ConjFlipCard key={conj.id || conj.verb} conj={conj} flipped={flipped}
                         onFlip={() => setFlipped(!flipped)}
                         color={activeBlock.color} />
           <div style={{ display: "flex", gap: 12, justifyContent: "center", marginTop: 20 }}>
@@ -3947,7 +3989,7 @@ function App() {
           </div>
           <div style={{ display: "flex", justifyContent: "center", marginTop: 12, gap: 10, flexWrap: "wrap" }}>
             <button style={S.outlineBtn("var(--c-outline-grey)")} onClick={startLearnConjMiniTest}>
-              <Icon name="target" /> Mini-тест (37)
+              <Icon name="clipboard" /> Mini-тест (37)
             </button>
             <button style={S.outlineBtn("var(--c-praeteritum)")} onClick={startLearnPraeteritumFullTest}>
               <Icon name="rewind" /> Полный тест Präteritum (131)
