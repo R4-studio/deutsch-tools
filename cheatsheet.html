@@ -191,7 +191,8 @@ tr:hover td{background:var(--bg-row-hover)}
 .search-result:last-child { border-bottom: none; }
 .search-result:hover,
 .search-result.focused { background: var(--bg-row-hover); }
-.search-result .sr-icon { font-size: 14px; flex-shrink: 0; }
+.search-result .sr-icon { flex-shrink: 0; display: inline-flex; }
+.search-result .sr-icon svg { width: 14px; height: 14px; display: block; }
 .search-result .sr-kind {
   font-size: 11px;
   color: var(--text-th);
@@ -405,7 +406,7 @@ tr[data-vid], [data-vid].conj-card { cursor: pointer; }
   document.documentElement.classList.add('theme-' + saved);
 })();
 </script>
-<script src="data.js?v=20260701"></script>
+<script src="data.js?v=20260718"></script>
 <script>
 // ─── Версия приложения (обновлять вместе с ?v= выше) ─────────
 var APP_VERSION = 'v65';
@@ -443,34 +444,56 @@ function escHtml(s) {
     <span>Разделы</span>
     <button class="side-menu-close" onclick="closeMenu()">×</button>
   </div>
- <div class="side-menu-item" data-tab="new" onclick="goTo('new')">🆕 Neu</div>
- <div class="side-menu-item" data-tab="nums" onclick="goTo('nums')">🔢 Zahlen</div>
- <div class="side-menu-item" data-tab="sounds" onclick="goTo('sounds')">🔤 Laute</div>
- <div class="side-menu-item" data-tab="verbs" onclick="goTo('verbs')">⚡ Verben</div>
- <div class="side-menu-item" data-tab="unregel" onclick="goTo('unregel')">🔥 Unregelmäßige Konjugation</div>
- <div class="side-menu-item" data-tab="nouns" onclick="goTo('nouns')">📦 Substantive</div>
- <div class="side-menu-item" data-tab="adj" onclick="goTo('adj')">🎨 Adjektive</div>
- <div class="side-menu-item" data-tab="adv" onclick="goTo('adv')">🔄 Adverbien</div>
- <div class="side-menu-item" data-tab="mestoim" onclick="goTo('mestoim')">👤 Pronomen</div>
- <div class="side-menu-item" data-tab="termin" onclick="goTo('termin')">📋 Begriffe</div>
- <div class="side-menu-item" data-tab="rules" onclick="goTo('rules')">📐 Regeln</div>
- <div class="side-menu-item" data-tab="phrases" onclick="goTo('phrases')">💬 Phrasen</div>
+  <div id="sideMenuItems"></div>
 </div>
- <div class="tabs">
- <div class="tab active" data-tab="new" onclick="show('new')">🆕 Neu</div>
- <div class="tab" data-tab="nums" onclick="show('nums')">🔢 Zahlen</div>
- <div class="tab" data-tab="sounds" onclick="show('sounds')">🔤 Laute</div>
- <div class="tab" data-tab="verbs" onclick="show('verbs')">⚡ Verben</div>
- <div class="tab" data-tab="unregel" onclick="show('unregel')">🔥 Unregelmäßige Konjugation</div>
- <div class="tab" data-tab="perfekt" onclick="show('perfekt')">🕰️ Vergangenheit</div>
- <div class="tab" data-tab="nouns" onclick="show('nouns')">📦 Substantive</div>
- <div class="tab" data-tab="adj" onclick="show('adj')">🎨 Adjektive</div>
- <div class="tab" data-tab="adv" onclick="show('adv')">🔄 Adverbien</div>
- <div class="tab" data-tab="mestoim" onclick="show('mestoim')">👤 Pronomen</div>
- <div class="tab" data-tab="termin" onclick="show('termin')">📋 Begriffe</div>
- <div class="tab" data-tab="rules" onclick="show('rules')">📐 Regeln</div>
- <div class="tab" data-tab="phrases" onclick="show('phrases')">💬 Phrasen</div>
-</div>
+<div class="tabs" id="tabsRow"></div>
+<script>
+// ic(key) — достаёт SVG-разметку иконки из ICON_SVGS (единый источник, генерируется в data.js)
+function ic(key) { return (typeof ICON_SVGS !== 'undefined' && ICON_SVGS[key]) || ''; }
+// topicTitleHtml(topic) — иконка + подпись для domen:group из TOPIC_TITLES ({icon,label})
+function topicTitleHtml(topic) {
+  var t = typeof TOPIC_TITLES !== 'undefined' ? TOPIC_TITLES[topic] : null;
+  if (!t) return escHtml(topic);
+  return (t.icon ? ic(t.icon) + ' ' : '') + escHtml(t.label);
+}
+// Маркеры-иконки в начале строк content_md (правила): 💡 совет, ⚠ предупреждение и т.п.
+var NOTE_ICON_MAP = { '💡': 'bulb', '⚠': 'warning', '📍': 'pin', '🔑': 'key', '✓': 'check', '✗': 'cross', '❗': 'warning' };
+var TABS_CONFIG = [
+  { id: 'new',     icon: 'sparkle',   label: 'Neu' },
+  { id: 'nums',    icon: 'hash',      label: 'Zahlen' },
+  { id: 'sounds',  icon: 'waveform',  label: 'Laute' },
+  { id: 'verbs',   icon: 'bolt',      label: 'Verben' },
+  { id: 'unregel', icon: 'flame',     label: 'Unregelmäßige Konjugation' },
+  { id: 'perfekt', icon: 'history',   label: 'Vergangenheit', tabsOnly: true },
+  { id: 'nouns',   icon: 'box',       label: 'Substantive' },
+  { id: 'adj',     icon: 'palette',   label: 'Adjektive' },
+  { id: 'adv',     icon: 'shuffle',   label: 'Adverbien' },
+  { id: 'mestoim', icon: 'user',      label: 'Pronomen' },
+  { id: 'termin',  icon: 'clipboard', label: 'Begriffe' },
+  { id: 'rules',   icon: 'ruleset',   label: 'Regeln' },
+  { id: 'phrases', icon: 'chat',      label: 'Phrasen' },
+];
+function renderTabsAndMenu() {
+  var menuHtml = TABS_CONFIG.filter(function(t) { return !t.tabsOnly; }).map(function(t) {
+    return '<div class="side-menu-item" data-tab="' + t.id + '" onclick="goTo(\'' + t.id + '\')">' + ic(t.icon) + ' ' + t.label + '</div>';
+  }).join('');
+  document.getElementById('sideMenuItems').innerHTML = menuHtml;
+  var tabsHtml = TABS_CONFIG.map(function(t, i) {
+    return '<div class="tab' + (i === 0 ? ' active' : '') + '" data-tab="' + t.id + '" onclick="show(\'' + t.id + '\')">' + ic(t.icon) + ' ' + t.label + '</div>';
+  }).join('');
+  document.getElementById('tabsRow').innerHTML = tabsHtml;
+}
+renderTabsAndMenu();
+
+// Гидратация статичных .section-title[data-icon] после парсинга остального HTML
+function hydrateIcons() {
+  document.querySelectorAll('[data-icon]').forEach(function(el) {
+    var svg = ic(el.dataset.icon);
+    if (svg) el.insertAdjacentHTML('afterbegin', svg);
+  });
+}
+document.addEventListener('DOMContentLoaded', hydrateIcons);
+</script>
 
 <!-- ЧИСЛА -->
 <div class="panel" id="tab-nums">
@@ -550,7 +573,7 @@ function escHtml(s) {
 <div class="panel" id="tab-verbs">
 
 <div class="section">
-<div class="section-title">💡 Базовые / Общие</div>
+<div class="section-title" data-icon="bulb">Базовые / Общие</div>
 <table><tbody>
 <tr><th>Немецкий</th><th>Перевод</th><th>Примечание</th></tr>
 <tr><td>machen</td><td>делать</td><td></td></tr>
@@ -568,7 +591,7 @@ function escHtml(s) {
 </div>
 
 <div class="section">
-<div class="section-title">🎯 Modalverben и условные формы</div>
+<div class="section-title" data-icon="target">Modalverben и условные формы</div>
 <table><tbody>
 <tr><th>Немецкий</th><th>Перевод</th><th>Примечание</th></tr>
 <tr><td>können</td><td>мочь, уметь</td><td>Modalverb, Unregelmäßig — см. вкладку Спряжение</td></tr>
@@ -584,7 +607,7 @@ function escHtml(s) {
 </div>
 
 <div class="section">
-<div class="section-title">🚌 Движение / транспорт</div>
+<div class="section-title" data-icon="bus">Движение / транспорт</div>
 <table><tbody>
 <tr><th>Немецкий</th><th>Перевод</th><th>Примечание</th></tr>
 <tr><td>gehen</td><td>идти, ходить</td><td></td></tr>
@@ -606,7 +629,7 @@ function escHtml(s) {
 </div>
 
 <div class="section">
-<div class="section-title">🍳 Еда / готовка</div>
+<div class="section-title" data-icon="pan">Еда / готовка</div>
 <table><tbody>
 <tr><th>Немецкий</th><th>Перевод</th><th>Примечание</th></tr>
 <tr><td>essen</td><td>есть, кушать</td><td>Unregelmäßig</td></tr>
@@ -619,7 +642,7 @@ function escHtml(s) {
 </div>
 
 <div class="section">
-<div class="section-title">🏠 Дом / быт / покупки</div>
+<div class="section-title" data-icon="home">Дом / быт / покупки</div>
 <table><tbody>
 <tr><th>Немецкий</th><th>Перевод</th><th>Примечание</th></tr>
 <tr><td>hinzufügen</td><td>добавлять</td><td>отделяемая: hinzu- | hin (туда) + zu (к) + fügen (присоединять) | Partizip II: hinzugefügt</td></tr>
@@ -650,7 +673,7 @@ function escHtml(s) {
 </div>
 
 <div class="section">
-<div class="section-title">💬 Общение / эмоции</div>
+<div class="section-title" data-icon="chat">Общение / эмоции</div>
 <table><tbody>
 <tr><th>Немецкий</th><th>Перевод</th><th>Примечание</th></tr>
 <tr><td>passen</td><td>подходить</td><td>Das passt! — Подходит! / Норм! | прил.: passend — подходящий</td></tr>
@@ -679,7 +702,7 @@ function escHtml(s) {
 </div>
 
 <div class="section">
-<div class="section-title">📚 Учёба / работа</div>
+<div class="section-title" data-icon="book">Учёба / работа</div>
 <table><tbody>
 <tr><th>Немецкий</th><th>Перевод</th><th>Примечание</th></tr>
 <tr><td>arbeiten</td><td>работать</td><td></td></tr>
@@ -695,7 +718,7 @@ function escHtml(s) {
 </div>
 
 <div class="section">
-<div class="section-title">🎮 Досуг / хобби</div>
+<div class="section-title" data-icon="gamepad">Досуг / хобби</div>
 <table><tbody>
 <tr><th>Немецкий</th><th>Перевод</th><th>Примечание</th></tr>
 <tr><td>spielen</td><td>играть</td><td></td></tr>
@@ -724,7 +747,7 @@ function escHtml(s) {
 </div>
 
 <div class="section">
-<div class="section-title">🌧 Безличные (погода и пр.)</div>
+<div class="section-title" data-icon="cloud-rain">Безличные (погода и пр.)</div>
 <table><tbody>
 <tr><th>Немецкий</th><th>Перевод</th><th>Примечание</th></tr>
 <tr><td>es hagelt</td><td>идёт град</td><td>безличный глагол | только с es | Es hagelt stark — идёт сильный град</td></tr>
@@ -798,7 +821,7 @@ function escHtml(s) {
 <tr><td>ihr</td><td>wollt</td></tr>
 <tr><td>sie/Sie</td><td>wollen</td></tr>
 </tbody></table>
-<p style="font-size:12px;margin-top:6px">⚠ ich/er одинаковые (will) | Infinitiv в конец → Ich <b>will</b> Deutsch <b>lernen</b>.</p>
+<p style="font-size:12px;margin-top:6px" data-icon="warning">ich/er одинаковые (will) | Infinitiv в конец → Ich <b>will</b> Deutsch <b>lernen</b>.</p>
 </div>
 
 <div class="rule-box">
@@ -837,7 +860,7 @@ function escHtml(s) {
 <tr><td>sie/Sie</td><td>dürfen</td></tr>
 </tbody>
 </table>
-<p style="font-size:12px;margin-top:6px">⚠ ich/er одинаковые (darf) | Infinitiv в конец → Ich <b>darf</b> hier nicht <b>rauchen</b>.</p>
+<p style="font-size:12px;margin-top:6px" data-icon="warning">ich/er одинаковые (darf) | Infinitiv в конец → Ich <b>darf</b> hier nicht <b>rauchen</b>.</p>
 </div>
 
 <div class="rule-box">
@@ -1038,7 +1061,7 @@ function escHtml(s) {
 <div class="panel" id="tab-nouns">
 
 <div class="section">
-<div class="section-title">👤 Личные данные</div>
+<div class="section-title" data-icon="user">Личные данные</div>
 <table>
 <tbody>
 <tr><th>Немецкий</th><th>Артикль</th><th>Перевод</th></tr>
@@ -1063,7 +1086,7 @@ function escHtml(s) {
 </div>
 
 <div class="section">
-<div class="section-title">👨‍👩‍👧 Семья</div>
+<div class="section-title" data-icon="users">Семья</div>
 <table><tbody>
 <tr><th>Немецкий</th><th>Артикль</th><th>Перевод / Примечание</th></tr>
 <tr><td>die Familie</td><td><span class="badge f">f</span></td><td>семья</td></tr>
@@ -1092,7 +1115,7 @@ function escHtml(s) {
 </div>
 
 <div class="section">
-<div class="section-title">💼 Профессии</div>
+<div class="section-title" data-icon="briefcase">Профессии</div>
 <table>
 <tbody>
 <tr><th>Немецкий</th><th>Артикль</th><th>Перевод</th></tr>
@@ -1109,7 +1132,7 @@ function escHtml(s) {
 </div>
 
 <div class="section">
-<div class="section-title">📅 Дни / Месяцы / Даты</div>
+<div class="section-title" data-icon="calendar">Дни / Месяцы / Даты</div>
 <table><tbody>
 <tr><th>Немецкий</th><th>Артикль</th><th>Перевод / Примечание</th></tr>
 <tr><td>der Montag</td><td><span class="badge m">m</span></td><td>понедельник | am Montag — в понедельник</td></tr>
@@ -1128,7 +1151,7 @@ function escHtml(s) {
 </div>
 
 <div class="section">
-<div class="section-title">📺 ТВ / Медиа</div>
+<div class="section-title" data-icon="tv">ТВ / Медиа</div>
 <table><tbody>
 <tr><th>Немецкий</th><th>Артикль</th><th>Перевод / Примечание</th></tr>
 <tr><td>der Film</td><td><span class="badge m">m</span></td><td>фильм</td></tr>
@@ -1140,7 +1163,7 @@ function escHtml(s) {
 </div>
 
 <div class="section">
-<div class="section-title">🎵 Музыка / Хобби</div>
+<div class="section-title" data-icon="music">Музыка / Хобби</div>
 <table><tbody>
 <tr><th>Немецкий</th><th>Артикль</th><th>Перевод / Примечание</th></tr>
 <tr><td>die Musik</td><td><span class="badge f">f</span></td><td>музыка</td></tr>
@@ -1154,7 +1177,7 @@ function escHtml(s) {
 </div>
 
 <div class="section">
-<div class="section-title">🍷 Заведения / Жильё / Поездки</div>
+<div class="section-title" data-icon="wine">Заведения / Жильё / Поездки</div>
 <table><tbody>
 <tr><th>Немецкий</th><th>Артикль</th><th>Перевод / Примечание</th></tr>
 <tr><td>die Kneipe</td><td><span class="badge f">f</span></td><td>пивная / бар / паб | разговорное</td></tr>
@@ -1167,7 +1190,7 @@ function escHtml(s) {
 </div>
 
 <div class="section">
-<div class="section-title">🐾 Животные / Природа</div>
+<div class="section-title" data-icon="paw">Животные / Природа</div>
 <table><tbody>
 <tr><th>Немецкий</th><th>Артикль</th><th>Перевод / Примечание</th></tr>
 <tr><td>der Hund</td><td><span class="badge m">m</span></td><td>собака | Pl: die Hunde</td></tr>
@@ -1181,7 +1204,7 @@ function escHtml(s) {
 </div>
 
 <div class="section">
-<div class="section-title">✏️ Письмо / Текст</div>
+<div class="section-title" data-icon="pencil">Письмо / Текст</div>
 <table><tbody>
 <tr><th>Немецкий</th><th>Артикль</th><th>Перевод / Примечание</th></tr>
 <tr><td>der Satz</td><td><span class="badge m">m</span></td><td>предложение | Pl: die Sätze</td></tr>
@@ -1196,7 +1219,7 @@ function escHtml(s) {
 </div>
 
 <div class="section">
-<div class="section-title">📱 Техника / Гаджеты</div>
+<div class="section-title" data-icon="laptop">Техника / Гаджеты</div>
 <table>
 <tbody>
 <tr><th>Немецкий</th><th>Артикль</th><th>Перевод</th></tr>
@@ -1212,7 +1235,7 @@ function escHtml(s) {
 </div>
 
 <div class="section">
-<div class="section-title">🚗 Транспорт</div>
+<div class="section-title" data-icon="car">Транспорт</div>
 <table>
 <tbody>
 <tr><th>Немецкий</th><th>Артикль</th><th>Перевод</th></tr>
@@ -1230,7 +1253,7 @@ function escHtml(s) {
 </div>
 
 <div class="section">
-<div class="section-title">🏠 Дом / Уборка</div>
+<div class="section-title" data-icon="home">Дом / Уборка</div>
 <table>
 <tbody>
 <tr><th>Немецкий</th><th>Артикль</th><th>Перевод</th></tr>
@@ -1248,7 +1271,7 @@ function escHtml(s) {
 </div>
 
 <div class="section">
-<div class="section-title">🛏 das Schlafzimmer</div>
+<div class="section-title" data-icon="bed">das Schlafzimmer</div>
 <table><tbody>
 <tr><th>Немецкий</th><th>Артикль</th><th>Перевод / Примечание</th></tr>
 <tr><td>das Bett</td><td><span class="badge n">n</span></td><td>кровать</td></tr>
@@ -1265,7 +1288,7 @@ function escHtml(s) {
 </div>
 
 <div class="section">
-<div class="section-title">🖥 das Arbeitszimmer</div>
+<div class="section-title" data-icon="monitor">das Arbeitszimmer</div>
 <table><tbody>
 <tr><th>Немецкий</th><th>Артикль</th><th>Перевод / Примечание</th></tr>
 <tr><td>der Bildschirm</td><td><span class="badge m">m</span></td><td>экран</td></tr>
@@ -1286,7 +1309,7 @@ function escHtml(s) {
 </div>
 
 <div class="section">
-<div class="section-title">🗃 der Keller</div>
+<div class="section-title" data-icon="archive">der Keller</div>
 <table><tbody>
 <tr><th>Немецкий</th><th>Артикль</th><th>Перевод / Примечание</th></tr>
 <tr><td>die Waschmaschine</td><td><span class="badge f">f</span></td><td>стиральная машина</td></tr>
@@ -1299,7 +1322,7 @@ function escHtml(s) {
 </div>
 
 <div class="section">
-<div class="section-title">🛋 das Wohnzimmer</div>
+<div class="section-title" data-icon="sofa">das Wohnzimmer</div>
 <table><tbody>
 <tr><th>Немецкий</th><th>Артикль</th><th>Перевод / Примечание</th></tr>
 <tr><td>das Sofa</td><td><span class="badge n">n</span></td><td>диван</td></tr>
@@ -1310,7 +1333,7 @@ function escHtml(s) {
 </div>
 
 <div class="section">
-<div class="section-title">🚿 das Bad</div>
+<div class="section-title" data-icon="shower">das Bad</div>
 <table><tbody>
 <tr><th>Немецкий</th><th>Артикль</th><th>Перевод / Примечание</th></tr>
 <tr><td>die Dusche</td><td><span class="badge f">f</span></td><td>душ</td></tr>
@@ -1324,7 +1347,7 @@ function escHtml(s) {
 </div>
 
 <div class="section">
-<div class="section-title">🧸 das Kinderzimmer</div>
+<div class="section-title" data-icon="toy">das Kinderzimmer</div>
 <table><tbody>
 <tr><th>Немецкий</th><th>Артикль</th><th>Перевод / Примечание</th></tr>
 <tr><td>die Kommode</td><td><span class="badge f">f</span></td><td>комод</td></tr>
@@ -1335,7 +1358,7 @@ function escHtml(s) {
 </div>
 
 <div class="section">
-<div class="section-title">🌿 der Balkon</div>
+<div class="section-title" data-icon="leaf">der Balkon</div>
 <table><tbody>
 <tr><th>Немецкий</th><th>Артикль</th><th>Перевод / Примечание</th></tr>
 <tr><td>der Sonnenschirm</td><td><span class="badge m">m</span></td><td>зонт от солнца</td></tr>
@@ -1343,7 +1366,7 @@ function escHtml(s) {
 </div>
 
 <div class="section">
-<div class="section-title">🚪 der Flur</div>
+<div class="section-title" data-icon="door">der Flur</div>
 <table><tbody>
 <tr><th>Немецкий</th><th>Артикль</th><th>Перевод / Примечание</th></tr>
 <tr><td>die Garderobe</td><td><span class="badge f">f</span></td><td>вешалка / гардероб</td></tr>
@@ -1352,7 +1375,7 @@ function escHtml(s) {
 </div>
 
 <div class="section">
-<div class="section-title">🍳 die Küche</div>
+<div class="section-title" data-icon="pan">die Küche</div>
 <table><tbody>
 <tr><th>Немецкий</th><th>Артикль</th><th>Перевод / Примечание</th></tr>
 <tr><td>der Kühlschrank</td><td><span class="badge m">m</span></td><td>холодильник</td></tr>
@@ -1368,7 +1391,7 @@ function escHtml(s) {
 </div>
 
 <div class="section">
-<div class="section-title">🍽️ Кухня / Посуда</div>
+<div class="section-title" data-icon="dining">Кухня / Посуда</div>
 <table>
 <tbody>
 <tr><th>Немецкий</th><th>Артикль</th><th>Перевод</th></tr>
@@ -1388,7 +1411,7 @@ function escHtml(s) {
 </div>
 
 <div class="section">
-<div class="section-title">🛒 Магазин / Продукты</div>
+<div class="section-title" data-icon="cart">Магазин / Продукты</div>
 <table>
 <tbody>
 <tr><th>Немецкий</th><th>Артикль</th><th>Перевод</th></tr>
@@ -1415,7 +1438,7 @@ function escHtml(s) {
 </div>
 
 <div class="section">
-<div class="section-title">🥗 Еда и напитки</div>
+<div class="section-title" data-icon="apple">Еда и напитки</div>
 <table>
 <tbody>
 <tr><th>Немецкий</th><th>Артикль</th><th>Перевод</th></tr>
@@ -1466,7 +1489,7 @@ function escHtml(s) {
 </div>
 
 <div class="section">
-<div class="section-title">🏙️ Помещения / Город</div>
+<div class="section-title" data-icon="city">Помещения / Город</div>
 <table>
 <tbody>
 <tr><th>Немецкий</th><th>Артикль</th><th>Перевод</th></tr>
@@ -1514,7 +1537,7 @@ function escHtml(s) {
 </div>
 
 <div class="section">
-<div class="section-title">👜 Одежда / Аксессуары</div>
+<div class="section-title" data-icon="bag">Одежда / Аксессуары</div>
 <table>
 <tbody>
 <tr><th>Немецкий</th><th>Артикль</th><th>Перевод</th></tr>
@@ -1530,7 +1553,7 @@ function escHtml(s) {
 </div>
 
 <div class="section">
-<div class="section-title">📚 Канцелярия / Учёба</div>
+<div class="section-title" data-icon="book">Канцелярия / Учёба</div>
 <table>
 <tbody>
 <tr><th>Немецкий</th><th>Артикль</th><th>Перевод</th></tr>
@@ -1569,7 +1592,7 @@ function escHtml(s) {
 </div>
 
 <div class="section">
-<div class="section-title">💬 Общение / Документы</div>
+<div class="section-title" data-icon="chat">Общение / Документы</div>
 <table>
 <tbody>
 <tr><th>Немецкий</th><th>Артикль</th><th>Перевод</th></tr>
@@ -1607,7 +1630,7 @@ function escHtml(s) {
 </div>
 
 <div class="section">
-<div class="section-title">🌅 Время суток</div>
+<div class="section-title" data-icon="sunrise">Время суток</div>
 <table><tbody>
 <tr><th>Немецкий</th><th>Артикль</th><th>Время / Перевод</th></tr>
 <tr><td>der Morgen</td><td><span class="badge m">m</span></td><td>утро | 05:00 – 09:00 | ⚠ Morgen с заглавной = утро, morgen со строчной = завтра</td></tr>
@@ -1620,7 +1643,7 @@ function escHtml(s) {
 </div>
 
 <div class="section">
-<div class="section-title">⏰ Время (часы)</div>
+<div class="section-title" data-icon="clock">Время (часы)</div>
 <table>
 <tbody>
 <tr><th>Немецкий</th><th>Артикль</th><th>Перевод</th></tr>
@@ -1636,7 +1659,7 @@ function escHtml(s) {
 </div>
 
 <div class="section">
-<div class="section-title">📦 Разное</div>
+<div class="section-title" data-icon="box">Разное</div>
 <table><tbody>
 <tr><th>Немецкий</th><th>Артикль</th><th>Перевод / Примечание</th></tr>
 <tr><td>das Leben</td><td><span class="badge n">n</span></td><td>жизнь</td></tr>
@@ -1661,7 +1684,7 @@ function escHtml(s) {
 <div class="panel" id="tab-adj">
 
 <div class="section">
-<div class="section-title">🎨 Цвета</div>
+<div class="section-title" data-icon="palette">Цвета</div>
 <table><tbody>
 <tr><th>Немецкий</th><th>Перевод</th><th>Примечание</th></tr>
 <tr><td>rot</td><td>красный</td><td></td></tr>
@@ -1680,7 +1703,7 @@ function escHtml(s) {
 </div>
 
 <div class="section">
-<div class="section-title">🌡 Описание предметов / характеристики</div>
+<div class="section-title" data-icon="thermometer">Описание предметов / характеристики</div>
 <table><tbody>
 <tr><th>Немецкий</th><th>Перевод</th><th>Примечание</th></tr>
 <tr><td>passend</td><td>подходящий</td><td>от passen (подходить) | passende Schuhe — подходящие туфли</td></tr>
@@ -1712,7 +1735,7 @@ function escHtml(s) {
 </div>
 
 <div class="section">
-<div class="section-title">😊 Люди / эмоции / состояние</div>
+<div class="section-title" data-icon="smile">Люди / эмоции / состояние</div>
 <table><tbody>
 <tr><th>Немецкий</th><th>Перевод</th><th>Примечание</th></tr>
 <tr><td>lustig</td><td>смешной, весёлый</td><td>Das ist lustig!</td></tr>
@@ -1740,7 +1763,7 @@ function escHtml(s) {
 </div>
 
 <div class="section">
-<div class="section-title">💰 Цена / вкус / похвала</div>
+<div class="section-title" data-icon="coin">Цена / вкус / похвала</div>
 <table><tbody>
 <tr><th>Немецкий</th><th>Перевод</th><th>Примечание</th></tr>
 <tr><td>teuer</td><td>дорогой</td><td>↔ billig / günstig</td></tr>
@@ -1758,7 +1781,7 @@ function escHtml(s) {
 </div>
 
 <div class="section">
-<div class="section-title">💍 Семейный статус</div>
+<div class="section-title" data-icon="ring">Семейный статус</div>
 <table><tbody>
 <tr><th>Немецкий</th><th>Перевод</th><th>Транскрипция</th></tr>
 <tr><td>verheiratet</td><td>женат / замужем</td><td>[фэр-хай-ра-тэт]</td></tr>
@@ -1774,7 +1797,7 @@ function escHtml(s) {
 <div class="panel" id="tab-adv">
 
 <div class="section">
-<div class="section-title">⏰ Время / частота</div>
+<div class="section-title" data-icon="clock">Время / частота</div>
 <table><tbody>
 <tr><th>Немецкий</th><th>Перевод</th><th>Примечание</th></tr>
 <tr><td>jetzt</td><td>сейчас</td><td>в данный момент</td></tr>
@@ -1802,7 +1825,7 @@ function escHtml(s) {
 </div>
 
 <div class="section">
-<div class="section-title">📍 Место / направление</div>
+<div class="section-title" data-icon="pin">Место / направление</div>
 <table><tbody>
 <tr><th>Немецкий</th><th>Перевод</th><th>Примечание</th></tr>
 <tr><td>da</td><td>здесь / там / дома</td><td></td></tr>
@@ -1817,7 +1840,7 @@ function escHtml(s) {
 </div>
 
 <div class="section">
-<div class="section-title">📊 Степень / количество</div>
+<div class="section-title" data-icon="chart">Степень / количество</div>
 <table><tbody>
 <tr><th>Немецкий</th><th>Перевод</th><th>Примечание</th></tr>
 <tr><td>sehr</td><td>очень</td><td>усилитель: sehr gut, sehr lecker</td></tr>
@@ -1835,7 +1858,7 @@ function escHtml(s) {
 </div>
 
 <div class="section">
-<div class="section-title">🤝 Согласие / реакции</div>
+<div class="section-title" data-icon="handshake">Согласие / реакции</div>
 <table><tbody>
 <tr><th>Немецкий</th><th>Перевод</th><th>Примечание</th></tr>
 <tr><td>gleichfalls</td><td>взаимно, также</td><td>Danke gleichfalls! — ответ на пожелание</td></tr>
@@ -1847,7 +1870,7 @@ function escHtml(s) {
 </div>
 
 <div class="section">
-<div class="section-title">👍 Самочувствие / оценка</div>
+<div class="section-title" data-icon="thumbs-up">Самочувствие / оценка</div>
 <table><tbody>
 <tr><th>Немецкий</th><th>Перевод</th><th>Примечание</th></tr>
 <tr><td>gut</td><td>хорошо</td><td></td></tr>
@@ -1857,7 +1880,7 @@ function escHtml(s) {
 </div>
 
 <div class="section">
-<div class="section-title">🎯 Прочие наречия / частицы</div>
+<div class="section-title" data-icon="target">Прочие наречия / частицы</div>
 <table><tbody>
 <tr><th>Немецкий</th><th>Перевод</th><th>Примечание</th></tr>
 <tr><td>dabei</td><td>при этом / рядом / при деле</td><td>Ich bin dabei — я участвую / я здесь | Er schläft dabei — он при этом спит</td></tr>
@@ -1910,7 +1933,7 @@ function escHtml(s) {
 <tr><td>Sie (вежл.)</td><td>Sie</td><td>Ihnen</td></tr>
 </tbody>
 </table>
-<p style="font-size:12px;margin-top:6px">⚠ es в Dativ — <b>ihm</b>, не ihr | <b>ihr</b> = «ей» (Dativ от sie-она) и «вы» (группа, Nominativ) — два разных значения!</p>
+<p style="font-size:12px;margin-top:6px" data-icon="warning">es в Dativ — <b>ihm</b>, не ihr | <b>ihr</b> = «ей» (Dativ от sie-она) и «вы» (группа, Nominativ) — два разных значения!</p>
 </div>
 
 <div class="rule-box">
@@ -1926,7 +1949,7 @@ function escHtml(s) {
 <tr><td>sie/Sie</td><td>sich</td><td>sich</td></tr>
 </tbody>
 </table>
-<p style="font-size:12px;margin-top:6px">💡 ich/du/wir/ihr — совпадают с Personalpronomen | <b>er/sie/es</b> и <b>sie/Sie</b> → всегда <b>sich</b><br>
+<p style="font-size:12px;margin-top:6px" data-icon="bulb">ich/du/wir/ihr — совпадают с Personalpronomen | <b>er/sie/es</b> и <b>sie/Sie</b> → всегда <b>sich</b><br>
 Akk vs Dat: <b>Ich wasche mich</b> (я моюсь — себя, Akk) | <b>Ich wasche mir die Hände</b> (я мою себе руки — кому? мне, Dat)</p>
 </div>
 
@@ -1942,7 +1965,7 @@ Akk vs Dat: <b>Ich wasche mich</b> (я моюсь — себя, Akk) | <b>Ich wa
 <tr><td>ihr</td><td>euer</td><td>eure</td></tr>
 <tr><td>sie (Pl) / Sie</td><td>ihr / Ihr</td><td>ihre / Ihre</td></tr>
 </tbody></table>
-<p class="note" style="margin-top:8px">⚠ Во множественном числе ein/eine/einen не ставится! kein используется с окончаниями → keine,keinen...</p>
+<p class="note" style="margin-top:8px" data-icon="warning">Во множественном числе ein/eine/einen не ставится! kein используется с окончаниями → keine,keinen...</p>
 </div>
 
 <div class="section">
@@ -2026,11 +2049,11 @@ Akk vs Dat: <b>Ich wasche mich</b> (я моюсь — себя, Akk) | <b>Ich wa
 <tr><td><b>f (die)</b></td><td>die</td><td>+<b>e</b></td><td>Das ist <b>mein<span style="color:var(--accent-red-bright)">e</span></b> Wohnung.</td></tr>
 <tr><td><b>Pl (die)</b></td><td>die</td><td>+<b>e</b></td><td>Das sind <b>mein<span style="color:var(--accent-red-bright)">e</span></b> Eltern.</td></tr>
 </table>
-<p style="font-size:12px">💡 f и Pl → +<b>e</b> | m и n → без окончания. Работает для всех: mein/dein/sein/ihr/unser/euer/Ihr.</p>
+<p style="font-size:12px" data-icon="bulb">f и Pl → +<b>e</b> | m и n → без окончания. Работает для всех: mein/dein/sein/ihr/unser/euer/Ihr.</p>
 </div>
 
 <div class="section">
-<div class="section-title">📐 Verbot — запрет (man darf nicht / kein)</div>
+<div class="section-title" data-icon="ruleset">Verbot — запрет (man darf nicht / kein)</div>
 <div class="rule-box">
 <p style="font-weight:600;margin-bottom:8px">Конструкция запрета через <b>man</b> (= "нельзя" / "не разрешается"):</p>
 <table style="margin-bottom:10px">
@@ -2038,7 +2061,7 @@ Akk vs Dat: <b>Ich wasche mich</b> (я моюсь — себя, Akk) | <b>Ich wa
 <tr><td>Man darf nicht + Verb</td><td>Man darf nicht grillen.</td><td>Здесь нельзя жарить на гриле.</td></tr>
 <tr><td>Man darf kein + Nomen</td><td>Man darf keine Haustiere haben.</td><td>Нельзя держать домашних животных.</td></tr>
 </table>
-<p style="font-size:12px">💡 <b>nicht</b> — отрицает действие | <b>kein/keine</b> — отрицает существительное<br>💡 <b>man</b> — безличное местоимение (= "нельзя / не разрешается" — без конкретного лица)</p>
+<p style="font-size:12px" data-icon="bulb"><b>nicht</b> — отрицает действие | <b>kein/keine</b> — отрицает существительное<br><span data-icon="bulb"></span> <b>man</b> — безличное местоимение (= "нельзя / не разрешается" — без конкретного лица)</p>
 </div>
 </div>
 
@@ -2050,7 +2073,7 @@ Akk vs Dat: <b>Ich wasche mich</b> (я моюсь — себя, Akk) | <b>Ich wa
 <tr><td><b>sein</b></td><td>прилагательные, профессии, национальности</td><td>Ich <b>bin</b> Arzt. / Er <b>ist</b> müde.</td></tr>
 <tr><td><b>haben</b></td><td>существительные (что-то у тебя есть)</td><td>Ich <b>habe</b> Hunger. / Er <b>hat</b> Zeit.</td></tr>
 </table>
-<p style="font-size:12px;margin-top:8px">💡 Проверка: «я <b>являюсь</b>...?» → sein &nbsp;|&nbsp; «у меня <b>есть</b>...?» → haben</p>
+<p style="font-size:12px;margin-top:8px" data-icon="bulb">Проверка: «я <b>являюсь</b>...?» → sein &nbsp;|&nbsp; «у меня <b>есть</b>...?» → haben</p>
 </div>
 </div>
 
@@ -2075,7 +2098,7 @@ Akk vs Dat: <b>Ich wasche mich</b> (я моюсь — себя, Akk) | <b>Ich wa
 </tbody></table>
 </div>
 </div>
-<p style="font-size:12px;margin-top:10px">💡 Wie war das Treffen? — Das Treffen <b>war</b> toll! / Wir <b>hatten</b> viel Spaß!</p>
+<p style="font-size:12px;margin-top:10px" data-icon="bulb">Wie war das Treffen? — Das Treffen <b>war</b> toll! / Wir <b>hatten</b> viel Spaß!</p>
 </div>
 </div>
 
@@ -2143,8 +2166,8 @@ Akk vs Dat: <b>Ich wasche mich</b> (я моюсь — себя, Akk) | <b>Ich wa
 </tr>
 </table>
 
-<p style="font-size:13px; margin-top:10px">
-👉 <b>Разделяемые глаголы (trennbare Verben)</b> в предложениях с Modalverb + Infinitiv <b>не разделяются</b> и остаются в конце предложения целиком.
+<p style="font-size:13px; margin-top:10px" data-icon="arrow-right">
+<b>Разделяемые глаголы (trennbare Verben)</b> в предложениях с Modalverb + Infinitiv <b>не разделяются</b> и остаются в конце предложения целиком.
 </p>
 
 <p style="font-size:13px; margin-top:10px">
@@ -2220,8 +2243,8 @@ Akk vs Dat: <b>Ich wasche mich</b> (я моюсь — себя, Akk) | <b>Ich wa
 <tr><td>die Augenfarbe (f)</td><td>meine Augenfarbe</td><td style="color:var(--accent-blue)">seine Augenfarbe</td><td style="color:var(--accent-red)">ihre Augenfarbe</td></tr>
 <tr><td>die Hobbys (Pl)</td><td>meine Hobbys</td><td style="color:var(--accent-blue)">seine Hobbys</td><td style="color:var(--accent-red)">ihre Hobbys</td></tr>
 </table>
-<div style="background:var(--tip-bg);border-left:4px solid var(--tip-border);padding:10px;margin-top:10px;border-radius:4px;font-weight:600;font-size:13px;">
-⚡ m/n → mein/sein/ihr &nbsp;|&nbsp; f/Pl → meine/seine/ihre
+<div style="background:var(--tip-bg);border-left:4px solid var(--tip-border);padding:10px;margin-top:10px;border-radius:4px;font-weight:600;font-size:13px;" data-icon="bolt">
+m/n → mein/sein/ihr &nbsp;|&nbsp; f/Pl → meine/seine/ihre
 </div>
 </div>
 <div class="section-title" style="margin-top:15px;border:none;font-size:12px;color:var(--text-muted);">Примеры:</div>
@@ -2244,7 +2267,7 @@ Akk vs Dat: <b>Ich wasche mich</b> (я моюсь — себя, Akk) | <b>Ich wa
 <tr><td>schließen</td><td>geschlossen</td><td>закрытый</td></tr>
 <tr><td>machen</td><td>gemacht</td><td>сделанный</td></tr>
 </tbody></table>
-<div class="warning" style="margin-top:10px">⚠ <b>ge- НЕ добавляется в двух случаях:</b><br>
+<div class="warning" style="margin-top:10px" data-icon="warning"><b>ge- НЕ добавляется в двух случаях:</b><br>
 1. Глаголы с неотделяемой приставкой (be-, er-, ver-, ent-, zer-): <b>besuchen → besucht</b>, verstehen → verstanden<br>
 2. Глаголы на <b>-ieren</b>: organisieren → <b>organisiert</b>, fotografieren → fotografiert
 </div>
@@ -2294,8 +2317,7 @@ Akk vs Dat: <b>Ich wasche mich</b> (я моюсь — себя, Akk) | <b>Ich wa
 <tr><td>das (n)</td><td>in <b>das</b> = <b>ins</b></td><td>Ich gehe <b>ins Kino</b> — иду в кино</td></tr>
 <tr><td>die (f)</td><td>in <b>die</b></td><td>Ich gehe <b>in die Kneipe</b> — иду в паб</td></tr>
 </table>
-<p style="font-size:12px;margin-top:8px">💡 <b>in + das = ins</b> (слитная форма) | <b>in + dem = im</b> (для Wo? — где?)<br>
-⚠ Различай: <b>Wohin?</b> → Akkusativ (in den, ins, in die) | <b>Wo?</b> → Dativ (im, im, in der)</p>
+<p style="font-size:12px;margin-top:8px" data-icon="bulb"><b>in + das = ins</b> (слитная форма) | <b>in + dem = im</b> (для Wo? — где?)<br><span data-icon="warning"></span> Различай: <b>Wohin?</b> → Akkusativ (in den, ins, in die) | <b>Wo?</b> → Dativ (im, im, in der)</p>
 </div>
 </div>
 
@@ -2308,7 +2330,7 @@ Akk vs Dat: <b>Ich wasche mich</b> (я моюсь — себя, Akk) | <b>Ich wa
 <tr><td>Пример</td><td>Du <b>sollst</b> nicht rauchen<br>(тебе говорят, что нельзя)</td><td>Ich <b>muss</b> schlafen<br>(сам устал, надо)</td></tr>
 <tr><td>Ещё</td><td>Ich <b>soll</b> Milch kaufen<br>(мама попросила)</td><td>Ich <b>muss</b> Milch kaufen<br>(дома кончилось)</td></tr>
 </table>
-<p style="font-size:12px;margin-top:8px">💡 Грубо: <b>sollen</b> — «надо для кого-то» | <b>müssen</b> — «надо мне / по сути»</p>
+<p style="font-size:12px;margin-top:8px" data-icon="bulb">Грубо: <b>sollen</b> — «надо для кого-то» | <b>müssen</b> — «надо мне / по сути»</p>
 </div>
 </div>
 
@@ -2317,14 +2339,14 @@ Akk vs Dat: <b>Ich wasche mich</b> (я моюсь — себя, Akk) | <b>Ich wa
 <div class="rule-box">
 <p style="font-size:13px;margin-bottom:10px">Прилагательное в словаре стоит <b>без окончания</b> (groß, schön, nächst, gut). Но <b>перед существительным</b> оно ВСЕГДА получает окончание — зависит от рода, числа и падежа.</p>
 
-<p style="font-size:13px;font-weight:600;margin:10px 0 6px">📍 Две позиции прилагательного:</p>
+<p style="font-size:13px;font-weight:600;margin:10px 0 6px" data-icon="pin">Две позиции прилагательного:</p>
 <table style="margin-bottom:12px">
 <tr><th>Позиция</th><th>Окончание</th><th>Пример</th></tr>
-<tr><td>После sein / werden / bleiben</td><td>❌ нет окончания</td><td>Das Haus ist <b>groß</b> | Er bleibt <b>gesund</b></td></tr>
-<tr><td>Перед существительным</td><td>✅ есть окончание</td><td>ein <b>großes</b> Haus | der <b>gesunde</b> Mann</td></tr>
+<tr><td>После sein / werden / bleiben</td><td><span data-icon="cross"></span> нет окончания</td><td>Das Haus ist <b>groß</b> | Er bleibt <b>gesund</b></td></tr>
+<tr><td>Перед существительным</td><td><span data-icon="check"></span> есть окончание</td><td>ein <b>großes</b> Haus | der <b>gesunde</b> Mann</td></tr>
 </table>
 
-<p style="font-size:13px;font-weight:600;margin:10px 0 6px">📍 Окончания после <b>определённого артикля</b> (der/die/das):</p>
+<p style="font-size:13px;font-weight:600;margin:10px 0 6px" data-icon="pin">Окончания после <b>определённого артикля</b> (der/die/das):</p>
 <table style="margin-bottom:12px">
 <tr><th>Падеж</th><th>m (der)</th><th>f (die)</th><th>n (das)</th><th>Pl (die)</th></tr>
 <tr><td>Nom</td><td>-e</td><td>-e</td><td>-e</td><td>-en</td></tr>
@@ -2332,7 +2354,7 @@ Akk vs Dat: <b>Ich wasche mich</b> (я моюсь — себя, Akk) | <b>Ich wa
 <tr><td>Dat</td><td>-en</td><td>-en</td><td>-en</td><td>-en</td></tr>
 </table>
 
-<p style="font-size:13px;font-weight:600;margin:10px 0 6px">📍 Примеры с <b>nächst</b> (следующий):</p>
+<p style="font-size:13px;font-weight:600;margin:10px 0 6px" data-icon="pin">Примеры с <b>nächst</b> (следующий):</p>
 <table style="margin-bottom:8px">
 <tr><th>Падеж / Род</th><th>Форма</th><th>Перевод</th></tr>
 <tr><td>f, Nom/Akk</td><td>nächst<b>e</b> Woche</td><td>следующая неделя / на следующей неделе</td></tr>
@@ -2340,8 +2362,7 @@ Akk vs Dat: <b>Ich wasche mich</b> (я моюсь — себя, Akk) | <b>Ich wa
 <tr><td>n, Nom/Akk</td><td>nächst<b>es</b> Jahr</td><td>следующий год</td></tr>
 <tr><td>Dat (любой род)</td><td>im nächst<b>en</b> Jahr</td><td>в следующем году</td></tr>
 </table>
-<p style="font-size:12px;margin-top:8px">💡 Простое правило: <b>в Dativ всегда -en</b> | в Akk у m-рода тоже <b>-en</b> | остальное обычно <b>-e</b><br>
-⚠ Без артикля (неопределённый/нулевой) — окончания немного другие. Это уровень A2+, пока запомни базовый случай.</p>
+<p style="font-size:12px;margin-top:8px" data-icon="bulb">Простое правило: <b>в Dativ всегда -en</b> | в Akk у m-рода тоже <b>-en</b> | остальное обычно <b>-e</b><br><span data-icon="warning"></span> Без артикля (неопределённый/нулевой) — окончания немного другие. Это уровень A2+, пока запомни базовый случай.</p>
 </div>
 </div>
 
@@ -2449,7 +2470,7 @@ Akk vs Dat: <b>Ich wasche mich</b> (я моюсь — себя, Akk) | <b>Ich wa
 <!-- НОВЫЕ СЛОВА (буфер — живёт до следующей обновы) -->
 <div class="panel active" id="tab-new">
 <div class="section">
-<div class="section-title">📦 Существительные</div>
+<div class="section-title" data-icon="box">Существительные</div>
 <table><tbody>
 <tr><th>Немецкий</th><th>Артикль</th><th>Перевод / Примечание</th></tr>
 <tr><td>der Anrufbeantworter</td><td><span class="badge m">m</span></td><td>автоответчик | Anruf (звонок) + beantworten (отвечать) | разговорно: AB</td></tr>
@@ -2466,7 +2487,7 @@ Akk vs Dat: <b>Ich wasche mich</b> (я моюсь — себя, Akk) | <b>Ich wa
 </tbody></table>
 </div>
 <div class="section">
-<div class="section-title">⚡ Глаголы</div>
+<div class="section-title" data-icon="bolt">Глаголы</div>
 <table><tbody>
 <tr><th>Немецкий</th><th>Перевод</th><th>Примечание</th></tr>
 <tr><td>kreuzen</td><td>отметить крестиком / пересекать</td><td>от <b>das Kreuz</b> (крест) | <b>ankreuzen</b> — отметить крестиком в тесте/анкете (отделяемая: an-)</td></tr>
@@ -2475,7 +2496,7 @@ Akk vs Dat: <b>Ich wasche mich</b> (я моюсь — себя, Akk) | <b>Ich wa
 </tbody></table>
 </div>
 <div class="section">
-<div class="section-title">🎨 Прилагательные / Наречия</div>
+<div class="section-title" data-icon="palette">Прилагательные / Наречия</div>
 <table><tbody>
 <tr><th>Немецкий</th><th>Перевод</th><th>Примечание</th></tr>
 <tr><td>herzlich</td><td>сердечный / искренний / тёплый</td><td>от <b>das Herz</b> (сердце) + <b>-lich</b> | herzlich willkommen — добро пожаловать (букв. «сердечно приветствуем») | herzliche Grüße — сердечный привет</td></tr>
@@ -2485,7 +2506,7 @@ Akk vs Dat: <b>Ich wasche mich</b> (я моюсь — себя, Akk) | <b>Ich wa
 </tbody></table>
 </div>
 <div class="section">
-<div class="section-title">📐 Правила</div>
+<div class="section-title" data-icon="ruleset">Правила</div>
 <div class="rule-box">
 <h3>Суффикс <b>-lich</b> — образование прилагательных</h3>
 <p style="font-size:13px;margin-bottom:10px">Суффикс <b>-lich</b> превращает существительное в прилагательное со значением «относящийся к / похожий на». Похож на русский суффикс «-ный».</p>
@@ -2498,7 +2519,7 @@ Akk vs Dat: <b>Ich wasche mich</b> (я моюсь — себя, Akk) | <b>Ich wa
 <tr><td>der Monat (месяц)</td><td>monat<b>lich</b></td><td>ежемесячный</td></tr>
 <tr><td>der Beruf (профессия)</td><td>beruf<b>lich</b></td><td>профессиональный</td></tr>
 </table>
-<p style="font-size:12px;margin-top:8px">💡 Часто корневая гласная меняется на умлаут: Tag → t<b>ä</b>glich, Nacht → n<b>ä</b>chtlich</p>
+<p style="font-size:12px;margin-top:8px" data-icon="bulb">Часто корневая гласная меняется на умлаут: Tag → t<b>ä</b>glich, Nacht → n<b>ä</b>chtlich</p>
 </div>
 </div>
 </div>
@@ -2622,8 +2643,8 @@ function show(id){
     'ein','eine','einen','einem','eines','einer'
   ]);
   const ICONS = {
-    noun:'📦', verb:'⚡', adj:'🎨', adv:'🔄', pron:'👤',
-    num:'🔢', phrase:'💬', rule:'📐', term:'📋', sound:'🔤'
+    noun:'box', verb:'bolt', adj:'palette', adv:'shuffle', pron:'user',
+    num:'hash', phrase:'chat', rule:'ruleset', term:'clipboard', sound:'waveform'
   };
   const POS_TO_TAB = {
     noun:'nouns', verb:'verbs', adj:'adj', adv:'adv',
@@ -2917,7 +2938,7 @@ function show(id){
     const top = results.slice(0, 10);
     let html = '';
     top.forEach((e, i) => {
-      const icon = ICONS[e.kind] || '•';
+      const icon = ic(ICONS[e.kind]) || '•';
       const sec = e.secondary ? ' <span class="sr-secondary">— ' + escHtml(e.secondary) + '</span>' : '';
       html += '<div class="search-result" data-idx="' + i + '" role="option">'
             + '<span class="sr-icon">' + icon + '</span>'
@@ -3121,9 +3142,8 @@ function show(id){
     if (topicsInTab.length === 0) return '';
 
     return topicsInTab.map(topic => {
-      const title = TOPIC_TITLES[topic] || topic;
       return '<div class="section">'
-           + '<div class="section-title">' + escHtml(title) + '</div>'
+           + '<div class="section-title">' + topicTitleHtml(topic) + '</div>'
            + tableHTML(groups[topic], rowFn, headers)
            + '</div>';
     }).join('');
@@ -3142,7 +3162,7 @@ function show(id){
     const panel = document.getElementById('tab-sounds');
     if (!panel || typeof SOUNDS === 'undefined') return;
     let html = '<div class="section">'
-             + '<div class="section-title">🔤 Произношение букв и сочетаний</div>'
+             + '<div class="section-title">' + ic('waveform') + ' Произношение букв и сочетаний</div>'
              + '<table><thead><tr><th>Буква/сочетание</th><th>Произношение</th><th>Пример</th></tr></thead><tbody>';
     for (const s of SOUNDS) {
       html += '<tr><td>' + escHtml(s.combo) + '</td>'
@@ -3212,7 +3232,7 @@ function show(id){
 
     // ─── Правило 1: Как образуется Perfekt ────────────────────────────────
     html += '<div class="section">';
-    html += '<div class="section-title">🕰️ Что такое Perfekt</div>';
+    html += '<div class="section-title">' + ic('history') + ' Что такое Perfekt</div>';
     html += '<div class="rule-box">';
     html += '<p>Прошедшее время в разговорной речи. Образуется по схеме:</p>';
     html += '<p style="text-align:center;font-size:18px;margin:14px 0;padding:10px;background:var(--bg-th);border-radius:8px">'
@@ -3224,7 +3244,7 @@ function show(id){
 
     // ─── Правило 2: Когда haben, когда sein ──────────────────────────────
     html += '<div class="section">';
-    html += '<div class="section-title">⚖️ haben vs sein</div>';
+    html += '<div class="section-title">' + ic('scale') + ' haben vs sein</div>';
     html += '<div class="rule-box">';
     html += '<table style="margin-bottom:10px;width:100%">';
     html += '<tr><th style="text-align:left;padding:6px 10px">Вспомогательный</th>'
@@ -3237,13 +3257,13 @@ function show(id){
           + '<td style="padding:6px 10px">движение / изменение состояния<br>+ sein, bleiben, werden</td>'
           + '<td style="padding:6px 10px">Er <b>ist</b> gefahren.</td></tr>';
     html += '</table>';
-    html += '<p style="font-size:12px">💡 Со <b style="color:var(--accent-red)">sein</b> запоминай: '
+    html += '<p style="font-size:12px" data-icon="bulb">Со <b style="color:var(--accent-red)">sein</b> запоминай: '
           + '<i>gehen, kommen, fahren, fliegen, schwimmen, reiten, bleiben, werden, sein</i></p>';
     html += '</div></div>';
 
     // ─── Правило 3: Как образуется Partizip II ───────────────────────────
     html += '<div class="section">';
-    html += '<div class="section-title">📐 Как образовать Partizip II</div>';
+    html += '<div class="section-title">' + ic('ruleset') + ' Как образовать Partizip II</div>';
     html += '<div class="rule-box">';
     html += '<table style="margin-bottom:10px;width:100%">';
     html += '<tr><th style="text-align:left;padding:6px 10px">Тип</th>'
@@ -3280,7 +3300,7 @@ function show(id){
         }
       }
       html += '<div class="section">';
-      html += '<div class="section-title">📋 Unregelmäßig — таблица Partizip II</div>';
+      html += '<div class="section-title">' + ic('clipboard') + ' Unregelmäßig — таблица Partizip II</div>';
       html += '<table style="width:100%"><thead><tr>'
             + '<th style="text-align:left;padding:6px 10px">Infinitiv</th>'
             + '<th style="text-align:left;padding:6px 10px">Перевод</th>'
@@ -3360,9 +3380,8 @@ function show(id){
     }
     let html = '';
     for (const topic of Object.keys(groups)) {
-      const title = TOPIC_TITLES[topic] || topic;
       html += '<div class="section">'
-            + '<div class="section-title">' + escHtml(title) + '</div>'
+            + '<div class="section-title">' + topicTitleHtml(topic) + '</div>'
             + '<table><thead><tr><th>Термин</th><th>Перевод</th><th>Примечание</th></tr></thead><tbody>';
       for (const t of groups[topic]) {
         html += '<tr><td>' + escHtml(t.term) + '</td>'
@@ -3387,9 +3406,8 @@ function show(id){
     }
     let html = '';
     for (const topic of Object.keys(groups)) {
-      const groupTitle = (typeof TOPIC_TITLES !== 'undefined' && TOPIC_TITLES[topic]) || topic;
       html += '<div class="section" style="margin-bottom:24px">';
-      html += '<div class="section-title" style="font-size:16px;margin-bottom:12px">' + escHtml(groupTitle) + '</div>';
+      html += '<div class="section-title" style="font-size:16px;margin-bottom:12px">' + topicTitleHtml(topic) + '</div>';
       for (const r of groups[topic]) {
         html += '<div class="rule-box" style="margin-bottom:18px">';
         if (r.title) {
@@ -3398,7 +3416,7 @@ function show(id){
         html += renderRuleContent(r.content_md || '');
         if (r.note) {
           html += '<div style="margin-top:10px;padding:8px 12px;background:var(--tip-bg);border-left:3px solid var(--tip-border);border-radius:4px;font-size:13px;color:var(--text-muted)">'
-               + '💡 ' + renderInline(r.note) + '</div>';
+               + ic('bulb') + ' ' + renderInline(r.note) + '</div>';
         }
         html += '</div>';
       }
@@ -3465,9 +3483,11 @@ function show(id){
         }
       }
       flushTable();
-      // Блок с эмодзи 💡 / ⚠ — мелкий шрифт
+      // Блок с иконкой-маркером 💡 / ⚠ / и т.п. в начале строки — мелкий шрифт
       if (/^[💡⚠📍🔑✓✗❗]/.test(trimmed) || /💡/.test(trimmed)) {
-        html += '<p style="font-size:12px;margin:6px 0">' + renderInline(trimmed) + '</p>';
+        const noteMatch = trimmed.match(/^([💡⚠📍🔑✓✗❗])\s*/);
+        const body = noteMatch ? (ic(NOTE_ICON_MAP[noteMatch[1]]) + ' ' + renderInline(trimmed.slice(noteMatch[0].length))) : renderInline(trimmed);
+        html += '<p style="font-size:12px;margin:6px 0">' + body + '</p>';
         continue;
       }
       // Заголовок ### / ##
@@ -3519,7 +3539,7 @@ function show(id){
       const newTerms = TERMS.filter(t => (t.topics || []).some(x => x === 'new:new-terms'));
       if (newTerms.length > 0) {
         html += '<div class="section">'
-              + '<div class="section-title">📖 Новые термины</div>'
+              + '<div class="section-title">' + ic('book-open') + ' Новые термины</div>'
               + '<table><thead><tr><th>Термин</th><th>Перевод</th><th>Примечание</th></tr></thead><tbody>';
         for (const t of newTerms) {
           html += '<tr><td>' + escHtml(t.term || '') + '</td>'
@@ -3535,7 +3555,7 @@ function show(id){
       const newSounds = SOUNDS.filter(s => (s.topics || []).some(x => x === 'new:new-sounds'));
       if (newSounds.length > 0) {
         html += '<div class="section">'
-              + '<div class="section-title">🔤 Новые звуки</div>'
+              + '<div class="section-title">' + ic('waveform') + ' Новые звуки</div>'
               + '<table><thead><tr><th>Буква/сочетание</th><th>Произношение</th><th>Пример</th></tr></thead><tbody>';
         for (const s of newSounds) {
           html += '<tr><td>' + escHtml(s.combo || '') + '</td>'
@@ -3551,7 +3571,7 @@ function show(id){
       const newRules = RULES.filter(r => r.new === true);
       if (newRules.length > 0) {
         html += '<div class="section" style="margin-bottom:24px">';
-        html += '<div class="section-title" style="font-size:15px;margin-bottom:12px">📐 Новые правила</div>';
+        html += '<div class="section-title" style="font-size:15px;margin-bottom:12px">' + ic('ruleset') + ' Новые правила</div>';
         for (const r of newRules) {
           html += '<div class="rule-box" style="margin-bottom:18px">';
           if (r.title) {
@@ -3560,7 +3580,7 @@ function show(id){
           html += renderRuleContent(r.content_md || '');
           if (r.note) {
             html += '<div style="margin-top:10px;padding:8px 12px;background:var(--tip-bg);border-left:3px solid var(--tip-border);border-radius:4px;font-size:13px;color:var(--text-muted)">'
-                 + '💡 ' + renderInline(r.note) + '</div>';
+                 + ic('bulb') + ' ' + renderInline(r.note) + '</div>';
           }
           html += '</div>';
         }
@@ -3634,7 +3654,7 @@ function show(id){
     reflexive: "Reflexiv", impersonal: "Безличный", modal: "Modal",
     exampleDe: "Пример", exampleRu: "Перевод примера",
     level: "Уровень", priority: "Приоритет", source: "Источник",
-    warning: "⚠ Внимание", label: "Метка", note: "Заметка",
+    warning: "Внимание", label: "Метка", note: "Заметка",
   };
   const HIDDEN_FIELDS = new Set([
     "id", "de", "ru", "pos", "topics", "domen", "group",
@@ -3655,8 +3675,7 @@ function show(id){
 
     // Категория
     if (v.topics && v.topics.length) {
-      const cat = TOPIC_TITLES[v.topics[0]] || v.topics[0];
-      lines.push('<div class="modal-row"><span class="modal-label">Категория:</span><span class="modal-value">' + escHtml(cat) + '</span></div>');
+      lines.push('<div class="modal-row"><span class="modal-label">Категория:</span><span class="modal-value">' + topicTitleHtml(v.topics[0]) + '</span></div>');
     }
 
     // Основные поля (кроме примера и спряжения — они отдельно)

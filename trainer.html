@@ -18,7 +18,7 @@
 
 <script crossorigin src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
 <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
-<script src="data.js?v=20260616"></script>
+<script src="data.js?v=20260718"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/7.25.6/babel.min.js"></script>
 
 <style>
@@ -45,6 +45,18 @@ input:focus, button:focus { outline: 2px solid var(--accent); outline-offset: 1p
 .tb-row { flex-shrink: 0; }
 @media (max-width: 600px) {
   .tb-row { gap: 6px !important; }
+}
+/* ─── Icon-компонент: SVG всегда заполняет заданный size, не зависит от font-size ───
+   Без явного size (inline width/height от React) — дефолт 1em (подстраивается под текст).
+   С явным size — inline style побеждает этот дефолт по каскаду. */
+.ic-svg-wrap { width: 1em; height: 1em; }
+.ic-svg-wrap svg { width: 100%; height: 100%; display: block; }
+
+/* ─── Главный экран: карточки режимов ─────────────────────────────────── */
+.mode-grid { display: grid; grid-template-columns: 1fr 1fr; gap: clamp(10px, 3vw, 14px); }
+.mode-card-icon { width: clamp(40px, 11vw, 64px); height: clamp(40px, 11vw, 64px); margin-bottom: clamp(4px, 1.5vw, 8px); }
+@media (max-width: 420px) {
+  .mode-grid { grid-template-columns: 1fr; }
 }
 </style>
 </head>
@@ -565,6 +577,24 @@ const ICON_SUN = (
 const ICON_MOON = (
   <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79Z" /></svg>
 );
+
+// Icon — читает SVG из ICON_SVGS (единый источник, сгенерирован в data.js из update_data.py).
+// Важно: сам <svg> внутри библиотеки имеет width/height="1em" (нужно для cheatsheet.html,
+// где иконки вставляются как текст), поэтому здесь размер прокидывается через CSS-класс
+// ic-svg-wrap (svg{width:100%;height:100%}), а не через em — иначе size игнорируется и
+// иконка всегда рисуется в размере унаследованного font-size контекста.
+function Icon({ name, size, className = "", style }) {
+  const svg = typeof ICON_SVGS !== "undefined" && name ? ICON_SVGS[name] : null;
+  if (!svg) return null;
+  const sizeStyle = size != null ? { width: size, height: size } : {};
+  return (
+    <span
+      className={"ic-svg-wrap" + (className ? " " + className : "")}
+      style={{ display: "inline-flex", flexShrink: 0, verticalAlign: "-3px", ...sizeStyle, ...style }}
+      dangerouslySetInnerHTML={{ __html: svg }}
+    />
+  );
+}
 
 function TopBar({ left, right, icon, onTheme, onHome }) {
   return (
@@ -3028,7 +3058,7 @@ function App() {
 
   function startNeuLearnAll(doShuffle) {
     setNeuShuffle(doShuffle);
-    setActiveSub({ id: "_all", label: "📚 Общее изучение", _neuAll: true });
+    setActiveSub({ id: "_all", label: "Общее изучение", icon: "book", _neuAll: true });
     setCardIdx(0); setFlipped(false);
     setPhase("learn-cards-new");
   }
@@ -3101,7 +3131,7 @@ function App() {
 
   // ─── Цвета режимов ──────────────────────────────────────────────────────
   const modeColor = mode === "learn" ? "var(--c-mode-learn)" : "var(--c-level-1)";
-  const modeLabel = mode === "learn" ? "🧠 Изучение" : "🎯 Тестирование";
+  const modeLabel = mode === "learn" ? (<><Icon name="brain" /> Изучение</>) : (<><Icon name="target" /> Тестирование</>);
 
   // ─── Подписи уровней (для пользователя — без сокращений) ────────────────
   const LEVEL_LABELS = {
@@ -3153,7 +3183,7 @@ function App() {
         }}>
           <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 12 }}>
             <div style={{ fontWeight: 700, fontSize: 18 }}>
-              🛠 Dev · {devPool.length} вопросов
+              <Icon name="wrench" /> Dev · {devPool.length} вопросов
               {devIsFullPool && <span style={{ fontSize: 12, color: "var(--c-level-3)", marginLeft: 8, fontWeight: 400 }}>весь пул</span>}
               {!devIsFullPool && <span style={{ fontSize: 12, color: "var(--text-muted)", marginLeft: 8, fontWeight: 400 }}>текущая сессия</span>}
             </div>
@@ -3168,7 +3198,7 @@ function App() {
                     setDevIsFullPool(true);
                     setDevModalPool(pool);
                   }}>
-                  📦 Весь пул
+                  <Icon name="box" /> Весь пул
                 </button>
               )}
               {devIsFullPool && (
@@ -3225,28 +3255,28 @@ function App() {
                       <span key={oi} style={{ display: "inline-block", marginRight: 10,
                         color: oi === q.ans ? "var(--c-level-1)" : "var(--text-muted)",
                         fontWeight: oi === q.ans ? 700 : 400 }}>
-                        {oi === q.ans ? "✓ " : "· "}{opt}
+                        {oi === q.ans ? <Icon name="check" size={12} /> : "· "}{opt}
                       </span>
                     ))}
                   </div>
                 )}
                 {q.type === "fill" && (
                   <div style={{ fontSize: 13, color: "var(--c-level-1)", marginBottom: 2 }}>
-                    ✓ <strong>{q.ans}</strong>
+                    <Icon name="check" size={12} /> <strong>{q.ans}</strong>
                     {q.altAns && q.altAns.length > 0 && (
                       <span style={{ color: "var(--text-muted)", marginLeft: 8 }}>также: {q.altAns.join(", ")}</span>
                     )}
                   </div>
                 )}
                 {q.type === "tiles" && q.words && (
-                  <div style={{ fontSize: 13, color: "var(--c-level-1)" }}>✓ {q.words.join(" ")}</div>
+                  <div style={{ fontSize: 13, color: "var(--c-level-1)" }}><Icon name="check" size={12} /> {q.words.join(" ")}</div>
                 )}
                 {q.type === "conj" && q.pronouns && q.ans && (
                   <div style={{ fontSize: 13, color: "var(--c-level-1)" }}>
                     {q.pronouns.map((p, pi) => `${p} → ${q.ans[pi]}`).join(" · ")}
                   </div>
                 )}
-                {q.hint && <div style={{ fontSize: 12, color: "var(--text-muted)", marginTop: 4 }}>💡 {q.hint}</div>}
+                {q.hint && <div style={{ fontSize: 12, color: "var(--text-muted)", marginTop: 4 }}><Icon name="bulb" size={12} /> {q.hint}</div>}
               </div>
             );
           })}
@@ -3261,19 +3291,20 @@ function App() {
           <TopBar left={null} right={null} icon={icon} onTheme={cycleTheme} />
           <div style={{ textAlign: "center", marginBottom: 28 }}>
             <div
-              style={{ fontSize: 52, marginBottom: 6, cursor: "default", userSelect: "none" }}
+              style={{ display: "flex", alignItems: "center", justifyContent: "center", gap: 6, marginBottom: 6, cursor: "default", userSelect: "none" }}
               onClick={handleDevTap}
               title=""
   >
-              🇩🇪{devMode && <span style={{ fontSize: 12, color: "var(--text-muted)", marginLeft: 6 }}>DEV</span>}
+              <span style={{ width: 52, height: 52, borderRadius: "50%", background: "var(--grey-900)", color: "#fff", display: "inline-flex", alignItems: "center", justifyContent: "center", fontSize: 18, fontWeight: 700, letterSpacing: "-0.02em" }}>DE</span>
+              {devMode && <span style={{ fontSize: 12, color: "var(--text-muted)" }}>DEV</span>}
           </div>
             <h1 style={S.heading}>Тренажёр немецкого</h1>
             <p style={S.subheading}>Выбери режим</p>
           </div>
-          <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 14 }}>
+          <div className="mode-grid">
             <div style={{ ...S.modeCard, borderColor: "var(--c-mode-learn)" }}
                  onClick={() => pickMode("learn")}>
-              <div style={{ fontSize: 42, marginBottom: 6 }}>🧠</div>
+              <Icon name="brain" className="mode-card-icon" />
               <div style={{ fontSize: 18, fontWeight: 700, marginBottom: 4, color: "var(--text-title)" }}>
                 Изучение
               </div>
@@ -3281,7 +3312,7 @@ function App() {
             </div>
             <div style={{ ...S.modeCard, borderColor: "var(--c-level-1)" }}
                  onClick={() => pickMode("test")}>
-              <div style={{ fontSize: 42, marginBottom: 6 }}>🎯</div>
+              <Icon name="target" className="mode-card-icon" />
               <div style={{ fontSize: 18, fontWeight: 700, marginBottom: 4, color: "var(--text-title)" }}>
                 Тестирование
               </div>
@@ -3308,7 +3339,7 @@ function App() {
               <div key={b.id}
                    style={{ ...S.card, borderLeft: `4px solid ${b.color}`, cursor: "pointer" }}
                    onClick={() => pickBlock(b)}>
-                <div style={S.cardTitle}>{b.label}</div>
+                <div style={S.cardTitle}><Icon name={b.icon} size={18} /> {b.label}</div>
                 {b.desc && <div style={S.cardDesc}>{b.desc}</div>}
                 {blockHasSubblocks(b) && <div style={S.cardMeta}>{b.subblocks.length} тем</div>}
                 {b.kind === "conjugations" && (
@@ -3339,14 +3370,14 @@ function App() {
             }
             right={<span style={S.muted}>{modeLabel}</span>}
             icon={icon} onTheme={cycleTheme} onHome={goHome} />
-          <h2 style={{ ...S.heading, textAlign: "center" }}>{activeBlock.label}</h2>
+          <h2 style={{ ...S.heading, textAlign: "center" }}><Icon name={activeBlock.icon} size={22} /> {activeBlock.label}</h2>
           <p style={{ ...S.subheading, textAlign: "center" }}>Выбери тему</p>
 
           {!isNeu && mode === "test" && (
             <div style={{ marginBottom: 16 }}>
               <div style={{ ...S.card, borderLeft: `4px solid ${activeBlock.color}`, cursor: "pointer" }}
                    onClick={startTestAll}>
-                <div style={S.cardTitle}>🔥 Тест по всему блоку</div>
+                <div style={S.cardTitle}><Icon name="flame" size={18} /> Тест по всему блоку</div>
                 <div style={S.cardMeta}>Все темы вперемешку · без разбивки</div>
               </div>
             </div>
@@ -3364,7 +3395,7 @@ function App() {
               <button
                 style={{ ...S.outlineBtn("var(--c-outline-grey)"), width: "100%", marginBottom: 12, fontSize: 13 }}
                 onClick={() => setDevModalPool(neuPool)}>
-                🛠 Dev: показать все вопросы Neu ({neuPool.length})
+                <Icon name="wrench" /> Dev: показать все вопросы Neu ({neuPool.length})
               </button>
             );
           })()}
@@ -3374,7 +3405,7 @@ function App() {
               {mode === "learn" && (
                 <div style={{ ...S.card, borderLeft: `4px solid ${activeBlock.color}`, cursor: "pointer" }}
                      onClick={() => startNeuLearnAll(false)}>
-                  <div style={S.cardTitle}>📚 Общее изучение</div>
+                  <div style={S.cardTitle}><Icon name="book" size={18} /> Общее изучение</div>
                   <div style={S.cardMeta}>{neuAllCount} слов · noun → verb → adj → adv</div>
                 </div>
               )}
@@ -3393,7 +3424,7 @@ function App() {
                     width: "100%",
                   }}
                   onClick={startNeuTestAll}>
-                  <div style={{ fontSize: 26, marginBottom: 4 }}>🎯</div>
+                  <div style={{ display: "flex", justifyContent: "center", marginBottom: 4 }}><Icon name="target" size={26} /></div>
                   <div style={{ fontSize: 18, marginBottom: 2 }}>Тест по блоку</div>
                   <div style={{ fontSize: 13, opacity: 0.85 }}>Все новые слова · все уровни вперемешку</div>
                 </button>
@@ -3420,7 +3451,7 @@ function App() {
                 <div key={sub.id}
                      style={{ ...S.card, borderLeft: `4px solid ${activeBlock.color}`, cursor: "pointer" }}
                      onClick={() => pickSub(sub)}>
-                  <div style={S.cardTitle}>{sub.label}</div>
+                  <div style={S.cardTitle}><Icon name={sub.icon} size={18} /> {sub.label}</div>
                   {sub.desc && <div style={S.cardDesc}>{sub.desc}</div>}
                   <div style={S.cardMeta}>{metaText}</div>
                 </div>
@@ -3436,6 +3467,7 @@ function App() {
   function renderBlockStart() {
     const vocab = getActiveVocab();
     const heading = activeSub ? activeSub.label : activeBlock.label;
+    const headingIcon = activeSub ? activeSub.icon : activeBlock.icon;
     return (
       <div style={S.page}>
         <div style={S.container}>
@@ -3443,15 +3475,15 @@ function App() {
             left={<button style={S.outlineBtn(activeBlock.color)} onClick={goBackToSubblocks}>← Назад</button>}
             right={<span style={S.muted}>{modeLabel}</span>}
             icon={icon} onTheme={cycleTheme} onHome={goHome} />
-          <h2 style={{ ...S.heading, textAlign: "center" }}>{heading}</h2>
+          <h2 style={{ ...S.heading, textAlign: "center" }}><Icon name={headingIcon} size={22} /> {heading}</h2>
           <p style={{ ...S.subheading, textAlign: "center" }}>{vocab.length} слов</p>
 
           <div style={{ display: "flex", gap: 16, justifyContent: "center", flexWrap: "wrap", marginTop: 24 }}>
             <button style={{ ...S.bigBtn, background: activeBlock.color }} onClick={startLearnCards}>
-              📖 Карточки
+              <Icon name="book-open" /> Карточки
             </button>
             <button style={{ ...S.bigBtn, background: "var(--c-outline-grey)" }} onClick={startLearnMiniTest}>
-              ⚡ Сразу к мини-тесту
+              <Icon name="bolt" /> Сразу к мини-тесту
             </button>
           </div>
         </div>
@@ -3506,6 +3538,7 @@ function App() {
     }
 
     const heading = activeSub ? activeSub.label : activeBlock.label;
+    const headingIcon = activeSub ? activeSub.icon : activeBlock.icon;
 
     const levelInfo = [
       { lvl: 1, color: "var(--c-level-1)", name: "Уровень 1", action: "Перевод" },
@@ -3569,7 +3602,7 @@ function App() {
             right={<span style={S.muted}>{modeLabel}</span>}
             icon={icon} onTheme={cycleTheme} onHome={goHome} />
           
-          <h2 style={{ ...S.heading, textAlign: "center" }}>{heading}</h2>
+          <h2 style={{ ...S.heading, textAlign: "center" }}><Icon name={headingIcon} size={22} /> {heading}</h2>
           <p style={{ ...S.subheading, textAlign: "center" }}>Выбери тест</p>
 
           {/* ── Главная кнопка: Тест по блоку ──────────────────────────── */}
@@ -3588,7 +3621,7 @@ function App() {
               marginBottom: 16,
             }}
             onClick={() => startCombo("general")}>
-            <div style={{ fontSize: 26, marginBottom: 4 }}>🎯</div>
+            <div style={{ display: "flex", justifyContent: "center", marginBottom: 4 }}><Icon name="target" size={26} /></div>
             <div style={{ fontSize: 18, marginBottom: 2 }}>Тест по блоку</div>
             <div style={{ fontSize: 13, opacity: 0.85 }}>30 вопросов</div>
           </button>
@@ -3606,7 +3639,7 @@ function App() {
                 disabled={p2Count === 0}
                 style={comboBtnStyle(p2Count === 0, "var(--c-combo-p2)")}
                 onClick={() => startCombo("partizip2")}>
-                <div style={{ fontSize: 20, marginBottom: 4 }}>⚙️</div>
+                <div style={{ display: "flex", justifyContent: "center", marginBottom: 4 }}><Icon name="gear" size={20} /></div>
                 <div style={{ fontSize: 13 }}>Partizip II</div>
                 <div style={{ fontSize: 11, marginTop: 4, opacity: 0.85 }}>
                   {p2Count === 0 ? "0 вопросов" : "30 вопросов"}
@@ -3617,7 +3650,7 @@ function App() {
                 disabled={prCount === 0}
                 style={comboBtnStyle(prCount === 0, "var(--c-combo-pr)")}
                 onClick={() => startCombo("praesens")}>
-                <div style={{ fontSize: 20, marginBottom: 4 }}>📝</div>
+                <div style={{ display: "flex", justifyContent: "center", marginBottom: 4 }}><Icon name="notes" size={20} /></div>
                 <div style={{ fontSize: 13 }}>Präsens</div>
                 <div style={{ fontSize: 11, marginTop: 4, opacity: 0.85 }}>
                   {prCount === 0 ? "0 вопросов" : "30 вопросов"}
@@ -3628,7 +3661,7 @@ function App() {
                 disabled={praetCount === 0}
                 style={comboBtnStyle(praetCount === 0, "var(--c-praeteritum)")}
                 onClick={() => startCombo("praeteritum")}>
-                <div style={{ fontSize: 20, marginBottom: 4 }}>⏮️</div>
+                <div style={{ display: "flex", justifyContent: "center", marginBottom: 4 }}><Icon name="rewind" size={20} /></div>
                 <div style={{ fontSize: 13 }}>Präteritum</div>
                 <div style={{ fontSize: 11, marginTop: 4, opacity: 0.85 }}>
                   {praetCount === 0 ? "0 вопросов" : "30 вопросов"}
@@ -3711,7 +3744,7 @@ function App() {
           </div>
           <div style={{ display: "flex", justifyContent: "center", marginTop: 12 }}>
             <button style={S.outlineBtn("var(--c-outline-grey)")} onClick={() => setPhase("learn-test")}>
-              🎯 Перейти к тесту
+              <Icon name="target" /> Перейти к тесту
             </button>
           </div>
         </div>
@@ -3734,12 +3767,12 @@ function App() {
             left={<button style={S.outlineBtn(activeBlock.color)} onClick={() => { setPhase("select-subblock"); setActiveSub(null); }}>← Назад</button>}
             right={<span style={S.muted}>{cardIdx + 1} / {vocab.length}</span>}
             icon={icon} onTheme={cycleTheme} onHome={goHome} />
-          <h2 style={{ ...S.heading, textAlign: "center", marginBottom: 4 }}>📚 Общее изучение</h2>
+          <h2 style={{ ...S.heading, textAlign: "center", marginBottom: 4 }}><Icon name="book" size={22} /> Общее изучение</h2>
           <div style={{ textAlign: "center", marginBottom: 12 }}>
             <button
               style={{ ...S.outlineBtn(neuShuffle ? activeBlock.color : "var(--c-outline-grey)"), fontSize: 13, padding: "4px 14px" }}
               onClick={() => { setNeuShuffle(!neuShuffle); setCardIdx(0); setFlipped(false); }}>
-              🎲 Вперемешку {neuShuffle ? "✓" : ""}
+              <Icon name="dice" /> Вперемешку {neuShuffle ? <Icon name="check" size={12} /> : ""}
             </button>
           </div>
           <FlipCard item={item} flipped={flipped} onFlip={() => setFlipped(!flipped)} color={activeBlock.color} />
@@ -3774,7 +3807,7 @@ function App() {
               setUserAnswers([]); setLastVerdict(null);
               setPhase("learn-test");
             }}>
-              🎯 Перейти к тесту
+              <Icon name="target" /> Перейти к тесту
             </button>
           </div>
         </div>
@@ -3791,14 +3824,14 @@ function App() {
         <div style={S.container}>
           <TopBar
             left={<button style={S.outlineBtn("var(--c-outline-grey)")} onClick={goBackToSubblocks}>← Назад</button>}
-            right={<span style={S.muted}>🧠 Изучение</span>}
+            right={<span style={S.muted}><Icon name="brain" size={13} /> Изучение</span>}
             icon={icon} onTheme={cycleTheme} onHome={goHome} />
           <h2 style={{ ...S.heading, textAlign: "center" }}>Что изучаем?</h2>
           <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
             <button
               style={{ ...S.card, borderLeft: `4px solid ${activeBlock.color}`, cursor: "pointer", textAlign: "left" }}
               onClick={startLearnConj}>
-              <div style={{ fontWeight: 700, fontSize: 16, marginBottom: 4 }}>📝 Präsens</div>
+              <div style={{ fontWeight: 700, fontSize: 16, marginBottom: 4 }}><Icon name="notes" /> Präsens</div>
               <div style={{ fontSize: 13, color: "var(--text-muted)" }}>
                 Карточки спряжений · {CONJUGATIONS.length} глаголов
               </div>
@@ -3807,7 +3840,7 @@ function App() {
               disabled={praetCount === 0}
               style={{ ...S.card, borderLeft: `4px solid var(--c-praeteritum)`, cursor: praetCount > 0 ? "pointer" : "not-allowed", textAlign: "left", opacity: praetCount > 0 ? 1 : 0.5 }}
               onClick={startLearnPraeteritum}>
-              <div style={{ fontWeight: 700, fontSize: 16, marginBottom: 4 }}>⏮️ Präteritum — карточки</div>
+              <div style={{ fontWeight: 700, fontSize: 16, marginBottom: 4 }}><Icon name="rewind" /> Präteritum — карточки</div>
               <div style={{ fontSize: 13, color: "var(--text-muted)" }}>
                 Карточки прошедшего времени · {praetCount} глаголов
               </div>
@@ -3816,7 +3849,7 @@ function App() {
               disabled={praetCount === 0}
               style={{ ...S.card, borderLeft: `4px solid var(--c-praeteritum)`, cursor: praetCount > 0 ? "pointer" : "not-allowed", textAlign: "left", opacity: praetCount > 0 ? 1 : 0.5 }}
               onClick={startLearnPraeteritumFullTest}>
-              <div style={{ fontWeight: 700, fontSize: 16, marginBottom: 4 }}>⏮️ Präteritum — полный тест</div>
+              <div style={{ fontWeight: 700, fontSize: 16, marginBottom: 4 }}><Icon name="rewind" /> Präteritum — полный тест</div>
               <div style={{ fontSize: 13, color: "var(--text-muted)" }}>
                 Все {praetCount} глаголов · один проход · fill
               </div>
@@ -3866,10 +3899,10 @@ function App() {
           <div style={{ display: "flex", justifyContent: "center", marginTop: 12 }}>
             <div style={{ display: "flex", gap: 10, justifyContent: "center" }}>
               <button style={S.outlineBtn("var(--c-outline-grey)")} onClick={startLearnPraeteritumTest}>
-                🎯 Тест (30)
+                <Icon name="target" /> Тест (30)
               </button>
               <button style={S.outlineBtn("var(--c-praeteritum)")} onClick={startLearnPraeteritumFullTest}>
-                🎯 Полный тест
+                <Icon name="target" /> Полный тест
               </button>
             </div>
           </div>
@@ -3914,10 +3947,10 @@ function App() {
           </div>
           <div style={{ display: "flex", justifyContent: "center", marginTop: 12, gap: 10, flexWrap: "wrap" }}>
             <button style={S.outlineBtn("var(--c-outline-grey)")} onClick={startLearnConjMiniTest}>
-              🎯 Mini-тест (37)
+              <Icon name="target" /> Mini-тест (37)
             </button>
             <button style={S.outlineBtn("var(--c-praeteritum)")} onClick={startLearnPraeteritumFullTest}>
-              ⏮ Полный тест Präteritum (131)
+              <Icon name="rewind" /> Полный тест Präteritum (131)
             </button>
           </div>
         </div>
@@ -3985,14 +4018,14 @@ function App() {
                 <button
                   style={{ ...S.outlineBtn("var(--c-outline-grey)"), padding: "4px 8px", fontSize: 12, marginRight: 8 }}
                   onClick={() => { setDevIsFullPool(false); setDevModalPool(questions); }}>
-                  🛠
+                  <Icon name="wrench" />
                 </button>
               )}
-              {qIdx + 1} / {questions.length} · ✓ {correctCount}
+              {qIdx + 1} / {questions.length} · <Icon name="check" size={12} /> {correctCount}
             </span>}
             icon={icon} onTheme={cycleTheme} onHome={goHome} />
           <div style={{ textAlign: "center", color: "var(--text-muted)", fontSize: 13, marginBottom: 12 }}>
-            {subLabel} · {modeLabel.includes("Тест") ? "Тестирование" : "Изучение"}
+            {subLabel} · {mode === "test" ? "Тестирование" : "Изучение"}
           </div>
 
           {/* Бейдж уровня */}
@@ -4015,11 +4048,11 @@ function App() {
 
             {/* Плашка ✓ Правильно / ✗ Неправильно */}
             {answered && lastVerdict === true && (
-              <div style={S.verdictRight}>✓ Правильно</div>
+              <div style={S.verdictRight}><Icon name="check" /> Правильно</div>
             )}
             {answered && lastVerdict === false && (
               <>
-                <div style={S.verdictWrong}>✗ Неправильно</div>
+                <div style={S.verdictWrong}><Icon name="cross" /> Неправильно</div>
                 {correctAnsText && (
                   <div style={S.correctAns}>
                     Правильно: <span style={S.correctAnsValue}>{correctAnsText}</span>
@@ -4032,7 +4065,7 @@ function App() {
             {answered && (() => {
               const explainText = getNoteForQuestion(q);
               if (!explainText) return null;
-              return <div style={S.explain}>💡 {explainText}</div>;
+              return <div style={S.explain}><Icon name="bulb" size={13} /> {explainText}</div>;
             })()}
           </div>
           {answered && (
@@ -4098,7 +4131,7 @@ function App() {
                  placeholder="Введи ответ..." />
           {q.hint && (
             <div style={{ marginTop: 8 }}>
-              {hintVisible ? (<div style={S.hint}>💡 {q.hint}</div>)
+              {hintVisible ? (<div style={S.hint}><Icon name="bulb" size={13} /> {q.hint}</div>)
                            : (<button style={S.linkBtn} onClick={() => setHintVisible(true)}>Показать подсказку</button>)}
             </div>
           )}
@@ -4169,7 +4202,7 @@ function App() {
                     <td style={{ padding: "0 8px",
                                  color: normalise(conjAnswers[i]) === normalise(q.ans[i])
                                         ? "var(--green)" : "var(--red)" }}>
-                      {normalise(conjAnswers[i]) === normalise(q.ans[i]) ? "✓" : q.ans[i]}
+                      {normalise(conjAnswers[i]) === normalise(q.ans[i]) ? <Icon name="check" size={12} /> : q.ans[i]}
                     </td>
                   )}
                 </tr>
@@ -4208,8 +4241,8 @@ function App() {
             right={<span style={S.muted}>{modeLabel}</span>}
             icon={icon} onTheme={cycleTheme} onHome={goHome} />
           <div style={{ ...S.questionCard, textAlign: "center", padding: 40 }}>
-            <div style={{ fontSize: 64, marginBottom: 16 }}>
-              {pct >= 80 ? "🎉" : pct >= 50 ? "👍" : "💪"}
+            <div style={{ display: "flex", justifyContent: "center", marginBottom: 16 }}>
+              <Icon name={pct >= 80 ? "party" : pct >= 50 ? "thumbs-up" : "flex"} size={64} />
             </div>
             <div style={{ fontSize: 28, marginBottom: 8, color: "var(--text-title)", fontWeight: 700 }}>
               {correctCount} / {questions.length}
@@ -4235,7 +4268,7 @@ function App() {
           {userAnswers.length > 0 && (
             <div style={{ marginTop: 24 }}>
               <div style={{ fontSize: 16, fontWeight: 700, color: "var(--text-title)", marginBottom: 12 }}>
-                📋 Разбор
+                <Icon name="clipboard" /> Разбор
               </div>
               {userAnswers.map((ua, idx) => {
                 const q = ua.q;
@@ -4254,7 +4287,7 @@ function App() {
                       </span>
                     </div>
                     <div style={S.reviewStatus(ua.isCorrect)}>
-                      {ua.isCorrect ? "✓" : "✗"}
+                      {ua.isCorrect ? <Icon name="check" size={12} /> : <Icon name="cross" size={12} />}
                     </div>
                     <div style={S.reviewQ}>{q.q}</div>
                     <div style={S.reviewLine}>
@@ -4269,7 +4302,7 @@ function App() {
                       </div>
                     )}
                     {explainText && (
-                      <div style={S.reviewNote}>💡 {explainText}</div>
+                      <div style={S.reviewNote}><Icon name="bulb" size={13} /> {explainText}</div>
                     )}
                   </div>
                 );
