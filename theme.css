@@ -410,3 +410,103 @@
 .dt-btn__subtitle { font-size: 24px; font-weight: 400; color: white; }
 .dt-btn__counter  { font-size: 20px; font-weight: 400; color: white; }
 .dt-btn__marker   { width: 96px; height: 99px; background: white; flex-shrink: 0; }
+
+/* ═══════════════════════════════════════════════════════════════
+   dt-icon-btn / dt-nav / dt-cta — общие UI-паттерны
+   Круглые icon-button, pill-навбар, CTA с text-roll hover.
+   Используются в index.html, cheatsheet.html, trainer.html.
+   ═══════════════════════════════════════════════════════════════ */
+:root {
+  --ease-dt: cubic-bezier(0.25, 0.1, 0.25, 1);
+}
+
+.dt-icon-btn {
+  width: 38px;
+  height: 38px;
+  flex-shrink: 0;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  border-radius: 50%;
+  background: var(--bg-panel);
+  border: 1px solid var(--border-soft);
+  color: var(--text-main);
+  cursor: pointer;
+  text-decoration: none;
+  transition: background 0.2s var(--ease-dt), border-color 0.2s var(--ease-dt), transform 0.15s var(--ease-dt);
+}
+.dt-icon-btn svg { width: 17px; height: 17px; display: block; }
+.dt-icon-btn:hover  { background: var(--bg-row-hover); }
+.dt-icon-btn:active { transform: scale(0.92); }
+.dt-icon-btn.dt-icon-btn--dark {
+  background: var(--grey-900);
+  border-color: var(--grey-900);
+  color: #fff;
+}
+.dt-icon-btn.dt-icon-btn--dark:hover { background: var(--grey-800); }
+
+.dt-icon-btn__dot {
+  position: absolute;
+  top: 6px;
+  right: 6px;
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: var(--red-500);
+  display: none;
+}
+.dt-icon-btn__dot.active { display: block; }
+
+.dt-nav {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px;
+  background: var(--bg-card);
+  border: 1px solid var(--border-soft);
+  border-radius: 999px;
+  box-shadow: var(--shadow-card);
+}
+
+.dt-cta {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  background: var(--grey-900);
+  color: #fff;
+  border: none;
+  border-radius: 999px;
+  padding: 6px 6px 6px 20px;
+  font-size: 14px;
+  font-weight: 600;
+  font-family: inherit;
+  line-height: 1;
+  cursor: pointer;
+  text-decoration: none;
+}
+.dt-cta__roll {
+  overflow: hidden;
+  height: 18px;
+}
+.dt-cta__roll-inner {
+  display: flex;
+  flex-direction: column;
+  transition: transform 0.5s var(--ease-dt);
+}
+.dt-cta__roll-inner span { height: 18px; line-height: 18px; white-space: nowrap; }
+.dt-cta:hover .dt-cta__roll-inner { transform: translateY(-50%); }
+.dt-cta__arrow {
+  width: 26px;
+  height: 26px;
+  flex-shrink: 0;
+  border-radius: 50%;
+  background: #fff;
+  color: var(--grey-900);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  transition: transform 0.5s var(--ease-dt);
+}
+.dt-cta__arrow svg { width: 13px; height: 13px; display: block; }
+.dt-cta:hover .dt-cta__arrow { transform: rotate(-45deg); }
