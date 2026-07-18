@@ -20,6 +20,49 @@ html, body {
 body {
   display: flex;
   flex-direction: column;
+  min-height: 100vh;
+}
+
+/* ─── Навбар ──────────────────────────────── */
+.dt-topnav {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  max-width: 900px;
+  width: 100%;
+  margin: 0 auto;
+  padding: 20px 20px 0;
+  box-sizing: border-box;
+}
+.dt-topnav__brand {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.dt-topnav__mark {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background: var(--grey-900);
+  color: #fff;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  flex-shrink: 0;
+}
+.dt-topnav__word {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--text-title);
+}
+
+/* ─── Основной блок ──────────────────────────────── */
+.main-wrap {
+  flex: 1;
+  display: flex;
   align-items: center;
   justify-content: center;
   padding: 20px;
@@ -37,10 +80,11 @@ body {
   margin-bottom: 12px;
 }
 h1 {
-  font-size: 32px;
+  font-size: clamp(1.75rem, 5vw, 2.6rem);
   color: var(--text-title);
   margin: 0 0 8px;
   font-weight: 700;
+  letter-spacing: -0.02em;
 }
 .subtitle {
   font-size: 15px;
@@ -58,37 +102,57 @@ h1 {
   h1 { font-size: 26px; }
 }
 .card {
-  display: block;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
   background: var(--bg-card);
   border: 1px solid var(--border-soft);
-  border-radius: 12px;
-  padding: 32px 24px;
+  border-radius: 16px;
+  padding: 28px 24px;
   text-decoration: none;
   color: var(--text-main);
   box-shadow: var(--shadow);
-  transition: transform 0.15s ease, box-shadow 0.15s ease;
+  transition: transform 0.2s var(--ease-dt), box-shadow 0.2s var(--ease-dt);
   cursor: pointer;
+  text-align: left;
 }
 .card:hover {
   transform: translateY(-2px);
   box-shadow: var(--shadow-hover);
 }
 .card-icon {
-  font-size: 48px;
-  margin-bottom: 16px;
-  line-height: 1;
+  width: 52px;
+  height: 52px;
+  border-radius: 50%;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 18px;
+  flex-shrink: 0;
 }
+.card-icon svg { width: 24px; height: 24px; }
+.card.cheatsheet .card-icon { background: var(--cyan-100); color: var(--cyan-700); }
+.card.trainer .card-icon { background: var(--red-100); color: var(--red-700); }
 .card-title {
-  font-size: 20px;
+  font-size: 19px;
   font-weight: 700;
   color: var(--text-title);
-  margin-bottom: 8px;
+  margin-bottom: 6px;
 }
 .card-desc {
   font-size: 13px;
   color: var(--text-muted);
   line-height: 1.5;
+  margin-bottom: 22px;
 }
+.card .dt-cta {
+  pointer-events: none;
+  margin-top: auto;
+  padding: 5px 5px 5px 16px;
+  font-size: 13px;
+}
+.card:hover .dt-cta__roll-inner { transform: translateY(-50%); }
+.card:hover .dt-cta__arrow { transform: rotate(-45deg); }
 .card.cheatsheet:hover { border-color: var(--accent); }
 .card.trainer:hover { border-color: var(--green); }
 .footer {
@@ -98,45 +162,10 @@ h1 {
 }
 .footer a { color: var(--accent); text-decoration: none; }
 
-/* ─── Кнопки в правом верхнем углу ──────────── */
-.top-controls {
-  position: absolute;
-  top: 16px;
-  right: 16px;
-  display: flex;
-  gap: 8px;
-  z-index: 10;
-}
-.top-btn {
-  padding: 8px 12px;
-  background: var(--bg-card);
-  border: 1px solid var(--border-soft);
-  border-radius: 6px;
-  cursor: pointer;
-  font-size: 14px;
-  color: var(--text-main);
-  position: relative;
-  line-height: 1;
-}
-.top-btn:hover { box-shadow: var(--shadow); }
-
-/* Красная точка непрочитанного */
-.bell-dot {
-  position: absolute;
-  top: 4px;
-  right: 4px;
-  width: 8px;
-  height: 8px;
-  background: #e74c3c;
-  border-radius: 50%;
-  display: none;
-}
-.bell-dot.active { display: block; }
-
 /* ─── Модалка changelog ──────────── */
 .changelog-modal {
   position: absolute;
-  top: 60px;
+  top: 68px;
   right: 16px;
   width: 360px;
   max-width: calc(100vw - 32px);
@@ -263,11 +292,20 @@ h1 {
 </head>
 <body>
 
-<div class="top-controls">
-  <button class="top-btn" id="bell-btn" onclick="toggleChangelog(event)" title="Что нового">
-    🔔<span class="bell-dot" id="bell-dot"></span>
-  </button>
-  <button class="top-btn" onclick="cycleTheme()" title="Переключить тему">🌓</button>
+<div class="dt-topnav">
+  <div class="dt-topnav__brand">
+    <span class="dt-topnav__mark">DT</span>
+    <span class="dt-topnav__word">Deutsch Tools</span>
+  </div>
+  <div class="dt-nav">
+    <button class="dt-icon-btn" id="bell-btn" onclick="toggleChangelog(event)" title="Что нового">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9"/><path d="M10.3 21a1.94 1.94 0 0 0 3.4 0"/></svg>
+      <span class="dt-icon-btn__dot" id="bell-dot"></span>
+    </button>
+    <button class="dt-icon-btn" id="theme-btn" onclick="cycleTheme()" title="Переключить тему">
+      <span id="theme-icon-wrap"></span>
+    </button>
+  </div>
 </div>
 
 <div class="changelog-modal" id="changelog-modal" role="dialog" aria-label="История обновлений">
@@ -276,6 +314,7 @@ h1 {
   <button class="changelog-more" id="changelog-more" onclick="toggleExpand()" style="display:none;">ещё</button>
 </div>
 
+<div class="main-wrap">
 <div class="container">
   <div class="brand">r4-studio</div>
   <h1>Deutsch Tools</h1>
@@ -283,15 +322,27 @@ h1 {
 
   <div class="cards">
     <a href="cheatsheet.html" class="card cheatsheet">
-      <div class="card-icon">📖</div>
+      <div class="card-icon">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg>
+      </div>
       <div class="card-title">Шпаргалка</div>
       <div class="card-desc">Слова, грамматика, правила.<br>Поиск по всему словарю.</div>
+      <span class="dt-cta">
+        <span class="dt-cta__roll"><span class="dt-cta__roll-inner"><span>Открыть</span><span>Открыть</span></span></span>
+        <span class="dt-cta__arrow"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span>
+      </span>
     </a>
 
     <a href="trainer.html" class="card trainer">
-      <div class="card-icon">🎯</div>
+      <div class="card-icon">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/></svg>
+      </div>
       <div class="card-title">Тренажёр</div>
       <div class="card-desc">Карточки и тесты<br>по уровням сложности.</div>
+      <span class="dt-cta">
+        <span class="dt-cta__roll"><span class="dt-cta__roll-inner"><span>Открыть</span><span>Открыть</span></span></span>
+        <span class="dt-cta__arrow"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span>
+      </span>
     </a>
   </div>
 
@@ -300,8 +351,20 @@ h1 {
     <a href="https://github.com/r4-studio/deutsch-tools" target="_blank">GitHub</a>
   </div>
 </div>
+</div>
 
 <script>
+var THEME_ICONS = {
+  auto: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 2a10 10 0 0 0 0 20z" fill="currentColor" stroke="none"/></svg>',
+  light: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41"/></svg>',
+  dark: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79Z"/></svg>'
+};
+function applyThemeIcon(theme) {
+  var el = document.getElementById('theme-icon-wrap');
+  var btn = document.getElementById('theme-btn');
+  if (el) el.innerHTML = THEME_ICONS[theme] || THEME_ICONS.auto;
+  if (btn) btn.title = 'Тема: ' + (theme === 'auto' ? 'авто (по системе)' : (theme === 'dark' ? 'тёмная' : 'светлая'));
+}
 function cycleTheme() {
   var html = document.documentElement;
   var saved = localStorage.getItem('theme') || 'auto';
@@ -312,7 +375,9 @@ function cycleTheme() {
   html.classList.remove('theme-light', 'theme-dark');
   if (next !== 'auto') html.classList.add('theme-' + next);
   localStorage.setItem('theme', next);
+  applyThemeIcon(next);
 }
+applyThemeIcon(localStorage.getItem('theme') || 'auto');
 
 // ─── Changelog ──────────────────────────────────
 var CHANGELOG = [];

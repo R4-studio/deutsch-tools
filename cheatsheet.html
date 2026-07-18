@@ -239,60 +239,36 @@ tr:hover td{background:var(--bg-row-hover)}
 @media(max-width:768px){.three-col{grid-template-columns:1fr}.two-col{grid-template-columns:1fr}}
 #csb-icon { display: none !important; }
 
-/* Кнопка переключения темы */
-.theme-toggle{
-  padding:8px 10px;
-  font-size:14px;
-  border-radius:6px;
-  background:var(--bg-tab);
-  color:var(--text-main);
-  border:1px solid var(--border-tab);
-  cursor:pointer;
-  font-weight:600;
-  white-space:nowrap;
-  user-select:none;
-  min-width:42px;
-}
-.theme-toggle:hover{background:var(--bg-row-hover)}
-
-/* Иконка "На главную" — стилизована под theme-toggle */
-.home-btn {
-  padding: 8px 10px;
-  font-size: 14px;
-  border-radius: 6px;
-  background: var(--bg-tab);
+/* Кнопки-иконки в шапке (тема / на главную / бургер) — единый круглый стиль */
+.theme-toggle,
+.home-btn,
+.burger-btn {
+  width: 38px;
+  height: 38px;
+  flex-shrink: 0;
+  padding: 0;
+  border-radius: 50%;
+  background: var(--bg-panel);
   color: var(--text-main);
-  border: 1px solid var(--border-tab);
+  border: 1px solid var(--border-soft);
   cursor: pointer;
-  font-weight: 600;
-  white-space: nowrap;
   user-select: none;
-  min-width: 42px;
   text-align: center;
   text-decoration: none;
   display: inline-flex;
   align-items: center;
   justify-content: center;
   line-height: 1;
+  transition: background 0.2s var(--ease-dt), transform 0.15s var(--ease-dt);
 }
-.home-btn:hover { background: var(--bg-row-hover); }
+.theme-toggle svg, .home-btn svg, .burger-btn svg { width: 17px; height: 17px; display: block; }
+.theme-toggle:hover, .home-btn:hover, .burger-btn:hover { background: var(--bg-row-hover); }
+.theme-toggle:active, .home-btn:active, .burger-btn:active { transform: scale(0.92); }
 
 /* ===== Бургер-меню (мобильное) ===== */
 .burger-btn {
   display: none; /* На десктопе скрыт */
-  padding: 8px 10px;
-  font-size: 18px;
-  border-radius: 6px;
-  background: var(--bg-tab);
-  color: var(--text-main);
-  border: 1px solid var(--border-tab);
-  cursor: pointer;
-  font-weight: 600;
-  user-select: none;
-  min-width: 42px;
-  line-height: 1;
 }
-.burger-btn:hover { background: var(--bg-row-hover); }
 
 .menu-backdrop {
   display: none;
@@ -446,12 +422,12 @@ function escHtml(s) {
 </head><body>
   <div class="search-bar">
   <div class="search-bar-inner">
-  <a href="index.html" class="home-btn" title="На главную">❌</a>
-  <button class="burger-btn" onclick="openMenu()" title="Меню">☰</button>
+  <a href="index.html" class="home-btn" title="На главную"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9.5 12 3l9 6.5"/><path d="M5 8v11a1 1 0 0 0 1 1h4v-6h4v6h4a1 1 0 0 0 1-1V8"/></svg></a>
+  <button class="burger-btn" onclick="openMenu()" title="Меню"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 6h16M4 12h16M4 18h16"/></svg></button>
   <input type="text" id="searchInput" placeholder="Поиск...">
   <button id="searchBtn" style="padding:8px 14px;font-size:13px;border-radius:6px;background:var(--accent);color:var(--on-color);border:none;cursor:pointer;font-weight:600;white-space:nowrap;">Найти</button>
   <span id="searchCount" class="search-count-label" style="font-size:12px;color:var(--text-muted);white-space:nowrap;"></span>
-  <button class="theme-toggle" id="themeToggle" onclick="cycleTheme()" title="Переключить тему">🌓</button>
+  <button class="theme-toggle" id="themeToggle" onclick="cycleTheme()" title="Переключить тему"></button>
 </div>
 </div>
 
@@ -2544,7 +2520,12 @@ function applyTheme(theme) {
   localStorage.setItem('theme', theme);
   var btn = document.getElementById('themeToggle');
   if (btn) {
-    btn.textContent = theme === 'auto' ? '🌓' : (theme === 'dark' ? '🌙' : '☀️');
+    var THEME_ICONS = {
+      auto: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 2a10 10 0 0 0 0 20z" fill="currentColor" stroke="none"/></svg>',
+      light: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41"/></svg>',
+      dark: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79Z"/></svg>'
+    };
+    btn.innerHTML = THEME_ICONS[theme] || THEME_ICONS.auto;
     btn.title = 'Тема: ' + (theme === 'auto' ? 'авто (по системе)' : (theme === 'dark' ? 'тёмная' : 'светлая'));
   }
   // Форсируем repaint видимой панели — обходит баг ленивого рендера CSS-переменных
