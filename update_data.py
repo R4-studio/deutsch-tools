@@ -317,124 +317,238 @@ def apply_schema(r, sheet):
     return out
 
 # ═══════════════════════════════════════════════════════════════
+# БИБЛИОТЕКА SVG-ИКОНОК (единственный источник — эмитится в data.js
+# как ICON_SVGS, потребители: cheatsheet.html (ic()) и trainer.html
+# (компонент <Icon name=.../>). Stroke-style, viewBox 24x24.
+# ═══════════════════════════════════════════════════════════════
+ICON_LIBRARY = {
+    "document": "<svg width='1em' height='1em' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><path d='M6 2h8l4 4v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2z'/><path d='M14 2v4h4'/></svg>",
+    "chat": "<svg width='1em' height='1em' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><path d='M4 4h16v12H8l-4 4V4z'/></svg>",
+    "wave": "<svg width='1em' height='1em' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><path d='M7 11V6a1.5 1.5 0 0 1 3 0v4'/><path d='M10 10V4.5a1.5 1.5 0 0 1 3 0V10'/><path d='M13 10V5.5a1.5 1.5 0 0 1 3 0V11'/><path d='M16 11.5a1.5 1.5 0 0 1 3 0V14a6 6 0 0 1-6 6h-1a6 6 0 0 1-6-6v-1l-2-3a1.3 1.3 0 0 1 2-1.6L7 11'/></svg>",
+    "tv": "<svg width='1em' height='1em' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><rect x='2' y='5' width='20' height='14' rx='2'/><path d='M8 21h8M12 17v4'/></svg>",
+    "broom": "<svg width='1em' height='1em' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><path d='M18 3 8 13'/><path d='M8 13c-2 0-4 2-4 4l6-2z'/><path d='M4 21l4-4'/></svg>",
+    "sofa": "<svg width='1em' height='1em' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><path d='M4 12v6h16v-6'/><path d='M4 12a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2'/><path d='M4 12V9a1 1 0 0 1 1-1h1a1 1 0 0 1 1 1v2M17 12V9a1 1 0 0 1 1-1h1a1 1 0 0 1 1 1v2'/><path d='M4 18v2M20 18v2'/></svg>",
+    "target": "<svg width='1em' height='1em' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><circle cx='12' cy='12' r='9'/><circle cx='12' cy='12' r='5'/><circle cx='12' cy='12' r='1'/></svg>",
+    "palette": "<svg width='1em' height='1em' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><path d='M12 2a10 10 0 1 0 0 20c1.1 0 2-.9 2-2 0-.5-.2-1-.5-1.4-.3-.4-.5-.8-.5-1.3 0-1.1.9-2 2-2h2.3A5.2 5.2 0 0 0 22 10c0-4.4-4.5-8-10-8z'/><circle cx='7' cy='11' r='1'/><circle cx='7.5' cy='7' r='1'/><circle cx='12' cy='5.5' r='1'/><circle cx='16.5' cy='7.5' r='1'/></svg>",
+    "carousel": "<svg width='1em' height='1em' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><path d='M12 2v4M12 8l7 4-7 4-7-4z'/><path d='M5 12v6l7 4 7-4v-6'/></svg>",
+    "traffic-light": "<svg width='1em' height='1em' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><rect x='8' y='2' width='8' height='16' rx='3'/><circle cx='12' cy='6' r='1.3'/><circle cx='12' cy='10' r='1.3'/><circle cx='12' cy='14' r='1.3'/><path d='M9 20h6'/></svg>",
+    "car": "<svg width='1em' height='1em' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><path d='M3 17V12l2-6h14l2 6v5'/><path d='M3 17h18'/><circle cx='7' cy='17' r='2'/><circle cx='17' cy='17' r='2'/></svg>",
+    "paw": "<svg width='1em' height='1em' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><circle cx='7' cy='8' r='2'/><circle cx='12' cy='6' r='2'/><circle cx='17' cy='8' r='2'/><path d='M12 12c-4 0-6 3-6 5.5S8 21 12 21s6-1 6-3.5S16 12 12 12z'/></svg>",
+    "mountain": "<svg width='1em' height='1em' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><path d='M3 20 9 8l4 6 2-3 6 9z'/></svg>",
+    "weather-sun": "<svg width='1em' height='1em' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><circle cx='12' cy='12' r='4'/><path d='M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4'/></svg>",
+    "users": "<svg width='1em' height='1em' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><circle cx='9' cy='7' r='3'/><path d='M2 21c0-3.9 3.1-7 7-7s7 3.1 7 7'/><circle cx='17' cy='8' r='2.5'/><path d='M22 21c0-3-2-5.5-5-6.3'/></svg>",
+    "user": "<svg width='1em' height='1em' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><circle cx='12' cy='8' r='4'/><path d='M4 21c0-4.4 3.6-8 8-8s8 3.6 8 8'/></svg>",
+    "health": "<svg width='1em' height='1em' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><rect x='3' y='3' width='18' height='18' rx='2'/><path d='M12 8v8M8 12h8'/></svg>",
+    "id-card": "<svg width='1em' height='1em' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><rect x='2' y='5' width='20' height='14' rx='2'/><circle cx='8' cy='11' r='2'/><path d='M5 17c0-1.7 1.3-3 3-3s3 1.3 3 3M14 9h5M14 13h5M14 17h3'/></svg>",
+    "briefcase": "<svg width='1em' height='1em' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><rect x='2' y='7' width='20' height='13' rx='2'/><path d='M8 7V5a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2M2 12h20'/></svg>",
+    "couple": "<svg width='1em' height='1em' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><path d='M12 21s-7-4.5-9.5-9C.7 8.6 2 5 5.5 5c2 0 3.3 1.2 4.5 2.7C11.2 6.2 12.5 5 14.5 5c3.5 0 4.8 3.6 3 7-2.5 4.5-9.5 9-9.5 9z'/></svg>",
+    "mask": "<svg width='1em' height='1em' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><circle cx='7' cy='12' r='5'/><circle cx='17' cy='12' r='5'/><path d='M5 10.5c1-1 3-1 4 0M15 10.5c1-1 3-1 4 0M5.5 14.5c1 1.5 3 1.5 4 0M14.5 14.5c1 1.5 3 1.5 4 0'/></svg>",
+    "brain": "<svg width='1em' height='1em' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><path d='M9 4a3 3 0 0 0-3 3v1a3 3 0 0 0-2 5 3 3 0 0 0 2 5 3 3 0 0 0 5 1V6a3 3 0 0 0-2-2z'/><path d='M15 4a3 3 0 0 1 3 3v1a3 3 0 0 1 2 5 3 3 0 0 1-2 5 3 3 0 0 1-5 1V6a3 3 0 0 1 2-2z'/></svg>",
+    "landmark": "<svg width='1em' height='1em' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><path d='M3 21h18M4 21V10M20 21V10M2 10l10-6 10 6M6 10v6M10 10v6M14 10v6M18 10v6'/></svg>",
+    "city": "<svg width='1em' height='1em' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><path d='M4 21V9l5-4v16M4 21h16M13 21V4l6 3v14M9 8h1M9 12h1M9 16h1M17 10h1M17 14h1M17 18h1'/></svg>",
+    "home": "<svg width='1em' height='1em' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><path d='M3 9.5 12 3l9 6.5'/><path d='M5 8v11a1 1 0 0 0 1 1h4v-6h4v6h4a1 1 0 0 0 1-1V8'/></svg>",
+    "door": "<svg width='1em' height='1em' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><rect x='6' y='2' width='12' height='20' rx='1'/><circle cx='14' cy='12' r='1'/></svg>",
+    "shirt": "<svg width='1em' height='1em' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><path d='M8 3 3 6l2 4 2-1v11a1 1 0 0 0 1 1h8a1 1 0 0 0 1-1V9l2 1 2-4-5-3a3 3 0 0 1-6 0z'/></svg>",
+    "cup": "<svg width='1em' height='1em' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><path d='M6 8h12l-1.2 11.5a2 2 0 0 1-2 1.5H9.2a2 2 0 0 1-2-1.5L6 8Z'/><path d='M9 3h6l1 5H8z'/></svg>",
+    "apple": "<svg width='1em' height='1em' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><path d='M12 7c-3 0-5 2.5-5 6 0 4 2.5 8 5 8s5-4 5-8c0-3.5-2-6-5-6Z'/><path d='M12 7c0-2 1-4 3-4'/></svg>",
+    "pan": "<svg width='1em' height='1em' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><circle cx='11' cy='12' r='7'/><path d='M18 10h4'/><path d='M8 10a3 3 0 0 1 6 0'/></svg>",
+    "pencil": "<svg width='1em' height='1em' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><path d='M12 20h9'/><path d='M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4Z'/></svg>",
+    "laptop": "<svg width='1em' height='1em' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><rect x='4' y='4' width='16' height='11' rx='1'/><path d='M2 19h20'/></svg>",
+    "cart": "<svg width='1em' height='1em' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><circle cx='9' cy='20' r='1.3'/><circle cx='18' cy='20' r='1.3'/><path d='M2 3h2l2.6 12.6a2 2 0 0 0 2 1.6h8.8a2 2 0 0 0 2-1.6L21 8H6'/></svg>",
+    "smile": "<svg width='1em' height='1em' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><circle cx='12' cy='12' r='9'/><path d='M8 14s1.5 2 4 2 4-2 4-2'/><path d='M9 9h.01M15 9h.01'/></svg>",
+    "warning": "<svg width='1em' height='1em' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><path d='M12 3 2 20h20L12 3Z'/><path d='M12 10v4M12 17h.01'/></svg>",
+    "school": "<svg width='1em' height='1em' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><path d='M12 3 2 8l10 5 10-5-10-5Z'/><path d='M6 10.5V16c0 1.5 3 3 6 3s6-1.5 6-3v-5.5M22 8v6'/></svg>",
+    "notes": "<svg width='1em' height='1em' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><path d='M4 3h13l3 3v15H4z'/><path d='M17 3v4h3M8 12h8M8 16h8M8 8h4'/></svg>",
+    "clock": "<svg width='1em' height='1em' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><circle cx='12' cy='12' r='9'/><path d='M12 7v5l4 2'/></svg>",
+    "calendar": "<svg width='1em' height='1em' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><rect x='3' y='4' width='18' height='17' rx='2'/><path d='M16 2v4M8 2v4M3 10h18'/></svg>",
+    "sunrise": "<svg width='1em' height='1em' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><path d='M12 3v5'/><path d='M5.6 10.6 7 12M18.4 10.6 17 12M2 18h20M4 18a8 8 0 0 1 16 0'/></svg>",
+    "hourglass": "<svg width='1em' height='1em' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><path d='M6 2h12M6 22h12M6 2c0 5 4 7 6 8-2 1-6 3-6 8M18 2c0 5-4 7-6 8 2 1 6 3 6 8'/></svg>",
+    "stopwatch": "<svg width='1em' height='1em' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><circle cx='12' cy='13' r='8'/><path d='M12 9v4l3 2'/><path d='M9 2h6M12 2v3'/></svg>",
+    "office": "<svg width='1em' height='1em' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><rect x='4' y='2' width='16' height='20' rx='1'/><path d='M9 7h1M14 7h1M9 11h1M14 11h1M9 15h1M14 15h1M10 22v-4h4v4'/></svg>",
+    "crane": "<svg width='1em' height='1em' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><path d='M4 21V9l8-5v17'/><path d='M12 6h8l-3 5M17 11v10'/></svg>",
+    "walk": "<svg width='1em' height='1em' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><circle cx='13' cy='4' r='2'/><path d='M10 21l1-6-3-2 1-5 4-2 3 3h3'/><path d='M9 13l-3 2v6'/></svg>",
+    "book": "<svg width='1em' height='1em' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><path d='M4 5a2 2 0 0 1 2-2h13v16H6a2 2 0 0 0-2 2Z'/><path d='M19 17H6a2 2 0 0 0-2 2'/></svg>",
+    "ring": "<svg width='1em' height='1em' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><circle cx='12' cy='15' r='6'/><path d='M9 9l3-6 3 6'/></svg>",
+    "flex": "<svg width='1em' height='1em' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><path d='M3 14c2-3 4-4 6-4 3 0 3 2 5 2s3-2 3-2'/><path d='M14 8c1-2 3-3 5-2 2.5 1.3 2 5-1 7-3 2.5-8 3-11 1'/></svg>",
+    "ruler": "<svg width='1em' height='1em' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><path d='M3 17 17 3l4 4L7 21z'/><path d='M9 11l2 2M12 8l2 2M6 14l2 2'/></svg>",
+    "ruleset": "<svg width='1em' height='1em' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><path d='M3 3v14a4 4 0 0 0 4 4h14'/><path d='M8 3v10M3 8h10'/></svg>",
+    "wood": "<svg width='1em' height='1em' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><rect x='2' y='9' width='20' height='6' rx='2'/><path d='M6 9v6M11 9v6M16 9v6'/></svg>",
+    "coin": "<svg width='1em' height='1em' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><circle cx='12' cy='12' r='9'/><path d='M12 7v10M9.5 9.5c0-1.4 1.1-2.2 2.5-2.2s2.5.8 2.5 2c0 2.5-5 1.7-5 4.2 0 1.2 1.1 2 2.5 2s2.5-.8 2.5-2'/></svg>",
+    "star": "<svg width='1em' height='1em' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><path d='M12 2l3 7h7l-5.5 4.5L18.5 21 12 16.5 5.5 21 7.5 13.5 2 9h7Z'/></svg>",
+    "handshake": "<svg width='1em' height='1em' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><path d='M2 12h4l3-3 3 3h3'/><path d='M9 12l3 3 6-6 3 3-8 8-6-6'/></svg>",
+    "arrow-right": "<svg width='1em' height='1em' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><path d='M5 12h14M13 6l6 6-6 6'/></svg>",
+    "pin": "<svg width='1em' height='1em' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><path d='M12 22s7-7.5 7-13a7 7 0 0 0-14 0c0 5.5 7 13 7 13Z'/><circle cx='12' cy='9' r='2.5'/></svg>",
+    "thumbs-up": "<svg width='1em' height='1em' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><path d='M7 22V11l4-9c1.5 0 2 1 2 2v6h6a2 2 0 0 1 2 2.3l-1.4 7A2 2 0 0 1 17.6 22H7Z'/><path d='M7 11H3v11h4'/></svg>",
+    "repeat": "<svg width='1em' height='1em' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><path d='M17 2l4 4-4 4'/><path d='M3 11V9a4 4 0 0 1 4-4h14'/><path d='M7 22l-4-4 4-4'/><path d='M21 13v2a4 4 0 0 1-4 4H3'/></svg>",
+    "graduation": "<svg width='1em' height='1em' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><path d='M2 9 12 4l10 5-10 5z'/><path d='M6 11v5c0 1.5 3 3 6 3s6-1.5 6-3v-5M22 9v6'/></svg>",
+    "newspaper": "<svg width='1em' height='1em' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><rect x='3' y='5' width='13' height='16' rx='1'/><path d='M16 8h5v11a2 2 0 0 1-2 2H5M6 9h6M6 13h6M6 17h6'/></svg>",
+    "key": "<svg width='1em' height='1em' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><circle cx='7' cy='15' r='4'/><path d='M10 12l9-9M16 6l2 2M19 3l2 2'/></svg>",
+    "fog": "<svg width='1em' height='1em' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><path d='M4 8h16M2 12h20M4 16h16M6 20h12'/></svg>",
+    "ban": "<svg width='1em' height='1em' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><circle cx='12' cy='12' r='9'/><path d='M6 6l12 12'/></svg>",
+    "link": "<svg width='1em' height='1em' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><path d='M9 17H7a5 5 0 0 1 0-10h2M15 7h2a5 5 0 0 1 0 10h-2M8 12h8'/></svg>",
+    "medal": "<svg width='1em' height='1em' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><circle cx='12' cy='15' r='6'/><path d='M9 10 6 3M15 10l3-7M9 3h6'/><path d='M12 12v6'/></svg>",
+    "scroll": "<svg width='1em' height='1em' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><path d='M6 4a2 2 0 0 0-2 2v1a2 2 0 0 0 2 2M6 4h13a2 2 0 0 1 2 2v1a2 2 0 0 1-2 2H6M6 4v14M6 18a2 2 0 0 0 2 2h11a2 2 0 0 0 2-2v-1a2 2 0 0 0-2-2H6'/></svg>",
+    "letter-a": "<svg width='1em' height='1em' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><path d='M4 20 10 4h4l6 16'/><path d='M7.5 14h9'/></svg>",
+    "letter-b": "<svg width='1em' height='1em' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><path d='M6 4h8a4 4 0 0 1 0 8H6zM6 12h9a4 4 0 0 1 0 8H6Z'/></svg>",
+    "hash": "<svg width='1em' height='1em' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><path d='M5 9h14M5 15h14M10 3 8 21M16 3l-2 18'/></svg>",
+    "box": "<svg width='1em' height='1em' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><path d='M21 8 12 3 3 8l9 5 9-5Z'/><path d='M3 8v9l9 5 9-5V8M12 13v9'/></svg>",
+    "bolt": "<svg width='1em' height='1em' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><path d='M13 2 4 14h6l-1 8 9-12h-6z'/></svg>",
+    "book-open": "<svg width='1em' height='1em' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><path d='M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z'/><path d='M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z'/></svg>",
+    "waveform": "<svg width='1em' height='1em' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><path d='M2 12h2l2-7 3 14 3-10 2 6 2-3h6'/></svg>",
+    "book-check": "<svg width='1em' height='1em' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><path d='M4 5a2 2 0 0 1 2-2h13v16H6a2 2 0 0 0-2 2Z'/><path d='M8 9l2 2 4-4'/></svg>",
+    "flame": "<svg width='1em' height='1em' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><path d='M12 2c1 3-3 4-3 8a3 3 0 0 0 6 0c1 1 2 2 2 4a5 5 0 0 1-10 0c0-5 5-6 5-12Z'/></svg>",
+    "sparkle": "<svg width='1em' height='1em' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><path d='M12 2l1.5 5.5L19 9l-5.5 1.5L12 16l-1.5-5.5L5 9l5.5-1.5Z'/></svg>",
+    "shuffle": "<svg width='1em' height='1em' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><path d='M2 6h4l12 12'/><path d='M14 6h6M18 3l4 3-4 3'/><path d='M2 18h4l3-5'/></svg>",
+    "question": "<svg width='1em' height='1em' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><circle cx='12' cy='12' r='9'/><path d='M9.5 9a2.5 2.5 0 0 1 5 0c0 2-2.5 2-2.5 4.5'/><path d='M12 17h.01'/></svg>",
+    "spa": "<svg width='1em' height='1em' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><path d='M12 21c4-2 7-5 7-10a7 7 0 0 0-7-7 7 7 0 0 0-7 7c0 5 3 8 7 10Z'/><path d='M12 21V9'/></svg>",
+    "bulb": "<svg width='1em' height='1em' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><path d='M9 18h6M10 21h4'/><path d='M12 3a6 6 0 0 0-4 10.5c.7.6 1 1.5 1 2.5h6c0-1 .3-1.9 1-2.5A6 6 0 0 0 12 3Z'/></svg>",
+    "bus": "<svg width='1em' height='1em' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><rect x='3' y='5' width='18' height='12' rx='2'/><path d='M3 11h18'/><circle cx='7.5' cy='17.5' r='1.5'/><circle cx='16.5' cy='17.5' r='1.5'/></svg>",
+    "gamepad": "<svg width='1em' height='1em' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><rect x='2' y='7' width='20' height='11' rx='5'/><path d='M7 10v4M5 12h4'/><circle cx='16' cy='11' r='1'/><circle cx='18' cy='14' r='1'/></svg>",
+    "cloud-rain": "<svg width='1em' height='1em' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><path d='M17 13a4 4 0 0 0-1-7.9A6 6 0 0 0 4.5 9 4 4 0 0 0 5 17h12Z'/><path d='M8 19l-1 2M12 19l-1 2M16 19l-1 2'/></svg>",
+    "music": "<svg width='1em' height='1em' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><path d='M9 18V5l11-2v13'/><circle cx='6' cy='18' r='3'/><circle cx='17' cy='16' r='3'/></svg>",
+    "wine": "<svg width='1em' height='1em' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><path d='M8 3h8l-1 8a3 3 0 0 1-6 0Z'/><path d='M12 14v7M9 21h6'/></svg>",
+    "bed": "<svg width='1em' height='1em' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><path d='M3 18v-6a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2v6'/><path d='M3 18v3M21 18v3M3 12V6h6v6'/></svg>",
+    "monitor": "<svg width='1em' height='1em' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><rect x='3' y='4' width='18' height='12' rx='1'/><path d='M8 20h8M12 16v4'/></svg>",
+    "archive": "<svg width='1em' height='1em' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><rect x='3' y='4' width='18' height='4' rx='1'/><path d='M4 8v10a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8M10 13h4'/></svg>",
+    "shower": "<svg width='1em' height='1em' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><path d='M4 12a8 8 0 0 1 14-5'/><path d='M18 3l3 3'/><path d='M4 12h16'/><path d='M8 16v2M12 16v2M16 16v2M6 20v1M10 20v1M14 20v1M18 20v1'/></svg>",
+    "toy": "<svg width='1em' height='1em' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><circle cx='12' cy='8' r='4'/><path d='M9 6l-1-2M15 6l1-2'/><path d='M6 21c0-4 3-7 6-7s6 3 6 7'/></svg>",
+    "leaf": "<svg width='1em' height='1em' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><path d='M11 20A7 7 0 0 1 4 13c0-6 5-10 15-11 0 10-4 15-11 15Z'/><path d='M4 20c3-3 5-6 15-15'/></svg>",
+    "dining": "<svg width='1em' height='1em' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><path d='M7 2v9M4 2v5a2 2 0 0 0 2 2M10 2v5a2 2 0 0 1-2 2M17 2c-2 0-3 2-3 5s1 4 3 4M17 2v20'/></svg>",
+    "bag": "<svg width='1em' height='1em' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><path d='M6 7h12l1 14H5Z'/><path d='M9 7a3 3 0 0 1 6 0'/></svg>",
+    "thermometer": "<svg width='1em' height='1em' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><path d='M12 3a2 2 0 0 0-2 2v9a4 4 0 1 0 4 0V5a2 2 0 0 0-2-2Z'/><path d='M12 14v-6'/></svg>",
+    "chart": "<svg width='1em' height='1em' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><path d='M4 20V10M10 20V4M16 20v-7M22 20H2'/></svg>",
+    "history": "<svg width='1em' height='1em' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><circle cx='12' cy='13' r='8'/><path d='M12 9v4l3 2'/><path d='M3 8a9 9 0 0 1 2-3M3 8V4M3 8h4'/></svg>",
+    "scale": "<svg width='1em' height='1em' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><path d='M12 3v18M5 8h14'/><path d='M5 8l-3 6a3 3 0 0 0 6 0ZM19 8l-3 6a3 3 0 0 0 6 0Z'/><path d='M8 21h8'/></svg>",
+    "clipboard": "<svg width='1em' height='1em' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><rect x='5' y='4' width='14' height='17' rx='2'/><rect x='9' y='2' width='6' height='4' rx='1'/><path d='M9 12h6M9 16h6'/></svg>",
+    "check": "<svg width='1em' height='1em' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><path d='M20 6 9 17l-5-5'/></svg>",
+    "cross": "<svg width='1em' height='1em' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><path d='M18 6 6 18M6 6l12 12'/></svg>",
+    "wrench": "<svg width='1em' height='1em' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><path d='M14.7 6.3a4 4 0 1 0-5.4 5.4L3 18l3 3 6.3-6.3a4 4 0 0 0 5.4-5.4l-2.8 2.8-2-2Z'/></svg>",
+    "gear": "<svg width='1em' height='1em' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><circle cx='12' cy='12' r='3'/><path d='M12 2v3M12 19v3M4.2 4.2l2.1 2.1M17.7 17.7l2.1 2.1M2 12h3M19 12h3M4.2 19.8l2.1-2.1M17.7 6.3l2.1-2.1'/></svg>",
+    "rewind": "<svg width='1em' height='1em' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><path d='M11 19 2 12l9-7v14Z'/><path d='M22 19 13 12l9-7v14Z'/></svg>",
+    "dice": "<svg width='1em' height='1em' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><rect x='3' y='3' width='18' height='18' rx='3'/><circle cx='8' cy='8' r='1.3'/><circle cx='16' cy='8' r='1.3'/><circle cx='8' cy='16' r='1.3'/><circle cx='16' cy='16' r='1.3'/><circle cx='12' cy='12' r='1.3'/></svg>",
+    "party": "<svg width='1em' height='1em' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><path d='M5.8 11.3 2 22l10.7-3.8'/><path d='M11.5 12.5c2-2 5-6 8.5-8.5'/><path d='M16 8c-2 2-6 5-8.5 8.5'/><path d='M4 3h.01M22 8h.01M15 2h.01M22 20h.01M22 14h.01'/></svg>",
+}
+
+# ═══════════════════════════════════════════════════════════════
 # НЕМЕЦКИЕ ПОДПИСИ ДЛЯ ФРОНТА (BLOCKS / TOPIC_TITLES / TAB_TITLES)
 # ─────────────────────────────────────────────────────────────────
-# Маппинг ключей domen:group → (emoji, deutsch). Хардкод-фоллбэк.
+# Маппинг ключей domen:group → (icon_key, deutsch). icon_key — ключ
+# в ICON_LIBRARY (SVG вместо эмодзи). Хардкод-фоллбэк.
 # Если в Settings-XLSX появятся колонки label_de/icon — они
 # автоматически переопределят значения отсюда (см. label_for_pair).
 # Дописывай сюда новые пары при расширении таксономии.
 # ═══════════════════════════════════════════════════════════════
 GERMAN_LABELS = {
     # ─── nouns ─────────────────────────────────────────────────
-    "communication:docs":       ("📄", "Dokumente"),
-    "communication:general":    ("💬", "Kommunikation"),
-    "communication:greetings":  ("👋", "Begrüßung"),
-    "communication:media":      ("📺", "Medien"),
-    "home:cleaning":            ("🧹", "Putzen"),
-    "home:furniture":           ("🛋", "Möbel"),
-    "leisure:activities":       ("🎯", "Aktivitäten"),
-    "leisure:hobby":            ("🎨", "Hobby"),
-    "leisure:places":           ("🎪", "Freizeitorte"),
-    "movement:traffic":         ("🚦", "Verkehr"),
-    "movement:transport":       ("🚗", "Transport"),
-    "nature:animals":           ("🐾", "Tiere"),
-    "nature:landscape":         ("🏞", "Landschaft"),
-    "nature:weather":           ("☀", "Wetter"),
-    "people:family":            ("👨‍👩‍👧", "Familie"),
-    "people:health":            ("🏥", "Gesundheit"),
-    "people:identity":          ("🪪", "Identität"),
-    "people:professions":       ("💼", "Berufe"),
-    "people:relations":         ("💑", "Beziehungen"),
-    "people:roles":             ("🎭", "Rollen"),
-    "people:traits":            ("🧠", "Eigenschaften"),
-    "place:buildings":          ("🏛", "Gebäude"),
-    "place:city":               ("🏙", "Stadt"),
-    "place:housing":            ("🏠", "Wohnung"),
-    "place:rooms":              ("🚪", "Zimmer"),
-    "products:clothing":        ("👕", "Kleidung"),
-    "products:drinks":          ("🥤", "Getränke"),
-    "products:food":            ("🍎", "Lebensmittel"),
-    "products:kitchenware":     ("🍳", "Geschirr"),
-    "products:stationery":      ("✏", "Schreibwaren"),
-    "products:tech":            ("💻", "Technik"),
-    "shopping:general":         ("🛒", "Einkaufen"),
-    "state:emotions":           ("😊", "Gefühle"),
-    "state:safety":             ("🚨", "Sicherheit"),
-    "study:places":             ("🏫", "Lernorte"),
-    "study:writing":            ("📝", "Schreiben"),
-    "time:clock":               ("🕐", "Uhrzeit"),
-    "time:dates":               ("📅", "Datum"),
-    "time:dayparts":            ("🌅", "Tageszeiten"),
-    "time:periods":             ("⏳", "Zeitabschnitte"),
-    "work:general":             ("💼", "Arbeit"),
-    "work:office":              ("🏢", "Büro"),
-    "work:places":              ("🏗", "Arbeitsorte"),
+    "communication:docs":       ("document", "Dokumente"),
+    "communication:general":    ("chat", "Kommunikation"),
+    "communication:greetings":  ("wave", "Begrüßung"),
+    "communication:media":      ("tv", "Medien"),
+    "home:cleaning":            ("broom", "Putzen"),
+    "home:furniture":           ("sofa", "Möbel"),
+    "leisure:activities":       ("target", "Aktivitäten"),
+    "leisure:hobby":            ("palette", "Hobby"),
+    "leisure:places":           ("carousel", "Freizeitorte"),
+    "movement:traffic":         ("traffic-light", "Verkehr"),
+    "movement:transport":       ("car", "Transport"),
+    "nature:animals":           ("paw", "Tiere"),
+    "nature:landscape":         ("mountain", "Landschaft"),
+    "nature:weather":           ("weather-sun", "Wetter"),
+    "people:family":            ("users", "Familie"),
+    "people:health":            ("health", "Gesundheit"),
+    "people:identity":          ("id-card", "Identität"),
+    "people:professions":       ("briefcase", "Berufe"),
+    "people:relations":         ("couple", "Beziehungen"),
+    "people:roles":             ("mask", "Rollen"),
+    "people:traits":            ("brain", "Eigenschaften"),
+    "place:buildings":          ("landmark", "Gebäude"),
+    "place:city":               ("city", "Stadt"),
+    "place:housing":            ("home", "Wohnung"),
+    "place:rooms":              ("door", "Zimmer"),
+    "products:clothing":        ("shirt", "Kleidung"),
+    "products:drinks":          ("cup", "Getränke"),
+    "products:food":            ("apple", "Lebensmittel"),
+    "products:kitchenware":     ("pan", "Geschirr"),
+    "products:stationery":      ("pencil", "Schreibwaren"),
+    "products:tech":            ("laptop", "Technik"),
+    "shopping:general":         ("cart", "Einkaufen"),
+    "state:emotions":           ("smile", "Gefühle"),
+    "state:safety":             ("warning", "Sicherheit"),
+    "study:places":             ("school", "Lernorte"),
+    "study:writing":            ("notes", "Schreiben"),
+    "time:clock":               ("clock", "Uhrzeit"),
+    "time:dates":               ("calendar", "Datum"),
+    "time:dayparts":            ("sunrise", "Tageszeiten"),
+    "time:periods":             ("hourglass", "Zeitabschnitte"),
+    "work:general":             ("briefcase", "Arbeit"),
+    "work:office":              ("office", "Büro"),
+    "work:places":              ("crane", "Arbeitsorte"),
     # ─── verbs (доп.) ──────────────────────────────────────────
-    "grammar:modal":            ("🎯", "Modalverben"),
-    "home:chores":              ("🧹", "Hausarbeit"),
-    "movement:general":         ("🚶", "Bewegung"),
-    "products:cooking":         ("🍳", "Kochen"),
-    "study:general":            ("📚", "Lernen"),
-    "time:duration":            ("⏱", "Dauer"),
+    "grammar:modal":            ("target", "Modalverben"),
+    "home:chores":              ("broom", "Hausarbeit"),
+    "movement:general":         ("walk", "Bewegung"),
+    "products:cooking":         ("pan", "Kochen"),
+    "study:general":            ("book", "Lernen"),
+    "time:duration":            ("stopwatch", "Dauer"),
     # ─── adjectives ────────────────────────────────────────────
-    "communication:style":      ("💬", "Stil"),
-    "movement:speed":           ("⚡", "Tempo"),
-    "people:marital":           ("💍", "Familienstand"),
-    "people:physical":          ("💪", "Aussehen"),
-    "place:size":               ("📏", "Größe"),
-    "products:materials":       ("🪵", "Materialien"),
-    "shopping:price":           ("💰", "Preis"),
-    "state:colors":             ("🎨", "Farben"),
-    "state:qualities":          ("⭐", "Qualität"),
-    "time:chronology":          ("📅", "Zeitfolge"),
+    "communication:style":      ("chat", "Stil"),
+    "movement:speed":           ("bolt", "Tempo"),
+    "people:marital":           ("ring", "Familienstand"),
+    "people:physical":          ("flex", "Aussehen"),
+    "place:size":               ("ruler", "Größe"),
+    "products:materials":       ("wood", "Materialien"),
+    "shopping:price":           ("coin", "Preis"),
+    "state:colors":             ("palette", "Farben"),
+    "state:qualities":          ("star", "Qualität"),
+    "time:chronology":          ("calendar", "Zeitfolge"),
     # ─── adverbs ───────────────────────────────────────────────
-    "communication:agreement":  ("🤝", "Zustimmung"),
-    "movement:direction":       ("➡", "Richtung"),
-    "place:location":           ("📍", "Ort"),
-    "state:certainty":          ("🎯", "Sicherheit"),
-    "state:feelings":           ("👍", "Befinden"),
-    "time:frequency":           ("🔁", "Häufigkeit"),
+    "communication:agreement":  ("handshake", "Zustimmung"),
+    "movement:direction":       ("arrow-right", "Richtung"),
+    "place:location":           ("pin", "Ort"),
+    "state:certainty":          ("target", "Sicherheit"),
+    "state:feelings":           ("thumbs-up", "Befinden"),
+    "time:frequency":           ("repeat", "Häufigkeit"),
     # ─── phrases (доп.) ────────────────────────────────────────
-    "communication:questions":  ("❓", "Fragen"),
-    "communication:wellbeing":  ("💆", "Befinden"),
-    "study:classroom":          ("🎓", "Im Unterricht"),
+    "communication:questions":  ("question", "Fragen"),
+    "communication:wellbeing":  ("spa", "Befinden"),
+    "study:classroom":          ("graduation", "Im Unterricht"),
     # ─── rules (домен grammar) ─────────────────────────────────
-    "grammar:pronouns":         ("👤", "Pronomen"),
-    "grammar:wordorder":        ("📐", "Satzbau"),
-    "grammar:verbs":            ("⚡", "Verben"),
-    "grammar:cases":            ("🎯", "Kasus"),
-    "grammar:articles":         ("📰", "Artikel"),
-    "grammar:wfragen":          ("❓", "W-Fragen"),
-    "grammar:adjectives":       ("🎨", "Adjektive"),
+    "grammar:pronouns":         ("user", "Pronomen"),
+    "grammar:wordorder":        ("ruleset", "Satzbau"),
+    "grammar:verbs":            ("bolt", "Verben"),
+    "grammar:cases":            ("target", "Kasus"),
+    "grammar:articles":         ("newspaper", "Artikel"),
+    "grammar:wfragen":          ("question", "W-Fragen"),
+    "grammar:adjectives":       ("palette", "Adjektive"),
     # ─── pronouns (домен grammar / специальные) ────────────────
-    "grammar:personal":         ("👤", "Personalpronomen"),
-    "grammar:possessive":       ("🔑", "Possessivpronomen"),
-    "grammar:indefinite":       ("🌫", "Indefinitpronomen"),
-    "grammar:negation":         ("🚫", "Negation"),
-    "grammar:particles":        ("🎯", "Partikeln"),
-    "grammar:prepositions":     ("🔗", "Präpositionen"),
+    "grammar:personal":         ("user", "Personalpronomen"),
+    "grammar:possessive":       ("key", "Possessivpronomen"),
+    "grammar:indefinite":       ("fog", "Indefinitpronomen"),
+    "grammar:negation":         ("ban", "Negation"),
+    "grammar:particles":        ("target", "Partikeln"),
+    "grammar:prepositions":     ("link", "Präpositionen"),
     # ─── numbers (доп.) ────────────────────────────────────────
-    "quantity:ordinal":         ("🥇", "Ordinalzahlen"),
+    "quantity:ordinal":         ("medal", "Ordinalzahlen"),
     # ─── phonetics (звуки) ─────────────────────────────────────
-    "phonetics:rules":          ("📜", "Regeln"),
-    "phonetics:vowels":         ("🅰", "Vokale"),
-    "phonetics:consonants":     ("🅱", "Konsonanten"),
+    "phonetics:rules":          ("scroll", "Regeln"),
+    "phonetics:vowels":         ("letter-a", "Vokale"),
+    "phonetics:consonants":     ("letter-b", "Konsonanten"),
     # ─── специальные (не из Settings) ──────────────────────────
-    "quantity:cardinal":        ("🔢", "Kardinalzahlen"),
-    "pron:personal":            ("👤", "Personalpronomen"),
-    "pron:negation":            ("🚫", "Negation"),
-    "new:new-nouns":            ("📦", "Neue Substantive"),
-    "new:new-verbs":             ("⚡", "Neue Verben"),
-    "new:new-adj":               ("🎨", "Neue Adjektive"),
-    "new:new-adv":               ("⏱", "Neue Adverbien"),
-    "new:new-phrases":           ("💬", "Neue Phrasen"),
-    "new:new-pron":              ("👤", "Neue Pronomen"),
-    "new:new-nums":              ("🔢", "Neue Zahlen"),
-    "new:new-terms":             ("📖", "Neue Begriffe"),
-    "new:new-sounds":            ("🔤", "Neue Laute"),
-    "new:new-rules":             ("📐", "Neue Regeln"),
-    "perfekt:regel":            ("📘", "Regelmäßig"),
-    "perfekt:unregel":          ("🔥", "Unregelmäßig"),
+    "quantity:cardinal":        ("hash", "Kardinalzahlen"),
+    "pron:personal":            ("user", "Personalpronomen"),
+    "pron:negation":            ("ban", "Negation"),
+    "new:new-nouns":            ("box", "Neue Substantive"),
+    "new:new-verbs":             ("bolt", "Neue Verben"),
+    "new:new-adj":               ("palette", "Neue Adjektive"),
+    "new:new-adv":               ("stopwatch", "Neue Adverbien"),
+    "new:new-phrases":           ("chat", "Neue Phrasen"),
+    "new:new-pron":              ("user", "Neue Pronomen"),
+    "new:new-nums":              ("hash", "Neue Zahlen"),
+    "new:new-terms":             ("book-open", "Neue Begriffe"),
+    "new:new-sounds":            ("waveform", "Neue Laute"),
+    "new:new-rules":             ("ruleset", "Neue Regeln"),
+    "perfekt:regel":            ("book-check", "Regelmäßig"),
+    "perfekt:unregel":          ("flame", "Unregelmäßig"),
 }
 
 # РУССКИЕ ПЕРЕВОДЫ (для тултипов на фронте)
@@ -568,36 +682,36 @@ BLOCK_META_RU = {
 
 # Подписи и цвета верхнеуровневых блоков (POS / спец.).
 BLOCK_META = {
-    "neu":     {"label": "🆕 Neu",            "color": "var(--c-block-neu)", "desc": "Frische Wörter (Puffer)"},
-    "verbs":   {"label": "⚡ Verben",         "color": "var(--c-block-verben)"},
-    "nouns":   {"label": "📦 Substantive",    "color": "var(--c-block-substantive)"},
-    "adj":     {"label": "🎨 Adjektive",      "color": "var(--c-block-adj)"},
-    "adv":     {"label": "🔄 Adverbien",      "color": "var(--c-block-adv)"},
-    "mestoim": {"label": "👤 Pronomen",       "color": "var(--c-block-pronomen)"},
-    "phrases": {"label": "💬 Redewendungen",  "color": "var(--c-block-redewendungen)"},
-    "unregel": {"label": "🔥 Unregelmäßig", "color": "var(--c-block-unregel)", "desc": "Unregelmäßige Verben in Präsens", "kind": "conjugations"},
-    "nums":    {"label": "🔢 Zahlen",         "color": "#16a085"},
-    "sounds":  {"label": "🔤 Aussprache",     "color": "#9b59b6", "desc": "Ausspracheregeln", "kind": "sounds"},
-    
+    "neu":     {"label": "Neu",            "icon": "sparkle", "color": "var(--c-block-neu)", "desc": "Frische Wörter (Puffer)"},
+    "verbs":   {"label": "Verben",         "icon": "bolt",    "color": "var(--c-block-verben)"},
+    "nouns":   {"label": "Substantive",    "icon": "box",     "color": "var(--c-block-substantive)"},
+    "adj":     {"label": "Adjektive",      "icon": "palette", "color": "var(--c-block-adj)"},
+    "adv":     {"label": "Adverbien",      "icon": "shuffle", "color": "var(--c-block-adv)"},
+    "mestoim": {"label": "Pronomen",       "icon": "user",    "color": "var(--c-block-pronomen)"},
+    "phrases": {"label": "Redewendungen",  "icon": "chat",    "color": "var(--c-block-redewendungen)"},
+    "unregel": {"label": "Unregelmäßig",   "icon": "flame",   "color": "var(--c-block-unregel)", "desc": "Unregelmäßige Verben in Präsens", "kind": "conjugations"},
+    "nums":    {"label": "Zahlen",         "icon": "hash",    "color": "#16a085"},
+    "sounds":  {"label": "Aussprache",     "icon": "waveform", "color": "#9b59b6", "desc": "Ausspracheregeln", "kind": "sounds"},
 }
 
 def label_for_pair(domen, group, taxonomy_entry=None):
-    """Возвращает 'эмодзи Подпись' для domen:group.
-    Override через колонки label_de/label/icon в Settings-XLSX."""
+    """Возвращает {"icon": icon_key, "label": Подпись} для domen:group.
+    Override через колонки label_de/label/icon в Settings-XLSX (icon —
+    ключ в ICON_LIBRARY, не эмодзи)."""
     if taxonomy_entry:
         de_label = taxonomy_entry.get("label_de") or taxonomy_entry.get("label")
         icon = taxonomy_entry.get("icon")
         if de_label:
-            return f"{icon} {de_label}".strip() if icon else de_label
+            return {"icon": icon or "", "label": de_label}
     key = f"{domen}:{group}"
-    emoji, name = GERMAN_LABELS.get(key, ("", key))
-    return f"{emoji} {name}".strip() if emoji else key
+    icon, name = GERMAN_LABELS.get(key, ("", key))
+    return {"icon": icon, "label": name}
 
 def build_block_from_pairs(bid, taxonomy_pairs, used_topics=None):
     """Блок POS: каждая пара domen:group → подблок.
     Если передан used_topics — отфильтровываем подблоки без слов."""
     meta = BLOCK_META[bid]
-    block = {"id": bid, "label": meta["label"], "color": meta["color"]}
+    block = {"id": bid, "label": meta["label"], "icon": meta.get("icon", ""), "color": meta["color"]}
     if "desc" in meta: block["desc"] = meta["desc"]
     seen = set()
     subs = []
@@ -608,9 +722,11 @@ def build_block_from_pairs(bid, taxonomy_pairs, used_topics=None):
         topic = f"{d}:{g}"
         if used_topics is not None and topic not in used_topics:
             continue  # пустой подблок — не показываем
+        lp = label_for_pair(d, g, p)
         subs.append({
             "id": f"{d}-{g}".replace("/", "-"),
-            "label": label_for_pair(d, g, p),
+            "label": lp["label"],
+            "icon": lp["icon"],
             "topics": [topic],
         })
     if subs: block["subblocks"] = subs
@@ -619,7 +735,7 @@ def build_block_from_pairs(bid, taxonomy_pairs, used_topics=None):
 def build_special_block(bid, subblocks=None):
     """Спец. блок (kind=sounds/terms/rules/conjugations/perfekt или с фикс. подблоками)."""
     meta = BLOCK_META[bid]
-    block = {"id": bid, "label": meta["label"], "color": meta["color"]}
+    block = {"id": bid, "label": meta["label"], "icon": meta.get("icon", ""), "color": meta["color"]}
     if "desc" in meta: block["desc"] = meta["desc"]
     if "kind" in meta: block["kind"] = meta["kind"]
     if subblocks: block["subblocks"] = subblocks
@@ -657,6 +773,7 @@ def build_blocks(taxonomy, vocab=None):
     unregel_sub = {
         "id": "unregel",
         "label": BLOCK_META["unregel"]["label"],
+        "icon": BLOCK_META["unregel"].get("icon", ""),
         "color": BLOCK_META["unregel"]["color"],
         "desc": BLOCK_META["unregel"].get("desc", ""),
         "kind": "conjugations",
@@ -666,10 +783,10 @@ def build_blocks(taxonomy, vocab=None):
     return [
         # 1. Neu (буфер новых)
         build_special_block("neu", subblocks=[
-            {"id": "nouns", "label": "📦 Substantive",  "topics": ["new:new-nouns"]},
-            {"id": "verbs", "label": "⚡ Verben",       "topics": ["new:new-verbs"]},
-            {"id": "adj",   "label": "🎨 Adjektive",   "topics": ["new:new-adj"]},
-            {"id": "adv",   "label": "⏱ Adverbien",   "topics": ["new:new-adv"]},
+            {"id": "nouns", "label": "Substantive", "icon": "box",       "topics": ["new:new-nouns"]},
+            {"id": "verbs", "label": "Verben",      "icon": "bolt",      "topics": ["new:new-verbs"]},
+            {"id": "adj",   "label": "Adjektive",   "icon": "palette",   "topics": ["new:new-adj"]},
+            {"id": "adv",   "label": "Adverbien",   "icon": "stopwatch", "topics": ["new:new-adv"]},
         ]),
         # 2. Aussprache (kind=sounds, только для шпоры; trainer фильтрует)
         build_special_block("sounds"),
@@ -688,7 +805,7 @@ def build_blocks(taxonomy, vocab=None):
     ]
 
 def build_topic_titles(taxonomy):
-    """TOPIC_TITLES — заголовки секций в шпоре."""
+    """TOPIC_TITLES — заголовки секций в шпоре. Каждое значение — {icon, label}."""
     out = {}
     for page, pairs in taxonomy.items():
         for p in pairs:
@@ -700,12 +817,12 @@ def build_topic_titles(taxonomy):
               "new:new-phrases", "new:new-pron", "new:new-nums",
               "new:new-terms", "new:new-sounds", "new:new-rules",
               "perfekt:regel", "perfekt:unregel"):
-        emoji, name = GERMAN_LABELS.get(k, ("", k))
-        out[k] = f"{emoji} {name}".strip() if emoji else k
+        icon, name = GERMAN_LABELS.get(k, ("", k))
+        out[k] = {"icon": icon, "label": name}
     return out
 
 def build_tab_titles():
-    return {bid: meta["label"] for bid, meta in BLOCK_META.items()}
+    return {bid: {"icon": meta.get("icon", ""), "label": meta["label"]} for bid, meta in BLOCK_META.items()}
 
 def build_ru_titles(taxonomy):
     """TOPIC_TITLES_RU и TAB_TITLES_RU — русские переводы для тултипов."""
@@ -1358,6 +1475,10 @@ if __name__ == '__main__':
 
     # TAXONOMY (из Settings-XLSX)
     out.append("const TAXONOMY = " + js_value(TAXONOMY) + ";")
+    out.append("")
+
+    # ICON_SVGS — единственный источник SVG-иконок (потребители: cheatsheet.html, trainer.html)
+    out.append("const ICON_SVGS = " + js_value(ICON_LIBRARY) + ";")
     out.append("")
 
     # BLOCKS / TOPIC_TITLES / TAB_TITLES — сгенерированы (немецкий, новая таксономия)
