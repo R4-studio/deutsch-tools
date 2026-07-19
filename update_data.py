@@ -758,7 +758,7 @@ def build_blocks(taxonomy, vocab=None):
     - В тренажёре 7 блоков: Neu, Verben (+Unregel внутри), Substantive,
       Adjektive, Adverbien, Pronomen, Redewendungen.
     - Sounds остаётся в массиве (kind=sounds), но тренажёр его фильтрует —
-      используется только в шпоре.
+      используется только в справочнике.
     - Unregel — сабблок Verben (kind=conjugations).
       trainer.html распознаёт sub.kind и роутит его в свой поток.
     - Блок Perfekt удалён: его функционал (тренировка Partizip II) полностью
@@ -788,7 +788,7 @@ def build_blocks(taxonomy, vocab=None):
             {"id": "adj",   "label": "Adjektive",   "icon": "palette",   "topics": ["new:new-adj"]},
             {"id": "adv",   "label": "Adverbien",   "icon": "stopwatch", "topics": ["new:new-adv"]},
         ]),
-        # 2. Aussprache (kind=sounds, только для шпоры; trainer фильтрует)
+        # 2. Aussprache (kind=sounds, только для справочника; trainer фильтрует)
         build_special_block("sounds"),
         # 3. Verben (+ Unregel-сабблок в начале)
         verbs_block,
@@ -805,7 +805,7 @@ def build_blocks(taxonomy, vocab=None):
     ]
 
 def build_topic_titles(taxonomy):
-    """TOPIC_TITLES — заголовки секций в шпоре. Каждое значение — {icon, label}."""
+    """TOPIC_TITLES — заголовки секций в справочнике. Каждое значение — {icon, label}."""
     out = {}
     for page, pairs in taxonomy.items():
         for p in pairs:
@@ -1436,7 +1436,7 @@ if __name__ == '__main__':
 
     out = []
     out.append("// ═══════════════════════════════════════════════════════════════")
-    out.append("// data.js — единый источник правды для шпоры и тренажёра")
+    out.append("// data.js — единый источник правды для справочника и тренажёра")
     out.append("// Собрано автоматически из database.xlsx (см. update_data.py)")
     out.append("// ═══════════════════════════════════════════════════════════════")
     out.append(f"// VOCAB: {len(all_vocab)} | REGEL: {len(regel_verbs)} | CONJ: {len(conjugations)}")
