@@ -228,7 +228,7 @@
   --c-dev-auto:       var(--c-level-1);
   --c-dev-manual:     var(--violet-700);
 
-  /* — Старые семантические переменные (используются в trainer и шпоре) — */
+  /* — Старые семантические переменные (используются в trainer и справочнике) — */
   --accent-red:        var(--red-700);
   --red:               var(--red-700);
   --accent-red-bright: var(--red-600);
