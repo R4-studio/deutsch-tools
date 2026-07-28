@@ -477,7 +477,7 @@ function escHtml(s) {
 </div>
 
 <!-- Дропдаун результатов поиска -->
-<div class="search-dropdown" id="searchDropdown" role="listbox" aria-label="Результаты поиска"></div>
+<div class="search-dropdown" style="margin-top:30px" id="searchDropdown" role="listbox" aria-label="Результаты поиска"></div>
 
 <!-- Backdrop (затемнение фона) -->
 <div class="menu-backdrop" id="menuBackdrop" onclick="closeMenu()"></div>
@@ -490,7 +490,7 @@ function escHtml(s) {
   </div>
   <div id="sideMenuItems"></div>
 </div>
-<div class="tabs" id="tabsRow"></div>
+<div class="tabs" id="tabsRow" style="margin-bottom:10px" ></div>
 <script>
 // ic(key) — достаёт SVG-разметку иконки из ICON_SVGS (единый источник, генерируется в data.js)
 function ic(key) { return (typeof ICON_SVGS !== 'undefined' && ICON_SVGS[key]) || ''; }
