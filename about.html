@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>О проекте — Deutsch Tools</title>
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🇩🇪</text></svg>">
+<meta property="og:title" content="О проекте — Deutsch Tools">
+<meta property="og:description" content="Что такое Deutsch Tools и из чего состоит проект">
+<meta property="og:type" content="website">
+<link rel="stylesheet" href="theme.css?v=1">
+<style>
+html, body {
+  margin: 0; padding: 0;
+  background: var(--bg-body);
+  color: var(--text-main);
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  min-height: 100vh;
+}
+body {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+/* ─── Навбар (как на главной) ──────────────────────── */
+.dt-topnav {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  max-width: 900px;
+  width: 100%;
+  margin: 0 auto;
+  padding: 20px 20px 0;
+  box-sizing: border-box;
+}
+.dt-topnav__brand {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  text-decoration: none;
+  color: inherit;
+}
+.dt-topnav__mark {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background: var(--grey-900);
+  color: #fff;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  flex-shrink: 0;
+}
+.dt-topnav__word {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--text-title);
+}
+
+/* ─── Контент ──────────────────────── */
+.about-wrap {
+  flex: 1;
+  display: flex;
+  justify-content: center;
+  padding: 40px 20px 60px;
+  box-sizing: border-box;
+}
+.about-container {
+  max-width: 640px;
+  width: 100%;
+}
+.about-back {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 13px;
+  color: var(--text-muted);
+  text-decoration: none;
+  margin-bottom: 24px;
+  transition: color 0.2s var(--ease-dt);
+}
+.about-back:hover { color: var(--text-main); }
+.about-back svg { width: 15px; height: 15px; }
+
+h1 {
+  font-size: clamp(1.6rem, 4vw, 2.1rem);
+  color: var(--text-title);
+  margin: 0 0 20px;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+}
+.about-container p {
+  font-size: 15px;
+  line-height: 1.7;
+  color: var(--text-main);
+  margin: 0 0 14px;
+}
+
+.about-parts {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  margin: 20px 0 28px;
+}
+.about-part {
+  background: var(--bg-card);
+  border: 1px solid var(--border-soft);
+  border-radius: 16px;
+  padding: 20px 22px;
+  box-shadow: var(--shadow-card);
+}
+.about-part__title {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 16px;
+  font-weight: 700;
+  color: var(--text-title);
+  margin-bottom: 8px;
+}
+.about-part__icon {
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+.about-part__icon svg { width: 16px; height: 16px; }
+.about-part.cheatsheet .about-part__icon { background: var(--cyan-100); color: var(--cyan-700); }
+.about-part.trainer .about-part__icon { background: var(--red-100); color: var(--red-700); }
+.about-part p { font-size: 14px; margin-bottom: 0; }
+.about-part ul {
+  margin: 10px 0 0;
+  padding-left: 20px;
+}
+.about-part li {
+  font-size: 14px;
+  line-height: 1.6;
+  color: var(--text-main);
+  margin-bottom: 4px;
+}
+
+.about-github {
+  font-size: 14px;
+  color: var(--text-muted);
+}
+.about-github a {
+  color: var(--accent);
+  text-decoration: none;
+  font-weight: 600;
+  transition: filter 0.2s var(--ease-dt);
+}
+.about-github a:hover { filter: brightness(0.85); }
+</style>
+<script>
+(function() {
+  var saved = localStorage.getItem('theme') || 'auto';
+  if (saved !== 'auto') document.documentElement.classList.add('theme-' + saved);
+})();
+</script>
+</head>
+<body>
+
+<div class="dt-topnav">
+  <a class="dt-topnav__brand" href="index.html">
+    <span class="dt-topnav__mark">DT</span>
+    <span class="dt-topnav__word">Deutsch Tools</span>
+  </a>
+  <div class="dt-nav">
+    <button class="dt-icon-btn" id="theme-btn" onclick="cycleTheme()" title="Переключить тему">
+      <span id="theme-icon-wrap"></span>
+    </button>
+  </div>
+</div>
+
+<div class="about-wrap">
+  <div class="about-container">
+    <a class="about-back" href="index.html">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+      На главную
+    </a>
+
+    <h1>О проекте</h1>
+    <p>Deutsch Tools — набор инструментов для изучения немецкого языка. Это не курс и не замена полноценному обучению — это помощник, который даёт под рукой то, что нужно для усвоения правил и отработки материала.</p>
+    <p>Проект состоит из двух частей:</p>
+
+    <div class="about-parts">
+      <div class="about-part cheatsheet">
+        <div class="about-part__title">
+          <span class="about-part__icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg></span>
+          Справочник
+        </div>
+        <p>База данных: слова, фразы, числа и грамматические правила. Можно искать по всему словарю, смотреть склонения и спряжения, примеры употребления.</p>
+      </div>
+
+      <div class="about-part trainer">
+        <div class="about-part__title">
+          <span class="about-part__icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/></svg></span>
+          Тренажёр
+        </div>
+        <p>Практика по материалу, в двух режимах:</p>
+        <ul>
+          <li><strong>Изучение</strong> — карточки слов для запоминания</li>
+          <li><strong>Тесты</strong> — проверка знаний по разным типам заданий и уровням сложности</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="about-github">
+      Исходный код проекта открыт: <a href="https://github.com/r4-studio/deutsch-tools" target="_blank" rel="noopener">GitHub</a>
+    </div>
+  </div>
+</div>
+
+<script>
+var THEME_ICONS = {
+  auto: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 2a10 10 0 0 0 0 20z" fill="currentColor" stroke="none"/></svg>',
+  light: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41"/></svg>',
+  dark: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79Z"/></svg>'
+};
+function applyThemeIcon(theme) {
+  var el = document.getElementById('theme-icon-wrap');
+  var btn = document.getElementById('theme-btn');
+  if (el) el.innerHTML = THEME_ICONS[theme] || THEME_ICONS.auto;
+  if (btn) btn.title = 'Тема: ' + (theme === 'auto' ? 'авто (по системе)' : (theme === 'dark' ? 'тёмная' : 'светлая'));
+}
+function cycleTheme() {
+  var html = document.documentElement;
+  var saved = localStorage.getItem('theme') || 'auto';
+  var next;
+  if (saved === 'auto') next = 'light';
+  else if (saved === 'light') next = 'dark';
+  else next = 'auto';
+  html.classList.remove('theme-light', 'theme-dark');
+  if (next !== 'auto') html.classList.add('theme-' + next);
+  localStorage.setItem('theme', next);
+  applyThemeIcon(next);
+}
+applyThemeIcon(localStorage.getItem('theme') || 'auto');
+</script>
+
+</body>
+</html>

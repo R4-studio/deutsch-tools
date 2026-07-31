@@ -68,7 +68,7 @@ body {
   padding: 20px;
 }
 .container {
-  max-width: 720px;
+  max-width: 900px;
   width: 100%;
   text-align: center;
 }
@@ -154,13 +154,186 @@ h1 {
 .card:hover .dt-cta__roll-inner { transform: translateY(-50%); }
 .card:hover .dt-cta__arrow { transform: rotate(-45deg); }
 .card.cheatsheet:hover { border-color: var(--accent); }
-.card.trainer:hover { border-color: var(--green); }
-.footer {
+.card.trainer:hover { border-color: var(--accent); }
+/* ─── Кнопка "Поддержать" ──────────────────────── */
+.dt-topnav__actions {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.dt-donate {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  padding: 8px 18px;
+  border-radius: 999px;
+  border: 1.5px solid var(--accent);
+  background: transparent;
+  color: var(--accent);
+  font-size: 13px;
+  font-weight: 600;
+  font-family: inherit;
+  line-height: 1;
+  cursor: pointer;
+  transition: filter 0.2s var(--ease-dt), transform 0.15s var(--ease-dt);
+}
+.dt-donate svg { width: 15px; height: 15px; display: block; }
+.dt-donate:hover { filter: brightness(0.88); }
+.dt-donate:active { transform: scale(0.96); }
+
+/* ─── Полоса-заглушек (Профиль/Установка/FAQ/О проекте/Обратная связь) ── */
+.dt-info-row {
+  display: flex;
+  align-items: stretch;
+  justify-content: space-between;
+  gap: 6px;
+  background: var(--bg-card);
+  border: 1px solid var(--border-soft);
+  border-radius: 20px;
+  padding: 18px 22px;
+  box-shadow: var(--shadow-card);
+  margin-bottom: 28px;
+  text-align: left;
+}
+.dt-info-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  background: transparent;
+  border: none;
+  padding: 0;
+  margin: 0;
+  cursor: pointer;
+  font-family: inherit;
+  color: var(--text-main);
+  text-decoration: none;
+  flex: 1;
+  min-width: 0;
+  text-align: left;
+}
+.dt-info-item__icon {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: var(--bg-panel);
+  border: 1px solid var(--border-soft);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  color: var(--text-main);
+  transition: background 0.2s var(--ease-dt);
+}
+.dt-info-item__icon svg { width: 16px; height: 16px; display: block; }
+.dt-info-item:hover .dt-info-item__icon { background: var(--bg-row-hover); }
+.dt-info-item__text { min-width: 0; }
+.dt-info-item__title {
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--text-title);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.dt-info-item__sub {
+  font-size: 11px;
+  color: var(--text-muted);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+@media (max-width: 700px) {
+  .dt-info-row { flex-wrap: wrap; row-gap: 16px; }
+  .dt-info-item { flex: 1 1 42%; }
+}
+@media (max-width: 420px) {
+  .dt-info-item { flex: 1 1 100%; }
+}
+
+/* ─── Футер ──────────────────────── */
+.dt-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 20px;
+  margin-top: 8px;
+  text-align: left;
+}
+.dt-footer__social-group {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+.dt-footer__social-label {
+  font-size: 11px;
+  color: var(--text-muted);
+}
+.dt-footer__social {
+  display: flex;
+  gap: 8px;
+}
+.dt-footer__social-btn {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background: var(--bg-panel);
+  border: 1px solid var(--border-soft);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  color: var(--text-main);
+  font-size: 11px;
+  font-weight: 700;
+  font-family: inherit;
+  text-decoration: none;
+  transition: background 0.2s var(--ease-dt);
+}
+.dt-footer__social-btn svg { width: 15px; height: 15px; display: block; }
+.dt-footer__social-btn:hover { background: var(--bg-row-hover); }
+.dt-footer__meta {
   font-size: 12px;
   color: var(--text-muted);
-  margin-top: 20px;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  flex-wrap: wrap;
 }
-.footer a { color: var(--accent); text-decoration: none; }
+.dt-footer__meta a {
+  color: var(--accent);
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  transition: filter 0.2s var(--ease-dt);
+}
+.dt-footer__meta a:hover { filter: brightness(0.85); }
+.dt-footer__meta a svg { width: 14px; height: 14px; display: block; }
+
+/* ─── Тост "Появится позже" ──────────────────────── */
+.dt-toast {
+  position: fixed;
+  left: 50%;
+  bottom: 28px;
+  transform: translateX(-50%) translateY(16px);
+  background: var(--grey-900);
+  color: #fff;
+  padding: 10px 20px;
+  border-radius: 999px;
+  font-size: 13px;
+  font-weight: 600;
+  box-shadow: var(--shadow-modal);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.25s var(--ease-dt), transform 0.25s var(--ease-dt);
+  z-index: 200;
+  white-space: nowrap;
+}
+.dt-toast.show {
+  opacity: 1;
+  transform: translateX(-50%) translateY(0);
+}
 
 /* ─── Модалка changelog ──────────── */
 .changelog-modal {
@@ -297,14 +470,20 @@ h1 {
     <span class="dt-topnav__mark">DT</span>
     <span class="dt-topnav__word">Deutsch Tools</span>
   </div>
-  <div class="dt-nav">
-    <button class="dt-icon-btn" id="bell-btn" onclick="toggleChangelog(event)" title="Что нового">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9"/><path d="M10.3 21a1.94 1.94 0 0 0 3.4 0"/></svg>
-      <span class="dt-icon-btn__dot" id="bell-dot"></span>
+  <div class="dt-topnav__actions">
+    <button class="dt-donate" onclick="showStub()" title="Поддержать проект">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20.8 4.6a5.5 5.5 0 0 0-7.8 0L12 5.6l-1-1a5.5 5.5 0 0 0-7.8 7.8l1 1L12 21l7.8-7.6 1-1a5.5 5.5 0 0 0 0-7.8Z"/></svg>
+      Поддержать
     </button>
-    <button class="dt-icon-btn" id="theme-btn" onclick="cycleTheme()" title="Переключить тему">
-      <span id="theme-icon-wrap"></span>
-    </button>
+    <div class="dt-nav">
+      <button class="dt-icon-btn" id="bell-btn" onclick="toggleChangelog(event)" title="Что нового">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9"/><path d="M10.3 21a1.94 1.94 0 0 0 3.4 0"/></svg>
+        <span class="dt-icon-btn__dot" id="bell-dot"></span>
+      </button>
+      <button class="dt-icon-btn" id="theme-btn" onclick="cycleTheme()" title="Переключить тему">
+        <span id="theme-icon-wrap"></span>
+      </button>
+    </div>
   </div>
 </div>
 
@@ -346,12 +525,67 @@ h1 {
     </a>
   </div>
 
-  <div class="footer">
-    A1 → A2 · открытый проект ·
-    <a href="https://github.com/r4-studio/deutsch-tools" target="_blank">GitHub</a>
+  <div class="dt-info-row">
+    <button class="dt-info-item" onclick="showStub()">
+      <span class="dt-info-item__icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4 3.5-7 8-7s8 3 8 7"/></svg></span>
+      <span class="dt-info-item__text">
+        <div class="dt-info-item__title">Профиль</div>
+        <div class="dt-info-item__sub">Скоро</div>
+      </span>
+    </button>
+    <button class="dt-info-item" onclick="showStub()">
+      <span class="dt-info-item__icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v12"/><path d="m7 10 5 5 5-5"/><path d="M4 21h16"/></svg></span>
+      <span class="dt-info-item__text">
+        <div class="dt-info-item__title">Установка</div>
+        <div class="dt-info-item__sub">Скоро</div>
+      </span>
+    </button>
+    <a class="dt-info-item" href="faq.html">
+      <span class="dt-info-item__icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M9.5 9a2.5 2.5 0 0 1 4.9.8c0 1.7-2.4 2-2.4 3.7"/><path d="M12 17h.01"/></svg></span>
+      <span class="dt-info-item__text">
+        <div class="dt-info-item__title">FAQ</div>
+        <div class="dt-info-item__sub">Вопросы и ответы</div>
+      </span>
+    </a>
+    <a class="dt-info-item" href="about.html">
+      <span class="dt-info-item__icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4"/><path d="M12 8h.01"/></svg></span>
+      <span class="dt-info-item__text">
+        <div class="dt-info-item__title">О проекте</div>
+        <div class="dt-info-item__sub">Подробнее</div>
+      </span>
+    </a>
+    <a class="dt-info-item" href="faq.html#contact">
+      <span class="dt-info-item__icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 11.5a8.38 8.38 0 0 1-8.5 8.4 8.5 8.5 0 0 1-4-1L3 20l1.1-5.5A8.4 8.4 0 0 1 12.5 3a8.5 8.5 0 0 1 8.5 8.5Z"/></svg></span>
+      <span class="dt-info-item__text">
+        <div class="dt-info-item__title">Обратная связь</div>
+        <div class="dt-info-item__sub">Напишите нам</div>
+      </span>
+    </a>
+  </div>
+
+  <div class="dt-footer">
+    <div class="dt-footer__social-group">
+      <div class="dt-footer__social-label">Связь и сообщества</div>
+      <div class="dt-footer__social">
+        <a class="dt-footer__social-btn" href="https://www.linkedin.com/in/r4-designer" target="_blank" rel="noopener" title="LinkedIn">in</a>
+        <a class="dt-footer__social-btn" href="https://www.behance.net/r4-designer" target="_blank" rel="noopener" title="Behance">Bē</a>
+        <a class="dt-footer__social-btn" href="https://www.instagram.com/r4.designer" target="_blank" rel="noopener" title="Instagram">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="0.6" fill="currentColor" stroke="none"/></svg>
+        </a>
+      </div>
+    </div>
+    <div class="dt-footer__meta">
+      <span id="footer-update">Update: — · открытый проект</span>
+      <a href="https://github.com/r4-studio/deutsch-tools" target="_blank">
+        <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2a10 10 0 0 0-3.16 19.5c.5.1.68-.22.68-.48v-1.7c-2.78.6-3.37-1.34-3.37-1.34-.46-1.16-1.11-1.47-1.11-1.47-.9-.62.07-.6.07-.6 1 .07 1.53 1.03 1.53 1.03.9 1.52 2.34 1.08 2.91.83.09-.65.35-1.08.63-1.33-2.22-.25-4.56-1.11-4.56-4.94 0-1.09.39-1.98 1.03-2.68-.1-.25-.45-1.27.1-2.65 0 0 .84-.27 2.75 1.02a9.6 9.6 0 0 1 5 0c1.91-1.29 2.75-1.02 2.75-1.02.55 1.38.2 2.4.1 2.65.64.7 1.03 1.59 1.03 2.68 0 3.84-2.34 4.68-4.57 4.93.36.31.68.92.68 1.85v2.74c0 .27.18.58.69.48A10 10 0 0 0 12 2Z"/></svg>
+        GitHub
+      </a>
+    </div>
   </div>
 </div>
 </div>
+
+<div class="dt-toast" id="dt-toast">Появится позже</div>
 
 <script>
 var THEME_ICONS = {
@@ -378,6 +612,16 @@ function cycleTheme() {
   applyThemeIcon(next);
 }
 applyThemeIcon(localStorage.getItem('theme') || 'auto');
+
+// ─── Заглушка "Появится позже" (донат, соцсети, профиль/установка/FAQ/о проекте/обратная связь) ──
+var SITE_VERSION = 'v68';
+function showStub(msg) {
+  var el = document.getElementById('dt-toast');
+  el.textContent = msg || 'Появится позже';
+  el.classList.add('show');
+  clearTimeout(showStub._t);
+  showStub._t = setTimeout(function() { el.classList.remove('show'); }, 1800);
+}
 
 // ─── Changelog ──────────────────────────────────
 var CHANGELOG = [];
@@ -500,6 +744,11 @@ document.addEventListener('keydown', function(ev) {
     var data = window.CHANGELOG;
     CHANGELOG = Array.isArray(data) ? data.slice(0, 10) : [];
     updateDot();
+    var footerUpdate = document.getElementById('footer-update');
+    if (footerUpdate) {
+      var dateStr = CHANGELOG.length ? formatDate(CHANGELOG[0].date) : '—';
+      footerUpdate.textContent = 'Update: ' + dateStr + ' - ' + SITE_VERSION + ' · открытый проект';
+    }
   };
   s.onerror = function() { /* нет файла — без точки, без модалки */ };
   document.head.appendChild(s);
