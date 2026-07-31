@@ -445,6 +445,12 @@
   color: #fff;
 }
 .dt-icon-btn.dt-icon-btn--dark:hover { background: var(--grey-800); }
+.dt-icon-btn--text {
+  font-family: inherit;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+}
 
 .dt-icon-btn__dot {
   position: absolute;

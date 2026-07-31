@@ -171,6 +171,151 @@ def item_to_js(item, key_order=None):
     return "  { " + ", ".join(parts) + " },"
 
 # ═══════════════════════════════════════════════════════════════
+# СЛОЙ 2 МУЛЬТИЯЗЫЧНОСТИ (бриф) — перевод VOCAB.ru → VOCAB.en через DeepL.
+# Без DEEPL_API_KEY просто тихо пропускается — сайт от поля en не зависит,
+# это доп. данные для будущего переключателя языка контента.
+# ═══════════════════════════════════════════════════════════════
+import json
+import os
+import urllib.request
+import urllib.parse
+
+try:
+    from dotenv import load_dotenv
+    load_dotenv(SCRIPT_DIR / ".env")
+except ImportError:
+    pass  # dotenv не обязателен — можно просто выставить переменную окружения
+
+DEEPL_API_KEY = os.environ.get("DEEPL_API_KEY", "").strip()
+
+def _deepl_base_url(api_key):
+    # Free-тариф — ключи оканчиваются на ":fx", у него отдельный домен API.
+    return "https://api-free.deepl.com/v2/translate" if api_key.endswith(":fx") \
+        else "https://api.deepl.com/v2/translate"
+
+def _deepl_translate_batch(texts, api_key):
+    """Один запрос к DeepL на пачку строк RU→EN. Возвращает переводы в том же порядке."""
+    data = urllib.parse.urlencode(
+        [("text", t) for t in texts] + [("source_lang", "RU"), ("target_lang", "EN")]
+    ).encode("utf-8")
+    req = urllib.request.Request(_deepl_base_url(api_key), data=data, headers={
+        "Authorization": f"DeepL-Auth-Key {api_key}",
+        "Content-Type": "application/x-www-form-urlencoded",
+    })
+    with urllib.request.urlopen(req, timeout=30) as resp:
+        result = json.loads(resp.read().decode("utf-8"))
+    return [tr["text"] for tr in result["translations"]]
+
+def _parse_old_vocab_en(old_content):
+    """Достаёт id→{ru, en} из VOCAB предыдущего data.js — по этому сверяем,
+    что реально изменилось, и зовём DeepL только для новых/изменённых слов
+    (diff-логика, как договаривались в брифе, без отдельного файла-кэша)."""
+    m = re.search(r"const VOCAB = (\[.*?\n\]);", old_content, re.S)
+    if not m:
+        return {}
+    raw = m.group(1)
+    raw = re.sub(r"^\s*//.*$", "", raw, flags=re.MULTILINE)
+    raw = re.sub(r'([{,]\s*)([a-zA-Z_][a-zA-Z0-9_]*)\s*:', r'\1"\2":', raw)
+    raw = re.sub(r",(\s*[\]}])", r"\1", raw)
+    try:
+        old_vocab = json.loads(raw)
+    except json.JSONDecodeError:
+        return {}
+    return {v["id"]: {"ru": v.get("ru"), "en": v.get("en")}
+            for v in old_vocab if v.get("id") and v.get("en")}
+
+def translate_vocab_to_english(all_vocab, old_en_map, warn):
+    if not DEEPL_API_KEY:
+        if any(item.get("ru") for item in all_vocab):
+            warn.append("DEEPL_API_KEY не задан — перевод en пропущен (см. README, раздел «Мультиязычность»)")
+        return
+
+    to_translate = []
+    for item in all_vocab:
+        ru = item.get("ru")
+        if not ru:
+            continue
+        old = old_en_map.get(item["id"])
+        if old and old.get("ru") == ru and old.get("en"):
+            item["en"] = old["en"]
+        else:
+            to_translate.append(item)
+
+    if not to_translate:
+        print("  ✓ EN-перевод: новых/изменённых слов нет, всё уже переведено раньше")
+        return
+
+    print(f"  → EN-перевод через DeepL: {len(to_translate)} новых/изменённых слов...")
+    BATCH = 50
+    ok = 0
+    for i in range(0, len(to_translate), BATCH):
+        chunk = to_translate[i:i + BATCH]
+        try:
+            translations = _deepl_translate_batch([it["ru"] for it in chunk], DEEPL_API_KEY)
+        except Exception as e:
+            warn.append(f"DeepL: ошибка перевода батча {i}-{i + len(chunk)}: {e}")
+            continue
+        for item, en_text in zip(chunk, translations):
+            item["en"] = en_text
+            ok += 1
+    print(f"  ✓ EN-перевод: переведено {ok}/{len(to_translate)}")
+
+def _parse_old_array_by_id(old_content, const_name):
+    """Как _parse_old_vocab_en, но для любого const-массива по имени —
+    достаёт id → полный словарь предыдущего прогона (для diff-кэша переводов
+    RULES/TERMS/CONJUGATIONS/REGEL_VERBS/SOUNDS)."""
+    m = re.search(rf"const {const_name} = (\[.*?\n\]);", old_content, re.S)
+    if not m:
+        return {}
+    raw = m.group(1)
+    raw = re.sub(r"^\s*//.*$", "", raw, flags=re.MULTILINE)
+    raw = re.sub(r'([{,]\s*)([a-zA-Z_][a-zA-Z0-9_]*)\s*:', r'\1"\2":', raw)
+    raw = re.sub(r",(\s*[\]}])", r"\1", raw)
+    try:
+        items = json.loads(raw)
+    except json.JSONDecodeError:
+        return {}
+    return {it["id"]: it for it in items if it.get("id")}
+
+def translate_field_to_english(items, field, en_field, old_map, warn, label):
+    """Обобщённая версия translate_vocab_to_english — переводит item[field] →
+    item[en_field] через DeepL для любого списка (RULES.title/content_md/note,
+    TERMS.ru/note, CONJUGATIONS.ru, REGEL_VERBS.ru, SOUNDS.pronunciation, ...).
+    Diff-логика та же: сверяем с old_map по id, зовём DeepL только для
+    новых/изменённых значений поля."""
+    if not DEEPL_API_KEY:
+        return
+
+    to_translate = []
+    for item in items:
+        val = item.get(field)
+        if not val or not isinstance(val, str) or not re.search(r"[А-Яа-яЁё]", val):
+            continue
+        old = old_map.get(item.get("id"), {})
+        if old.get(field) == val and old.get(en_field):
+            item[en_field] = old[en_field]
+        else:
+            to_translate.append(item)
+
+    if not to_translate:
+        return
+
+    print(f"  → {label}.{field} → {en_field}: {len(to_translate)} новых/изменённых...")
+    BATCH = 50
+    ok = 0
+    for i in range(0, len(to_translate), BATCH):
+        chunk = to_translate[i:i + BATCH]
+        try:
+            translations = _deepl_translate_batch([it[field] for it in chunk], DEEPL_API_KEY)
+        except Exception as e:
+            warn.append(f"DeepL: ошибка перевода {label}.{field} батч {i}-{i + len(chunk)}: {e}")
+            continue
+        for item, en_text in zip(chunk, translations):
+            item[en_field] = en_text
+            ok += 1
+    print(f"  ✓ {label}.{en_field}: переведено {ok}/{len(to_translate)}")
+
+# ═══════════════════════════════════════════════════════════════
 # Утилиты для чтения xlsx
 # ═══════════════════════════════════════════════════════════════
 def clean(v):
@@ -1399,6 +1544,28 @@ if __name__ == '__main__':
     assign_ids(terms, "t", WARN, "terms", width=3)
     assign_ids(sounds, "s", WARN, "sounds", width=3)
 
+    print("\n=== EN-перевод словаря (мультиязычность, слой 2 — DeepL) ===")
+    old_en_map = _parse_old_vocab_en(old_content)
+    translate_vocab_to_english(all_vocab, old_en_map, WARN)
+
+    # То же самое для остального контента cheatsheet, которое не входит в VOCAB:
+    # правила (заголовок + текст + примечание), термины (перевод + примечание),
+    # спряжения (перевод глагола), произношение (кириллическая транскрипция).
+    old_rules_map = _parse_old_array_by_id(old_content, "RULES")
+    old_terms_map = _parse_old_array_by_id(old_content, "TERMS")
+    old_conj_map = _parse_old_array_by_id(old_content, "CONJUGATIONS")
+    old_regel_map = _parse_old_array_by_id(old_content, "REGEL_VERBS")
+    old_sounds_map = _parse_old_array_by_id(old_content, "SOUNDS")
+
+    translate_field_to_english(rules, "title", "titleEn", old_rules_map, WARN, "RULES")
+    translate_field_to_english(rules, "content_md", "content_md_en", old_rules_map, WARN, "RULES")
+    translate_field_to_english(rules, "note", "noteEn", old_rules_map, WARN, "RULES")
+    translate_field_to_english(terms, "ru", "en", old_terms_map, WARN, "TERMS")
+    translate_field_to_english(terms, "note", "noteEn", old_terms_map, WARN, "TERMS")
+    translate_field_to_english(conjugations, "ru", "en", old_conj_map, WARN, "CONJUGATIONS")
+    translate_field_to_english(regel_verbs, "ru", "en", old_regel_map, WARN, "REGEL_VERBS")
+    translate_field_to_english(sounds, "pronunciation", "pronunciationEn", old_sounds_map, WARN, "SOUNDS")
+
     print("\n=== Генерирую BLOCKS / TOPIC_TITLES / TAB_TITLES (немецкий) ===")
     BLOCKS_DATA = build_blocks(TAXONOMY, all_vocab)
     TOPIC_TITLES_DATA = build_topic_titles(TAXONOMY)
@@ -1413,7 +1580,7 @@ if __name__ == '__main__':
     # ═══════════════════════════════════════════════════════════════
     print("\n=== Собираю data.js ===")
 
-    VOCAB_KEYS = ["id", "de", "altDe", "ru", "altRu", "pos", "gender", "plural", "altPlural",
+    VOCAB_KEYS = ["id", "de", "altDe", "ru", "altRu", "en", "pos", "gender", "plural", "altPlural",
                   "level", "topics", "domen", "group", "note", "new",
                   "comparative", "superlative", "antonym", "derivedFrom",
                   "kind", "case", "digit", "transcription", "context",
@@ -1421,18 +1588,18 @@ if __name__ == '__main__':
                   "aux", "partizip2", "praeteritum",
                   "priority", "source", "exampleDe", "exampleRu", "quizUse",
                   "strictOrder", "warning", "label"]
-    REGEL_KEYS = ["id", "verb", "ru", "forms", "partizip2", "aux", "praeteritum",
+    REGEL_KEYS = ["id", "verb", "ru", "en", "forms", "partizip2", "aux", "praeteritum",
                   "separable", "reflexive", "impersonal", "case"]
-    CONJ_KEYS = ["id", "verb", "ru", "tense", "modal", "level", "pronouns", "forms",
+    CONJ_KEYS = ["id", "verb", "ru", "en", "tense", "modal", "level", "pronouns", "forms",
                  "partizip2", "aux", "praeteritum", "separable", "reflexive",
                  "impersonal", "case"]
     Q_KEYS = ["id", "topic", "level", "difficulty", "type", "q",
               "opts", "ans", "words", "pronouns", "altAns", "hint", "explain"]
-    R_KEYS = ["id", "title", "topic", "domen", "group", "level", "content_md",
-              "examples", "note", "new"]
-    T_KEYS = ["id", "term", "plural", "ru", "topic", "domen", "group", "level",
-              "priority", "source", "note"]
-    S_KEYS = ["id", "combo", "pronunciation", "example", "translation", "domen", "group", "note"]
+    R_KEYS = ["id", "title", "titleEn", "topic", "domen", "group", "level", "content_md", "content_md_en",
+              "examples", "note", "noteEn", "new"]
+    T_KEYS = ["id", "term", "plural", "ru", "en", "topic", "domen", "group", "level",
+              "priority", "source", "note", "noteEn"]
+    S_KEYS = ["id", "combo", "pronunciation", "pronunciationEn", "example", "translation", "domen", "group", "note"]
 
     out = []
     out.append("// ═══════════════════════════════════════════════════════════════")

@@ -7,6 +7,9 @@
 <meta property="og:description" content="Интерактивный справочник по немецкому: слова, правила, произношение">
 <meta property="og:type" content="website">
 <link rel="stylesheet" href="theme.css?v=20260730">
+<script src="i18n/ru.js?v=2"></script>
+<script src="i18n/en.js?v=2"></script>
+<script src="i18n/i18n.js?v=1"></script>
 <style>
 *{box-sizing:border-box;margin:0;padding:0}
 body{font-family:sans-serif;font-size:13px;color:var(--text-main);line-height:1.4;background:var(--bg-body);overflow-x:hidden}
@@ -463,21 +466,41 @@ function escHtml(s) {
     .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
     .replace(/"/g, '&quot;');
 }
+// wordText(item) — перевод слова с учётом языка (мультиязычность, слой 2):
+// en, если выбран английский и оно переведено (VOCAB.en из update_data.py/DeepL),
+// иначе всегда ru. Безопасно для CONJUGATIONS/TERMS — там en нет, просто вернёт ru.
+function wordText(item) {
+  if (!item) return '';
+  var lang = (typeof getLang === 'function') ? getLang() : 'ru';
+  if (lang === 'en' && item.en) return item.en;
+  return item.ru != null ? item.ru : '';
+}
+// wordField(item, 'note', 'noteEn') — как wordText(), но для произвольной пары
+// полей (RULES.title/titleEn, .content_md/content_md_en, .note/noteEn;
+// SOUNDS.pronunciation/pronunciationEn и т.д.), которых у update_data.py/DeepL
+// может не быть переведено (новое поле, ключ ещё не прогоняли) — тогда просто ru.
+function wordField(item, field, enField) {
+  if (!item) return '';
+  var lang = (typeof getLang === 'function') ? getLang() : 'ru';
+  if (lang === 'en' && item[enField]) return item[enField];
+  return item[field] != null ? item[field] : '';
+}
 </script>
 </head><body>
   <div class="search-bar">
   <div class="search-bar-inner">
-  <a href="index.html" class="home-btn" title="На главную"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9.5 12 3l9 6.5"/><path d="M5 8v11a1 1 0 0 0 1 1h4v-6h4v6h4a1 1 0 0 0 1-1V8"/></svg></a>
-  <button class="burger-btn" onclick="openMenu()" title="Меню"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 6h16M4 12h16M4 18h16"/></svg></button>
-  <input type="text" id="searchInput" placeholder="Поиск...">
-  <button id="searchBtn" style="padding:9px 16px;font-size:13px;border-radius:999px;background:var(--accent);color:var(--on-color);border:none;cursor:pointer;font-weight:600;white-space:nowrap;">Найти</button>
+  <a href="index.html" class="home-btn" data-i18n-title="nav.back_home" title="На главную"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9.5 12 3l9 6.5"/><path d="M5 8v11a1 1 0 0 0 1 1h4v-6h4v6h4a1 1 0 0 0 1-1V8"/></svg></a>
+  <button class="burger-btn" onclick="openMenu()" data-i18n-title="cheatsheet.menu_title" title="Меню"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 6h16M4 12h16M4 18h16"/></svg></button>
+  <input type="text" id="searchInput" data-i18n-placeholder="cheatsheet.search_placeholder" placeholder="Поиск...">
+  <button id="searchBtn" data-i18n="cheatsheet.search_button" style="padding:9px 16px;font-size:13px;border-radius:999px;background:var(--accent);color:var(--on-color);border:none;cursor:pointer;font-weight:600;white-space:nowrap;">Найти</button>
   <span id="searchCount" class="search-count-label" style="font-size:12px;color:var(--text-muted);white-space:nowrap;"></span>
+  <button class="theme-toggle" id="lang-btn" onclick="cycleLang()" style="font-size:10px;font-weight:700;" title="Сменить язык">RU</button>
   <button class="theme-toggle" id="themeToggle" onclick="cycleTheme()" title="Переключить тему"></button>
 </div>
 </div>
 
 <!-- Дропдаун результатов поиска -->
-<div class="search-dropdown" style="margin-top:30px" id="searchDropdown" role="listbox" aria-label="Результаты поиска"></div>
+<div class="search-dropdown" style="margin-top:30px" id="searchDropdown" role="listbox" data-i18n-aria="cheatsheet.search_results_aria" aria-label="Результаты поиска"></div>
 
 <!-- Backdrop (затемнение фона) -->
 <div class="menu-backdrop" id="menuBackdrop" onclick="closeMenu()"></div>
@@ -485,8 +508,8 @@ function escHtml(s) {
 <!-- Выезжающее меню -->
 <div class="side-menu" id="sideMenu">
   <div class="side-menu-header">
-    <span>Разделы</span>
-    <button class="side-menu-close" onclick="closeMenu()">×</button>
+    <span data-i18n="cheatsheet.sections_label">Разделы</span>
+    <button class="side-menu-close" onclick="closeMenu()" data-i18n-aria="cheatsheet.menu_close" aria-label="Закрыть">×</button>
   </div>
   <div id="sideMenuItems"></div>
 </div>
@@ -2591,7 +2614,8 @@ function applyTheme(theme) {
       dark: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79Z"/></svg>'
     };
     btn.innerHTML = THEME_ICONS[theme] || THEME_ICONS.auto;
-    btn.title = 'Тема: ' + (theme === 'auto' ? 'авто (по системе)' : (theme === 'dark' ? 'тёмная' : 'светлая'));
+    var tt = (typeof t === 'function') ? t : function(k) { return k; };
+    btn.title = tt('theme.prefix') + (theme === 'auto' ? tt('theme.auto') : (theme === 'dark' ? tt('theme.dark') : tt('theme.light')));
   }
   // Форсируем repaint видимой панели — обходит баг ленивого рендера CSS-переменных
   var activePanel = document.querySelector('.panel.active');
@@ -2983,7 +3007,8 @@ function show(id){
     let html = '';
     top.forEach((e, i) => {
       const icon = ic(ICONS[e.kind]) || '•';
-      const sec = e.secondary ? ' <span class="sr-secondary">— ' + escHtml(e.secondary) + '</span>' : '';
+      const secText = (e.item && e.item.ru != null) ? wordText(e.item) : e.secondary;
+      const sec = secText ? ' <span class="sr-secondary">— ' + escHtml(secText) + '</span>' : '';
       html += '<div class="search-result" data-idx="' + i + '" role="option">'
             + '<span class="sr-icon">' + icon + '</span>'
             + '<span class="sr-kind">' + e.kind + ':</span>'
@@ -2991,7 +3016,7 @@ function show(id){
             + '</div>';
     });
     if (total > top.length) {
-      html += '<div class="search-more">и ещё ' + (total - top.length) + ' — уточни запрос</div>';
+      html += '<div class="search-more">' + t('cheatsheet.search_more_prefix') + (total - top.length) + t('cheatsheet.search_more_suffix') + '</div>';
     }
     dd.innerHTML = html;
     dd.classList.add('open');
@@ -3079,7 +3104,7 @@ function show(id){
 </script>
 
 <div class="to-top to-top-fixed" onclick="window.scrollTo({top:0, behavior:'smooth'})">
-  ↑ Наверх
+  ↑ <span data-i18n="cheatsheet.to_top">Наверх</span>
 </div>
 <div id="footer-version" style="text-align:center;font-size:11px;color:var(--text-muted);padding:6px;"></div>
 <script>
@@ -3127,26 +3152,26 @@ function show(id){
     const noteCol = noteParts.join(' | ');
     return '<tr data-vid="' + escHtml(item.id) + '"><td>' + escHtml(item.de) + '</td>'
          + '<td>' + badge + '</td>'
-         + '<td>' + escHtml(item.ru) + (noteCol ? ' | ' + escHtml(noteCol) : '') + '</td></tr>';
+         + '<td>' + escHtml(wordText(item)) + (noteCol ? ' | ' + escHtml(noteCol) : '') + '</td></tr>';
   }
 
   // ─── Рендер обычной таблицы (verb/adj/adv/pron/phrase) ──────────────────
   function renderSimpleRow(item) {
     return '<tr data-vid="' + escHtml(item.id) + '"><td>' + escHtml(item.de) + '</td>'
-         + '<td>' + escHtml(item.ru) + '</td>'
+         + '<td>' + escHtml(wordText(item)) + '</td>'
          + '<td>' + escHtml(item.note || '') + '</td></tr>';
   }
 
   // ─── Рендер строки глагола с Partizip II ────────────────────────────────
   function renderVerbRow(item) {
     return '<tr data-vid="' + escHtml(item.id) + '"><td>' + escHtml(item.de) + '</td>'
-         + '<td>' + escHtml(item.ru) + '</td>'
+         + '<td>' + escHtml(wordText(item)) + '</td>'
          + '<td>' + escHtml(item.note || '') + '</td></tr>';
   }
 
   // ─── Рендер строки чисел (cifra | de | произношение) ────────────────────
   function renderNumRow(item) {
-    return '<tr data-vid="' + escHtml(item.id) + '"><td>' + escHtml(item.ru) + '</td>'
+    return '<tr data-vid="' + escHtml(item.id) + '"><td>' + escHtml(wordText(item)) + '</td>'
          + '<td>' + escHtml(item.de) + '</td>'
          + '<td>' + escHtml(item.note || '') + '</td></tr>';
   }
@@ -3198,7 +3223,7 @@ function show(id){
     const panel = document.getElementById('tab-nums');
     if (!panel) return;
     panel.innerHTML = renderSections('nums', ['num'], renderNumRow,
-      ['Цифра', 'Немецкий', 'Произношение']);
+      [t('cheatsheet.th_number'), t('cheatsheet.th_german'), t('cheatsheet.th_pronunciation')]);
   }
 
   // ─── Рендер: sounds (произношение) ───────────────────────────────────────
@@ -3206,11 +3231,11 @@ function show(id){
     const panel = document.getElementById('tab-sounds');
     if (!panel || typeof SOUNDS === 'undefined') return;
     let html = '<div class="section">'
-             + '<div class="section-title">' + ic('waveform') + ' Произношение букв и сочетаний</div>'
-             + '<table><thead><tr><th>Буква/сочетание</th><th>Произношение</th><th>Пример</th></tr></thead><tbody>';
+             + '<div class="section-title">' + ic('waveform') + ' ' + t('cheatsheet.sounds_title') + '</div>'
+             + '<table><thead><tr><th>' + t('cheatsheet.th_letter_combo') + '</th><th>' + t('cheatsheet.th_pronunciation') + '</th><th>' + t('cheatsheet.th_example') + '</th></tr></thead><tbody>';
     for (const s of SOUNDS) {
       html += '<tr><td>' + escHtml(s.combo) + '</td>'
-            + '<td>' + escHtml(s.pronunciation) + '</td>'
+            + '<td>' + escHtml(wordField(s, 'pronunciation', 'pronunciationEn')) + '</td>'
             + '<td>' + escHtml(s.example) + '</td></tr>';
     }
     html += '</tbody></table></div>';
@@ -3222,7 +3247,7 @@ function show(id){
     const panel = document.getElementById('tab-verbs');
     if (!panel) return;
     panel.innerHTML = renderSections('verbs', ['verb'], renderVerbRow,
-      ['Глагол', 'Перевод', 'Примечание']);
+      [t('cheatsheet.th_verb'), t('cheatsheet.th_translation'), t('cheatsheet.th_note')]);
   }
 
   // ─── Рендер: unregel (спряжения) ────────────────────────────────────────
@@ -3242,7 +3267,7 @@ function show(id){
       const vidAttr = vid ? ' data-vid="' + escHtml(vid) + '"' : '';
       const modalTag = c.modal ? ' <span style="background:var(--c-modal-tag-bg);padding:2px 8px;border-radius:6px;font-size:12px;color:var(--c-modal-tag-fg)">Modalverb</span>' : '';
       html += '<div class="rule-box conj-card"' + vidAttr + ' style="cursor:' + (vid ? 'pointer' : 'default') + '"><h3>' + escHtml(c.verb)
-            + (c.ru ? ' — ' + escHtml(c.ru) : '') + modalTag + '</h3>'
+            + (c.ru ? ' — ' + escHtml(wordText(c)) : '') + modalTag + '</h3>'
             + '<table class="conj-table"><tbody>';
       for (let i = 0; i < c.pronouns.length; i++) {
         html += '<tr><td>' + escHtml(c.pronouns[i]) + '</td>'
@@ -3276,14 +3301,14 @@ function show(id){
 
     // ─── Правило 1: Как образуется Perfekt ────────────────────────────────
     html += '<div class="section">';
-    html += '<div class="section-title">' + ic('history') + ' Что такое Perfekt</div>';
+    html += '<div class="section-title">' + ic('history') + ' ' + t('perfekt.title') + '</div>';
     html += '<div class="rule-box">';
-    html += '<p>Прошедшее время в разговорной речи. Образуется по схеме:</p>';
+    html += '<p>' + t('perfekt.p1') + '</p>';
     html += '<p style="text-align:center;font-size:18px;margin:14px 0;padding:10px;background:var(--bg-th);border-radius:8px">'
-          + '<b>haben</b> или <b style="color:var(--accent-red)">sein</b> (в Präsens) + <b>Partizip II</b></p>';
-    html += '<p style="font-size:13px"><b>Пример:</b><br>'
-          + 'Ich <b>habe</b> ein Buch <b>gelesen</b>. — Я прочитал книгу.<br>'
-          + 'Wir <b style="color:var(--accent-red)">sind</b> nach Berlin <b>gefahren</b>. — Мы поехали в Берлин.</p>';
+          + '<b>haben</b> ' + t('perfekt.or') + ' <b style="color:var(--accent-red)">sein</b> (' + t('perfekt.in_praesens') + ') + <b>Partizip II</b></p>';
+    html += '<p style="font-size:13px"><b>' + t('perfekt.example_label') + '</b><br>'
+          + 'Ich <b>habe</b> ein Buch <b>gelesen</b>. — ' + t('perfekt.ex1_ru') + '<br>'
+          + 'Wir <b style="color:var(--accent-red)">sind</b> nach Berlin <b>gefahren</b>. — ' + t('perfekt.ex2_ru') + '</p>';
     html += '</div></div>';
 
     // ─── Правило 2: Когда haben, когда sein ──────────────────────────────
@@ -3291,45 +3316,45 @@ function show(id){
     html += '<div class="section-title">' + ic('scale') + ' haben vs sein</div>';
     html += '<div class="rule-box">';
     html += '<table style="margin-bottom:10px;width:100%">';
-    html += '<tr><th style="text-align:left;padding:6px 10px">Вспомогательный</th>'
-          + '<th style="text-align:left;padding:6px 10px">Когда использовать</th>'
-          + '<th style="text-align:left;padding:6px 10px">Пример</th></tr>';
+    html += '<tr><th style="text-align:left;padding:6px 10px">' + t('perfekt.th_aux') + '</th>'
+          + '<th style="text-align:left;padding:6px 10px">' + t('perfekt.th_when') + '</th>'
+          + '<th style="text-align:left;padding:6px 10px">' + t('cheatsheet.th_example') + '</th></tr>';
     html += '<tr><td style="padding:6px 10px"><b style="color:var(--accent-blue)">haben</b></td>'
-          + '<td style="padding:6px 10px">большинство глаголов (действия)</td>'
+          + '<td style="padding:6px 10px">' + t('perfekt.haben_usage') + '</td>'
           + '<td style="padding:6px 10px">Ich <b>habe</b> gegessen.</td></tr>';
     html += '<tr><td style="padding:6px 10px"><b style="color:var(--accent-red)">sein</b></td>'
-          + '<td style="padding:6px 10px">движение / изменение состояния<br>+ sein, bleiben, werden</td>'
+          + '<td style="padding:6px 10px">' + t('perfekt.sein_usage') + '</td>'
           + '<td style="padding:6px 10px">Er <b>ist</b> gefahren.</td></tr>';
     html += '</table>';
-    html += '<p style="font-size:12px" data-icon="bulb">Со <b style="color:var(--accent-red)">sein</b> запоминай: '
+    html += '<p style="font-size:12px" data-icon="bulb">' + t('perfekt.sein_memo_prefix') + ' <b style="color:var(--accent-red)">sein</b> ' + t('perfekt.sein_memo_suffix') + ' '
           + '<i>gehen, kommen, fahren, fliegen, schwimmen, reiten, bleiben, werden, sein</i></p>';
     html += '</div></div>';
 
     // ─── Правило 3: Как образуется Partizip II ───────────────────────────
     html += '<div class="section">';
-    html += '<div class="section-title">' + ic('ruleset') + ' Как образовать Partizip II</div>';
+    html += '<div class="section-title">' + ic('ruleset') + ' ' + t('perfekt.p2_title') + '</div>';
     html += '<div class="rule-box">';
     html += '<table style="margin-bottom:10px;width:100%">';
-    html += '<tr><th style="text-align:left;padding:6px 10px">Тип</th>'
-          + '<th style="text-align:left;padding:6px 10px">Правило</th>'
-          + '<th style="text-align:left;padding:6px 10px">Пример</th></tr>';
-    html += '<tr><td style="padding:6px 10px"><b>regelmäßig (стандарт)</b></td>'
-          + '<td style="padding:6px 10px">ge + основа + t</td>'
+    html += '<tr><th style="text-align:left;padding:6px 10px">' + t('cheatsheet.th_type') + '</th>'
+          + '<th style="text-align:left;padding:6px 10px">' + t('cheatsheet.th_rule') + '</th>'
+          + '<th style="text-align:left;padding:6px 10px">' + t('cheatsheet.th_example') + '</th></tr>';
+    html += '<tr><td style="padding:6px 10px"><b>regelmäßig (' + t('perfekt.standard') + ')</b></td>'
+          + '<td style="padding:6px 10px">ge + ' + t('perfekt.stem') + ' + t</td>'
           + '<td style="padding:6px 10px">machen → <b>gemacht</b></td></tr>';
-    html += '<tr><td style="padding:6px 10px">основа на -t/-d</td>'
-          + '<td style="padding:6px 10px">ge + основа + et</td>'
+    html += '<tr><td style="padding:6px 10px">' + t('perfekt.stem_td') + '</td>'
+          + '<td style="padding:6px 10px">ge + ' + t('perfekt.stem') + ' + et</td>'
           + '<td style="padding:6px 10px">arbeiten → <b>gearbeitet</b></td></tr>';
-    html += '<tr><td style="padding:6px 10px">на -ieren</td>'
-          + '<td style="padding:6px 10px">БЕЗ ge-, основа + t</td>'
+    html += '<tr><td style="padding:6px 10px">' + t('perfekt.on_ieren') + '</td>'
+          + '<td style="padding:6px 10px">' + t('perfekt.no_ge') + ', ' + t('perfekt.stem') + ' + t</td>'
           + '<td style="padding:6px 10px">studieren → <b>studiert</b></td></tr>';
-    html += '<tr><td style="padding:6px 10px">неотделяемая приставка<br>(be-, ent-, er-, ge-, ver-, zer-)</td>'
-          + '<td style="padding:6px 10px">БЕЗ ge-</td>'
+    html += '<tr><td style="padding:6px 10px">' + t('perfekt.untrennbar') + '<br>(be-, ent-, er-, ge-, ver-, zer-)</td>'
+          + '<td style="padding:6px 10px">' + t('perfekt.no_ge') + '</td>'
           + '<td style="padding:6px 10px">besuchen → <b>besucht</b></td></tr>';
-    html += '<tr><td style="padding:6px 10px">отделяемая приставка<br>(auf-, ein-, mit-, ab- ...)</td>'
-          + '<td style="padding:6px 10px">приставка + ge + основа + t</td>'
+    html += '<tr><td style="padding:6px 10px">' + t('perfekt.trennbar') + '<br>(auf-, ein-, mit-, ab- ...)</td>'
+          + '<td style="padding:6px 10px">' + t('perfekt.trennbar_rule') + '</td>'
           + '<td style="padding:6px 10px">aufmachen → <b>aufgemacht</b></td></tr>';
     html += '<tr><td style="padding:6px 10px"><b>unregelmäßig</b></td>'
-          + '<td style="padding:6px 10px">учить наизусть!</td>'
+          + '<td style="padding:6px 10px">' + t('perfekt.memorize') + '</td>'
           + '<td style="padding:6px 10px">essen → <b>gegessen</b><br>gehen → <b>gegangen</b></td></tr>';
     html += '</table>';
     html += '</div></div>';
@@ -3344,10 +3369,10 @@ function show(id){
         }
       }
       html += '<div class="section">';
-      html += '<div class="section-title">' + ic('clipboard') + ' Unregelmäßig — таблица Partizip II</div>';
+      html += '<div class="section-title">' + ic('clipboard') + ' Unregelmäßig — ' + t('perfekt.unregel_table_title') + '</div>';
       html += '<table style="width:100%"><thead><tr>'
             + '<th style="text-align:left;padding:6px 10px">Infinitiv</th>'
-            + '<th style="text-align:left;padding:6px 10px">Перевод</th>'
+            + '<th style="text-align:left;padding:6px 10px">' + t('cheatsheet.th_translation') + '</th>'
             + '<th style="text-align:left;padding:6px 10px">Hilfsverb</th>'
             + '<th style="text-align:left;padding:6px 10px">Partizip II</th>'
             + '</tr></thead><tbody>';
@@ -3359,7 +3384,7 @@ function show(id){
         const auxColor = c.aux === 'sein' ? 'var(--accent-red)' : 'var(--accent-blue)';
         html += '<tr' + vidAttr + '>'
               + '<td style="padding:5px 10px;border-bottom:1px solid var(--border-soft)"><b>' + escHtml(c.verb) + '</b></td>'
-              + '<td style="padding:5px 10px;border-bottom:1px solid var(--border-soft);color:var(--text-muted)">' + escHtml(c.ru || '') + '</td>'
+              + '<td style="padding:5px 10px;border-bottom:1px solid var(--border-soft);color:var(--text-muted)">' + escHtml(wordText(c)) + '</td>'
               + '<td style="padding:5px 10px;border-bottom:1px solid var(--border-soft)"><b style="color:' + auxColor + '">' + escHtml(c.aux || '') + '</b></td>'
               + '<td style="padding:5px 10px;border-bottom:1px solid var(--border-soft)"><b>' + escHtml(c.partizip2) + '</b></td>'
               + '</tr>';
@@ -3376,7 +3401,7 @@ function show(id){
     const panel = document.getElementById('tab-nouns');
     if (!panel) return;
     panel.innerHTML = renderSections('nouns', ['noun'], renderNounsRow,
-      ['Существительное', 'Род', 'Перевод / Примечание']);
+      [t('cheatsheet.th_noun'), t('cheatsheet.th_gender'), t('cheatsheet.th_translation_note')]);
   }
 
   // ─── Рендер: adj/adv/mestoim ────────────────────────────────────────────
@@ -3384,19 +3409,19 @@ function show(id){
     const panel = document.getElementById('tab-adj');
     if (!panel) return;
     panel.innerHTML = renderSections('adj', ['adj'], renderSimpleRow,
-      ['Прилагательное', 'Перевод', 'Примечание']);
+      [t('cheatsheet.th_adj'), t('cheatsheet.th_translation'), t('cheatsheet.th_note')]);
   }
   function renderAdv() {
     const panel = document.getElementById('tab-adv');
     if (!panel) return;
     panel.innerHTML = renderSections('adv', ['adv'], renderSimpleRow,
-      ['Наречие', 'Перевод', 'Примечание']);
+      [t('cheatsheet.th_adv'), t('cheatsheet.th_translation'), t('cheatsheet.th_note')]);
   }
   function renderMestoim() {
     const panel = document.getElementById('tab-mestoim');
     if (!panel) return;
     let html = renderSections('mestoim', ['pron'], renderSimpleRow,
-      ['Местоимение', 'Перевод', 'Примечание']);
+      [t('cheatsheet.th_pron'), t('cheatsheet.th_translation'), t('cheatsheet.th_note')]);
     // Добавляем правила склонения местоимений (из RULES с topic grammar:pronouns)
     if (typeof RULES !== 'undefined') {
       const pronounRules = RULES.filter(r => r.topic === 'grammar:pronouns');
@@ -3426,11 +3451,11 @@ function show(id){
     for (const topic of Object.keys(groups)) {
       html += '<div class="section">'
             + '<div class="section-title">' + topicTitleHtml(topic) + '</div>'
-            + '<table><thead><tr><th>Термин</th><th>Перевод</th><th>Примечание</th></tr></thead><tbody>';
+            + '<table><thead><tr><th>' + t('cheatsheet.th_term') + '</th><th>' + t('cheatsheet.th_translation') + '</th><th>' + t('cheatsheet.th_note') + '</th></tr></thead><tbody>';
       for (const t of groups[topic]) {
         html += '<tr><td>' + escHtml(t.term) + '</td>'
-              + '<td>' + escHtml(t.ru) + '</td>'
-              + '<td>' + escHtml(t.note) + '</td></tr>';
+              + '<td>' + escHtml(wordText(t)) + '</td>'
+              + '<td>' + escHtml(wordField(t, 'note', 'noteEn')) + '</td></tr>';
       }
       html += '</tbody></table></div>';
     }
@@ -3455,12 +3480,12 @@ function show(id){
       for (const r of groups[topic]) {
         html += '<div class="rule-box" style="margin-bottom:18px">';
         if (r.title) {
-          html += '<div class="section-title" style="margin-bottom:8px">' + escHtml(r.title) + '</div>';
+          html += '<div class="section-title" style="margin-bottom:8px">' + escHtml(wordField(r, 'title', 'titleEn')) + '</div>';
         }
-        html += renderRuleContent(r.content_md || '');
+        html += renderRuleContent(wordField(r, 'content_md', 'content_md_en'));
         if (r.note) {
           html += '<div style="margin-top:10px;padding:8px 12px;background:var(--tip-bg);border-left:3px solid var(--tip-border);border-radius:4px;font-size:13px;color:var(--text-muted)">'
-               + ic('bulb') + ' ' + renderInline(r.note) + '</div>';
+               + ic('bulb') + ' ' + renderInline(wordField(r, 'note', 'noteEn')) + '</div>';
         }
         html += '</div>';
       }
@@ -3552,7 +3577,7 @@ function show(id){
     const panel = document.getElementById('tab-phrases');
     if (!panel) return;
     panel.innerHTML = renderSections('phrases', ['phrase'], renderSimpleRow,
-      ['Фраза', 'Перевод', 'Примечание']);
+      [t('cheatsheet.th_phrase'), t('cheatsheet.th_translation'), t('cheatsheet.th_note')]);
   }
 
   // ─── Рендер: new (буфер новых слов) ─────────────────────────────────────
@@ -3564,31 +3589,31 @@ function show(id){
     // Слова попадают в таб через topics (new:new-nouns, new:new-verbs и т.д.)
     let html = '';
     html += renderSections('new', ['noun'], renderNounsRow,
-      ['Существительное', 'Род', 'Перевод / Примечание']);
+      [t('cheatsheet.th_noun'), t('cheatsheet.th_gender'), t('cheatsheet.th_translation_note')]);
     html += renderSections('new', ['verb'], renderVerbRow,
-      ['Глагол', 'Перевод', 'Примечание']);
+      [t('cheatsheet.th_verb'), t('cheatsheet.th_translation'), t('cheatsheet.th_note')]);
     html += renderSections('new', ['adj'], renderSimpleRow,
-      ['Прилагательное', 'Перевод', 'Примечание']);
+      [t('cheatsheet.th_adj'), t('cheatsheet.th_translation'), t('cheatsheet.th_note')]);
     html += renderSections('new', ['adv'], renderSimpleRow,
-      ['Наречие', 'Перевод', 'Примечание']);
+      [t('cheatsheet.th_adv'), t('cheatsheet.th_translation'), t('cheatsheet.th_note')]);
     html += renderSections('new', ['pron'], renderSimpleRow,
-      ['Местоимение', 'Перевод', 'Примечание']);
+      [t('cheatsheet.th_pron'), t('cheatsheet.th_translation'), t('cheatsheet.th_note')]);
     html += renderSections('new', ['phrase'], renderSimpleRow,
-      ['Фраза', 'Перевод', 'Примечание']);
+      [t('cheatsheet.th_phrase'), t('cheatsheet.th_translation'), t('cheatsheet.th_note')]);
     html += renderSections('new', ['num'], renderNumRow,
-      ['Цифра', 'Немецкий', 'Произношение']);
+      [t('cheatsheet.th_number'), t('cheatsheet.th_german'), t('cheatsheet.th_pronunciation')]);
 
     // Новые термины (TERMS лежат отдельно от VOCAB, фильтруем по new:new-terms в topics)
     if (typeof TERMS !== 'undefined') {
       const newTerms = TERMS.filter(t => (t.topics || []).some(x => x === 'new:new-terms'));
       if (newTerms.length > 0) {
         html += '<div class="section">'
-              + '<div class="section-title">' + ic('book-open') + ' Новые термины</div>'
-              + '<table><thead><tr><th>Термин</th><th>Перевод</th><th>Примечание</th></tr></thead><tbody>';
+              + '<div class="section-title">' + ic('book-open') + ' ' + t('cheatsheet.new_terms_title') + '</div>'
+              + '<table><thead><tr><th>' + t('cheatsheet.th_term') + '</th><th>' + t('cheatsheet.th_translation') + '</th><th>' + t('cheatsheet.th_note') + '</th></tr></thead><tbody>';
         for (const t of newTerms) {
           html += '<tr><td>' + escHtml(t.term || '') + '</td>'
-                + '<td>' + escHtml(t.ru || '') + '</td>'
-                + '<td>' + escHtml(t.note || '') + '</td></tr>';
+                + '<td>' + escHtml(wordText(t)) + '</td>'
+                + '<td>' + escHtml(wordField(t, 'note', 'noteEn')) + '</td></tr>';
         }
         html += '</tbody></table></div>';
       }
@@ -3599,11 +3624,11 @@ function show(id){
       const newSounds = SOUNDS.filter(s => (s.topics || []).some(x => x === 'new:new-sounds'));
       if (newSounds.length > 0) {
         html += '<div class="section">'
-              + '<div class="section-title">' + ic('waveform') + ' Новые звуки</div>'
-              + '<table><thead><tr><th>Буква/сочетание</th><th>Произношение</th><th>Пример</th></tr></thead><tbody>';
+              + '<div class="section-title">' + ic('waveform') + ' ' + t('cheatsheet.new_sounds_title') + '</div>'
+              + '<table><thead><tr><th>' + t('cheatsheet.th_letter_combo') + '</th><th>' + t('cheatsheet.th_pronunciation') + '</th><th>' + t('cheatsheet.th_example') + '</th></tr></thead><tbody>';
         for (const s of newSounds) {
           html += '<tr><td>' + escHtml(s.combo || '') + '</td>'
-                + '<td>' + escHtml(s.pronunciation || '') + '</td>'
+                + '<td>' + escHtml(wordField(s, 'pronunciation', 'pronunciationEn')) + '</td>'
                 + '<td>' + escHtml(s.example || '') + '</td></tr>';
         }
         html += '</tbody></table></div>';
@@ -3615,16 +3640,16 @@ function show(id){
       const newRules = RULES.filter(r => r.new === true);
       if (newRules.length > 0) {
         html += '<div class="section" style="margin-bottom:24px">';
-        html += '<div class="section-title" style="font-size:15px;margin-bottom:12px">' + ic('ruleset') + ' Новые правила</div>';
+        html += '<div class="section-title" style="font-size:15px;margin-bottom:12px">' + ic('ruleset') + ' ' + t('cheatsheet.new_rules_title') + '</div>';
         for (const r of newRules) {
           html += '<div class="rule-box" style="margin-bottom:18px">';
           if (r.title) {
-            html += '<div class="section-title" style="margin-bottom:8px">' + escHtml(r.title) + '</div>';
+            html += '<div class="section-title" style="margin-bottom:8px">' + escHtml(wordField(r, 'title', 'titleEn')) + '</div>';
           }
-          html += renderRuleContent(r.content_md || '');
+          html += renderRuleContent(wordField(r, 'content_md', 'content_md_en'));
           if (r.note) {
             html += '<div style="margin-top:10px;padding:8px 12px;background:var(--tip-bg);border-left:3px solid var(--tip-border);border-radius:4px;font-size:13px;color:var(--text-muted)">'
-                 + ic('bulb') + ' ' + renderInline(r.note) + '</div>';
+                 + ic('bulb') + ' ' + renderInline(wordField(r, 'note', 'noteEn')) + '</div>';
           }
           html += '</div>';
         }
@@ -3634,40 +3659,40 @@ function show(id){
 
     // Если совсем ничего нет — показываем заглушку
     if (!html.trim()) {
-      html = '<div style="padding:24px;color:var(--text-muted);font-size:13px;text-align:center;">Новых слов пока нет</div>';
+      html = '<div style="padding:24px;color:var(--text-muted);font-size:13px;text-align:center;">' + t('cheatsheet.no_new_words') + '</div>';
     }
 
     panel.innerHTML = html;
   }
 
   // ─── Запуск всех рендеров ───────────────────────────────────────────────
-  renderNums();
-  renderSounds();
-  renderVerbs();
-  renderUnregel();
-  renderPerfekt();
-  renderNouns();
-  renderAdj();
-  renderAdv();
-  renderMestoim();
-  renderTermin();
-  renderRules();
-  renderPhrases();
-  renderNew();
-
-  // Оборачиваем динамически созданные таблицы в .table-wrap
-  document.querySelectorAll('table').forEach(t => {
-    if (!t.parentElement.classList.contains('table-wrap')) {
-      const wrap = document.createElement('div');
-      wrap.className = 'table-wrap';
-      t.parentNode.insertBefore(wrap, t);
-      wrap.appendChild(t);
-    }
-  });
-
-
-
-
+  // Вынесено в функцию и на window — чтобы перезапускать при смене языка
+  // (переводы в таблицах должны обновиться на wordText() без перезагрузки страницы).
+  function renderAllVocabTables() {
+    renderNums();
+    renderSounds();
+    renderVerbs();
+    renderUnregel();
+    renderPerfekt();
+    renderNouns();
+    renderAdj();
+    renderAdv();
+    renderMestoim();
+    renderTermin();
+    renderRules();
+    renderPhrases();
+    renderNew();
+    document.querySelectorAll('table').forEach(t => {
+      if (!t.parentElement.classList.contains('table-wrap')) {
+        const wrap = document.createElement('div');
+        wrap.className = 'table-wrap';
+        t.parentNode.insertBefore(wrap, t);
+        wrap.appendChild(t);
+      }
+    });
+  }
+  window.renderAllVocabTables = renderAllVocabTables;
+  renderAllVocabTables();
 })();
 
 </script>
@@ -3713,7 +3738,7 @@ function show(id){
                     v.gender === 'n' ? 'das ' :
                     v.gender === 'pl' ? 'die ' : '';
     document.getElementById('word-modal-title').textContent = article + (v.de || '');
-    document.getElementById('word-modal-subtitle').textContent = v.ru || '';
+    document.getElementById('word-modal-subtitle').textContent = wordText(v);
 
     const lines = [];
 
@@ -3798,6 +3823,15 @@ function show(id){
   document.addEventListener('keydown', function(ev) {
     if (ev.key === 'Escape') closeWordModal();
   });
+
+  // ─── i18n: применяем сохранённый язык ──────────────────────────────
+  // Таблицы слов уже отрендерены (renderAllVocabTables вызван раньше) —
+  // перерисовываем их и обновляем title кнопки темы под текущий язык.
+  window.onI18nApplied = function() {
+    if (typeof applyTheme === 'function') applyTheme(localStorage.getItem('theme') || 'auto');
+    if (typeof window.renderAllVocabTables === 'function') window.renderAllVocabTables();
+  };
+  applyI18n();
 </script>
 
 </body></html>

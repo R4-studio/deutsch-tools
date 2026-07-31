@@ -9,6 +9,9 @@
 <meta property="og:description" content="Частые вопросы о Deutsch Tools">
 <meta property="og:type" content="website">
 <link rel="stylesheet" href="theme.css?v=1">
+<script src="i18n/ru.js?v=2"></script>
+<script src="i18n/en.js?v=2"></script>
+<script src="i18n/i18n.js?v=1"></script>
 <style>
 html { scroll-behavior: smooth; }
 html, body {
@@ -210,6 +213,7 @@ h1 {
     <span class="dt-topnav__word">Deutsch Tools</span>
   </a>
   <div class="dt-nav">
+    <button class="dt-icon-btn dt-icon-btn--text" id="lang-btn" onclick="cycleLang()" title="Сменить язык">RU</button>
     <button class="dt-icon-btn" id="theme-btn" onclick="cycleTheme()" title="Переключить тему">
       <span id="theme-icon-wrap"></span>
     </button>
@@ -220,91 +224,91 @@ h1 {
   <div class="faq-container">
     <a class="faq-back" href="index.html">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
-      На главную
+      <span data-i18n="nav.back_home">На главную</span>
     </a>
 
-    <h1>FAQ</h1>
+    <h1 data-i18n="faq.title">FAQ</h1>
 
     <details class="faq-item">
-      <summary>Что такое Deutsch Tools?
+      <summary><span data-i18n="faq.q1">Что такое Deutsch Tools?</span>
         <span class="faq-item__icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5v14M5 12h14"/></svg></span>
       </summary>
-      <div class="faq-item__answer">Набор инструментов для изучения немецкого языка — Справочник и Тренажёр. Не курс и не замена полноценному обучению, а помощник для повторения слов, правил и практики.</div>
+      <div class="faq-item__answer" data-i18n="faq.a1">Набор инструментов для изучения немецкого языка — Справочник и Тренажёр. Не курс и не замена полноценному обучению, а помощник для повторения слов, правил и практики.</div>
     </details>
 
     <details class="faq-item">
-      <summary>Это бесплатно?
+      <summary><span data-i18n="faq.q2">Это бесплатно?</span>
         <span class="faq-item__icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5v14M5 12h14"/></svg></span>
       </summary>
-      <div class="faq-item__answer">Да, весь функционал сейчас бесплатный. Проект держится на энтузиазме и, при желании, донатах — никакой обязательной подписки нет.</div>
+      <div class="faq-item__answer" data-i18n="faq.a2">Да, весь функционал сейчас бесплатный. Проект держится на энтузиазме и, при желании, донатах — никакой обязательной подписки нет.</div>
     </details>
 
     <details class="faq-item">
-      <summary>Нужна ли регистрация?
+      <summary><span data-i18n="faq.q3">Нужна ли регистрация?</span>
         <span class="faq-item__icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5v14M5 12h14"/></svg></span>
       </summary>
-      <div class="faq-item__answer">Нет, всем содержимым можно пользоваться без аккаунта.</div>
+      <div class="faq-item__answer" data-i18n="faq.a3">Нет, всем содержимым можно пользоваться без аккаунта.</div>
     </details>
 
     <details class="faq-item">
-      <summary>Для какого уровня подходит?
+      <summary><span data-i18n="faq.q4">Для какого уровня подходит?</span>
         <span class="faq-item__icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5v14M5 12h14"/></svg></span>
       </summary>
-      <div class="faq-item__answer">Сейчас база покрывает уровни A1–A2.</div>
+      <div class="faq-item__answer" data-i18n="faq.a4">Сейчас база покрывает уровни A1–A2.</div>
     </details>
 
     <details class="faq-item">
-      <summary>Будет ли озвучка слов?
+      <summary><span data-i18n="faq.q5">Будет ли озвучка слов?</span>
         <span class="faq-item__icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5v14M5 12h14"/></svg></span>
       </summary>
-      <div class="faq-item__answer">Да, в планах — базовая функция, доступная бесплатно, не премиум-фича.</div>
+      <div class="faq-item__answer" data-i18n="faq.a5">Да, в планах — базовая функция, доступная бесплатно, не премиум-фича.</div>
     </details>
 
     <details class="faq-item">
-      <summary>Можно ли пользоваться с телефона?
+      <summary><span data-i18n="faq.q6">Можно ли пользоваться с телефона?</span>
         <span class="faq-item__icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5v14M5 12h14"/></svg></span>
       </summary>
-      <div class="faq-item__answer">Да, сайт адаптирован под мобильные устройства. В планах — установка как приложение (PWA), чтобы можно было работать офлайн.</div>
+      <div class="faq-item__answer" data-i18n="faq.a6">Да, сайт адаптирован под мобильные устройства. В планах — установка как приложение (PWA), чтобы можно было работать офлайн.</div>
     </details>
 
     <details class="faq-item">
-      <summary>Как часто обновляется база слов?
+      <summary><span data-i18n="faq.q7">Как часто обновляется база слов?</span>
         <span class="faq-item__icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5v14M5 12h14"/></svg></span>
       </summary>
-      <div class="faq-item__answer">Регулярно, актуальный changelog виден на главной странице.</div>
+      <div class="faq-item__answer" data-i18n="faq.a7">Регулярно, актуальный changelog виден на главной странице.</div>
     </details>
 
     <details class="faq-item">
-      <summary>Нашёл ошибку в слове/переводе/правиле — куда писать?
+      <summary><span data-i18n="faq.q8">Нашёл ошибку в слове/переводе/правиле — куда писать?</span>
         <span class="faq-item__icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5v14M5 12h14"/></svg></span>
       </summary>
-      <div class="faq-item__answer">Через раздел <a href="#contact">«Обратная связь»</a> внизу этой страницы — в Telegram или на почту.</div>
+      <div class="faq-item__answer" data-i18n="faq.a8">Через раздел <a href="#contact">«Обратная связь»</a> внизу этой страницы — в Telegram или на почту.</div>
     </details>
 
     <details class="faq-item">
-      <summary>Можно ли предложить добавить слово или тему?
+      <summary><span data-i18n="faq.q9">Можно ли предложить добавить слово или тему?</span>
         <span class="faq-item__icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5v14M5 12h14"/></svg></span>
       </summary>
-      <div class="faq-item__answer">Да, через ту же <a href="#contact">обратную связь</a> — идеи и предложения приветствуются.</div>
+      <div class="faq-item__answer" data-i18n="faq.a9">Да, через ту же <a href="#contact">обратную связь</a> — идеи и предложения приветствуются.</div>
     </details>
 
     <details class="faq-item">
-      <summary>Проект с открытым кодом?
+      <summary><span data-i18n="faq.q10">Проект с открытым кодом?</span>
         <span class="faq-item__icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5v14M5 12h14"/></svg></span>
       </summary>
-      <div class="faq-item__answer">Да, исходники доступны на <a href="https://github.com/r4-studio/deutsch-tools" target="_blank" rel="noopener">GitHub</a>.</div>
+      <div class="faq-item__answer" data-i18n="faq.a10">Да, исходники доступны на <a href="https://github.com/r4-studio/deutsch-tools" target="_blank" rel="noopener">GitHub</a>.</div>
     </details>
 
     <div class="faq-contact" id="contact">
-      <p>Не нашли ответа в FAQ или у вас есть предложения по улучшению — пишите:</p>
+      <p data-i18n="faq.contact_text">Не нашли ответа в FAQ или у вас есть предложения по улучшению — пишите:</p>
       <div class="faq-contact__buttons">
         <a class="faq-hero-btn" href="https://t.me/r4_studio" target="_blank" rel="noopener">
           <span class="faq-hero-btn__icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 2 11 13"/><path d="M22 2 15 22l-4-9-9-4Z"/></svg></span>
-          Telegram
+          <span data-i18n="faq.telegram_label">Telegram</span>
         </a>
         <a class="faq-hero-btn" href="mailto:iminr4v3@gmail.com">
           <span class="faq-hero-btn__icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="4" width="20" height="16" rx="3"/><path d="m3 7 9 6 9-6"/></svg></span>
-          Почта
+          <span data-i18n="faq.mail_label">Почта</span>
         </a>
       </div>
     </div>
@@ -321,7 +325,7 @@ function applyThemeIcon(theme) {
   var el = document.getElementById('theme-icon-wrap');
   var btn = document.getElementById('theme-btn');
   if (el) el.innerHTML = THEME_ICONS[theme] || THEME_ICONS.auto;
-  if (btn) btn.title = 'Тема: ' + (theme === 'auto' ? 'авто (по системе)' : (theme === 'dark' ? 'тёмная' : 'светлая'));
+  if (btn) btn.title = t('theme.prefix') + (theme === 'auto' ? t('theme.auto') : (theme === 'dark' ? t('theme.dark') : t('theme.light')));
 }
 function cycleTheme() {
   var html = document.documentElement;
@@ -336,6 +340,11 @@ function cycleTheme() {
   applyThemeIcon(next);
 }
 applyThemeIcon(localStorage.getItem('theme') || 'auto');
+
+window.onI18nApplied = function() {
+  applyThemeIcon(localStorage.getItem('theme') || 'auto');
+};
+applyI18n();
 
 // Автоскролл к #contact, если пришли по прямой ссылке faq.html#contact
 if (window.location.hash === '#contact') {
