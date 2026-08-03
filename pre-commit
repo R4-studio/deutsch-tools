@@ -1,7 +1,8 @@
 #!/bin/sh
-# pre-commit: проверка ?v=YYYYMMDD у data.js в HTML-файлах
+# pre-commit: проверка ?v=YYYYMMDD у data.js И theme.css в HTML-файлах
 # Должен соответствовать сегодняшней дате.
-# Файлы, в которых нет data.js?v=NNN, пропускаются.
+# Файлы/ассеты, где версия не в формате даты (напр. i18n/*.js?v=N), пропускаются —
+# это отдельная, более простая схема версионирования, дата тут не при чём.
 
 TODAY=$(date +%Y%m%d)
 REPO_ROOT=$(git rev-parse --show-toplevel)
@@ -10,13 +11,13 @@ BAD_FILES=""
 
 for f in "$REPO_ROOT"/*.html; do
   [ -f "$f" ] || continue
-  # Ищем все вхождения data.js?v=XXXXXXXX
-  VERSIONS=$(grep -oE 'data\.js\?v=[0-9]{8}' "$f" | sed 's/data\.js?v=//' | sort -u)
+  # Ищем все вхождения data.js?v=XXXXXXXX и theme.css?v=XXXXXXXX
+  VERSIONS=$(grep -oE '(data\.js|theme\.css)\?v=[0-9]{8}' "$f" | sed -E 's/(data\.js|theme\.css)\?v=//' | sort -u)
   [ -z "$VERSIONS" ] && continue
   for V in $VERSIONS; do
     if [ "$V" != "$TODAY" ]; then
       NAME=$(basename "$f")
-      echo "  ✗ $NAME: data.js?v=$V  →  должно быть ?v=$TODAY"
+      echo "  ✗ $NAME: ?v=$V  →  должно быть ?v=$TODAY"
       BAD_FILES="$BAD_FILES $NAME"
       FAIL=1
     fi
@@ -25,11 +26,11 @@ done
 
 if [ "$FAIL" = "1" ]; then
   echo ""
-  echo "Версия data.js в HTML не совпадает с сегодняшней датой ($TODAY)."
+  echo "Версия data.js/theme.css в HTML не совпадает с сегодняшней датой ($TODAY)."
   echo ""
   echo "Команда для починки (запусти в git bash из корня репо):"
   echo ""
-  echo "  sed -i -E 's/data\\.js\\?v=[0-9]{8}/data.js?v=$TODAY/g'$BAD_FILES"
+  echo "  sed -i -E 's/(data\\.js|theme\\.css)\\?v=[0-9]{8}/\\1?v=$TODAY/g'$BAD_FILES"
   echo ""
   echo "Или вручную найди и замени строку в указанных файлах."
   exit 1
