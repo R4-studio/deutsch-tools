@@ -206,24 +206,6 @@ def _deepl_translate_batch(texts, api_key):
         result = json.loads(resp.read().decode("utf-8"))
     return [tr["text"] for tr in result["translations"]]
 
-def _parse_old_vocab_en(old_content):
-    """Достаёт id→{ru, en} из VOCAB предыдущего data.js — по этому сверяем,
-    что реально изменилось, и зовём DeepL только для новых/изменённых слов
-    (diff-логика, как договаривались в брифе, без отдельного файла-кэша)."""
-    m = re.search(r"const VOCAB = (\[.*?\n\]);", old_content, re.S)
-    if not m:
-        return {}
-    raw = m.group(1)
-    raw = re.sub(r"^\s*//.*$", "", raw, flags=re.MULTILINE)
-    raw = re.sub(r'([{,]\s*)([a-zA-Z_][a-zA-Z0-9_]*)\s*:', r'\1"\2":', raw)
-    raw = re.sub(r",(\s*[\]}])", r"\1", raw)
-    try:
-        old_vocab = json.loads(raw)
-    except json.JSONDecodeError:
-        return {}
-    return {v["id"]: {"ru": v.get("ru"), "en": v.get("en")}
-            for v in old_vocab if v.get("id") and v.get("en")}
-
 def translate_vocab_to_english(all_vocab, old_en_map, warn):
     if not DEEPL_API_KEY:
         if any(item.get("ru") for item in all_vocab):
@@ -261,9 +243,10 @@ def translate_vocab_to_english(all_vocab, old_en_map, warn):
     print(f"  ✓ EN-перевод: переведено {ok}/{len(to_translate)}")
 
 def _parse_old_array_by_id(old_content, const_name):
-    """Как _parse_old_vocab_en, но для любого const-массива по имени —
-    достаёт id → полный словарь предыдущего прогона (для diff-кэша переводов
-    RULES/TERMS/CONJUGATIONS/REGEL_VERBS/SOUNDS)."""
+    """Достаёт id → полный словарь предыдущего прогона для любого const-массива
+    по имени (VOCAB/RULES/TERMS/CONJUGATIONS/REGEL_VERBS/SOUNDS) — по этому
+    сверяем, что реально изменилось, и зовём DeepL только для новых/изменённых
+    значений (diff-логика, без отдельного файла-кэша)."""
     m = re.search(rf"const {const_name} = (\[.*?\n\]);", old_content, re.S)
     if not m:
         return {}
@@ -1545,8 +1528,13 @@ if __name__ == '__main__':
     assign_ids(sounds, "s", WARN, "sounds", width=3)
 
     print("\n=== EN-перевод словаря (мультиязычность, слой 2 — DeepL) ===")
-    old_en_map = _parse_old_vocab_en(old_content)
+    old_en_map = _parse_old_array_by_id(old_content, "VOCAB")
     translate_vocab_to_english(all_vocab, old_en_map, WARN)
+    # Остальные ru-поля VOCAB: примечание, альт. перевод, перевод примера, предупреждение
+    translate_field_to_english(all_vocab, "note", "noteEn", old_en_map, WARN, "VOCAB")
+    translate_field_to_english(all_vocab, "altRu", "altEn", old_en_map, WARN, "VOCAB")
+    translate_field_to_english(all_vocab, "exampleRu", "exampleEn", old_en_map, WARN, "VOCAB")
+    translate_field_to_english(all_vocab, "warning", "warningEn", old_en_map, WARN, "VOCAB")
 
     # То же самое для остального контента cheatsheet, которое не входит в VOCAB:
     # правила (заголовок + текст + примечание), термины (перевод + примечание),
@@ -1580,14 +1568,14 @@ if __name__ == '__main__':
     # ═══════════════════════════════════════════════════════════════
     print("\n=== Собираю data.js ===")
 
-    VOCAB_KEYS = ["id", "de", "altDe", "ru", "altRu", "en", "pos", "gender", "plural", "altPlural",
-                  "level", "topics", "domen", "group", "note", "new",
+    VOCAB_KEYS = ["id", "de", "altDe", "ru", "altRu", "altEn", "en", "pos", "gender", "plural", "altPlural",
+                  "level", "topics", "domen", "group", "note", "noteEn", "new",
                   "comparative", "superlative", "antonym", "derivedFrom",
                   "kind", "case", "digit", "transcription", "context",
                   "type", "modal", "separable", "prefix", "reflexive", "impersonal",
                   "aux", "partizip2", "praeteritum",
-                  "priority", "source", "exampleDe", "exampleRu", "quizUse",
-                  "strictOrder", "warning", "label"]
+                  "priority", "source", "exampleDe", "exampleRu", "exampleEn", "quizUse",
+                  "strictOrder", "warning", "warningEn", "label"]
     REGEL_KEYS = ["id", "verb", "ru", "en", "forms", "partizip2", "aux", "praeteritum",
                   "separable", "reflexive", "impersonal", "case"]
     CONJ_KEYS = ["id", "verb", "ru", "en", "tense", "modal", "level", "pronouns", "forms",
