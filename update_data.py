@@ -317,6 +317,18 @@ def is_false(v):
     if v is None: return False
     return str(v).strip().lower() in ("false", "0", "no", "нет")
 
+def new_status(v):
+    """Колонка `new`: TRUE-подобное → "new" (действительно новая запись),
+    UPDATE-подобное → "update" (существующую запись отредактировали и
+    перевзвели флаг, чтобы она опять попала в отчёт). На сайте оба статуса
+    ведут себя одинаково (item.new = True, попадает в буфер «Neu») — разница
+    только в консольном отчёте update_data.py. Пусто/не распознано → None."""
+    if v is None: return None
+    s = str(v).strip().lower()
+    if s in ("true", "1", "x", "yes", "да"): return "new"
+    if s in ("update", "upd", "u", "обновлено", "обновление"): return "update"
+    return None
+
 def to_int(v):
     if v is None or str(v).strip() == "": return None
     try:
@@ -1011,8 +1023,10 @@ def attach_common(item, r, pos):
     topics = []
     tk = topic_key(domen, group)
     if tk: topics.append(tk)
-    if is_true(r.get("new")):
+    status = new_status(r.get("new"))
+    if status:
         item["new"] = True
+        if status == "update": item["_newUpdate"] = True
         nt = NEW_TOPIC.get(pos)
         if nt and nt not in topics:
             topics.append(nt)
@@ -1187,8 +1201,10 @@ def process_numbers(rows):
         else:
             topics.append("nums:" + kind if kind else "nums:basic")
         # буфер «Новые»
-        if is_true(r.get("new")):
+        status = new_status(r.get("new"))
+        if status:
             item["new"] = True
+            if status == "update": item["_newUpdate"] = True
             nt = NEW_TOPIC.get("num")
             if nt and nt not in topics:
                 topics.append(nt)
@@ -1214,8 +1230,10 @@ def process_sounds(rows):
         topics = []
         tk = topic_key(domen, group)
         if tk: topics.append(tk)
-        if is_true(r.get("new")):
+        status = new_status(r.get("new"))
+        if status:
             item["new"] = True
+            if status == "update": item["_newUpdate"] = True
             nt = NEW_TOPIC.get("sound")
             if nt and nt not in topics:
                 topics.append(nt)
@@ -1240,8 +1258,10 @@ def process_terms(rows):
         # буфер «Новые»
         topics = []
         if tk: topics.append(tk)
-        if is_true(r.get("new")):
+        status = new_status(r.get("new"))
+        if status:
             item["new"] = True
+            if status == "update": item["_newUpdate"] = True
             nt = NEW_TOPIC.get("term")
             if nt and nt not in topics:
                 topics.append(nt)
@@ -1269,8 +1289,10 @@ def process_rules(rows, warn):
         # буфер «Новые» — кладём и флаг, и topic (для рендера на вкладке Neu)
         topics = []
         if tk: topics.append(tk)
-        if is_true(r.get("new")):
+        status = new_status(r.get("new"))
+        if status:
             item["new"] = True
+            if status == "update": item["_newUpdate"] = True
             nt = NEW_TOPIC.get("rule")
             if nt and nt not in topics:
                 topics.append(nt)
@@ -1667,6 +1689,54 @@ if __name__ == '__main__':
     # ═══════════════════════════════════════════════════════════════
     print(f"\n✓ Записано: {OUT_DATA_JS}")
     print(f"  размер: {OUT_DATA_JS.stat().st_size:,} байт")
+
+    # ═══════════════════════════════════════════════════════════════
+    # Что нового (по флагу new=TRUE в xlsx, текущее состояние — не диф
+    # с прошлым прогоном). Снять флаг в xlsx после публикации — сам
+    # скрипт его не сбрасывает.
+    # ═══════════════════════════════════════════════════════════════
+    NEW_POS_LABELS = {
+        "noun":   ("Nomen", "Nomen"),
+        "verb":   ("Verb", "Verben"),
+        "adj":    ("Adjektiv", "Adjektive"),
+        "adv":    ("Adverb", "Adverbien"),
+        "pron":   ("Pronomen", "Pronomen"),
+        "num":    ("Zahl", "Zahlen"),
+        "phrase": ("Redewendung", "Redewendungen"),
+        "term":   ("Begriff", "Begriffe"),
+    }
+    NEW_POS_ORDER = ["noun", "verb", "adj", "adv", "pron", "num", "phrase", "term"]
+
+    new_counts = {}
+    updated_words_total = 0
+    for v in all_vocab:
+        if v.get("new"):
+            new_counts[v["pos"]] = new_counts.get(v["pos"], 0) + 1
+            if v.get("_newUpdate"):
+                updated_words_total += 1
+    new_terms_count = sum(1 for t in terms if t.get("new"))
+    if new_terms_count:
+        new_counts["term"] = new_terms_count
+        updated_words_total += sum(1 for t in terms if t.get("_newUpdate"))
+
+    total_new_words = sum(new_counts.values())
+    if total_new_words:
+        suffix = f" (davon {updated_words_total} aktualisiert)" if updated_words_total else ""
+        print(f"\n+{total_new_words} neue Wörter{suffix}:")
+        for pos in NEW_POS_ORDER:
+            n = new_counts.get(pos, 0)
+            if not n:
+                continue
+            sg, pl = NEW_POS_LABELS[pos]
+            print(f"  · {n} {sg if n == 1 else pl}")
+
+    new_rules = [r for r in rules if r.get("new")]
+    if new_rules:
+        print(f"\n+{len(new_rules)} neue Regeln:")
+        for r in new_rules:
+            mark = " ↻ aktualisiert" if r.get("_newUpdate") else ""
+            print(f"   • {r['title']}{mark}")
+
     if WARN:
         print(f"\n⚠ Предупреждения ({len(WARN)}):")
         for w in WARN:
