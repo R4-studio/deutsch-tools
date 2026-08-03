@@ -3148,7 +3148,7 @@ function show(id){
       : '';
     const noteParts = [];
     if (item.plural) noteParts.push('Pl: ' + item.plural);
-    if (item.note) noteParts.push(item.note);
+    if (item.note) noteParts.push(wordField(item, 'note', 'noteEn'));
     const noteCol = noteParts.join(' | ');
     return '<tr data-vid="' + escHtml(item.id) + '"><td>' + escHtml(item.de) + '</td>'
          + '<td>' + badge + '</td>'
@@ -3159,21 +3159,21 @@ function show(id){
   function renderSimpleRow(item) {
     return '<tr data-vid="' + escHtml(item.id) + '"><td>' + escHtml(item.de) + '</td>'
          + '<td>' + escHtml(wordText(item)) + '</td>'
-         + '<td>' + escHtml(item.note || '') + '</td></tr>';
+         + '<td>' + escHtml(wordField(item, 'note', 'noteEn')) + '</td></tr>';
   }
 
   // ─── Рендер строки глагола с Partizip II ────────────────────────────────
   function renderVerbRow(item) {
     return '<tr data-vid="' + escHtml(item.id) + '"><td>' + escHtml(item.de) + '</td>'
          + '<td>' + escHtml(wordText(item)) + '</td>'
-         + '<td>' + escHtml(item.note || '') + '</td></tr>';
+         + '<td>' + escHtml(wordField(item, 'note', 'noteEn')) + '</td></tr>';
   }
 
   // ─── Рендер строки чисел (cifra | de | произношение) ────────────────────
   function renderNumRow(item) {
     return '<tr data-vid="' + escHtml(item.id) + '"><td>' + escHtml(wordText(item)) + '</td>'
          + '<td>' + escHtml(item.de) + '</td>'
-         + '<td>' + escHtml(item.note || '') + '</td></tr>';
+         + '<td>' + escHtml(wordField(item, 'note', 'noteEn')) + '</td></tr>';
   }
 
   // ─── Рендер таблицы по списку слов ──────────────────────────────────────
@@ -3726,9 +3726,15 @@ function show(id){
     warning: "Внимание", label: "Метка", note: "Заметка",
   };
   const HIDDEN_FIELDS = new Set([
-    "id", "de", "ru", "pos", "topics", "domen", "group",
-    "new", "quizUse", "strictOrder"
+    "id", "de", "ru", "en", "pos", "topics", "domen", "group",
+    "new", "quizUse", "strictOrder",
+    // *En-поля показываются не отдельной строкой, а подменяют значение
+    // своей ru-пары в EN_FIELD_PAIRS ниже — сюда, чтобы цикл их не дублировал
+    "altEn", "noteEn", "warningEn", "exampleEn"
   ]);
+  // ru-поле → его en-пара (мультиязычность, слой 2) — используется в общем
+  // цикле полей модалки, чтобы показывать перевод вместо русского на EN
+  const EN_FIELD_PAIRS = { altRu: "altEn", note: "noteEn", warning: "warningEn" };
 
   function showWordModal(id) {
     const v = VOCAB_BY_ID[id];
@@ -3751,7 +3757,7 @@ function show(id){
     const SKIP_IN_LOOP = new Set([...HIDDEN_FIELDS, 'exampleDe', 'exampleRu']);
     for (const key of Object.keys(v)) {
       if (SKIP_IN_LOOP.has(key)) continue;
-      let val = v[key];
+      let val = EN_FIELD_PAIRS[key] ? wordField(v, key, EN_FIELD_PAIRS[key]) : v[key];
       if (val === null || val === undefined || val === '') continue;
       if (typeof val === 'boolean') val = val ? 'ja' : '—';
       if (Array.isArray(val)) val = val.join(', ');
@@ -3761,10 +3767,11 @@ function show(id){
 
     // Пример использования
     if (v.exampleDe) {
+      const exampleRuText = wordField(v, 'exampleRu', 'exampleEn');
       lines.push('<div class="modal-row" style="flex-direction:column;gap:2px">'
         + '<span class="modal-label" style="flex:none;margin-bottom:4px">Пример:</span>'
         + '<span class="modal-value" style="font-style:italic">' + escHtml(v.exampleDe) + '</span>'
-        + (v.exampleRu ? '<span class="modal-value" style="color:var(--text-muted);font-size:12px">' + escHtml(v.exampleRu) + '</span>' : '')
+        + (exampleRuText ? '<span class="modal-value" style="color:var(--text-muted);font-size:12px">' + escHtml(exampleRuText) + '</span>' : '')
         + '</div>');
     }
 
