@@ -14,11 +14,14 @@
   document.documentElement.classList.add('theme-' + saved);
 })();
 </script>
-<link rel="stylesheet" href="theme.css?v=20260803">
+<link rel="stylesheet" href="theme.css?v=20260804">
+<script src="i18n/ru.js?v=20260804"></script>
+<script src="i18n/en.js?v=20260804"></script>
+<script src="i18n/i18n.js?v=20260804"></script>
 
 <script crossorigin src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
 <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
-<script src="data.js?v=20260803"></script>
+<script src="data.js?v=20260804"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/7.25.6/babel.min.js"></script>
 
 <style>
@@ -214,6 +217,10 @@ const S = {
     fontSize: 14,
     fontWeight: 600,
     fontFamily: "inherit",
+    display: "inline-flex",
+    alignItems: "center",
+    gap: 6,
+    lineHeight: 1,
   }),
   input: {
     width: "100%",
@@ -583,6 +590,25 @@ function useTheme() {
   return { theme, cycleTheme, icon };
 }
 
+// Мультиязычность (RU/EN): t() из i18n/i18n.js читает localStorage сам при каждом
+// вызове — обычному data-i18n+querySelectorAll тут не место (React перетрёт при
+// следующем рендере). Вместо этого держим язык в состоянии верхнего компонента:
+// смена lang триггерит ре-рендер всего дерева, и все t()-вызовы в JSX по пути
+// подхватывают свежее значение — без прокидывания lang пропом в каждый компонент.
+function useLang() {
+  const [lang, setLangState] = useState(() => {
+    try { return localStorage.getItem("lang") || "ru"; } catch (e) { return "ru"; }
+  });
+  function cycleLang() {
+    setLangState((l) => {
+      const next = l === "ru" ? "en" : "ru";
+      try { localStorage.setItem("lang", next); } catch (e) {}
+      return next;
+    });
+  }
+  return { lang, cycleLang };
+}
+
 // ═══════════════════════════════════════════════════════════════
 // КОМПОНЕНТ: ШАПКА С КНОПКОЙ ТЕМЫ И ДОМ
 // ═══════════════════════════════════════════════════════════════
@@ -598,6 +624,9 @@ const ICON_HOME = (
 // путать пользователя одинаковым значком с разным смыслом в двух файлах.
 const ICON_TRAINER_HOME = (
   <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="9" /><circle cx="12" cy="12" r="5" /><circle cx="12" cy="12" r="1" /></svg>
+);
+const ICON_ARROW_LEFT = ( // "Назад"/"Блоки"/"На главную" — раньше был текстовый символ "←", съезжал по вертикали
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M19 12H5M11 6l-6 6 6 6" /></svg>
 );
 const ICON_AUTO = (
   <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="10" /><path d="M12 2a10 10 0 0 0 0 20z" fill="currentColor" stroke="none" /></svg>
@@ -627,19 +656,22 @@ function Icon({ name, size, className = "", style }) {
   );
 }
 
-function TopBar({ left, right, icon, onTheme, onHome }) {
+function TopBar({ left, right, icon, onTheme, onHome, onLang }) {
   return (
     <div style={S.topBar}>
       <div className="tb-row" style={{ display: "flex", gap: 8, alignItems: "center" }}>
-        <a href="index.html" className="tb-btn dt-icon-btn" title="Выйти из тренажёра">{ICON_HOME}</a>
+        <a href="index.html" className="tb-btn dt-icon-btn" title={window.t('nav.back_home')}>{ICON_HOME}</a>
         {onHome && (
-          <button className="tb-btn dt-icon-btn" onClick={onHome} title="На главную тренажёра">{ICON_TRAINER_HOME}</button>
+          <button className="tb-btn dt-icon-btn" onClick={onHome} title={window.t('trainer.trainer_home_title')}>{ICON_TRAINER_HOME}</button>
         )}
         {left}
       </div>
       <div className="tb-row" style={{ display: "flex", gap: 8, alignItems: "center" }}>
         {right}
-        <button className="tb-btn dt-icon-btn" onClick={onTheme} title="Переключить тему">
+        <button className="tb-btn dt-icon-btn dt-icon-btn--text" onClick={onLang} title={window.t('nav.lang_title')}>
+          {window.getLang().toUpperCase()}
+        </button>
+        <button className="tb-btn dt-icon-btn" onClick={onTheme} title={window.t('trainer.theme_toggle_title')}>
           {icon}
         </button>
       </div>
@@ -682,7 +714,7 @@ function ConjFlipCard({ conj, flipped, onFlip, color }) {
               </div>
             )}
             <div style={{ fontSize: 12, color: "var(--text-muted)" }}>
-              Нажми, чтобы увидеть спряжение
+              {window.t('trainer.tap_to_see_conjugation')}
             </div>
           </div>
         </div>
@@ -690,7 +722,7 @@ function ConjFlipCard({ conj, flipped, onFlip, color }) {
              style={{ background: color, color: "var(--on-color)", textAlign: "center" }}>
           <div style={{ padding: "0 20px" }}>
             <div style={{ fontSize: 18, fontWeight: 700, marginBottom: 10 }}>
-              {conj.verb} · Präsens
+              {conj.verb} · {window.t('trainer.praesens_label')}
             </div>
             <table style={{ margin: "0 auto", fontSize: 15 }}>
               <tbody>
@@ -713,14 +745,14 @@ function ConjFlipCard({ conj, flipped, onFlip, color }) {
               }}>
                 {conj.praeteritum && (
                   <div>
-                    <span style={{ opacity: 0.85 }}>Präteritum: </span>
+                    <span style={{ opacity: 0.85 }}>{window.t('trainer.praeteritum_label')} </span>
                     <span style={{ fontWeight: 700 }}>{conj.praeteritum}</span>
-                    <span style={{ opacity: 0.7, fontSize: 12 }}> (er/sie/es)</span>
+                    <span style={{ opacity: 0.7, fontSize: 12 }}> {window.t('trainer.er_sie_es')}</span>
                   </div>
                 )}
                 {conj.partizip2 && (
                   <div>
-                    <span style={{ opacity: 0.85 }}>Perfekt: </span>
+                    <span style={{ opacity: 0.85 }}>{window.t('trainer.perfekt_label')} </span>
                     <span style={{ fontWeight: 700 }}>
                       {conj.aux === "sein" ? "ist" : "hat"} {conj.partizip2}
                     </span>
@@ -764,20 +796,20 @@ function PraeteritumFlipCard({ conj, flipped, onFlip, color }) {
               </div>
             )}
             <div style={{ fontSize: 12, color: "var(--text-muted)" }}>
-              Нажми, чтобы увидеть Präteritum
+              {window.t('trainer.tap_to_see_praeteritum')}
             </div>
           </div>
         </div>
         <div className="flip-face back"
              style={{ background: color, color: "var(--on-color)", textAlign: "center" }}>
           <div style={{ padding: "0 20px" }}>
-            <div style={{ fontSize: 14, opacity: 0.85, marginBottom: 8 }}>Präteritum · er/sie/es</div>
+            <div style={{ fontSize: 14, opacity: 0.85, marginBottom: 8 }}>{window.t('trainer.praeteritum_er_sie_es')}</div>
             <div style={{ fontSize: 36, fontWeight: 700, marginBottom: 16 }}>
               {conj.praeteritum || "—"}
             </div>
             {conj.aux && (
               <div style={{ fontSize: 13, opacity: 0.85 }}>
-                Perfekt: {conj.aux === "sein" ? "ist" : "hat"} {conj.partizip2 || "..."}
+                {window.t('trainer.perfekt_label')} {conj.aux === "sein" ? "ist" : "hat"} {conj.partizip2 || "..."}
               </div>
             )}
           </div>
@@ -842,11 +874,11 @@ function FlipCard({ item, flipped, onFlip, color }) {
             </div>
             {item.plural && (
               <div style={{ fontSize: 14, color: "var(--text-muted)", marginBottom: 8 }}>
-                Pl: {item.plural}
+                {window.t('trainer.plural_prefix')} {item.plural}
               </div>
             )}
             <div style={{ fontSize: 12, color: "var(--text-muted)" }}>
-              Нажми, чтобы перевернуть
+              {window.t('trainer.tap_to_flip')}
             </div>
           </div>
         </div>
@@ -863,7 +895,7 @@ function FlipCard({ item, flipped, onFlip, color }) {
               <div style={{ fontSize: 16, fontWeight: 700, marginBottom: 4 }}>
                 {item.de} · <span style={{ opacity: 0.9, fontWeight: 400 }}>{item.ru}</span>
               </div>
-              <div style={{ fontSize: 13, opacity: 0.85, marginBottom: 10 }}>Präsens</div>
+              <div style={{ fontSize: 13, opacity: 0.85, marginBottom: 10 }}>{window.t('trainer.praesens_label')}</div>
               <table style={{ margin: "0 auto", fontSize: 14 }}>
                 <tbody>
                   {forms.pronouns.map((p, i) => (
@@ -885,14 +917,14 @@ function FlipCard({ item, flipped, onFlip, color }) {
                 }}>
                   {forms.praeteritum && (
                     <div>
-                      <span style={{ opacity: 0.85 }}>Präteritum: </span>
+                      <span style={{ opacity: 0.85 }}>{window.t('trainer.praeteritum_label')} </span>
                       <span style={{ fontWeight: 700 }}>{forms.praeteritum}</span>
-                      <span style={{ opacity: 0.7, fontSize: 11 }}> (er/sie/es)</span>
+                      <span style={{ opacity: 0.7, fontSize: 11 }}> {window.t('trainer.er_sie_es')}</span>
                     </div>
                   )}
                   {forms.partizip2 && (
                     <div>
-                      <span style={{ opacity: 0.85 }}>Perfekt: </span>
+                      <span style={{ opacity: 0.85 }}>{window.t('trainer.perfekt_label')} </span>
                       <span style={{ fontWeight: 700 }}>
                         {forms.aux === "sein" ? "ist" : "hat"} {forms.partizip2}
                       </span>
@@ -2824,6 +2856,7 @@ function buildTestSession(topics, vocab, conjugations, manualQuestions, blockId,
 // ═══════════════════════════════════════════════════════════════
 function App() {
   const { theme, cycleTheme, icon } = useTheme();
+  const { lang, cycleLang } = useLang();
 
   // ─── Состояние навигации ─────────────────────────────────────────────────
   // Фазы: home | select-block | select-subblock | block-start
@@ -3112,7 +3145,7 @@ function App() {
     const autoFiltered = autoPool.filter(q => !q.sourceId || !manualSourceIds.has(q.sourceId));
     const allQ = [...autoFiltered, ...manualPool];
     if (allQ.length === 0) {
-      alert("Нет вопросов для новых слов. Добавь слова в буфер «Neu».");
+      alert(window.t('trainer.no_questions_for_new_words'));
       return;
     }
     const session = shuffleMC(shuffle(allQ));
@@ -3170,23 +3203,23 @@ function App() {
 
   // ─── Цвета режимов ──────────────────────────────────────────────────────
   const modeColor = mode === "learn" ? "var(--c-mode-learn)" : "var(--c-level-1)";
-  const modeLabel = mode === "learn" ? (<><Icon name="brain" /> Изучение</>) : (<><Icon name="clipboard" /> Тестирование</>);
+  const modeLabel = mode === "learn" ? (<><Icon name="brain" /> {window.t('trainer.mode_learn_title')}</>) : (<><Icon name="clipboard" /> {window.t('trainer.mode_test_title')}</>);
 
   // ─── Подписи уровней (для пользователя — без сокращений) ────────────────
   const LEVEL_LABELS = {
-    1: { name: "Уровень 1", action: "Выбор", color: "var(--c-level-1)" },     // зелёный
-    2: { name: "Уровень 2", action: "Артикль / Спряжение", color: "var(--c-level-2)" }, // синий
-    3: { name: "Уровень 3", action: "Вставь / Заполни", color: "var(--c-level-3)" },  // оранжевый
-    4: { name: "Уровень 4", action: "Составь предложение", color: "var(--c-level-4)" }, // фиолетовый
-    5: { name: "Уровень 5", action: "Открытый ответ", color: "var(--c-level-5)" },     // красный
+    1: { name: `${window.t('trainer.level_label')} 1`, action: window.t('trainer.lbl_action_choice'), color: "var(--c-level-1)" },     // зелёный
+    2: { name: `${window.t('trainer.level_label')} 2`, action: window.t('trainer.lbl_action_article_conj'), color: "var(--c-level-2)" }, // синий
+    3: { name: `${window.t('trainer.level_label')} 3`, action: window.t('trainer.lbl_action_fill'), color: "var(--c-level-3)" },  // оранжевый
+    4: { name: `${window.t('trainer.level_label')} 4`, action: window.t('trainer.lbl_action_build_sentence'), color: "var(--c-level-4)" }, // фиолетовый
+    5: { name: `${window.t('trainer.level_label')} 5`, action: window.t('trainer.action_open_answer'), color: "var(--c-level-5)" },     // красный
   };
 
   // ─── Названия типов вопросов (полные, для пользователя) ─────────────────
   const TYPE_LABELS = {
-    mc: "Выбор",
-    fill: "Вставь",
-    tiles: "Составь",
-    conj: "Спряжение",
+    mc: window.t('trainer.type_mc'),
+    fill: window.t('trainer.type_fill'),
+    tiles: window.t('trainer.type_tiles'),
+    conj: window.t('trainer.type_conj'),
   };
 
   // Получить note слова/глагола привязанного к вопросу через sourceId
@@ -3327,7 +3360,7 @@ function App() {
     return (
       <div style={S.page}>
         <div style={S.container}>
-          <TopBar left={null} right={null} icon={icon} onTheme={cycleTheme} />
+          <TopBar left={null} right={null} icon={icon} onTheme={cycleTheme} onLang={cycleLang} />
           <div style={{ textAlign: "center", marginBottom: 28 }}>
             <div
               style={{ display: "flex", alignItems: "center", justifyContent: "center", gap: 6, marginBottom: 6, cursor: "default", userSelect: "none" }}
@@ -3337,25 +3370,25 @@ function App() {
               <span style={{ width: 52, height: 52, borderRadius: "50%", background: "var(--grey-900)", color: "#fff", display: "inline-flex", alignItems: "center", justifyContent: "center", fontSize: 18, fontWeight: 700, letterSpacing: "-0.02em" }}>DE</span>
               {devMode && <span style={{ fontSize: 12, color: "var(--text-muted)" }}>DEV</span>}
           </div>
-            <h1 style={S.heading}>Тренажёр немецкого</h1>
-            <p style={S.subheading}>Выбери режим</p>
+            <h1 style={S.heading}>{window.t('trainer.title_home')}</h1>
+            <p style={S.subheading}>{window.t('trainer.pick_mode')}</p>
           </div>
           <div className="mode-grid">
             <div className="dt-tap-card" style={{ ...S.modeCard, borderColor: "var(--c-mode-learn)" }}
                  onClick={() => pickMode("learn")}>
               <Icon name="brain" className="mode-card-icon" />
               <div style={{ fontSize: 18, fontWeight: 700, marginBottom: 4, color: "var(--text-title)" }}>
-                Изучение
+                {window.t('trainer.mode_learn_title')}
               </div>
-              <div style={S.muted}>Карточки + мини-тест на перевод</div>
+              <div style={S.muted}>{window.t('trainer.mode_learn_desc')}</div>
             </div>
             <div className="dt-tap-card" style={{ ...S.modeCard, borderColor: "var(--c-level-1)" }}
                  onClick={() => pickMode("test")}>
               <Icon name="clipboard" className="mode-card-icon" />
               <div style={{ fontSize: 18, fontWeight: 700, marginBottom: 4, color: "var(--text-title)" }}>
-                Тестирование
+                {window.t('trainer.mode_test_title')}
               </div>
-              <div style={S.muted}>5 уровней: перевод, артикли, спряжение, плитки</div>
+              <div style={S.muted}>{window.t('trainer.mode_test_desc')}</div>
             </div>
           </div>
         </div>
@@ -3369,10 +3402,10 @@ function App() {
       <div style={S.page}>
         <div style={S.container}>
           <TopBar
-            left={<button style={S.outlineBtn("var(--c-outline-grey)")} onClick={goHome}>← Назад</button>}
+            left={<button style={S.outlineBtn("var(--c-outline-grey)")} onClick={goHome}>{ICON_ARROW_LEFT} {window.t('trainer.back')}</button>}
             right={<span style={S.muted}>{modeLabel}</span>}
-            icon={icon} onTheme={cycleTheme} onHome={goHome} />
-          <h2 style={{ ...S.heading, textAlign: "center" }}>Выбери блок</h2>
+            icon={icon} onTheme={cycleTheme} onLang={cycleLang} onHome={goHome} />
+          <h2 style={{ ...S.heading, textAlign: "center" }}>{window.t('trainer.pick_block')}</h2>
           <div style={S.grid}>
             {BLOCKS.filter(b => b.kind !== "sounds").map(b => (
               <div key={b.id} className="dt-tap-card"
@@ -3380,11 +3413,11 @@ function App() {
                    onClick={() => pickBlock(b)}>
                 <div style={S.cardTitle}><Icon name={b.icon} size={18} /> {b.label}</div>
                 {b.desc && <div style={S.cardDesc}>{b.desc}</div>}
-                {blockHasSubblocks(b) && <div style={S.cardMeta}>{b.subblocks.length} тем</div>}
+                {blockHasSubblocks(b) && <div style={S.cardMeta}>{b.subblocks.length} {window.t('trainer.n_topics')}</div>}
                 {b.kind === "conjugations" && (
-                  <div style={S.cardMeta}>{CONJUGATIONS.length} глаголов</div>
+                  <div style={S.cardMeta}>{CONJUGATIONS.length} {window.t('trainer.n_verbs')}</div>
                 )}
-                {b.kind && b.kind !== "conjugations" && <div style={{ ...S.cardMeta }}>(только в справочнике)</div>}
+                {b.kind && b.kind !== "conjugations" && <div style={{ ...S.cardMeta }}>{window.t('trainer.only_in_cheatsheet')}</div>}
               </div>
             ))}
           </div>
@@ -3404,20 +3437,20 @@ function App() {
             left={
               <button style={S.outlineBtn(activeBlock.color)}
                       onClick={() => { setPhase("select-block"); setActiveBlock(null); }}>
-                ← Блоки
+                {ICON_ARROW_LEFT} {window.t('trainer.blocks')}
               </button>
             }
             right={<span style={S.muted}>{modeLabel}</span>}
-            icon={icon} onTheme={cycleTheme} onHome={goHome} />
+            icon={icon} onTheme={cycleTheme} onLang={cycleLang} onHome={goHome} />
           <h2 style={{ ...S.heading, textAlign: "center" }}><Icon name={activeBlock.icon} size={22} /> {activeBlock.label}</h2>
-          <p style={{ ...S.subheading, textAlign: "center" }}>Выбери тему</p>
+          <p style={{ ...S.subheading, textAlign: "center" }}>{window.t('trainer.pick_topic')}</p>
 
           {!isNeu && mode === "test" && (
             <div style={{ marginBottom: 16 }}>
               <div className="dt-tap-card" style={{ ...S.card, borderLeft: `4px solid ${activeBlock.color}`, cursor: "pointer" }}
                    onClick={startTestAll}>
-                <div style={S.cardTitle}><Icon name="flame" size={18} /> Тест по всему блоку</div>
-                <div style={S.cardMeta}>Все темы вперемешку · без разбивки</div>
+                <div style={S.cardTitle}><Icon name="flame" size={18} /> {window.t('trainer.test_whole_block')}</div>
+                <div style={S.cardMeta}>{window.t('trainer.all_topics_mixed')}</div>
               </div>
             </div>
           )}
@@ -3444,8 +3477,8 @@ function App() {
               {mode === "learn" && (
                 <div className="dt-tap-card" style={{ ...S.card, borderLeft: `4px solid ${activeBlock.color}`, cursor: "pointer" }}
                      onClick={() => startNeuLearnAll(false)}>
-                  <div style={S.cardTitle}><Icon name="book" size={18} /> Общее изучение</div>
-                  <div style={S.cardMeta}>{neuAllCount} слов · noun → verb → adj → adv</div>
+                  <div style={S.cardTitle}><Icon name="book" size={18} /> {window.t('trainer.general_learn')}</div>
+                  <div style={S.cardMeta}>{neuAllCount} {window.t('trainer.n_words')} · {window.t('trainer.neu_order')}</div>
                 </div>
               )}
               {mode === "test" && (
@@ -3464,8 +3497,8 @@ function App() {
                   }}
                   onClick={startNeuTestAll}>
                   <div style={{ display: "flex", justifyContent: "center", marginBottom: 4 }}><Icon name="clipboard" size={26} /></div>
-                  <div style={{ fontSize: 18, marginBottom: 2 }}>Тест по блоку</div>
-                  <div style={{ fontSize: 13, opacity: 0.85 }}>Все новые слова · все уровни вперемешку</div>
+                  <div style={{ fontSize: 18, marginBottom: 2 }}>{window.t('trainer.test_by_block')}</div>
+                  <div style={{ fontSize: 13, opacity: 0.85 }}>{window.t('trainer.all_new_mixed')}</div>
                 </button>
               )}
               <div style={{ borderTop: `1px solid var(--border)`, margin: "4px 0" }} />
@@ -3480,11 +3513,11 @@ function App() {
               // главной до перемещения).
               let metaText;
               if (sub.kind === "conjugations") {
-                metaText = `${CONJUGATIONS.length} глаголов`;
+                metaText = `${CONJUGATIONS.length} ${window.t('trainer.n_verbs')}`;
               } else {
                 const wc = countWords(sub.topics);
                 const qc = countQuestions(sub.topics, `${activeBlock.id}:${sub.id}`);
-                metaText = mode === "learn" ? `${wc} слов` : `${qc} заданий`;
+                metaText = mode === "learn" ? `${wc} ${window.t('trainer.n_words')}` : `${qc} ${window.t('trainer.n_tasks')}`;
               }
               return (
                 <div key={sub.id} className="dt-tap-card"
@@ -3511,18 +3544,18 @@ function App() {
       <div style={S.page}>
         <div style={S.container}>
           <TopBar
-            left={<button style={S.outlineBtn(activeBlock.color)} onClick={goBackToSubblocks}>← Назад</button>}
+            left={<button style={S.outlineBtn(activeBlock.color)} onClick={goBackToSubblocks}>{ICON_ARROW_LEFT} {window.t('trainer.back')}</button>}
             right={<span style={S.muted}>{modeLabel}</span>}
-            icon={icon} onTheme={cycleTheme} onHome={goHome} />
+            icon={icon} onTheme={cycleTheme} onLang={cycleLang} onHome={goHome} />
           <h2 style={{ ...S.heading, textAlign: "center" }}><Icon name={headingIcon} size={22} /> {heading}</h2>
-          <p style={{ ...S.subheading, textAlign: "center" }}>{vocab.length} слов</p>
+          <p style={{ ...S.subheading, textAlign: "center" }}>{vocab.length} {window.t('trainer.n_words')}</p>
 
           <div style={{ display: "flex", gap: 16, justifyContent: "center", flexWrap: "wrap", marginTop: 24 }}>
             <button style={{ ...S.bigBtn, background: activeBlock.color }} onClick={startLearnCards}>
-              <Icon name="book-open" /> Карточки
+              <Icon name="book-open" /> {window.t('trainer.cards_btn')}
             </button>
             <button style={{ ...S.bigBtn, background: "var(--c-outline-grey)" }} onClick={startLearnMiniTest}>
-              <Icon name="bolt" /> Сразу к мини-тесту
+              <Icon name="bolt" /> {window.t('trainer.straight_to_minitest')}
             </button>
           </div>
         </div>
@@ -3580,11 +3613,11 @@ function App() {
     const headingIcon = activeSub ? activeSub.icon : activeBlock.icon;
 
     const levelInfo = [
-      { lvl: 1, color: "var(--c-level-1)", name: "Уровень 1", action: "Перевод" },
-      { lvl: 2, color: "var(--c-level-2)", name: "Уровень 2", action: "Базовая форма" },
-      { lvl: 3, color: "var(--c-level-3)", name: "Уровень 3", action: "Склонение" },
-      { lvl: 4, color: "var(--c-level-4)", name: "Уровень 4", action: "В предложении" },
-      { lvl: 5, color: "var(--c-level-5)", name: "Уровень 5", action: "Открытый ответ" },
+      { lvl: 1, color: "var(--c-level-1)", name: `${window.t('trainer.level_label')} 1`, action: window.t('trainer.lvl_action_translation') },
+      { lvl: 2, color: "var(--c-level-2)", name: `${window.t('trainer.level_label')} 2`, action: window.t('trainer.lvl_action_base_form') },
+      { lvl: 3, color: "var(--c-level-3)", name: `${window.t('trainer.level_label')} 3`, action: window.t('trainer.lvl_action_declension') },
+      { lvl: 4, color: "var(--c-level-4)", name: `${window.t('trainer.level_label')} 4`, action: window.t('trainer.lvl_action_in_sentence') },
+      { lvl: 5, color: "var(--c-level-5)", name: `${window.t('trainer.level_label')} 5`, action: window.t('trainer.action_open_answer') },
     ];
 
     // Запустить комбо-тест по типу
@@ -3636,14 +3669,14 @@ function App() {
             left={
               <button style={S.outlineBtn(activeBlock.color)}
                       onClick={goBackToSubblocks}>
-                ← Назад
+                {ICON_ARROW_LEFT} {window.t('trainer.back')}
               </button>
             }
             right={<span style={S.muted}>{modeLabel}</span>}
-            icon={icon} onTheme={cycleTheme} onHome={goHome} />
-          
+            icon={icon} onTheme={cycleTheme} onLang={cycleLang} onHome={goHome} />
+
           <h2 style={{ ...S.heading, textAlign: "center" }}><Icon name={headingIcon} size={22} /> {heading}</h2>
-          <p style={{ ...S.subheading, textAlign: "center" }}>Выбери тест</p>
+          <p style={{ ...S.subheading, textAlign: "center" }}>{window.t('trainer.pick_test')}</p>
 
           {/* ── Главная кнопка: Тест по блоку ──────────────────────────── */}
           <button
@@ -3662,8 +3695,8 @@ function App() {
             }}
             onClick={() => startCombo("general")}>
             <div style={{ display: "flex", justifyContent: "center", marginBottom: 4 }}><Icon name="clipboard" size={26} /></div>
-            <div style={{ fontSize: 18, marginBottom: 2 }}>Тест по блоку</div>
-            <div style={{ fontSize: 13, opacity: 0.85 }}>30 вопросов</div>
+            <div style={{ fontSize: 18, marginBottom: 2 }}>{window.t('trainer.test_by_block')}</div>
+            <div style={{ fontSize: 13, opacity: 0.85 }}>30 {window.t('trainer.n_questions')}</div>
           </button>
 
           {/* ── Комбо-кнопки (Partizip / Präsens) ───────────────────────── */}
@@ -3682,7 +3715,7 @@ function App() {
                 <div style={{ display: "flex", justifyContent: "center", marginBottom: 4 }}><Icon name="gear" size={20} /></div>
                 <div style={{ fontSize: 13 }}>Partizip II</div>
                 <div style={{ fontSize: 11, marginTop: 4, opacity: 0.85 }}>
-                  {p2Count === 0 ? "0 вопросов" : "30 вопросов"}
+                  {p2Count === 0 ? 0 : 30} {window.t('trainer.n_questions')}
                 </div>
               </button>
               {/* Präsens */}
@@ -3693,7 +3726,7 @@ function App() {
                 <div style={{ display: "flex", justifyContent: "center", marginBottom: 4 }}><Icon name="notes" size={20} /></div>
                 <div style={{ fontSize: 13 }}>Präsens</div>
                 <div style={{ fontSize: 11, marginTop: 4, opacity: 0.85 }}>
-                  {prCount === 0 ? "0 вопросов" : "30 вопросов"}
+                  {prCount === 0 ? 0 : 30} {window.t('trainer.n_questions')}
                 </div>
               </button>
               {/* Präteritum */}
@@ -3704,7 +3737,7 @@ function App() {
                 <div style={{ display: "flex", justifyContent: "center", marginBottom: 4 }}><Icon name="rewind" size={20} /></div>
                 <div style={{ fontSize: 13 }}>Präteritum</div>
                 <div style={{ fontSize: 11, marginTop: 4, opacity: 0.85 }}>
-                  {praetCount === 0 ? "0 вопросов" : "30 вопросов"}
+                  {praetCount === 0 ? 0 : 30} {window.t('trainer.n_questions')}
                 </div>
               </button>
             </div>
@@ -3712,7 +3745,7 @@ function App() {
           {!showVerbCombos && <div style={{ marginBottom: 8 }} />}
 
           <div style={{ ...S.subheading, textAlign: "center", marginBottom: 12 }}>
-            или по одному уровню
+            {window.t('trainer.or_by_level')}
           </div>
 
           {/* ── Кнопки уровней ─────────────────────────────────────────── */}
@@ -3750,7 +3783,7 @@ function App() {
                     <span style={{ fontSize: 14, fontWeight: 600 }}>{li.action}</span>
                   </div>
                   <span style={{ fontSize: 13, color: "var(--text-muted)" }}>
-                    {hasAny ? `${count} вопросов` : "—"}
+                    {hasAny ? `${count} ${window.t('trainer.n_questions')}` : "—"}
                   </span>
                 </button>
               );
@@ -3765,26 +3798,26 @@ function App() {
   function renderLearnCards() {
     const vocab = getActiveVocab();
     if (vocab.length === 0) {
-      return <div style={S.page}><div style={S.container}>Нет слов в этой теме.</div></div>;
+      return <div style={S.page}><div style={S.container}>{window.t('trainer.no_words_in_topic')}</div></div>;
     }
     const item = vocab[cardIdx];
     return (
       <div style={S.page}>
         <div style={S.container}>
           <TopBar
-            left={<button style={S.outlineBtn(activeBlock.color)} onClick={() => setPhase("block-start")}>← Назад</button>}
+            left={<button style={S.outlineBtn(activeBlock.color)} onClick={() => setPhase("block-start")}>{ICON_ARROW_LEFT} {window.t('trainer.back')}</button>}
             right={<span style={S.muted}>{cardIdx + 1} / {vocab.length}</span>}
-            icon={icon} onTheme={cycleTheme} onHome={goHome} />
+            icon={icon} onTheme={cycleTheme} onLang={cycleLang} onHome={goHome} />
           <FlipCard key={item.id} item={item} flipped={flipped} onFlip={() => setFlipped(!flipped)} color={activeBlock.color} />
           <div style={{ display: "flex", gap: 12, justifyContent: "center", marginTop: 20 }}>
-            <button style={S.outlineBtn()} onClick={prevCard} disabled={cardIdx === 0}>← Назад</button>
+            <button style={S.outlineBtn()} onClick={prevCard} disabled={cardIdx === 0}>{ICON_ARROW_LEFT} {window.t('trainer.back')}</button>
             <button style={S.primaryBtn(activeBlock.color)} onClick={nextCard}>
-              {cardIdx + 1 >= vocab.length ? "К мини-тесту →" : "Дальше →"}
+              {cardIdx + 1 >= vocab.length ? window.t('trainer.to_minitest') : window.t('trainer.next_arrow')}
             </button>
           </div>
           <div style={{ display: "flex", justifyContent: "center", marginTop: 12 }}>
             <button style={S.outlineBtn("var(--c-outline-grey)")} onClick={() => setPhase("learn-test")}>
-              <Icon name="clipboard" /> Перейти к тесту
+              <Icon name="clipboard" /> {window.t('trainer.go_to_test')}
             </button>
           </div>
         </div>
@@ -3797,17 +3830,17 @@ function App() {
     const base = getNeuAllVocab();
     const vocab = neuShuffle && neuVocabOrder ? neuVocabOrder : base;
     if (vocab.length === 0) {
-      return <div style={S.page}><div style={S.container}>Нет новых слов.</div></div>;
+      return <div style={S.page}><div style={S.container}>{window.t('trainer.no_new_words')}</div></div>;
     }
     const item = vocab[cardIdx];
     return (
       <div style={S.page}>
         <div style={S.container}>
           <TopBar
-            left={<button style={S.outlineBtn(activeBlock.color)} onClick={() => { setPhase("select-subblock"); setActiveSub(null); }}>← Назад</button>}
+            left={<button style={S.outlineBtn(activeBlock.color)} onClick={() => { setPhase("select-subblock"); setActiveSub(null); }}>{ICON_ARROW_LEFT} {window.t('trainer.back')}</button>}
             right={<span style={S.muted}>{cardIdx + 1} / {vocab.length}</span>}
-            icon={icon} onTheme={cycleTheme} onHome={goHome} />
-          <h2 style={{ ...S.heading, textAlign: "center", marginBottom: 4 }}><Icon name="book" size={22} /> Общее изучение</h2>
+            icon={icon} onTheme={cycleTheme} onLang={cycleLang} onHome={goHome} />
+          <h2 style={{ ...S.heading, textAlign: "center", marginBottom: 4 }}><Icon name="book" size={22} /> {window.t('trainer.general_learn')}</h2>
           <div style={{ textAlign: "center", marginBottom: 12 }}>
             <button
               style={{ ...S.outlineBtn(neuShuffle ? activeBlock.color : "var(--c-outline-grey)"), fontSize: 13, padding: "4px 14px" }}
@@ -3817,12 +3850,12 @@ function App() {
                 setNeuVocabOrder(next ? shuffle([...base]) : null);
                 setCardIdx(0); setFlipped(false);
               }}>
-              <Icon name="dice" /> Вперемешку {neuShuffle ? <Icon name="check" size={12} /> : ""}
+              <Icon name="dice" /> {window.t('trainer.shuffle')} {neuShuffle ? <Icon name="check" size={12} /> : ""}
             </button>
           </div>
           <FlipCard key={item.id} item={item} flipped={flipped} onFlip={() => setFlipped(!flipped)} color={activeBlock.color} />
           <div style={{ display: "flex", gap: 12, justifyContent: "center", marginTop: 20 }}>
-            <button style={S.outlineBtn()} onClick={() => { if (cardIdx > 0) { setCardIdx(cardIdx - 1); setFlipped(false); } }} disabled={cardIdx === 0}>← Назад</button>
+            <button style={S.outlineBtn()} onClick={() => { if (cardIdx > 0) { setCardIdx(cardIdx - 1); setFlipped(false); } }} disabled={cardIdx === 0}>{ICON_ARROW_LEFT} {window.t('trainer.back')}</button>
             <button style={S.primaryBtn(activeBlock.color)} onClick={() => {
               if (cardIdx + 1 >= vocab.length) {
                 // Мини-тест по всем новым (все 3 подблока)
@@ -3838,7 +3871,7 @@ function App() {
                 setCardIdx(cardIdx + 1); setFlipped(false);
               }
             }}>
-              {cardIdx + 1 >= vocab.length ? "К мини-тесту →" : "Дальше →"}
+              {cardIdx + 1 >= vocab.length ? window.t('trainer.to_minitest') : window.t('trainer.next_arrow')}
             </button>
           </div>
           <div style={{ display: "flex", justifyContent: "center", marginTop: 12 }}>
@@ -3852,7 +3885,7 @@ function App() {
               setUserAnswers([]); setLastVerdict(null);
               setPhase("learn-test");
             }}>
-              <Icon name="clipboard" /> Перейти к тесту
+              <Icon name="clipboard" /> {window.t('trainer.go_to_test')}
             </button>
           </div>
         </div>
@@ -3868,35 +3901,35 @@ function App() {
       <div style={S.page}>
         <div style={S.container}>
           <TopBar
-            left={<button style={S.outlineBtn("var(--c-outline-grey)")} onClick={goBackToSubblocks}>← Назад</button>}
-            right={<span style={S.muted}><Icon name="brain" size={13} /> Изучение</span>}
-            icon={icon} onTheme={cycleTheme} onHome={goHome} />
-          <h2 style={{ ...S.heading, textAlign: "center" }}>Что изучаем?</h2>
+            left={<button style={S.outlineBtn("var(--c-outline-grey)")} onClick={goBackToSubblocks}>{ICON_ARROW_LEFT} {window.t('trainer.back')}</button>}
+            right={<span style={S.muted}><Icon name="brain" size={13} /> {window.t('trainer.mode_learn_title')}</span>}
+            icon={icon} onTheme={cycleTheme} onLang={cycleLang} onHome={goHome} />
+          <h2 style={{ ...S.heading, textAlign: "center" }}>{window.t('trainer.what_to_study')}</h2>
           <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
             <button
               style={{ ...S.card, borderLeft: `4px solid ${activeBlock.color}`, cursor: "pointer", textAlign: "left" }}
               onClick={startLearnConj}>
               <div style={{ fontWeight: 700, fontSize: 16, marginBottom: 4 }}><Icon name="notes" /> Präsens</div>
               <div style={{ fontSize: 13, color: "var(--text-muted)" }}>
-                Карточки спряжений · {CONJUGATIONS.length} глаголов
+                {window.t('trainer.conj_cards_label')} · {CONJUGATIONS.length} {window.t('trainer.n_verbs')}
               </div>
             </button>
             <button
               disabled={praetCount === 0}
               style={{ ...S.card, borderLeft: `4px solid var(--c-praeteritum)`, cursor: praetCount > 0 ? "pointer" : "not-allowed", textAlign: "left", opacity: praetCount > 0 ? 1 : 0.5 }}
               onClick={startLearnPraeteritum}>
-              <div style={{ fontWeight: 700, fontSize: 16, marginBottom: 4 }}><Icon name="rewind" /> Präteritum — карточки</div>
+              <div style={{ fontWeight: 700, fontSize: 16, marginBottom: 4 }}><Icon name="rewind" /> {window.t('trainer.praeteritum_cards')}</div>
               <div style={{ fontSize: 13, color: "var(--text-muted)" }}>
-                Карточки прошедшего времени · {praetCount} глаголов
+                {window.t('trainer.past_tense_cards_label')} · {praetCount} {window.t('trainer.n_verbs')}
               </div>
             </button>
             <button
               disabled={praetCount === 0}
               style={{ ...S.card, borderLeft: `4px solid var(--c-praeteritum)`, cursor: praetCount > 0 ? "pointer" : "not-allowed", textAlign: "left", opacity: praetCount > 0 ? 1 : 0.5 }}
               onClick={startLearnPraeteritumFullTest}>
-              <div style={{ fontWeight: 700, fontSize: 16, marginBottom: 4 }}><Icon name="rewind" /> Präteritum — полный тест</div>
+              <div style={{ fontWeight: 700, fontSize: 16, marginBottom: 4 }}><Icon name="rewind" /> {window.t('trainer.praeteritum_full_test_title')}</div>
               <div style={{ fontSize: 13, color: "var(--text-muted)" }}>
-                Все {praetCount} глаголов · один проход · fill
+                {window.t('trainer.all_prefix')} {praetCount} {window.t('trainer.n_verbs')} · {window.t('trainer.one_pass_fill')}
               </div>
             </button>
           </div>
@@ -3909,7 +3942,7 @@ function App() {
   function renderLearnPraeteritumCards() {
     const praetList = CONJUGATIONS.filter(c => c.praeteritum);
     if (praetList.length === 0) {
-      return <div style={S.page}><div style={S.container}>Нет данных по Präteritum.</div></div>;
+      return <div style={S.page}><div style={S.container}>{window.t('trainer.no_praeteritum_data')}</div></div>;
     }
     const conj = praetList[cardIdx] || praetList[0];
     return (
@@ -3919,16 +3952,16 @@ function App() {
             left={
               <button style={S.outlineBtn(activeBlock.color)}
                       onClick={() => setPhase("select-learn-conj")}>
-                ← Назад
+                {ICON_ARROW_LEFT} {window.t('trainer.back')}
               </button>
             }
             right={<span style={S.muted}>{cardIdx + 1} / {praetList.length}</span>}
-            icon={icon} onTheme={cycleTheme} onHome={goHome} />
+            icon={icon} onTheme={cycleTheme} onLang={cycleLang} onHome={goHome} />
           <PraeteritumFlipCard key={conj.id || conj.verb} conj={conj} flipped={flipped}
                                onFlip={() => setFlipped(!flipped)}
                                color="var(--c-praeteritum)" />
           <div style={{ display: "flex", gap: 12, justifyContent: "center", marginTop: 20 }}>
-            <button style={S.outlineBtn()} onClick={() => { setCardIdx(Math.max(0, cardIdx-1)); setFlipped(false); }} disabled={cardIdx === 0}>← Назад</button>
+            <button style={S.outlineBtn()} onClick={() => { setCardIdx(Math.max(0, cardIdx-1)); setFlipped(false); }} disabled={cardIdx === 0}>{ICON_ARROW_LEFT} {window.t('trainer.back')}</button>
             <button style={S.primaryBtn("var(--c-praeteritum)")}
                     onClick={() => {
                       if (cardIdx + 1 >= praetList.length) {
@@ -3938,16 +3971,16 @@ function App() {
                         setFlipped(false);
                       }
                     }}>
-              {cardIdx + 1 >= praetList.length ? "К тесту →" : "Дальше →"}
+              {cardIdx + 1 >= praetList.length ? window.t('trainer.to_test_arrow') : window.t('trainer.next_arrow')}
             </button>
           </div>
           <div style={{ display: "flex", justifyContent: "center", marginTop: 12 }}>
             <div style={{ display: "flex", gap: 10, justifyContent: "center" }}>
               <button style={S.outlineBtn("var(--c-outline-grey)")} onClick={startLearnPraeteritumTest}>
-                <Icon name="clipboard" /> Тест (30)
+                <Icon name="clipboard" /> {window.t('trainer.test_30')}
               </button>
               <button style={S.outlineBtn("var(--c-praeteritum)")} onClick={startLearnPraeteritumFullTest}>
-                <Icon name="clipboard" /> Полный тест
+                <Icon name="clipboard" /> {window.t('trainer.full_test')}
               </button>
             </div>
           </div>
@@ -3958,7 +3991,7 @@ function App() {
 
   function renderLearnConjCards() {
     if (CONJUGATIONS.length === 0) {
-      return <div style={S.page}><div style={S.container}>Нет данных по спряжениям.</div></div>;
+      return <div style={S.page}><div style={S.container}>{window.t('trainer.no_conj_data')}</div></div>;
     }
     const conj = CONJUGATIONS[cardIdx];
     return (
@@ -3968,16 +4001,16 @@ function App() {
             left={
               <button style={S.outlineBtn(activeBlock.color)}
                       onClick={goBackToSubblocks}>
-                ← Назад
+                {ICON_ARROW_LEFT} {window.t('trainer.back')}
               </button>
             }
             right={<span style={S.muted}>{cardIdx + 1} / {CONJUGATIONS.length}</span>}
-            icon={icon} onTheme={cycleTheme} onHome={goHome} />
+            icon={icon} onTheme={cycleTheme} onLang={cycleLang} onHome={goHome} />
           <ConjFlipCard key={conj.id || conj.verb} conj={conj} flipped={flipped}
                         onFlip={() => setFlipped(!flipped)}
                         color={activeBlock.color} />
           <div style={{ display: "flex", gap: 12, justifyContent: "center", marginTop: 20 }}>
-            <button style={S.outlineBtn()} onClick={prevCard} disabled={cardIdx === 0}>← Назад</button>
+            <button style={S.outlineBtn()} onClick={prevCard} disabled={cardIdx === 0}>{ICON_ARROW_LEFT} {window.t('trainer.back')}</button>
             <button style={S.primaryBtn(activeBlock.color)}
                     onClick={() => {
                       if (cardIdx + 1 >= CONJUGATIONS.length) {
@@ -3987,15 +4020,15 @@ function App() {
                         setFlipped(false);
                       }
                     }}>
-              {cardIdx + 1 >= CONJUGATIONS.length ? "К мини-тесту →" : "Дальше →"}
+              {cardIdx + 1 >= CONJUGATIONS.length ? window.t('trainer.to_minitest') : window.t('trainer.next_arrow')}
             </button>
           </div>
           <div style={{ display: "flex", justifyContent: "center", marginTop: 12, gap: 10, flexWrap: "wrap" }}>
             <button style={S.outlineBtn("var(--c-outline-grey)")} onClick={startLearnConjMiniTest}>
-              <Icon name="clipboard" /> Mini-тест (37)
+              <Icon name="clipboard" /> {window.t('trainer.minitest_37')}
             </button>
             <button style={S.outlineBtn("var(--c-praeteritum)")} onClick={startLearnPraeteritumFullTest}>
-              <Icon name="rewind" /> Полный тест Präteritum (131)
+              <Icon name="rewind" /> {window.t('trainer.full_test_praeteritum_131')}
             </button>
           </div>
         </div>
@@ -4010,12 +4043,12 @@ function App() {
         <div style={S.page}>
           <div style={S.container}>
             <TopBar
-              left={<button style={S.outlineBtn(activeBlock.color)} onClick={goBackToSubblocks}>← Назад</button>}
+              left={<button style={S.outlineBtn(activeBlock.color)} onClick={goBackToSubblocks}>{ICON_ARROW_LEFT} {window.t('trainer.back')}</button>}
               right={<span style={S.muted}>{modeLabel}</span>}
-              icon={icon} onTheme={cycleTheme} onHome={goHome} />
+              icon={icon} onTheme={cycleTheme} onLang={cycleLang} onHome={goHome} />
             <div style={{ textAlign: "center", marginTop: 40 }}>
-              <p>Нет вопросов для этого блока.</p>
-              <button style={S.primaryBtn(activeBlock.color)} onClick={goBackToSubblocks}>Назад</button>
+              <p>{window.t('trainer.no_questions_for_block')}</p>
+              <button style={S.primaryBtn(activeBlock.color)} onClick={goBackToSubblocks}>{window.t('trainer.back')}</button>
             </div>
           </div>
         </div>
@@ -4023,7 +4056,7 @@ function App() {
     }
     const q = questions[qIdx];
     const subLabel = phase === "learn-test"
-      ? "Мини-тест на перевод"
+      ? window.t('trainer.minitest_translation_label')
       : (activeSub ? activeSub.label : activeBlock.label);
 
     // Уровень и подпись (полная для пользователя)
@@ -4055,7 +4088,7 @@ function App() {
                                      }
                                    }
                                  : goBackToSubblocks}>
-                ← Назад
+                {ICON_ARROW_LEFT} {window.t('trainer.back')}
               </button>
             }
             right={<span style={S.muted}>
@@ -4068,9 +4101,9 @@ function App() {
               )}
               {qIdx + 1} / {questions.length} · <Icon name="check" size={12} /> {correctCount}
             </span>}
-            icon={icon} onTheme={cycleTheme} onHome={goHome} />
+            icon={icon} onTheme={cycleTheme} onLang={cycleLang} onHome={goHome} />
           <div style={{ textAlign: "center", color: "var(--text-muted)", fontSize: 13, marginBottom: 12 }}>
-            {subLabel} · {mode === "test" ? "Тестирование" : "Изучение"}
+            {subLabel} · {mode === "test" ? window.t('trainer.mode_test_title') : window.t('trainer.mode_learn_title')}
           </div>
 
           {/* Бейдж уровня */}
@@ -4086,21 +4119,21 @@ function App() {
           <div style={S.questionCard}>
             <div style={S.questionMeta}>
               {TYPE_LABELS[q.type] || q.type}
-              {q.auto && <span style={S.autoBadge}>авто</span>}
+              {q.auto && <span style={S.autoBadge}>{window.t('trainer.auto_badge')}</span>}
             </div>
             <div style={S.questionText}>{q.q}</div>
             {renderAnswerControls(q)}
 
             {/* Плашка ✓ Правильно / ✗ Неправильно */}
             {answered && lastVerdict === true && (
-              <div style={S.verdictRight}><Icon name="check" /> Правильно</div>
+              <div style={S.verdictRight}><Icon name="check" /> {window.t('trainer.correct')}</div>
             )}
             {answered && lastVerdict === false && (
               <>
-                <div style={S.verdictWrong}><Icon name="cross" /> Неправильно</div>
+                <div style={S.verdictWrong}><Icon name="cross" /> {window.t('trainer.incorrect')}</div>
                 {correctAnsText && (
                   <div style={S.correctAns}>
-                    Правильно: <span style={S.correctAnsValue}>{correctAnsText}</span>
+                    {window.t('trainer.correct_answer_prefix')} <span style={S.correctAnsValue}>{correctAnsText}</span>
                   </div>
                 )}
               </>
@@ -4116,7 +4149,7 @@ function App() {
           {answered && (
             <div style={{ textAlign: "center", marginTop: 16 }}>
               <button style={S.primaryBtn(activeBlock.color)} onClick={nextQ}>
-                {qIdx + 1 >= questions.length ? "Результат →" : "Дальше →"}
+                {qIdx + 1 >= questions.length ? window.t('trainer.to_result') : window.t('trainer.next_arrow')}
               </button>
             </div>
           )}
@@ -4173,18 +4206,18 @@ function App() {
                    if (e.key === "Enter" && !answered)
                      submitAnswer(checkFill(userAns, q.ans, q.altAns), userAns);
                  }}
-                 placeholder="Введи ответ..." />
+                 placeholder={window.t('trainer.enter_answer_placeholder')} />
           {q.hint && (
             <div style={{ marginTop: 8 }}>
               {hintVisible ? (<div style={S.hint}><Icon name="bulb" size={13} /> {q.hint}</div>)
-                           : (<button style={S.linkBtn} onClick={() => setHintVisible(true)}>Показать подсказку</button>)}
+                           : (<button style={S.linkBtn} onClick={() => setHintVisible(true)}>{window.t('trainer.show_hint')}</button>)}
             </div>
           )}
           {!answered && (
             <div style={{ marginTop: 12, textAlign: "right" }}>
               <button style={S.primaryBtn(activeBlock.color)}
                       onClick={() => submitAnswer(checkFill(userAns, q.ans, q.altAns), userAns)}>
-                Проверить
+                {window.t('trainer.check_btn')}
               </button>
             </div>
           )}
@@ -4220,7 +4253,7 @@ function App() {
                         const correctPhrase = q.words.join(" ");
                         submitAnswer(normalise(userPhrase) === normalise(correctPhrase), userPhrase);
                       }}>
-                Проверить
+                {window.t('trainer.check_btn')}
               </button>
             </div>
           )}
@@ -4265,14 +4298,14 @@ function App() {
                           `${p} ${conjAnswers[i] || "—"}`).join(", ");
                         submitAnswer(allCorrect, userValue);
                       }}>
-                Проверить
+                {window.t('trainer.check_btn')}
               </button>
             </div>
           )}
         </div>
       );
     }
-    return <div>Неизвестный тип вопроса: {q.type}</div>;
+    return <div>{window.t('trainer.unknown_question_type')} {q.type}</div>;
   }
 
   // ─── RESULTS ────────────────────────────────────────────────────────────
@@ -4282,9 +4315,9 @@ function App() {
       <div style={S.page}>
         <div style={S.container}>
           <TopBar
-            left={<button style={S.outlineBtn(activeBlock.color)} onClick={goHome}>← На главную</button>}
+            left={<button style={S.outlineBtn(activeBlock.color)} onClick={goHome}>{ICON_ARROW_LEFT} {window.t('nav.back_home')}</button>}
             right={<span style={S.muted}>{modeLabel}</span>}
-            icon={icon} onTheme={cycleTheme} onHome={goHome} />
+            icon={icon} onTheme={cycleTheme} onLang={cycleLang} onHome={goHome} />
           <div style={{ ...S.questionCard, textAlign: "center", padding: 40 }}>
             <div style={{ display: "flex", justifyContent: "center", marginBottom: 16 }}>
               <Icon name={pct >= 80 ? "party" : pct >= 50 ? "thumbs-up" : "flex"} size={64} />
@@ -4292,9 +4325,9 @@ function App() {
             <div style={{ fontSize: 28, marginBottom: 8, color: "var(--text-title)", fontWeight: 700 }}>
               {correctCount} / {questions.length}
             </div>
-            <div style={{ fontSize: 18, color: "var(--text-muted)" }}>{pct}% правильно</div>
+            <div style={{ fontSize: 18, color: "var(--text-muted)" }}>{pct}% {window.t('trainer.pct_correct_label')}</div>
             <div style={{ marginTop: 24, display: "flex", gap: 12, justifyContent: "center", flexWrap: "wrap" }}>
-              <button style={S.outlineBtn(activeBlock.color)} onClick={goBackToSubblocks}>К темам</button>
+              <button style={S.outlineBtn(activeBlock.color)} onClick={goBackToSubblocks}>{window.t('trainer.to_topics')}</button>
               <button style={S.primaryBtn(activeBlock.color)}
                       onClick={() => {
                         if (mode === "learn") {
@@ -4304,7 +4337,7 @@ function App() {
                           startTest(activeSub);
                         }
                       }}>
-                Ещё раз →
+                {window.t('trainer.again_arrow')}
               </button>
             </div>
           </div>
@@ -4313,7 +4346,7 @@ function App() {
           {userAnswers.length > 0 && (
             <div style={{ marginTop: 24 }}>
               <div style={{ fontSize: 16, fontWeight: 700, color: "var(--text-title)", marginBottom: 12 }}>
-                <Icon name="clipboard" /> Разбор
+                <Icon name="clipboard" /> {window.t('trainer.review_label')}
               </div>
               {userAnswers.map((ua, idx) => {
                 const q = ua.q;
@@ -4336,14 +4369,14 @@ function App() {
                     </div>
                     <div style={S.reviewQ}>{q.q}</div>
                     <div style={S.reviewLine}>
-                      Твой ответ:{" "}
+                      {window.t('trainer.your_answer')}{" "}
                       <span style={S.reviewMyAns(ua.isCorrect)}>
                         {userText || "—"}
                       </span>
                     </div>
                     {!ua.isCorrect && correctText && (
                       <div style={S.reviewLine}>
-                        Правильно: <span style={S.reviewRightAns}>{correctText}</span>
+                        {window.t('trainer.correct_answer_prefix')} <span style={S.reviewRightAns}>{correctText}</span>
                       </div>
                     )}
                     {explainText && (

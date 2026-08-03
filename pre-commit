@@ -1,39 +1,52 @@
 #!/bin/sh
-# pre-commit: проверка ?v=YYYYMMDD у data.js И theme.css в HTML-файлах
-# Должен соответствовать сегодняшней дате.
-# Файлы/ассеты, где версия не в формате даты (напр. i18n/*.js?v=N), пропускаются —
-# это отдельная, более простая схема версионирования, дата тут не при чём.
+# pre-commit: единая версия кэш-баста для всех статических ассетов.
+#
+# Источник правды — маркер CACHE_VERSION в самом верху <head> index.html:
+#   <!-- CACHE_VERSION: YYYYMMDD -->
+#
+# Если в коммите затронут хотя бы один из ASSET_FILES — хук проверяет, что
+# маркер равен сегодняшней дате, и сам прописывает это значение во ВСЕ
+# ?v=... у ASSET_FILES во ВСЕХ HTML_FILES (включая i18n/*.js — для них раньше
+# была отдельная схема с простым счётчиком, теперь всё под одной датой).
+# Изменённые файлы автоматически добавляются в этот же коммит.
 
-TODAY=$(date +%Y%m%d)
 REPO_ROOT=$(git rev-parse --show-toplevel)
-FAIL=0
-BAD_FILES=""
+cd "$REPO_ROOT" || exit 1
 
-for f in "$REPO_ROOT"/*.html; do
-  [ -f "$f" ] || continue
-  # Ищем все вхождения data.js?v=XXXXXXXX и theme.css?v=XXXXXXXX
-  VERSIONS=$(grep -oE '(data\.js|theme\.css)\?v=[0-9]{8}' "$f" | sed -E 's/(data\.js|theme\.css)\?v=//' | sort -u)
-  [ -z "$VERSIONS" ] && continue
-  for V in $VERSIONS; do
-    if [ "$V" != "$TODAY" ]; then
-      NAME=$(basename "$f")
-      echo "  ✗ $NAME: ?v=$V  →  должно быть ?v=$TODAY"
-      BAD_FILES="$BAD_FILES $NAME"
-      FAIL=1
-    fi
-  done
+ASSET_FILES="theme.css data.js i18n/ru.js i18n/en.js i18n/i18n.js"
+HTML_FILES="index.html about.html faq.html cheatsheet.html trainer.html"
+TODAY=$(date +%Y%m%d)
+
+# Проверяем: тронут ли в этом коммите хоть один из ASSET_FILES?
+STAGED=$(git diff --cached --name-only)
+NEED_CHECK=0
+for a in $ASSET_FILES; do
+  case "$STAGED" in
+    *"$a"*) NEED_CHECK=1 ;;
+  esac
 done
+[ "$NEED_CHECK" = "0" ] && exit 0
 
-if [ "$FAIL" = "1" ]; then
-  echo ""
-  echo "Версия data.js/theme.css в HTML не совпадает с сегодняшней датой ($TODAY)."
-  echo ""
-  echo "Команда для починки (запусти в git bash из корня репо):"
-  echo ""
-  echo "  sed -i -E 's/(data\\.js|theme\\.css)\\?v=[0-9]{8}/\\1?v=$TODAY/g'$BAD_FILES"
-  echo ""
-  echo "Или вручную найди и замени строку в указанных файлах."
+MARKER=$(grep -oE '<!-- CACHE_VERSION: [0-9]{8}' index.html | grep -oE '[0-9]{8}')
+
+if [ -z "$MARKER" ]; then
+  echo "✗ pre-commit: не найден маркер <!-- CACHE_VERSION: YYYYMMDD --> в index.html"
   exit 1
 fi
+
+if [ "$MARKER" != "$TODAY" ]; then
+  echo "✗ pre-commit: CACHE_VERSION в index.html = $MARKER, должен быть сегодняшний $TODAY"
+  echo ""
+  echo "  Поправь строку в index.html:"
+  echo "    <!-- CACHE_VERSION: $TODAY -->"
+  exit 1
+fi
+
+# Прописываем маркер во все ?v= у ASSET_FILES во всех HTML_FILES
+for f in $HTML_FILES; do
+  [ -f "$f" ] || continue
+  sed -i -E "s#(theme\.css|data\.js|i18n/(ru|en|i18n)\.js)\?v=[0-9A-Za-z]+#\1?v=$MARKER#g" "$f"
+  git add "$f"
+done
 
 exit 0

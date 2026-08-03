@@ -6,10 +6,10 @@
 <meta property="og:title" content="Справочник — Deutsch Tools">
 <meta property="og:description" content="Интерактивный справочник по немецкому: слова, правила, произношение">
 <meta property="og:type" content="website">
-<link rel="stylesheet" href="theme.css?v=20260803">
-<script src="i18n/ru.js?v=2"></script>
-<script src="i18n/en.js?v=2"></script>
-<script src="i18n/i18n.js?v=1"></script>
+<link rel="stylesheet" href="theme.css?v=20260804">
+<script src="i18n/ru.js?v=20260804"></script>
+<script src="i18n/en.js?v=20260804"></script>
+<script src="i18n/i18n.js?v=20260804"></script>
 <style>
 *{box-sizing:border-box;margin:0;padding:0}
 body{font-family:sans-serif;font-size:13px;color:var(--text-main);line-height:1.4;background:var(--bg-body);overflow-x:hidden}
@@ -453,7 +453,7 @@ tr[data-vid], [data-vid].conj-card { cursor: pointer; }
   document.documentElement.classList.add('theme-' + saved);
 })();
 </script>
-<script src="data.js?v=20260803"></script>
+<script src="data.js?v=20260804"></script>
 <script>
 // ─── Версия приложения (обновлять вместе с ?v= выше) ─────────
 var APP_VERSION = 'v6.9';
@@ -2978,6 +2978,13 @@ function show(id){
   }
 
   function jumpTo(entry) {
+    // Слово из VOCAB — сразу открываем модалку с полной карточкой (перевод,
+    // склонение/спряжение, пример), без перехода на вкладку и скролла к строке.
+    // Термины/правила/звуки модалки не имеют — для них старое поведение (переход + подсветка).
+    if (entry.item && entry.item.id && typeof VOCAB_BY_ID !== 'undefined' && VOCAB_BY_ID[entry.item.id]) {
+      showWordModal(entry.item.id);
+      return;
+    }
     const tabId = tabIdFor(entry);
     if (!tabId) return;
     if (typeof show === 'function') show(tabId);
