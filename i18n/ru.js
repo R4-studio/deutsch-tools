@@ -104,9 +104,6 @@ window.I18N_RU = {
   "cheatsheet.th_letter_combo": "Буква/сочетание",
   "cheatsheet.th_example": "Пример",
   "cheatsheet.sounds_title": "Произношение букв и сочетаний",
-  "cheatsheet.new_rules_title": "Новые правила",
-  "cheatsheet.new_terms_title": "Новые термины",
-  "cheatsheet.new_sounds_title": "Новые звуки",
   "cheatsheet.no_new_words": "Новых слов пока нет",
   "cheatsheet.to_top": "Наверх",
 
