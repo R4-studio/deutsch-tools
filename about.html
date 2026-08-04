@@ -162,9 +162,14 @@ h1 {
 .about-github a:hover { filter: brightness(0.85); }
 </style>
 <script>
+// 'auto' резолвим через системную настройку сразу же — theme.css больше не
+// дублирует палитру в @media (prefers-color-scheme), класс нужен всегда явно.
 (function() {
   var saved = localStorage.getItem('theme') || 'auto';
-  if (saved !== 'auto') document.documentElement.classList.add('theme-' + saved);
+  var resolved = saved === 'auto'
+    ? ((window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) ? 'dark' : 'light')
+    : saved;
+  document.documentElement.classList.add('theme-' + resolved);
 })();
 </script>
 </head>
@@ -234,17 +239,29 @@ function applyThemeIcon(theme) {
   if (el) el.innerHTML = THEME_ICONS[theme] || THEME_ICONS.auto;
   if (btn) btn.title = t('theme.prefix') + (theme === 'auto' ? t('theme.auto') : (theme === 'dark' ? t('theme.dark') : t('theme.light')));
 }
-function cycleTheme() {
+function applyThemeClass(theme) {
   var html = document.documentElement;
+  html.classList.remove('theme-light', 'theme-dark');
+  var resolved = theme === 'auto'
+    ? ((window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) ? 'dark' : 'light')
+    : theme;
+  html.classList.add('theme-' + resolved);
+}
+function cycleTheme() {
   var saved = localStorage.getItem('theme') || 'auto';
   var next;
   if (saved === 'auto') next = 'light';
   else if (saved === 'light') next = 'dark';
   else next = 'auto';
-  html.classList.remove('theme-light', 'theme-dark');
-  if (next !== 'auto') html.classList.add('theme-' + next);
+  applyThemeClass(next);
   localStorage.setItem('theme', next);
   applyThemeIcon(next);
+}
+// Если выбран 'auto' и система меняет тему — перерисовываемся без перезагрузки
+if (window.matchMedia) {
+  window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', function() {
+    if ((localStorage.getItem('theme') || 'auto') === 'auto') applyThemeClass('auto');
+  });
 }
 applyThemeIcon(localStorage.getItem('theme') || 'auto');
 
