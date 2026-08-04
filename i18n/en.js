@@ -103,9 +103,6 @@ window.I18N_EN = {
   "cheatsheet.th_letter_combo": "Letter/combo",
   "cheatsheet.th_example": "Example",
   "cheatsheet.sounds_title": "Pronunciation of letters and combos",
-  "cheatsheet.new_rules_title": "New rules",
-  "cheatsheet.new_terms_title": "New terms",
-  "cheatsheet.new_sounds_title": "New sounds",
   "cheatsheet.no_new_words": "No new words yet",
   "cheatsheet.to_top": "Top",
 

@@ -3591,7 +3591,7 @@ function show(id){
       const newTerms = TERMS.filter(t => (t.topics || []).some(x => x === 'new:new-terms'));
       if (newTerms.length > 0) {
         html += '<div class="section">'
-              + '<div class="section-title">' + ic('book-open') + ' ' + t('cheatsheet.new_terms_title') + '</div>'
+              + '<div class="section-title">' + topicTitleHtml('new:new-terms') + '</div>'
               + '<table><thead><tr><th>' + t('cheatsheet.th_term') + '</th><th>' + t('cheatsheet.th_translation') + '</th><th>' + t('cheatsheet.th_note') + '</th></tr></thead><tbody>';
         for (const t of newTerms) {
           html += '<tr><td>' + escHtml(t.term || '') + '</td>'
@@ -3607,7 +3607,7 @@ function show(id){
       const newSounds = SOUNDS.filter(s => (s.topics || []).some(x => x === 'new:new-sounds'));
       if (newSounds.length > 0) {
         html += '<div class="section">'
-              + '<div class="section-title">' + ic('waveform') + ' ' + t('cheatsheet.new_sounds_title') + '</div>'
+              + '<div class="section-title">' + topicTitleHtml('new:new-sounds') + '</div>'
               + '<table><thead><tr><th>' + t('cheatsheet.th_letter_combo') + '</th><th>' + t('cheatsheet.th_pronunciation') + '</th><th>' + t('cheatsheet.th_example') + '</th></tr></thead><tbody>';
         for (const s of newSounds) {
           html += '<tr><td>' + escHtml(s.combo || '') + '</td>'
@@ -3623,7 +3623,7 @@ function show(id){
       const newRules = RULES.filter(r => r.new === true);
       if (newRules.length > 0) {
         html += '<div class="section" style="margin-bottom:24px">';
-        html += '<div class="section-title" style="font-size:15px;margin-bottom:12px">' + ic('ruleset') + ' ' + t('cheatsheet.new_rules_title') + '</div>';
+        html += '<div class="section-title" style="font-size:15px;margin-bottom:12px">' + topicTitleHtml('new:new-rules') + '</div>';
         for (const r of newRules) {
           html += '<div class="rule-box" style="margin-bottom:18px">';
           if (r.title) {
