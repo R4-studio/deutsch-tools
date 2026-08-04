@@ -455,10 +455,6 @@ tr[data-vid], [data-vid].conj-card { cursor: pointer; }
 </script>
 <script src="data.js?v=20260804"></script>
 <script>
-// ─── Версия приложения (обновлять вместе с ?v= выше) ─────────
-var APP_VERSION = 'v6.9';
-</script>
-<script>
 // ─── Глобальный хелпер экранирования HTML ────────────────────────────────
 function escHtml(s) {
   if (s === null || s === undefined) return '';
@@ -3113,26 +3109,6 @@ function show(id){
 <div class="to-top to-top-fixed" onclick="window.scrollTo({top:0, behavior:'smooth'})">
   ↑ <span data-i18n="cheatsheet.to_top">Наверх</span>
 </div>
-<div id="footer-version" style="text-align:center;font-size:11px;color:var(--text-muted);padding:6px;"></div>
-<script>
-(function() {
-  var el = document.getElementById('footer-version');
-  if (!el) return;
-  // Берём версию из атрибута src тега data.js
-  var scripts = document.querySelectorAll('script[src*="data.js"]');
-  var ver = '';
-  if (scripts.length) {
-    var m = scripts[0].getAttribute('src').match(/\?v=(\d+)/);
-    if (m) {
-      var v = m[1]; // напр. 20260524
-      ver = v.slice(0,4) + '-' + v.slice(4,6) + '-' + v.slice(6,8);
-    }
-  }
-  if (ver) el.textContent = 'Update: ' + ver + ' | ' + (window.APP_VERSION || '');
-})();
-</script>
-
-
 <!-- Рендер справочника из data.js -->
 <script>
 // ═══════════════════════════════════════════════════════════════
