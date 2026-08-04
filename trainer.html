@@ -679,6 +679,23 @@ function TopBar({ left, right, icon, onTheme, onHome, onLang }) {
   );
 }
 
+// wordText(item) — перевод слова с учётом языка (мультиязычность, слой 2):
+// en, если выбран английский и оно переведено (VOCAB.en/CONJUGATIONS.en из
+// update_data.py/DeepL), иначе всегда ru. Тот же паттерн, что в cheatsheet.html.
+function wordText(item) {
+  if (!item) return "";
+  var lang = window.getLang ? window.getLang() : "ru";
+  if (lang === "en" && item.en) return item.en;
+  return item.ru != null ? item.ru : "";
+}
+// wordField(item, 'note', 'noteEn') — как wordText(), но для произвольной пары полей.
+function wordField(item, field, enField) {
+  if (!item) return "";
+  var lang = window.getLang ? window.getLang() : "ru";
+  if (lang === "en" && item[enField]) return item[enField];
+  return item[field] != null ? item[field] : "";
+}
+
 // ═══════════════════════════════════════════════════════════════
 // КОМПОНЕНТ: КАРТОЧКА СПРЯЖЕНИЯ (FLIP) — для unregel
 // ═══════════════════════════════════════════════════════════════
@@ -710,7 +727,7 @@ function ConjFlipCard({ conj, flipped, onFlip, color }) {
             </div>
             {conj.ru && (
               <div style={{ fontSize: 16, color: "var(--text-muted)", marginBottom: 14 }}>
-                — {conj.ru}
+                — {wordText(conj)}
               </div>
             )}
             <div style={{ fontSize: 12, color: "var(--text-muted)" }}>
@@ -792,7 +809,7 @@ function PraeteritumFlipCard({ conj, flipped, onFlip, color }) {
             </div>
             {conj.ru && (
               <div style={{ fontSize: 16, color: "var(--text-muted)", marginBottom: 14 }}>
-                — {conj.ru}
+                — {wordText(conj)}
               </div>
             )}
             <div style={{ fontSize: 12, color: "var(--text-muted)" }}>
@@ -893,7 +910,7 @@ function FlipCard({ item, flipped, onFlip, color }) {
           {isVerb ? (
             <div style={{ padding: "0 16px", width: "100%" }}>
               <div style={{ fontSize: 16, fontWeight: 700, marginBottom: 4 }}>
-                {item.de} · <span style={{ opacity: 0.9, fontWeight: 400 }}>{item.ru}</span>
+                {item.de} · <span style={{ opacity: 0.9, fontWeight: 400 }}>{wordText(item)}</span>
               </div>
               <div style={{ fontSize: 13, opacity: 0.85, marginBottom: 10 }}>{window.t('trainer.praesens_label')}</div>
               <table style={{ margin: "0 auto", fontSize: 14 }}>
@@ -935,9 +952,9 @@ function FlipCard({ item, flipped, onFlip, color }) {
             </div>
           ) : (
             <div>
-              <div style={{ fontSize: 24, fontWeight: 700, marginBottom: 10 }}>{item.ru}</div>
+              <div style={{ fontSize: 24, fontWeight: 700, marginBottom: 10 }}>{wordText(item)}</div>
               {item.note && (
-                <div style={{ fontSize: 13, opacity: 0.9, lineHeight: 1.5, padding: "0 20px" }}>{item.note}</div>
+                <div style={{ fontSize: 13, opacity: 0.9, lineHeight: 1.5, padding: "0 20px" }}>{wordField(item, "note", "noteEn")}</div>
               )}
             </div>
           )}
@@ -3227,10 +3244,10 @@ function App() {
     if (!q || !q.sourceId) return q?.explain || "";
     // Ищем в VOCAB
     const v = VOCAB.find(x => x.id === q.sourceId);
-    if (v && v.note) return v.note;
+    if (v && v.note) return wordField(v, "note", "noteEn");
     // Ищем в CONJUGATIONS
     const c = CONJUGATIONS.find(x => x.id === q.sourceId);
-    if (c && c.ru) return `${c.verb} — ${c.ru}`;
+    if (c && c.ru) return `${c.verb} — ${wordText(c)}`;
     return q.explain || "";
   }
 
