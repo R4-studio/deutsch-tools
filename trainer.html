@@ -14,14 +14,14 @@
   document.documentElement.classList.add('theme-' + saved);
 })();
 </script>
-<link rel="stylesheet" href="theme.css?v=20260804">
-<script src="i18n/ru.js?v=20260804"></script>
-<script src="i18n/en.js?v=20260804"></script>
-<script src="i18n/i18n.js?v=20260804"></script>
+<link rel="stylesheet" href="theme.css?v=20260817">
+<script src="i18n/ru.js?v=20260817"></script>
+<script src="i18n/en.js?v=20260817"></script>
+<script src="i18n/i18n.js?v=20260817"></script>
 
 <script crossorigin src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
 <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
-<script src="data.js?v=20260804"></script>
+<script src="data.js?v=20260817"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/7.25.6/babel.min.js"></script>
 
 <style>
@@ -2446,46 +2446,54 @@ function buildPraesensPool(verbItems, conjugations) {
   // ─── Ур.4 — глагол в предложении (tiles) ─────────────────────────────
   // Шаблоны Präsens-предложений. {VERB_ICH}, {VERB_DU}, {VERB_ER} — формы глагола.
   // words: массив слов-плиток в правильном порядке.
+  // ruWord(v, ruForms, i) — личная форма для подсказки на русском: берём
+  // ruForms[i] (сгенерировано pymorphy3 в update_data.py, тот же индекс
+  // person/number, что и в forms[i] для немецкого), иначе — фолбэк на
+  // сырой инфинитив v.ru (если pymorphy3 не смог проспрягать конкретный
+  // глагол — см. предупреждения update_data.py).
+  function ruWord(v, ruForms, i) {
+    return (ruForms && ruForms[i]) || v.ru;
+  }
   const PRAESENS_TILES_TMPLS = [
     {
-      build: (v, forms) => ({
-        ru: `Я ${v.ru}.`,
+      build: (v, forms, ruForms) => ({
+        ru: `Я ${ruWord(v, ruForms, 0)}.`,
         words: ["Ich", forms[0] + "."],
       }),
     },
     {
-      build: (v, forms) => ({
-        ru: `Ты ${v.ru}?`,
+      build: (v, forms, ruForms) => ({
+        ru: `Ты ${ruWord(v, ruForms, 1)}?`,
         words: [forms[1].charAt(0).toUpperCase() + forms[1].slice(1), "du?"],
       }),
     },
     {
-      build: (v, forms) => ({
-        ru: `Он ${v.ru}.`,
+      build: (v, forms, ruForms) => ({
+        ru: `Он ${ruWord(v, ruForms, 2)}.`,
         words: ["Er", forms[2] + "."],
       }),
     },
     {
-      build: (v, forms) => ({
-        ru: `Мы ${v.ru}.`,
+      build: (v, forms, ruForms) => ({
+        ru: `Мы ${ruWord(v, ruForms, 3)}.`,
         words: ["Wir", forms[3] + "."],
       }),
     },
     {
-      build: (v, forms) => ({
-        ru: `Я сейчас ${v.ru}.`,
+      build: (v, forms, ruForms) => ({
+        ru: `Я сейчас ${ruWord(v, ruForms, 0)}.`,
         words: ["Ich", forms[0], "gerade."],
       }),
     },
     {
-      build: (v, forms) => ({
-        ru: `Ты сейчас ${v.ru}?`,
+      build: (v, forms, ruForms) => ({
+        ru: `Ты сейчас ${ruWord(v, ruForms, 1)}?`,
         words: [forms[1].charAt(0).toUpperCase() + forms[1].slice(1), "du", "gerade?"],
       }),
     },
     {
-      build: (v, forms) => ({
-        ru: `Они ${v.ru}.`,
+      build: (v, forms, ruForms) => ({
+        ru: `Они ${ruWord(v, ruForms, 5)}.`,
         words: ["Sie", forms[5] + "."],
       }),
     },
@@ -2500,7 +2508,7 @@ function buildPraesensPool(verbItems, conjugations) {
     // Берём 2 случайных шаблона для разнообразия
     const chosen = shuffle(PRAESENS_TILES_TMPLS.slice()).slice(0, 2);
     for (const tmpl of chosen) {
-      const built = tmpl.build(item, forms);
+      const built = tmpl.build(item, forms, item.ruForms);
       if (!built || built.words.length < 2) continue;
       pool.push({
         auto: true, level: "A2", difficulty: 4, type: "tiles",

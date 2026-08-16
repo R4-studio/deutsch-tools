@@ -299,6 +299,55 @@ def translate_field_to_english(items, field, en_field, old_map, warn, label):
     print(f"  ✓ {label}.{en_field}: переведено {ok}/{len(to_translate)}")
 
 # ═══════════════════════════════════════════════════════════════
+# СЛОЙ 3: русские личные формы наст. времени для VOCAB-глаголов
+# (нужно trainer.html/PRAESENS_TILES_TMPLS — там v.ru раньше подставлялся
+# как есть, инфинитивом: "Составь: «Я любить.»" вместо "«Я люблю.»").
+# Генерируем через pymorphy3 из уже существующего поля `ru` в xlsx —
+# без новых колонок, без ручной работы автора базы.
+#
+# pymorphy2 сюда не встал: он тянет pkg_resources через entry points,
+# а в актуальных setuptools (>=81) pkg_resources выпилен физически —
+# ImportError при первом же MorphAnalyzer(). pymorphy3 — тот же API
+# (тот же .parse()/.inflect()), поддерживаемый форк, без этой проблемы.
+# ═══════════════════════════════════════════════════════════════
+try:
+    import pymorphy3
+    _MORPH = pymorphy3.MorphAnalyzer()
+except ImportError:
+    pymorphy3 = None
+    _MORPH = None
+
+RU_PRAESENS_PERSONS = [("1per", "sing"), ("2per", "sing"), ("3per", "sing"),
+                        ("1per", "plur"), ("2per", "plur"), ("3per", "plur")]
+
+def generate_ru_forms(ru_text):
+    """6 личных форм наст. времени (я/ты/он/мы/вы/они) из русского инфинитива.
+    Возвращает список из 6 строк либо None, если сгенерировать не удалось —
+    вызывающий код в этом случае должен фолбэкнуться на сырой ru_text
+    (несовершенный вид без пары, идиома/фраза, слово вне словаря и т.п.).
+
+    Спрягает только первое слово (голову) — хвост фразы вида "ходить по
+    магазинам" переносится как есть после проспрягованной формы: "хожу по
+    магазинам". Для омографов совершенного/несовершенного вида с одинаковым
+    инфинитивом (находить, выглядеть, уходить...) предпочитает несовершенный
+    разбор — у совершенного вида в русском нет наст. времени в принципе
+    (inflect(pres) для него всегда вернёт None), а у несовершенного есть."""
+    if not _MORPH or not ru_text:
+        return None
+    parts = ru_text.strip().split(None, 1)
+    head = parts[0]
+    rest = (" " + parts[1]) if len(parts) > 1 else ""
+    parses = [p for p in _MORPH.parse(head) if "INFN" in p.tag]
+    if not parses:
+        return None
+    impf = [p for p in parses if "impf" in p.tag]
+    chosen = impf[0] if impf else parses[0]
+    forms = [chosen.inflect({"pres", per, num}) for per, num in RU_PRAESENS_PERSONS]
+    if any(f is None for f in forms):
+        return None
+    return [f.word + rest for f in forms]
+
+# ═══════════════════════════════════════════════════════════════
 # Утилиты для чтения xlsx
 # ═══════════════════════════════════════════════════════════════
 def clean(v):
@@ -1477,6 +1526,24 @@ if __name__ == '__main__':
     verbs_vocab, regel_verbs, conjugations = process_verbs(read_sheet(wb, "verbs"), WARN)
     print(f"  ✓ {len(verbs_vocab)} в VOCAB, {len(regel_verbs)} regel, {len(conjugations)} unregel")
 
+    print("\n=== ruForms (личные формы наст. времени, pymorphy3) ===")
+    if _MORPH is None:
+        print("  ⚠ pymorphy3 не установлен — пропускаю (pip install pymorphy3 pymorphy3-dicts-ru)")
+        WARN.append("pymorphy3 не установлен — ruForms не сгенерированы, tiles Ур.4 используют сырой v.ru")
+    else:
+        ru_forms_fail = []
+        for v in verbs_vocab:
+            forms = generate_ru_forms(v.get("ru"))
+            if forms:
+                v["ruForms"] = forms
+            else:
+                ru_forms_fail.append(v.get("ru") or v.get("de"))
+        print(f"  ✓ {len(verbs_vocab) - len(ru_forms_fail)}/{len(verbs_vocab)} глаголов проспрягано, "
+              f"{len(ru_forms_fail)} — fallback на v.ru")
+        if ru_forms_fail:
+            WARN.append(f"ruForms: не удалось проспрягать {len(ru_forms_fail)} глаголов "
+                        f"(fallback на v.ru, проверить вручную при желании): {ru_forms_fail}")
+
     print("\n=== adjectives ===")
     adjectives = process_simple_vocab(read_sheet(wb, "adjectives"), "adjectives", "adj", WARN)
     print(f"  ✓ {len(adjectives)} прилагательных")
@@ -1595,7 +1662,7 @@ if __name__ == '__main__':
                   "comparative", "superlative", "antonym", "derivedFrom",
                   "kind", "case", "digit", "transcription", "context",
                   "type", "modal", "separable", "prefix", "reflexive", "impersonal",
-                  "aux", "partizip2", "praeteritum",
+                  "aux", "partizip2", "praeteritum", "ruForms",
                   "priority", "source", "exampleDe", "exampleRu", "exampleEn", "quizUse",
                   "strictOrder", "warning", "warningEn", "label"]
     REGEL_KEYS = ["id", "verb", "ru", "en", "forms", "partizip2", "aux", "praeteritum",
