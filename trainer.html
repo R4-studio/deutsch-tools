@@ -1687,27 +1687,17 @@ function genL3_possessive(item) {
     Dat: `Ich helfe ___ ${nounStem} (${p.ru})`,
   };
   return {
-    auto: true, level: "A2", difficulty: 2, type: "mc",
+    auto: true, level: "A2", difficulty: 3, type: "mc",
     q: `Вставь притяжательное (${kase}):\n${tmpls[kase]}`,
     opts, ans,
     sourceId: item.id,
   };
 }
 
-// blockId (верхний сегмент, до ":") → ожидаемый pos для этого блока. Один
-// и тот же topic (domen:group) может стоять у слов разных частей речи —
-// без этой проверки блок «Verben» может подмешать вопрос про существительное
-// с той же темой (напр. «Verben» → «Medien» и noun «Seite» c topic
-// communication:media). Блок «Neu» сюда не входит намеренно — там смешение
-// pos через уже pos-специфичные topics (new:new-nouns/new:new-verbs/...) —
-// корректное поведение, не баг.
-const BLOCK_POS = { verbs: "verb", nouns: "noun", adj: "adj", adv: "adv", mestoim: "pron", phrases: "phrase" };
-
 // ─── Главная функция: собрать пул автогенерированных вопросов для топиков ──
-function buildAutoQuestions(topics, vocab, conjugations, pos) {
-  // Берём слова из заданных topics (+ pos, если передан — см. BLOCK_POS выше)
-  const items = vocab.filter(v =>
-    (v.topics || []).some(t => topics.includes(t)) && (!pos || v.pos === pos));
+function buildAutoQuestions(topics, vocab, conjugations) {
+  // Берём слова из заданных topics
+  const items = vocab.filter(v => (v.topics || []).some(t => topics.includes(t)));
   if (items.length === 0) return [];
 
   const pool = [];
@@ -1738,11 +1728,6 @@ function buildAutoQuestions(topics, vocab, conjugations, pos) {
     // adj/adv
     const qt = genL2_topic_classify(item, vocab);
     if (qt) pool.push(qt);
-    // pron: склонение местоимений — личные (ниже, по теме целиком) и
-    // притяжательные (по каждому noun-item, единая логика без разделения
-    // на "тест существительного" vs "тест местоимения")
-    const qpos = genL3_possessive(item);
-    if (qpos) pool.push(qpos);
   }
   // Если есть местоимения в этой теме — Pers. Pronoun вопросы
   const hasPronouns = items.some(v => v.pos === "pron");
@@ -1753,7 +1738,7 @@ function buildAutoQuestions(topics, vocab, conjugations, pos) {
     }
   }
 
-  // Ур 3: полное спряжение verbs + артикль в контексте noun
+  // Ур 3: полное спряжение verbs + артикль в контексте noun + Possessive noun
   // Глаголы: full conj для каждого глагола в теме (regelmäßig из REGEL_VERBS, unregel из CONJUGATIONS)
   const verbsInTopic = items.filter(v => v.pos === "verb");
   for (const v of verbsInTopic) {
@@ -1794,10 +1779,12 @@ function buildAutoQuestions(topics, vocab, conjugations, pos) {
     });
   }
 
-  // Артикли в контексте — для существительных
+  // Артикли в контексте + Possessive — для существительных
   for (const item of items) {
     const qac = genL3_article_in_context(item);
     if (qac) pool.push(qac);
+    const qpos = genL3_possessive(item);
+    if (qpos) pool.push(qpos);
   }
 
   // ─── Partizip II ─────────────────────────────────────────────────────
@@ -1810,17 +1797,10 @@ function buildAutoQuestions(topics, vocab, conjugations, pos) {
     if (p2Table2) pool.push(p2Table2);
   }
 
-  // Ур 3: fill в Perfekt-предложении (несколько штук, через общий генератор
-  // genPerfL4_sentence — единая реализация haben+sein, см. buildPartizip2Pool)
-  const regelForP2Fill = verbsInTopic.filter(v =>
-    !v.de.includes(" ") && !conjugations.find(c => c.verb === v.de));
-  if (regelForP2Fill.length > 0) {
+  // Ур 4: fill в Perfekt-предложении (несколько штук)
+  if (verbsInTopic.length > 0) {
     for (let i = 0; i < 3; i++) {
-      const v = regelForP2Fill[Math.floor(Math.random() * regelForP2Fill.length)];
-      const q = genPerfL4_sentence({
-        verb: v.de, partizip2: getPartizip2(v.de, conjugations),
-        aux: getAux(v.de, conjugations), ru: v.ru, id: v.id,
-      });
+      const q = genL4_perfekt_fill(verbsInTopic, conjugations);
       if (q) pool.push(q);
     }
   }
@@ -1930,6 +1910,42 @@ function genL3_partizip2_table(verbsAvailable, conjugations) {
     tense: "Partizip II",
     pronouns: chosen.map(v => v.de),
     ans: chosen.map(v => getPartizip2(v.de, conjugations)),
+  };
+}
+
+// ─── Генератор: Ур 4 — Perfekt-предложение (fill на Partizip II) ──────────
+// Шаблоны: "Ich {aux} ... {p2}" — пользователь вписывает Partizip II
+const PERFEKT_TEMPLATES_HABEN = [
+  { tmpl: "Ich habe das Buch ___",       ru: "Я прочитал книгу", obj_pos: ["noun"] },
+  { tmpl: "Sie hat ein Lied ___",        ru: "Она спела песню",   obj_pos: ["noun"] },
+  { tmpl: "Wir haben die Hausaufgaben ___", ru: "Мы сделали уроки", obj_pos: ["noun"] },
+  { tmpl: "Er hat den Test ___",         ru: "Он сделал тест",     obj_pos: ["noun"] },
+  { tmpl: "Ich habe den ganzen Tag ___", ru: "Я весь день ...",    obj_pos: ["verb"] },
+  { tmpl: "Wir haben gestern ___",       ru: "Вчера мы ...",        obj_pos: ["verb"] },
+];
+
+function genL4_perfekt_fill(verbsAvailable, conjugations) {
+  // Берём случайный regel глагол (для unregel сейчас не делаем — другой генератор будет)
+  const regelOnly = verbsAvailable.filter(v => {
+    if (v.de.includes(" ")) return false;
+    const isUnregel = conjugations.find(c => c.verb === v.de);
+    if (isUnregel) return false;
+    const aux = getAux(v.de, conjugations);
+    return aux === "haben";  // пока только haben-глаголы
+  });
+  if (regelOnly.length === 0) return null;
+  const verb = regelOnly[Math.floor(Math.random() * regelOnly.length)];
+  const p2 = getPartizip2(verb.de, conjugations);
+  // Шаблон по смыслу — берём из verb-шаблонов
+  const tmpls = PERFEKT_TEMPLATES_HABEN.filter(t => t.obj_pos.includes("verb"));
+  const tmpl = tmpls[Math.floor(Math.random() * tmpls.length)];
+  return {
+    auto: true, level: "A2", difficulty: 4, type: "fill",
+    q: `Перфект — впиши Partizip II от «${verb.de}» (${verb.ru || ""}):\n${tmpl.tmpl}`,
+    ans: p2,
+    altAns: [],
+    hint: `Partizip II от ${verb.de}`,
+    sourceId: verb.id,
   };
 }
 
@@ -2076,41 +2092,13 @@ function buildUnregelMiniTest(conjugations) {
 // ═══════════════════════════════════════════════════════════════
 
 // Ур 1: «Что значит Partizip II X?» (Partizip → RU)
-// pickSimilarDistractors(target, candidates, toText) — похожие по написанию
-// (триграммы) в приоритете, добор случайными при нехватке. Тот же паттерн,
-// что pickP2Distractors в buildPartizip2Pool, обобщённый на любое текстовое
-// поле (перевод, инфинитив, ...), а не только Partizip II.
-function pickSimilarDistractors(targetText, candidates, toText) {
-  const taken = new Set([targetText]);
-  const result = [];
-  function tryAdd(text) {
-    if (!text || taken.has(text)) return;
-    taken.add(text); result.push(text);
-  }
-  const bySim = candidates
-    .map(c => ({ text: toText(c), sim: trigramSimilarity(toText(c), targetText) }))
-    .filter(x => x.text && x.sim >= DIST_SIM_THRESHOLD)
-    .sort((a, b) => b.sim - a.sim);
-  for (const { text } of bySim) {
-    if (result.length >= 3) break;
-    tryAdd(text);
-  }
-  if (result.length < 3) {
-    for (const c of shuffle(candidates.slice())) {
-      if (result.length >= 3) break;
-      tryAdd(toText(c));
-    }
-  }
-  return result;
-}
-
 function genPerfL1_p2_to_ru(verb, allVerbs) {
   if (!verb.partizip2 || !verb.ru) return null;
-  const candidates = allVerbs.filter(v => v !== verb && v.ru && v.ru !== verb.ru);
-  if (candidates.length < 3) return null;
-  const distractors = pickSimilarDistractors(verb.ru, candidates, v => v.ru);
+  const distractors = allVerbs
+    .filter(v => v !== verb && v.ru && v.ru !== verb.ru)
+    .map(v => v.ru);
   if (distractors.length < 3) return null;
-  const opts = shuffle([verb.ru, ...distractors]);
+  const opts = shuffle([verb.ru, ...shuffle(distractors).slice(0, 3)]);
   const ans = opts.indexOf(verb.ru);
   return {
     auto: true, level: "A1", difficulty: 1, type: "mc",
@@ -2123,11 +2111,11 @@ function genPerfL1_p2_to_ru(verb, allVerbs) {
 // Ур 1: «Какой инфинитив у gegessen?» (Partizip → Infinitiv)
 function genPerfL1_p2_to_inf(verb, allVerbs) {
   if (!verb.partizip2) return null;
-  const candidates = allVerbs.filter(v => v !== verb && v.verb !== verb.verb);
-  if (candidates.length < 3) return null;
-  const distractors = pickSimilarDistractors(verb.verb, candidates, v => v.verb);
+  const distractors = allVerbs
+    .filter(v => v !== verb && v.verb !== verb.verb)
+    .map(v => v.verb);
   if (distractors.length < 3) return null;
-  const opts = shuffle([verb.verb, ...distractors]);
+  const opts = shuffle([verb.verb, ...shuffle(distractors).slice(0, 3)]);
   const ans = opts.indexOf(verb.verb);
   return {
     auto: true, level: "A1", difficulty: 1, type: "mc",
@@ -2197,7 +2185,7 @@ function genPerfL4_sentence(verb) {
   const auxForm = auxForms[verb.aux][tmpl.who];
   const sentence = tmpl.tmpl.replace("{AUX}", auxForm);
   return {
-    auto: true, level: "A2", difficulty: 3, type: "fill",
+    auto: true, level: "A2", difficulty: 4, type: "fill",
     q: `Впиши Partizip II от «${verb.verb}» (${verb.ru || ""}):\n${sentence}`,
     ans: verb.partizip2,
     altAns: [],
@@ -2276,6 +2264,17 @@ function applyQuota30(autoPool, manualPool) {
 }
 
 // ─── Пул вопросов Partizip II (для VOCAB-глаголов из подблока) ───────────
+const _PERF_COMBO_TMPLS = [
+  { tmpl: "Ich {AUX} gestern ___", who: "ich" },
+  { tmpl: "Wir {AUX} das schon ___", who: "wir" },
+  { tmpl: "Er {AUX} heute ___", who: "er" },
+  { tmpl: "{AUX} du das schon ___?", who: "du" },
+];
+const _AUX_FORMS = {
+  haben: { ich: "habe", du: "hast", er: "hat", wir: "haben", ihr: "habt", sie: "haben" },
+  sein:  { ich: "bin",  du: "bist", er: "ist", wir: "sind",  ihr: "seid", sie: "sind"  },
+};
+
 function buildPartizip2Pool(verbItems, conjugations) {
   const validVerbs = verbItems.filter(v => !v.de.includes(" "));
   if (validVerbs.length === 0) return [];
@@ -2374,9 +2373,14 @@ function buildPartizip2Pool(verbItems, conjugations) {
       hint: ru || "", sourceId: id,
     });
 
-    // Ур.3 fill — Perfekt-предложение (единая реализация, haben+sein)
-    const q4 = genPerfL4_sentence({ verb, partizip2: p2, aux, ru, id });
-    if (q4) pool.push(q4);
+    // Ур.4 fill — Perfekt-предложение
+    const tmpl = _PERF_COMBO_TMPLS[Math.floor(Math.random() * _PERF_COMBO_TMPLS.length)];
+    const auxForm = _AUX_FORMS[aux][tmpl.who];
+    pool.push({
+      auto: true, level: "A2", difficulty: 4, type: "fill",
+      q: `Впиши Partizip II от «${verb}»${ru ? " (" + ru + ")" : ""}:\n${tmpl.tmpl.replace("{AUX}", auxForm)}`,
+      ans: p2, altAns: [], hint: `aux: ${aux}`, sourceId: id,
+    });
   }
   return pool;
 }
@@ -2630,7 +2634,7 @@ function buildPraeteritumTestSession(blockId, topics) {
 
     // Тип 2: fill — вписать Präteritum
     pool.push({
-      auto: true, level: c.level || "A2", difficulty: 3, type: "fill",
+      auto: true, level: c.level || "A2", difficulty: 4, type: "fill",
       q: `Präteritum: er ___ (${c.verb}${c.ru ? " — " + c.ru : ""})`,
       ans: praet,
       hint: `Präteritum от ${c.verb}`,
@@ -2728,7 +2732,7 @@ function buildFullPool(blockId, topics, type, vocab, conjugations, manualQuestio
     } else if (blockId === "perfekt" || blockId.startsWith("perfekt:")) {
       autoPool = buildPerfektQuestions(blockId);
     } else {
-      autoPool = buildAutoQuestions(topics, vocab, conjugations, BLOCK_POS[blockId.split(":")[0]]);
+      autoPool = buildAutoQuestions(topics, vocab, conjugations);
     }
   }
 
@@ -2769,7 +2773,7 @@ function countPraeteritumAvailable(blockId, topics) {
 function buildPraeteritumFullSession() {
   const list = CONJUGATIONS.filter(c => c.praeteritum);
   return shuffle(list).map(c => ({
-    auto: true, level: c.level || "A2", difficulty: 3, type: "fill",
+    auto: true, level: c.level || "A2", difficulty: 4, type: "fill",
     q: `Präteritum: er ___ (${c.verb}${c.ru ? " — " + c.ru : ""})`,
     ans: c.praeteritum,
     hint: `Präteritum от ${c.verb}`,
@@ -2793,7 +2797,7 @@ function buildTestSession(topics, vocab, conjugations, manualQuestions, blockId,
   } else if (blockId === "perfekt" || blockId.startsWith("perfekt:")) {
     autoPool = buildPerfektQuestions(blockId);
   } else {
-    autoPool = buildAutoQuestions(topics, vocab, conjugations, BLOCK_POS[blockId.split(":")[0]]);
+    autoPool = buildAutoQuestions(topics, vocab, conjugations);
   }
 
   // 2. Ручные вопросы из QUESTIONS, привязанные к этому блоку или сабблоку
@@ -2947,9 +2951,7 @@ function App() {
   function getActiveVocab() {
     const topics = getActiveTopics();
     if (topics.length === 0) return [];
-    const pos = activeBlock ? BLOCK_POS[activeBlock.id] : undefined;
-    return VOCAB.filter(v =>
-      (v.topics || []).some(t => topics.includes(t)) && (!pos || v.pos === pos));
+    return VOCAB.filter(v => (v.topics || []).some(t => topics.includes(t)));
   }
   function blockHasSubblocks(b) { return b && b.subblocks && b.subblocks.length > 0; }
   function countWords(topics) {
@@ -3228,15 +3230,12 @@ function App() {
   const modeColor = mode === "learn" ? "var(--c-mode-learn)" : "var(--c-level-1)";
   const modeLabel = mode === "learn" ? (<><Icon name="brain" /> {window.t('trainer.mode_learn_title')}</>) : (<><Icon name="clipboard" /> {window.t('trainer.mode_test_title')}</>);
 
-  // ─── Подписи уровней (для пользователя — без сокращений). Единый источник:
-  // раньше здесь и в renderSelectTestType()'s levelInfo был разный текст для
-  // одних и тех же уровней ("Артикль / Спряжение" vs "Базовая форма" и т.п.) —
-  // теперь оба места читают отсюда, текст описывает СМЫСЛ уровня, не механику.
+  // ─── Подписи уровней (для пользователя — без сокращений) ────────────────
   const LEVEL_LABELS = {
-    1: { name: `${window.t('trainer.level_label')} 1`, action: window.t('trainer.lvl_action_translation'), color: "var(--c-level-1)" },     // зелёный
-    2: { name: `${window.t('trainer.level_label')} 2`, action: window.t('trainer.lvl_action_base_form'), color: "var(--c-level-2)" }, // синий
-    3: { name: `${window.t('trainer.level_label')} 3`, action: window.t('trainer.lvl_action_declension'), color: "var(--c-level-3)" },  // оранжевый
-    4: { name: `${window.t('trainer.level_label')} 4`, action: window.t('trainer.lvl_action_in_sentence'), color: "var(--c-level-4)" }, // фиолетовый
+    1: { name: `${window.t('trainer.level_label')} 1`, action: window.t('trainer.lbl_action_choice'), color: "var(--c-level-1)" },     // зелёный
+    2: { name: `${window.t('trainer.level_label')} 2`, action: window.t('trainer.lbl_action_article_conj'), color: "var(--c-level-2)" }, // синий
+    3: { name: `${window.t('trainer.level_label')} 3`, action: window.t('trainer.lbl_action_fill'), color: "var(--c-level-3)" },  // оранжевый
+    4: { name: `${window.t('trainer.level_label')} 4`, action: window.t('trainer.lbl_action_build_sentence'), color: "var(--c-level-4)" }, // фиолетовый
     5: { name: `${window.t('trainer.level_label')} 5`, action: window.t('trainer.action_open_answer'), color: "var(--c-level-5)" },     // красный
   };
 
@@ -3638,8 +3637,13 @@ function App() {
     const heading = activeSub ? activeSub.label : activeBlock.label;
     const headingIcon = activeSub ? activeSub.icon : activeBlock.icon;
 
-    // Единый источник подписей — LEVEL_LABELS (см. выше в App()), а не своя копия.
-    const levelInfo = [1, 2, 3, 4, 5].map(lvl => ({ lvl, ...LEVEL_LABELS[lvl] }));
+    const levelInfo = [
+      { lvl: 1, color: "var(--c-level-1)", name: `${window.t('trainer.level_label')} 1`, action: window.t('trainer.lvl_action_translation') },
+      { lvl: 2, color: "var(--c-level-2)", name: `${window.t('trainer.level_label')} 2`, action: window.t('trainer.lvl_action_base_form') },
+      { lvl: 3, color: "var(--c-level-3)", name: `${window.t('trainer.level_label')} 3`, action: window.t('trainer.lvl_action_declension') },
+      { lvl: 4, color: "var(--c-level-4)", name: `${window.t('trainer.level_label')} 4`, action: window.t('trainer.lvl_action_in_sentence') },
+      { lvl: 5, color: "var(--c-level-5)", name: `${window.t('trainer.level_label')} 5`, action: window.t('trainer.action_open_answer') },
+    ];
 
     // Запустить комбо-тест по типу
     function startCombo(type) {
