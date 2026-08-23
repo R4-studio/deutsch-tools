@@ -243,7 +243,7 @@
 .theme-dark {
   /* фон */
   --bg-body:       var(--grey-950);
-  --bg-panel:      var(--grey-900);
+  --bg-panel:      var(--grey-950);
   --bg-card:       var(--grey-900);
   --bg-tab:        var(--grey-800);
   --bg-tab-active: var(--grey-900);
