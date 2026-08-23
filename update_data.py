@@ -298,6 +298,75 @@ def translate_field_to_english(items, field, en_field, old_map, warn, label):
             ok += 1
     print(f"  ✓ {label}.{en_field}: переведено {ok}/{len(to_translate)}")
 
+def translate_changelog(changelog_path, warn):
+    """Добавляет titleEn/itemsEn к записям changelog.js через DeepL.
+
+    changelog.js не входит в xlsx→data.js пайплайн и не перегенерируется
+    целиком каждый раз (в отличие от VOCAB/RULES) — записи туда дописываются
+    вручную. Поэтому обычная diff-логика "сверить со старым прогоном" тут не
+    применима буквально: своего "старого прогона" нет, есть только текущий
+    файл. Вместо этого — более простое правило: переводим только записи, где
+    ещё нет titleEn (остальные считаем уже переведёнными и не трогаем).
+
+    Если вручную поправил русский текст уже переведённой записи — сотри у
+    неё titleEn/itemsEn, тогда при следующем запуске перевод переделается.
+    """
+    if not changelog_path.exists():
+        return
+    content = changelog_path.read_text(encoding="utf-8")
+    m = re.search(r"window\.CHANGELOG\s*=\s*(\[.*\n\]);", content, re.S)
+    if not m:
+        warn.append("changelog.js: не нашёл window.CHANGELOG — перевод пропущен")
+        return
+    try:
+        changelog = json.loads(m.group(1))
+    except json.JSONDecodeError as e:
+        warn.append(f"changelog.js: невалидный JSON ({e}) — перевод пропущен, проверь синтаксис вручную")
+        return
+
+    to_translate = [e for e in changelog if e.get("title") and not e.get("titleEn")]
+    if not to_translate:
+        print("  ✓ changelog: новых/непереведённых записей нет")
+        return
+    if not DEEPL_API_KEY:
+        warn.append(f"DEEPL_API_KEY не задан — {len(to_translate)} запис(ей) changelog не переведено")
+        return
+
+    print(f"  → changelog: {len(to_translate)} записей без перевода...")
+    try:
+        titles = _deepl_translate_batch([e["title"] for e in to_translate], DEEPL_API_KEY)
+    except Exception as ex:
+        warn.append(f"DeepL: ошибка перевода changelog.title: {ex}")
+        titles = [None] * len(to_translate)
+    for e, tr in zip(to_translate, titles):
+        if tr:
+            e["titleEn"] = tr
+
+    ok = 0
+    for e in to_translate:
+        items = e.get("items") or []
+        if not items:
+            e["itemsEn"] = []
+            continue
+        try:
+            e["itemsEn"] = _deepl_translate_batch(items, DEEPL_API_KEY)
+            ok += 1
+        except Exception as ex:
+            warn.append(f"DeepL: ошибка перевода changelog.items ({e.get('date')}): {ex}")
+    print(f"  ✓ changelog: переведено {ok}/{len(to_translate)} записей")
+
+    # Переписываем файл целиком (нормализует форматирование заодно —
+    # старый файл редактировался руками вперемешку, с плавающими отступами)
+    ordered_entries = []
+    for e in changelog:
+        ordered = {}
+        for k in ("date", "title", "items", "titleEn", "itemsEn"):
+            if k in e:
+                ordered[k] = e[k]
+        ordered_entries.append(ordered)
+    new_content = "window.CHANGELOG = " + json.dumps(ordered_entries, ensure_ascii=False, indent=2) + ";\n"
+    changelog_path.write_text(new_content, encoding="utf-8")
+
 # ═══════════════════════════════════════════════════════════════
 # СЛОЙ 3: русские личные формы наст. времени для VOCAB-глаголов
 # (нужно trainer.html/PRAESENS_TILES_TMPLS — там v.ru раньше подставлялся
@@ -1754,6 +1823,9 @@ if __name__ == '__main__':
     translate_field_to_english(conjugations, "ru", "en", old_conj_map, WARN, "CONJUGATIONS")
     translate_field_to_english(regel_verbs, "ru", "en", old_regel_map, WARN, "REGEL_VERBS")
     translate_field_to_english(sounds, "pronunciation", "pronunciationEn", old_sounds_map, WARN, "SOUNDS")
+
+    print("\n=== EN-перевод changelog.js ===")
+    translate_changelog(SCRIPT_DIR / "changelog.js", WARN)
 
     print("\n=== Генерирую BLOCKS / TOPIC_TITLES / TAB_TITLES (немецкий) ===")
     BLOCKS_DATA = build_blocks(TAXONOMY, all_vocab)

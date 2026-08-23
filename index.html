@@ -676,12 +676,14 @@ function escapeHtml(s) {
 }
 
 function renderEntry(e) {
+  var title = (getLang() === 'en' && e.titleEn) ? e.titleEn : e.title;
+  var items = (getLang() === 'en' && e.itemsEn) ? e.itemsEn : e.items;
   var html = '<div class="changelog-entry">';
   html += '<div class="changelog-date">' + escapeHtml(formatDate(e.date)) + '</div>';
-  if (e.title) html += '<div class="changelog-title">' + escapeHtml(e.title) + '</div>';
-  if (e.items && e.items.length) {
+  if (title) html += '<div class="changelog-title">' + escapeHtml(title) + '</div>';
+  if (items && items.length) {
     html += '<ul class="changelog-items">';
-    e.items.forEach(function(it) {
+    items.forEach(function(it) {
       html += '<li>' + escapeHtml(it) + '</li>';
     });
     html += '</ul>';
