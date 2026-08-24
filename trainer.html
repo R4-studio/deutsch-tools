@@ -67,6 +67,16 @@ button:active { transform: scale(0.96); }
 @media (hover: hover) {
   .dt-tap-card:hover { transform: translateY(-2px); box-shadow: var(--shadow-hover); }
 }
+/* Карточки блоков — без вечной цветной полосы, вместо неё обводка цветом
+   блока только при наведении (как .card на index.html), цвет передаётся
+   через --card-accent на самом элементе. */
+.dt-block-card {
+  border: 2px solid transparent;
+  transition: border-color 0.15s var(--ease-dt), transform 0.15s var(--ease-dt), box-shadow 0.15s var(--ease-dt);
+}
+@media (hover: hover) {
+  .dt-block-card:hover { border-color: var(--card-accent); }
+}
 /* ─── TopBar кнопки ─────────────────────────────────────── */
 .tb-btn { flex-shrink: 0; }
 .tb-row { flex-shrink: 0; }
@@ -3434,8 +3444,8 @@ function App() {
           <h2 style={{ ...S.heading, textAlign: "center" }}>{window.t('trainer.pick_block')}</h2>
           <div style={S.grid}>
             {BLOCKS.filter(b => b.kind !== "sounds").map(b => (
-              <div key={b.id} className="dt-tap-card"
-                   style={{ ...S.card, borderLeft: `4px solid ${b.color}`, cursor: "pointer" }}
+              <div key={b.id} className="dt-tap-card dt-block-card"
+                   style={{ ...S.card, "--card-accent": b.color, cursor: "pointer" }}
                    onClick={() => pickBlock(b)}>
                 <div style={S.cardTitle}><Icon name={b.icon} size={18} /> {b.label}</div>
                 {b.desc && <div style={S.cardDesc}>{b.desc}</div>}
