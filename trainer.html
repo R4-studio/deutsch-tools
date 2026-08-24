@@ -3486,7 +3486,7 @@ function App() {
 
           {!isNeu && mode === "test" && (
             <div style={{ marginBottom: 16 }}>
-              <div className="dt-tap-card" style={{ ...S.card, borderLeft: `4px solid ${activeBlock.color}`, cursor: "pointer" }}
+              <div className="dt-tap-card dt-block-card" style={{ ...S.card, "--card-accent": activeBlock.color, cursor: "pointer" }}
                    onClick={startTestAll}>
                 <div style={S.cardTitle}><Icon name="flame" size={18} /> {window.t('trainer.test_whole_block')}</div>
                 <div style={S.cardMeta}>{window.t('trainer.all_topics_mixed')}</div>
@@ -3514,7 +3514,7 @@ function App() {
           {isNeu && (
             <div style={{ display: "flex", flexDirection: "column", gap: 10, marginBottom: 16 }}>
               {mode === "learn" && (
-                <div className="dt-tap-card" style={{ ...S.card, borderLeft: `4px solid ${activeBlock.color}`, cursor: "pointer" }}
+                <div className="dt-tap-card dt-block-card" style={{ ...S.card, "--card-accent": activeBlock.color, cursor: "pointer" }}
                      onClick={() => startNeuLearnAll(false)}>
                   <div style={S.cardTitle}><Icon name="book" size={18} /> {window.t('trainer.general_learn')}</div>
                   <div style={S.cardMeta}>{neuAllCount} {window.t('trainer.n_words')} · {window.t('trainer.neu_order')}</div>
@@ -3559,8 +3559,8 @@ function App() {
                 metaText = mode === "learn" ? `${wc} ${window.t('trainer.n_words')}` : `${qc} ${window.t('trainer.n_tasks')}`;
               }
               return (
-                <div key={sub.id} className="dt-tap-card"
-                     style={{ ...S.card, borderLeft: `4px solid ${activeBlock.color}`, cursor: "pointer" }}
+                <div key={sub.id} className="dt-tap-card dt-block-card"
+                     style={{ ...S.card, "--card-accent": activeBlock.color, cursor: "pointer" }}
                      onClick={() => pickSub(sub)}>
                   <div style={S.cardTitle}><Icon name={sub.icon} size={18} /> {sub.label}</div>
                   {sub.desc && <div style={S.cardDesc}>{sub.desc}</div>}
