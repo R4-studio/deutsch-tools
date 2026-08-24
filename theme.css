@@ -186,7 +186,7 @@
      теперь тёмная тема (.theme-dark ниже), светлая подстроена под неё,
      просто более насыщенная/тёмная ступень для читаемости на белом фоне — */
   --c-block-neu:      var(--red-500);
-  --c-block-verben:    var(--orange-500);
+  --c-block-verben:    var(--orange-400);
   --c-block-substantive:    var(--green-500);
   --c-block-adj:      var(--pink-500);
   --c-block-adv:      var(--violet-500);
