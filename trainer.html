@@ -14,14 +14,14 @@
   document.documentElement.classList.add('theme-' + saved);
 })();
 </script>
-<link rel="stylesheet" href="theme.css?v=20260823">
-<script src="i18n/ru.js?v=20260823"></script>
-<script src="i18n/en.js?v=20260823"></script>
-<script src="i18n/i18n.js?v=20260823"></script>
+<link rel="stylesheet" href="theme.css?v=20260824">
+<script src="i18n/ru.js?v=20260824"></script>
+<script src="i18n/en.js?v=20260824"></script>
+<script src="i18n/i18n.js?v=20260824"></script>
 
 <script crossorigin src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
 <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
-<script src="data.js?v=20260823"></script>
+<script src="data.js?v=20260824"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/7.25.6/babel.min.js"></script>
 
 <style>
@@ -3667,7 +3667,7 @@ function App() {
     function comboBtnStyle(disabled, bg) {
       return {
         background: disabled ? "var(--bg-soft)" : bg,
-        color: disabled ? "var(--text-muted)" : "white",
+        color: disabled ? "var(--text-muted)" : "var(--on-color)",
         border: disabled ? "2px solid var(--border-soft)" : "none",
         padding: "14px 8px",
         borderRadius: 16,
@@ -3792,7 +3792,7 @@ function App() {
                     borderRadius: 12,
                     cursor: hasAny ? "pointer" : "not-allowed",
                     opacity: hasAny ? 1 : 0.5,
-                    color: (lastTestLevel === li.lvl && lastTestBlockId === blockId) ? "white" : "var(--text-main)",
+                    color: (lastTestLevel === li.lvl && lastTestBlockId === blockId) ? "var(--on-color)" : "var(--text-main)",
                     fontFamily: "inherit",
                     textAlign: "left",
                   }}>

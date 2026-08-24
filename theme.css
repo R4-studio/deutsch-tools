@@ -182,15 +182,17 @@
      Менять ссылки чтобы поменять смысловые роли.
      ═══════════════════════════════════════════════════════════════ */
 
-  /* — Цвета блоков (рамки карточек на главной тренажёра) — */
-  --c-block-neu:      var(--red-700);
-  --c-block-verben:    var(--green-700);
-  --c-block-substantive:    var(--cyan-700);
+  /* — Цвета блоков (рамки карточек на главной тренажёра) — эталон хьюнов
+     теперь тёмная тема (.theme-dark ниже), светлая подстроена под неё,
+     просто более насыщенная/тёмная ступень для читаемости на белом фоне — */
+  --c-block-neu:      var(--red-500);
+  --c-block-verben:    var(--orange-500);
+  --c-block-substantive:    var(--green-500);
   --c-block-adj:      var(--pink-500);
-  --c-block-adv:      var(--orange-400);
-  --c-block-pronomen:  var(--violet-700);
-  --c-block-redewendungen:  var(--green-500);
-  --c-block-unregel:  var(--green-700);
+  --c-block-adv:      var(--violet-500);
+  --c-block-pronomen:  var(--lime-500);
+  --c-block-redewendungen:  var(--cyan-500);
+  --c-block-unregel:  var(--orange-500);
 
   /* — Цвета внутри блока Verben (Unregel и комбо-кнопки) — */
   --c-unregel:        var(--orange-500);
@@ -295,7 +297,7 @@
      для фонов плашек — глубокие (800–900).
      ═══════════════════════════════════════════════════════════════ */
 
-  /* Блоки */
+  /* Блоки — эталон хьюнов, светлая тема (:root выше) подстроена под эти */
   --c-block-neu:      var(--red-300);
   --c-block-sounds:   var(--violet-100);
   --c-block-verben:    var(--orange-300);
