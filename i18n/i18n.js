@@ -15,10 +15,10 @@
 // который зависит и от языка, и от текущей темы одновременно).
 var I18N_DICTS = { ru: window.I18N_RU || {}, en: window.I18N_EN || {} };
 
-// Слой 2 (контент: VOCAB/RULES/TERMS/SOUNDS/CONJUGATIONS): выключен на время
-// починки перевода (см. docs/en-fix/BRIEF-en-fix.md, этап A). wordText()/
+// Слой 2 (контент: VOCAB/RULES/TERMS/SOUNDS/CONJUGATIONS): включён после
+// починки перевода (этапы A–E, см. docs/en-fix/BRIEF-en-fix.md). wordText()/
 // wordField() в cheatsheet.html и trainer.html читают этот флаг.
-window.I18N_CONTENT_EN = false;
+window.I18N_CONTENT_EN = true;
 
 function getLang() {
   return localStorage.getItem('lang') || 'ru';
