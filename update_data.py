@@ -1227,74 +1227,306 @@ def translate_field_to_english(items, field, en_field, old_map, warn, label):
             ok += 1
     print(f"  ✓ {label}.{en_field}: переведено {ok}/{len(to_translate)}")
 
-def translate_changelog(changelog_path, warn):
-    """Добавляет titleEn/itemsEn к записям changelog.js через DeepL.
+def _deepl_usage(api_key):
+    """GET /v2/usage — израсходовано символов за период. Для baseline до/после
+    прогона (BRIEF этап F §6). Запрос не тарифицируется. Возвращает
+    (character_count, character_limit) либо (None, None) при ошибке."""
+    if not api_key:
+        return None, None
+    url = _deepl_base_url(api_key).replace("/translate", "/usage")
+    req = urllib.request.Request(url, headers={"Authorization": f"DeepL-Auth-Key {api_key}"})
+    try:
+        with urllib.request.urlopen(req, timeout=30) as resp:
+            d = json.loads(resp.read().decode("utf-8"))
+        return d.get("character_count"), d.get("character_limit")
+    except (urllib.error.URLError, ValueError, KeyError):
+        return None, None
 
-    changelog.js не входит в xlsx→data.js пайплайн и не перегенерируется
-    целиком каждый раз (в отличие от VOCAB/RULES) — записи туда дописываются
-    вручную. Поэтому обычная diff-логика "сверить со старым прогоном" тут не
-    применима буквально: своего "старого прогона" нет, есть только текущий
-    файл. Вместо этого — более простое правило: переводим только записи, где
-    ещё нет titleEn (остальные считаем уже переведёнными и не трогаем).
+CHANGELOG_RE = re.compile(r"window\.CHANGELOG\s*=\s*(\[.*\n\]);", re.S)
 
-    Если вручную поправил русский текст уже переведённой записи — сотри у
-    неё titleEn/itemsEn, тогда при следующем запуске перевод переделается.
-    """
+def _load_changelog(changelog_path, warn):
+    """(changelog_list | None). Парсит window.CHANGELOG из changelog.js."""
     if not changelog_path.exists():
-        return
+        return None
     content = changelog_path.read_text(encoding="utf-8")
-    m = re.search(r"window\.CHANGELOG\s*=\s*(\[.*\n\]);", content, re.S)
+    m = CHANGELOG_RE.search(content)
     if not m:
         warn.append("changelog.js: не нашёл window.CHANGELOG — перевод пропущен")
-        return
+        return None
     try:
-        changelog = json.loads(m.group(1))
+        return json.loads(m.group(1))
     except json.JSONDecodeError as e:
         warn.append(f"changelog.js: невалидный JSON ({e}) — перевод пропущен, проверь синтаксис вручную")
+        return None
+
+def _changelog_should_translate(e, force_changelog):
+    """BRIEF этап F §2.2. manualEn: true — руки прочь при любых флагах (§2.2.4).
+    Иначе: переводим, если нет titleEn ИЛИ (--force-changelog и это не ручная
+    запись)."""
+    if e.get("manualEn"):
+        return False
+    if not e.get("titleEn"):
+        return True
+    return bool(force_changelog)
+
+def plan_changelog(changelog_path, force_changelog, warn):
+    """Для --dry-run: (записи_на_перевод, символов_в_DeepL). Ни одного
+    обращения к API. Символы считаются только по строкам с кириллицей —
+    полностью латинские/числовые копируются как есть, без запроса."""
+    changelog = _load_changelog(changelog_path, warn)
+    if changelog is None:
+        return [], 0
+    entries = [e for e in changelog
+               if e.get("title") and _changelog_should_translate(e, force_changelog)]
+    chars = 0
+    for e in entries:
+        for s in [e.get("title", "")] + (e.get("items") or []):
+            if has_cyrillic(s):
+                chars += len(s)
+    return entries, chars
+
+def _changelog_items_invariants(items, parts):
+    """BRIEF этап F §2.3 для itemsEn. Возвращает строку-причину или None.
+    len совпадает, кириллицы нет, остатков <x/</x нет, каждый латинский токен
+    items[i] дословно в parts[i]."""
+    if len(parts) != len(items):
+        return f"len(itemsEn)={len(parts)} ≠ len(items)={len(items)}"
+    for i, (src, tr) in enumerate(zip(items, parts), 1):
+        if has_cyrillic(tr):
+            return f"элемент {i}: кириллица в переводе"
+        if "<x" in tr or "</x" in tr:
+            return f"элемент {i}: остаток тега <x/</x"
+        missing = [tok for tok in dict.fromkeys(LATIN_WORD_RE.findall(src)) if tok not in tr]
+        if missing:
+            return f"элемент {i}: пропали токены: {', '.join(missing[:6])}"
+    return None
+
+def translate_changelog(changelog_path, warn, force_changelog=False):
+    """titleEn/itemsEn для записей changelog.js — RU→EN через DeepL под защитой
+    ignore-тегов (BRIEF этап F).
+
+    changelog.js правится руками, не генерируется из xlsx, отдельного "старого
+    прогона" нет. Диф-логика проще: переводим запись, если у неё нет titleEn.
+    Флаг --force-changelog переводит заново и те, где titleEn уже есть —
+    кроме записей с "manualEn": true (перевод написан человеком, §2.2).
+
+    Механика перевода — та же обобщённая обёртка, что на этапах C/D
+    (compute_ignoretag_candidates / translate_ignoretag_field): латиница в
+    русском тексте по определению немецкая, оборачивается в <x>…</x>,
+    tag_handling=xml, ignore_tags="x". Отправка построчная (каждый элемент
+    items — отдельная строка в DeepL): если DeepL вернёт элемент с
+    добавленными переводами строк, инвариант "число строк" его отбраковывает
+    и элемент считается непереведённым (§2.1).
+
+    Инварианты — на каждую запись отдельно (§2.3). Не прошло → titleEn/itemsEn
+    не записывается, на сайте показывается русский, строка идёт в
+    reports/en_review_changelog.md. Кэша в translations.json у changelog нет —
+    защита от повторного перевода это titleEn + флаг manualEn в самом файле.
+
+    Ручная правка: стёр titleEn у записи — она переведётся заново на следующем
+    прогоне. Написал перевод вручную — поставь "manualEn": true, тогда никакой
+    флаг его не тронет.
+    """
+    changelog = _load_changelog(changelog_path, warn)
+    if changelog is None:
         return
 
-    to_translate = [e for e in changelog if e.get("title") and not e.get("titleEn")]
+    to_translate = [e for e in changelog
+                    if e.get("title") and _changelog_should_translate(e, force_changelog)]
+    report_rows = []
     if not to_translate:
         print("  ✓ changelog: новых/непереведённых записей нет")
+        _write_changelog_report(changelog, report_rows, force_changelog)
         return
     if not DEEPL_API_KEY:
         warn.append(f"DEEPL_API_KEY не задан — {len(to_translate)} запис(ей) changelog не переведено")
+        _write_changelog_report(changelog, report_rows, force_changelog)
         return
 
-    print(f"  → changelog: {len(to_translate)} записей без перевода...")
-    try:
-        titles = _deepl_translate_batch([e["title"] for e in to_translate], DEEPL_API_KEY)
-    except Exception as ex:
-        warn.append(f"DeepL: ошибка перевода changelog.title: {ex}")
-        titles = [None] * len(to_translate)
-    for e, tr in zip(to_translate, titles):
-        if tr:
-            e["titleEn"] = tr
+    print(f"  → changelog: {len(to_translate)} записей на перевод"
+          f"{' (--force-changelog)' if force_changelog else ''}...")
+    before_cnt, before_lim = _deepl_usage(DEEPL_API_KEY)
+    if before_cnt is not None:
+        print(f"    DeepL /usage до: {before_cnt:,}/{before_lim:,} символов")
 
-    ok = 0
+    # --force-changelog: сносим прежний перевод у переводимых записей, чтобы
+    # провал инвариантов давал откат на русский, а не сохранял старый
+    # (немецкое-теряющий) вариант. Резерв — changelog.js.bak (BRIEF §2.4).
+    for e in to_translate:
+        e.pop("titleEn", None)
+        e.pop("itemsEn", None)
+
+    kf = lambda e: id(e)  # changelog не в translations.json — ключ = тождество объекта
+    ref_date = {id(e): e.get("date", "") for e in to_translate}
+
+    # 1) titleEn — заголовок как одна строка.
+    tcache = {}
+    tcands = compute_ignoretag_candidates(to_translate, "title", "titleEn", tcache, kf)
+    for r in translate_ignoretag_field(tcands, "title", "titleEn", tcache, kf, warn, "changelog"):
+        report_rows.append({"id": r["id"], "date": ref_date.get(r["id"], ""),
+                            "field": "title", "reason": r["reason"]})
+
+    # 2) itemsEn — каждый элемент items отдельной строкой. Склейка через \n в
+    #    одно поле: translate_ignoretag_field шлёт строки в DeepL по одной, а
+    #    инвариант "число строк совпадает" ловит расхождение количества.
+    icache = {}
+    items_cands = []
     for e in to_translate:
         items = e.get("items") or []
         if not items:
             e["itemsEn"] = []
             continue
-        try:
-            e["itemsEn"] = _deepl_translate_batch(items, DEEPL_API_KEY)
-            ok += 1
-        except Exception as ex:
-            warn.append(f"DeepL: ошибка перевода changelog.items ({e.get('date')}): {ex}")
-    print(f"  ✓ changelog: переведено {ok}/{len(to_translate)} записей")
+        e["_itemsJoined"] = "\n".join(items)
+        items_cands.append(e)
+    ic = compute_ignoretag_candidates(items_cands, "_itemsJoined", "_itemsEnJoined", icache, kf)
+    items_fail_refs = {r["id"]: r["reason"]
+                       for r in translate_ignoretag_field(ic, "_itemsJoined", "_itemsEnJoined",
+                                                          icache, kf, warn, "changelog")}
 
-    # Переписываем файл целиком (нормализует форматирование заодно —
-    # старый файл редактировался руками вперемешку, с плавающими отступами)
+    # 3) itemsEn обратно в список + changelog-специфичные инварианты (§2.3).
+    for e in items_cands:
+        joined = e.pop("_itemsEnJoined", None)
+        e.pop("_itemsJoined", None)
+        items = e["items"]
+        if joined is None:
+            reason = items_fail_refs.get(id(e), "перевод не прошёл (см. WARN)")
+            report_rows.append({"id": id(e), "date": e.get("date", ""), "field": "items", "reason": reason})
+            continue
+        parts = joined.split("\n")
+        bad = _changelog_items_invariants(items, parts)
+        if bad:
+            report_rows.append({"id": id(e), "date": e.get("date", ""), "field": "items", "reason": bad})
+            continue
+        e["itemsEn"] = parts
+
+    # titleEn — добор инварианта на остаток тега (translate_ignoretag_field
+    # проверяет кириллицу/токены/строки, но не подстроку "<x").
+    for e in to_translate:
+        te = e.get("titleEn")
+        if te and ("<x" in te or "</x" in te):
+            report_rows.append({"id": id(e), "date": e.get("date", ""), "field": "title",
+                                "reason": "остаток тега <x/</x в titleEn"})
+            del e["titleEn"]
+
+    ok_t = sum(1 for e in to_translate if e.get("titleEn"))
+    ok_i = sum(1 for e in items_cands if isinstance(e.get("itemsEn"), list) and e.get("itemsEn"))
+    print(f"  ✓ changelog: titleEn {ok_t}/{len(to_translate)}, itemsEn {ok_i}/{len(items_cands)}")
+
+    after_cnt, after_lim = _deepl_usage(DEEPL_API_KEY)
+    if after_cnt is not None:
+        delta = after_cnt - before_cnt if before_cnt is not None else None
+        print(f"    DeepL /usage после: {after_cnt:,}/{after_lim:,} символов"
+              + (f" (Δ {delta:+,})" if delta is not None else ""))
+
+    # Переписываем файл целиком (нормализует форматирование заодно).
     ordered_entries = []
     for e in changelog:
         ordered = {}
-        for k in ("date", "title", "items", "titleEn", "itemsEn"):
+        for k in ("date", "title", "items", "titleEn", "itemsEn", "manualEn"):
             if k in e:
                 ordered[k] = e[k]
         ordered_entries.append(ordered)
     new_content = "window.CHANGELOG = " + json.dumps(ordered_entries, ensure_ascii=False, indent=2) + ";\n"
     changelog_path.write_text(new_content, encoding="utf-8")
+    _write_changelog_report(changelog, report_rows, force_changelog)
+
+def _write_changelog_report(changelog, report_rows, force_changelog):
+    """BRIEF этап F §5: по каждой записи — дата, заголовок, источник, прошли ли
+    инварианты, что не прошло."""
+    REPORTS_DIR.mkdir(exist_ok=True)
+    path = REPORTS_DIR / "en_review_changelog.md"
+    fails = {}
+    for r in report_rows:
+        f = r.get("field", "")
+        f = "items" if "item" in f.lower() else f
+        fails.setdefault(r["id"], []).append(f"{f}: {r['reason']}")
+    lines = [
+        "# en_review_changelog — статус EN-перевода changelog.js",
+        "",
+        f"Прогон: {date.today().isoformat()}. Всего записей: {len(changelog)}. "
+        f"--force-changelog: {'да' if force_changelog else 'нет'}.",
+        "",
+        "Поле, не прошедшее инварианты, в changelog.js не записано — на сайте показывается русский.",
+        "",
+        "| # | дата | заголовок | источник | titleEn | itemsEn | len(itemsEn)=len(items) | не прошло |",
+        "|---|---|---|---|---|---|---|---|",
+    ]
+    for i, e in enumerate(changelog, 1):
+        src = "manual" if e.get("manualEn") else ("deepl" if e.get("titleEn") else "—")
+        items = e.get("items") or []
+        ien = e.get("itemsEn")
+        has_t = "ok" if e.get("titleEn") else "—"
+        has_i = "ok" if isinstance(ien, list) and (ien or not items) else "—"
+        if not items:
+            lens = "n/a"
+        elif isinstance(ien, list):
+            lens = "ok" if len(ien) == len(items) else f"{len(ien)}≠{len(items)}"
+        else:
+            lens = "—"
+        why = "; ".join(fails.get(id(e), []))
+        title_short = (e.get("title") or "")[:38].replace("|", "/")
+        lines.append(f"| {i} | {e.get('date','')} | {title_short} | {src} | {has_t} | {has_i} | {lens} | {why} |")
+
+    # Приёмочные токены (BRIEF §4) — ищем в финальном EN-тексте записей.
+    def _en_blob(pred):
+        out = []
+        for e in changelog:
+            if pred(e):
+                out.append(e.get("titleEn") or "")
+                out.extend(e.get("itemsEn") or [])
+        return "\n".join(out)
+    acc = [
+        ("2026-08-23 «Реорганизация тем словаря»",
+         lambda e: e.get("date") == "2026-08-23" and "Реорганизац" in (e.get("title") or ""),
+         ["stehen", "liegen", "hängen", "stellen", "setzen"]),
+        ("запись с Modalverben im Präteritum",
+         lambda e: "Modalverben im Präteritum" in (e.get("title") or "")
+                   or any("Modalverben im Präteritum" in x for x in (e.get("items") or [])),
+         ["Modalverben im Präteritum"]),
+        ("2026-06-21 (Adjektivdeklination)",
+         lambda e: e.get("date") == "2026-06-21",
+         ["Adjektivdeklination"]),
+        ("2026-06-02 (Verben mit Dativ)",
+         lambda e: e.get("date") == "2026-06-02",
+         ["Verben mit Dativ"]),
+        ("2026-07-01 (drei Verben)",
+         lambda e: e.get("date") == "2026-07-01",
+         []),
+    ]
+    lines += ["", "## Приёмка — контрольные токены (BRIEF §4)", ""]
+    for label, pred, tokens in acc:
+        blob = _en_blob(pred)
+        if not tokens:
+            lines.append(f"- **{label}**: EN-текст — см. запись в таблице выше")
+            continue
+        miss = [t for t in tokens if t not in blob]
+        status = "✓ все на месте" if not miss else f"✗ отсутствуют: {', '.join(miss)}"
+        lines.append(f"- **{label}**: {status}")
+
+    # Косметические артефакты DeepL (не потеря немецкого, не провал инвариантов —
+    # немецкое на месте; это склейка/лишний пробел у границы ignore-тега и
+    # неверный смысл у отдельных русских слов). Инварианты этого не ловят.
+    artifact_re = re.compile(r"  +|\S\. [a-z]{2}\b|[a-zäöüß]{2}(?:from|and|the|of)\b")
+    flagged = []
+    for i, e in enumerate(changelog, 1):
+        if e.get("manualEn"):
+            continue
+        for fld in ("titleEn",):
+            v = e.get(fld) or ""
+            if artifact_re.search(v):
+                flagged.append((i, e.get("date", ""), fld, v))
+        for j, v in enumerate(e.get("itemsEn") or [], 1):
+            if artifact_re.search(v):
+                flagged.append((i, e.get("date", ""), f"itemsEn[{j}]", v))
+    lines += ["", "## Косметика DeepL (не блокер — немецкое на месте, инварианты пройдены)", ""]
+    if flagged:
+        for i, d, fld, v in flagged:
+            lines.append(f"- #{i} {d} `{fld}`: {v}")
+    else:
+        lines.append("- не обнаружено")
+
+    path.write_text("\n".join(lines) + "\n", encoding="utf-8")
+    return path
 
 # ═══════════════════════════════════════════════════════════════
 # СЛОЙ 3: русские личные формы наст. времени для VOCAB-глаголов
@@ -2626,6 +2858,10 @@ if __name__ == '__main__':
                                   "к DeepL и без записи data.js/translations.json")
     arg_parser.add_argument("--force", action="store_true",
                              help="Продолжить перевод VOCAB, даже если он затрагивает больше 20%% словаря")
+    arg_parser.add_argument("--force-changelog", action="store_true",
+                             help="Перевести записи changelog.js заново, даже если titleEn уже есть. "
+                                  "Записи с \"manualEn\": true не трогаются никогда. Без флага "
+                                  "переводятся только записи без titleEn.")
     arg_parser.add_argument("--arbiter", choices=["none", "haiku"], default="none",
                              help="Разбор флагов обратного перевода VOCAB.en. 'none' — все флаги в "
                                   "reports/en_review_vocab.md для разбора в чате. 'haiku' — сначала "
@@ -2760,6 +2996,9 @@ if __name__ == '__main__':
 
     threshold_ok = check_vocab_threshold(len(vocab_candidates), all_vocab, args.force)
 
+    changelog_entries, changelog_chars = plan_changelog(
+        SCRIPT_DIR / "changelog.js", args.force_changelog, WARN)
+
     if args.dry_run:
         print("\n=== --dry-run: без обращения к API ===")
         print(f"  VOCAB.en (DE→EN + контекст + обратный перевод):")
@@ -2775,7 +3014,12 @@ if __name__ == '__main__':
         print(f"  REGEL_VERBS.en (verb, DE→EN): кэш-хитов {regel_cache_hits}, "
               f"к переводу {len(regel_candidates)} записей, {regel_chars} символов")
         print(f"  RULES: этап C, не входит в --dry-run этапа B (символы не посчитаны)")
-        print(f"  TERMS/SOUNDS/changelog: не входят ни в этап B, ни в этап C, не трогаются")
+        print(f"  TERMS/SOUNDS: только manual, не трогаются")
+        print(f"  changelog.js (этап F — ignore-теги, RU→EN, построчно):")
+        print(f"    к переводу: {len(changelog_entries)} записей"
+              f"{' [--force-changelog]' if args.force_changelog else ''}")
+        print(f"    ~{changelog_chars} символов уйдёт в DeepL "
+              f"(только строки с кириллицей; латиница/числа копируются без API)")
         if WARN:
             print(f"\n⚠ Предупреждения ({len(WARN)}):")
             for w in WARN:
@@ -2858,7 +3102,7 @@ if __name__ == '__main__':
     print(f"  ✓ отчёт: {notes_report_path}")
 
     print("\n=== EN-перевод changelog.js ===")
-    translate_changelog(SCRIPT_DIR / "changelog.js", WARN)
+    translate_changelog(SCRIPT_DIR / "changelog.js", WARN, args.force_changelog)
 
     print("\n=== Генерирую BLOCKS / TOPIC_TITLES / TAB_TITLES (немецкий) ===")
     BLOCKS_DATA = build_blocks(TAXONOMY, all_vocab)
