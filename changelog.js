@@ -28,7 +28,8 @@ window.CHANGELOG = [
       "Terms, 54 entries: regelmäßig was \"transitive verb\" → regular verb, das Objekt was \"supplement\" → object, Wohin? was identical to Wo? → Where to?",
       "Sounds, 17 entries: transcription switched to IPA. Previously [и:] became \"[and:]\" and [шт] became \"[pcs]\"",
       "Notes: 349 of 437 contain German — it is now protected from translation"
-    ]
+    ],
+    "manualEn": true
   },
   {
     "date": "2026-08-23",
@@ -57,20 +58,20 @@ window.CHANGELOG = [
       "No words were added—they were simply reorganized by topic",
       "492 words were moved to more specific topics; +40 new topics",
       "+5 new sections:",
-      "· Basic verbs—such as “sein,” “haben,” “machen,” “tun,” and others—are no longer included in “The Work”",
-      "· Money — prices, bank, account, income (previously spread out between “Work” and “Shopping”)",
-      "· Documents and government agencies — application, ID, contract, insurance",
-      "· Society — Strike, Culture, Integration",
+      "· Basic verbs—sein, haben, machen, tun, and other similar forms—are no longer included in “Raba”",
+      "· Money — prices, bank, account, income (previously spread out between “Work” and “Purchases”)",
+      "· Documents and government agencies — Antrag, Ausweis, Vertrag, insurance",
+      "· Company — Streik, Kultur, Integration",
       "· Qualities—the properties of objects are distinct from human sensations and states",
       "We've broken down the most overhyped topics:",
       "· “Work”: 90 verbs → 6 topics",
       "· “Qualities”: 87 adjectives → 5 themes",
       "· “Communication”: 65 verbs → speech / requests and advice / information",
-      "· “Household Chores”: 52 verbs → daily life, home repairs, housing, daily routine",
+      "· “Household Chores”: 52 verbs → daily life, home improvement, housing, daily routine",
       "· “Abstract”: 60 nouns → 4 topics",
-      "\"stand / lie / hang / place / set\" are grouped under the single topic \"Position in Space\"",
-      "Colors and patterns are now separated: plaid and striped are no longer grouped with colors",
-      "4 duplicates were removed: Stunde, Beruf, Führerschein, Erlaubnis"
+      "stehen / liegen / hängen / stellen / setzen have been compiled into a single thread titled “Position in Space”",
+      "Colors and patterns have been separated: kariert and gestreift are no longer listed under \"Colors\"",
+      "4 duplicates have been removed: Stunde, Beruf, Führerschein, Erlaubnis"
     ]
   },
   {
@@ -100,10 +101,10 @@ window.CHANGELOG = [
       "1 idiom",
       "2 terms",
       "4 new rules:",
-      "Accusative or Dative for Reflexive Pronouns (Reflexivpronomen)",
-      "\"both...and\" / \"neither...nor\" — paired conjunctions",
-      "Infinitive with \"zu\"",
-      "sondern — “not X, but Y”"
+      "Akkusativ or Dativ for the Reflexivpronomen",
+      "sowohl... als auch / weder... noch — paired conjunctions",
+      "Infinitiv mit zu",
+      "sondern — “Not X, but Y”"
     ]
   },
   {
@@ -125,7 +126,7 @@ window.CHANGELOG = [
     ],
     "titleEn": "Update History Log",
     "itemsEn": [
-      "Fixed a bug in changelog.js that could prevent the update history from displaying"
+      "A bug has been fixed in changelog. js, which could prevent the update history from displaying."
     ]
   },
   {
@@ -135,7 +136,7 @@ window.CHANGELOG = [
       "Пересмотрены и выровнены уровни сложности тестов",
       "Исправлен баг: в некоторых блоках проскакивали вопросы не той части речи"
     ],
-    "titleEn": "Workout Program: Revision of Difficulty Levels",
+    "titleEn": "Workout Program: Revising Difficulty Levels",
     "itemsEn": [
       "The difficulty levels of the tests have been revised and standardized",
       "Bug fixed: In some blocks, questions from the wrong part of speech were appearing."
@@ -159,13 +160,13 @@ window.CHANGELOG = [
     "titleEn": "Verb inflection and database updates",
     "itemsEn": [
       "Automatic conjugation of Russian verbs for sentence-building exercises",
-      "81 new words:",
+      "81 new word:",
       "45 nouns",
       "22 verbs",
       "6 adjectives",
       "5 adverbs",
       "1 pronoun",
-      "1 idiom",
+      "1 set phrase",
       "1 term",
       "4 New Rules"
     ]
@@ -211,7 +212,7 @@ window.CHANGELOG = [
       "1 idiom",
       "2 terms",
       "1 new rule:",
-      "Sentence Structure: Conjunctions and Word Order (Weil vs. Denn vs. Deshalb)"
+      "Sentence Structure: Conjunctions and Word Order (Weil vs Denn vs Deshalb)"
     ]
   },
   {
@@ -221,10 +222,10 @@ window.CHANGELOG = [
       "Тренажёр теперь тоже доступен на английском — раньше перевод был активен только в справочнике",
       "Мелкое улучшение UI: кнопка «Назад» визуально исправлена"
     ],
-    "titleEn": "Simulator Update: English UI",
+    "titleEn": "Simulator Update: English  UI",
     "itemsEn": [
-      "The trainer is now also available in English—previously, the translation was only available in the help section",
-      "Minor UI improvement: The \"Back\" button has been visually fixed"
+      "The trainer is now also available in English—previously, the translation was only available in the reference guide",
+      "A minor improvement in UI: The \"Back\" button has been visually fixed"
     ]
   },
   {
@@ -238,8 +239,8 @@ window.CHANGELOG = [
     "titleEn": "Infrastructure Upgrade",
     "itemsEn": [
       "The file versioning scheme has been changed",
-      "README Updated",
-      "Added the \"Word of the Day\" Telegram bot (a separate subproject)"
+      "UpdatedREADME",
+      "Added the \"Word of the Day\" bot on Telegram- (a separate subproject)"
     ]
   },
   {
@@ -249,9 +250,9 @@ window.CHANGELOG = [
       "Завершён перевод справочника на английский язык через DeepL API",
       "Если заметите ошибки или неудачные формулировки — пишите, поправим"
     ],
-    "titleEn": "The translation of the handbook into English is complete",
+    "titleEn": "The translation of the manual into English is complete",
     "itemsEn": [
-      "The translation of the reference guide into English using the DeepL API has been completed",
+      "The translation of the reference guide into English has been completed via DeepL API",
       "If you notice any errors or awkward phrasing, please let us know, and we'll correct them."
     ]
   },
@@ -270,14 +271,14 @@ window.CHANGELOG = [
     ],
     "titleEn": "Website Redesign",
     "itemsEn": [
-      "An automatically generated English translation using the DeepL API has been integrated (it will be reviewed and revised manually at a later time)",
+      "An automatically generated English translation via DeepL API has been integrated (it will be reviewed and revised manually at a later time)",
       "The homepage design has been updated:",
-      "New header, hero block, Reference/Practice cards",
-      "Quick Links: Profile, Setup, FAQ, About the Project, Feedback",
+      "New header, \"hero-\" block, Reference/Practice cards",
+      "Quick Links: Profile, Installation, FAQ, About the Project, Feedback",
       "Footer with social media links",
       "Most links are active (some are placeholders)",
       "The \"About the Project\" page has been written",
-      "The structure and questions for the FAQ have been drafted"
+      "The outline and questions for FAQ have been compiled."
     ]
   },
   {
@@ -319,7 +320,7 @@ window.CHANGELOG = [
       "8 verbs",
       "1 adjective",
       "1 adverb",
-      "1 fixed expression"
+      "1 idiom"
     ]
   },
   {
@@ -378,11 +379,11 @@ window.CHANGELOG = [
       "1 pronoun",
       "2 terms",
       "5 new rules:",
-      "seit vs. vor — both take the dative case, but have different meanings",
-      "Modal verbs in the past tense: konnten...",
+      "seit vs vor — both from Dativ, different meanings",
+      "Modalverb im Präteritum: konnten...",
       "Separable verbs with \"zusammen-\"",
-      "The genitive case in proper nouns: Kaufhaus des Westens",
-      "Forming Adjectives Ending in -ig from Nouns",
+      "Genitiv in proper nouns: Kaufhaus des Westens",
+      "Forming Adjectives Ending in -igfrom Nouns",
       " A minor update to the website's design"
     ]
   },
@@ -401,14 +402,14 @@ window.CHANGELOG = [
     ],
     "titleEn": "Website Redesign",
     "itemsEn": [
-      "Redesign of the cheat sheet and practice tool to match the homepage's style—rounded buttons, a search bar, and capsule tabs, along with updated word and rule cards",
-      "All emojis in the interface have been replaced with crisp SVG icons",
-      "Added animation when flipping through cards in the training module (“Next” / “Back”)",
-      "Buttons and cards now respond to taps (including on mobile devices, not just when the mouse hovers over them)",
+      "Redesign of the cheat sheet and practice tool to match the home page's style—rounded buttons, a search bar, and capsule-style tabs, along with updated word and rule cards",
+      "All emojis in the interface have been replaced with crisp SVG- icons",
+      "Added animation when swiping through cards in the simulator (“Next” / “Back”)",
+      "Buttons and cards now respond when tapped (including on a phone, not just when the mouse hovers over them)",
       "Fixed: On mobile, the header was covering the beginning of the word list—indentation has been added",
       "Fixed: The burger menu icon was offset from the center on mobile devices",
-      "Fixed: In the simulator, the \"Home\" and \"Testing\" icons looked the same and were easily confused—they are now different.",
-      "Fixed an important bug: In \"Shuffle\" mode (General Study → Neu), when a card was flipped, the translation for a different word would sometimes appear instead of the one on the front of the card."
+      "Fixed: In the simulator, the \"Home\" and \"Testing\" icons looked the same and were easy to confuse—now they're different",
+      "Fixed an important bug: In \"Shuffled\" mode (General Study → Neu), when a card was flipped, the translation for a different word would sometimes appear instead of the one on the front of the card."
     ]
   },
   {
@@ -431,7 +432,7 @@ window.CHANGELOG = [
       "11 verbs",
       "17 adjectives",
       "13 adverbs",
-      "7 Idioms",
+      "7 idiomatic expressions",
       "2 pronouns",
       "6 terms"
     ]
@@ -454,17 +455,17 @@ window.CHANGELOG = [
     ],
     "titleEn": "Updating the Database and Rules",
     "itemsEn": [
-      "9 new words (3 nouns, 3 verbs, 2 adjectives, 1 set phrase)",
+      "9 new words (3 nouns, 3 verbs, 2 adjectives, 1 idiom)",
       "6 new rules:",
-      "Comparative (faster than …)",
-      "Superlatives (fastest / the fastest)",
+      "Komparativ (schneller als …)",
+      "Superlativ (am schnellsten / der schnellste)",
       "Adjective endings without an article (netter Mann, kaltes Wasser)",
-      "Color shades: light/dark colors (light brown, dark blue)",
-      "Clothing: to wear / to put on / to be wearing",
-      "Conjunctions: weil / dass / wenn",
+      "Color shades: hell- / dunkel-  color (hellbraun, dunkelblau)",
+      "Clothing: anhaben / tragen / angezogen sein",
+      "Links: weil / dass / wenn",
       "2 rules have been updated:",
-      "Definite article — der / ein / kein / ohne",
-      "Adjective endings after \"ein,\" \"kein,\" and \"mein\" (now with the dative case)"
+      "Article — der / ein / kein / ohne",
+      "Adjective endings after \"ein\" / \"kein\" / \"mein\" (now with \"Dativ\")"
     ]
   },
   {
@@ -478,7 +479,7 @@ window.CHANGELOG = [
     ],
     "titleEn": "Structural Update (Reorganization)",
     "itemsEn": [
-      "11 new category pairs (TAXONOMY)",
+      "11 new TAXONOMY",
       "20 new subunits",
       "8 new topic titles",
       "No words were added—they were simply reorganized by topic"
@@ -507,7 +508,7 @@ window.CHANGELOG = [
       "4 idioms",
       "2 adverbs",
       "1 term (ab)",
-      "5 New Rules: Adjective Declension, \"am/im/um,\" Meanings of Modal Verbs, \"X-year-old,\" Ordinal Numbers",
+      "5 new rules: Adjektivdeklination am / im / um meanings of modal verbs X-jährig ordinal numbers",
       "Total: 135. This is a preliminary version—it will be further refined."
     ]
   },
@@ -526,7 +527,7 @@ window.CHANGELOG = [
       "18 nouns",
       "3 adjectives",
       "2 adverbs",
-      " New rule: “Modal Verbs in the Past Tense”",
+      " New rule: “Modalverben im Präteritum”",
       "Total: 23"
     ]
   },
@@ -549,7 +550,7 @@ window.CHANGELOG = [
       "4 adjectives",
       "3 adverbs",
       "1 term (als)",
-      " Update to the “Nebensatz” rule",
+      " Update to the \"Nebensatz\" rule",
       "Total: 34"
     ]
   },
@@ -598,7 +599,7 @@ window.CHANGELOG = [
       "1 новое правило",
       "Фикс: все части речи теперь отображаются в буфере «Neu»"
     ],
-    "titleEn": "Dativ Update",
+    "titleEn": "Dativ update",
     "itemsEn": [
       "8 nouns",
       "6 verbs",
@@ -620,7 +621,7 @@ window.CHANGELOG = [
     "titleEn": "Database Update",
     "itemsEn": [
       "18 nouns",
-      "5 Verbs",
+      "5 verbs",
       "2 new rules",
       "Exercise Machine Lock"
     ]
@@ -632,10 +633,10 @@ window.CHANGELOG = [
       "4 новых глагола (antworten, danken, gehören, gratulieren)",
       "3 новых правила: Падежи — роль в предложении Verben mit Dativ порядок Dativ/Akkusativ"
     ],
-    "titleEn": "Rule Update (Dative)",
+    "titleEn": "Rule Update (Dativ)",
     "itemsEn": [
       "4 new verbs (antworten, danken, gehören, gratulieren)",
-      "3 New Rules: Cases—Role in a Sentence; Verbs with the Dative; Dative/Accusative Order"
+      "3 New Rules: Cases — Role in a Sentence Verben mit Dativ Order Dativ / Akkusativ"
     ]
   },
   {
@@ -651,8 +652,8 @@ window.CHANGELOG = [
     "itemsEn": [
       "2 verbs (verkaufen, auspacken)",
       "3 new terms (Hauptsatz, Nebensatz, weil)",
-      "3 New Rules (Subclause, mit, weil)",
-      " New entry in the \"Rules\" section — word order: weil → verb at the end"
+      "3 new rules (Nebensatz, mit, weil)",
+      " New entry in the \"Rules\" section — word order: \"weil\" → verb at the end"
     ]
   },
   {
@@ -669,12 +670,12 @@ window.CHANGELOG = [
     ],
     "titleEn": "Training Exercise: Rearranging Blocks and Cards",
     "itemsEn": [
-      "Workbook: 7 units instead of 12—the sections “Zahlen,” “Begriffe,” “Regeln,” and “Aussprache” have been removed (all of these remain in the study guide)",
-      "\"Irregular\" is now included under \"Verbs\"—there is no longer a separate button for it on the main page.",
-      "\"Perfekt\" has been removed from the main menu—you can now practice the Partizip II using the \"Partizip II\" combo button in any \"Verben\" section (for all verbs or only irregular verbs—depending on which section you're in)",
-      "The irregular verb card now shows the present tense, past tense, and perfect tense all at once—three tenses on a single side",
-      "In study mode, tapping on Unregel immediately opens the flashcards—the extra \"What are we studying?\" screen has been removed",
-      "The complete Präteritum test (all 131 verbs in a row) has been moved to the flashcards page, next to the mini-test",
+      "Workout: 7 sets instead of 12—Zahlen, Begriffe, Regeln, and Aussprache have been removed (all of these remain in the cheat sheet)",
+      "Unregelmäßig Now, on Verben, there is no longer a separate button on the home page.",
+      "Perfekt Removed from the main menu — practice Partizip II; now accessible via the \"Partizip II\" combo button in any topic Verben (for all verbs or only for unregel — depending on where you are)",
+      "The irregular verb card now shows all three tenses on one side: Präsens  Präteritum  Perfekt",
+      "In study mode, tapping Unregel opens the flashcards immediately—the extra \"What are we studying?\" screen has been removed",
+      "The full \"Präteritum\" test (all 131 verbs in a row) has been moved to the flashcards page, next to the mini-test",
       "Dark theme fix: Card buttons no longer display black text on a dark background"
     ]
   },
@@ -692,13 +693,13 @@ window.CHANGELOG = [
     ],
     "titleEn": "Spora: Database and Interface Update",
     "itemsEn": [
-      "Vocabulary: 86 words and 130 A2-level verbs with the Partizip II, auxiliary verbs, and examples",
+      "Vocabulary: 86 words and 130 verbs A 2 from Partizip II, including auxiliary verbs and examples",
       "Hint: Clicking on a word opens a card showing its gender, plural form, conjugation, and an example.",
-      "A \"Perfekt\" tab has been added, featuring a table of regular and irregular verbs",
-      "Rule added: Perfekt—when to use \"sein\" and when to use \"haben,\" and how the Partizip II is formed",
-      "The menus and sections have been renamed to German: Verben, Substantive, Regeln, etc.",
+      "The \"Perfekt\" tab has been added, featuring a table of regular and irregular verbs",
+      "Rule added: Perfekt — when sein, when haben, how Partizip is formed II",
+      "The menus and sections have been renamed to German: \"Verben,\" \"Substantive,\" \"Regeln,\" etc.",
       "Tables on your phone now scroll horizontally—they won't be cut off",
-      "The theme settings have been moved to a separate file, theme.css—the dark/light theme now works more reliably"
+      "The theme settings have been moved to a separate file: theme. css — the dark/light theme works more reliably"
     ]
   },
   {
@@ -715,10 +716,10 @@ window.CHANGELOG = [
     ],
     "titleEn": "Major update to the simulator and database:",
     "itemsEn": [
-      "Verbs: Separate tests for the present tense and past participle have been added—now you can practice specific tenses",
+      "Verbs: Separate tests have been added for Präsens and Partizip II — you can now practice specific tenses",
       "On the test selection screen, there are three buttons at the top: Partizip II / Präsens / General",
-      "Clever distractors in tests—the incorrect answer choices are taken from the same topic, rather than chosen at random from the entire vocabulary",
-      "The Präsens tests now include Level 4—build a sentence from tiles",
+      "Clever distractors in tests—the incorrect options are drawn from the same topic, rather than being chosen at random from the entire vocabulary",
+      "Präsens- The tests now include Level 4—put together a sentence using the tiles",
       "Fixed the \"🔢 Numbers\" block in the simulator—the numbers are displayed again",
       "The \"🔤 Sounds\" block has been removed from the simulator (it remains in the cheat sheet)",
       "Database: 270 plural forms; compound entries have been broken down; feminine forms have been added for 16 professions"
@@ -732,11 +733,11 @@ window.CHANGELOG = [
       "Шпора: улучшен поиск",
       "Добавлены уведомления об обновлениях — кнопка 🔔 справа вверху"
     ],
-    "titleEn": "Update to the Trainer and Spurs:",
+    "titleEn": "Update on the Simulator and Spurs:",
     "itemsEn": [
-      "Practice Test: Questions on the Partizip II have been added",
+      "Practice Test: Questions have been added to Partizip II",
       "Spora: Improved Search",
-      "Added update notifications—the 🔔 button in the upper-right corner"
+      "Added update notifications—the 🔔 button in the top right corner"
     ]
   },
   {
@@ -750,14 +751,14 @@ window.CHANGELOG = [
       "Общий тест: 30 вопросов, каждый раз разные",
       "Проект открыт, файлы на GitHub"
     ],
-    "titleEn": "Major Update: The Exercise Machine",
+    "titleEn": "Major Update: Fitness Machine",
     "itemsEn": [
       "The cheat sheet has evolved into a full-fledged tool: a dictionary, grammar rules, and a practice tool with flashcards and quizzes",
-      "Study: Flashcards by Topic  Mini-Test",
-      "Testing — 4 difficulty levels: Level 1: Translation; Level 2: Basic Forms; Level 3: Plural Forms/Verb Conjugations; Level 4: Sentence Construction",
+      "Study: Topic Flashcards  Mini-Test",
+      "Testing — 4 levels of difficulty: Level 1: Translation; Level 2: Basic forms; Level 3: Plural / verb conjugation; Level 4: Sentence construction",
       "Lesson 5 — in development",
       "General Test: 30 questions, different each time",
-      "The project is open source; the files are on GitHub"
+      "The project is open; the files are available at GitHub"
     ]
   }
 ];
