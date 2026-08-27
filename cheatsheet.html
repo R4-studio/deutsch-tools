@@ -3217,9 +3217,9 @@ function show(id){
              + '<div class="section-title">' + ic('waveform') + ' ' + t('cheatsheet.sounds_title') + '</div>'
              + '<table><thead><tr><th>' + t('cheatsheet.th_letter_combo') + '</th><th>' + t('cheatsheet.th_pronunciation') + '</th><th>' + t('cheatsheet.th_example') + '</th></tr></thead><tbody>';
     for (const s of SOUNDS) {
-      html += '<tr><td>' + escHtml(s.combo) + '</td>'
+      html += '<tr><td>' + escHtml(wordField(s, 'combo', 'comboEn')) + '</td>'
             + '<td>' + escHtml(wordField(s, 'pronunciation', 'pronunciationEn')) + '</td>'
-            + '<td>' + escHtml(s.example) + '</td></tr>';
+            + '<td>' + escHtml(wordField(s, 'example', 'exampleEn')) + '</td></tr>';
     }
     html += '</tbody></table></div>';
     panel.innerHTML = html;
@@ -3610,9 +3610,9 @@ function show(id){
               + '<div class="section-title">' + topicTitleHtml('new:new-sounds') + '</div>'
               + '<table><thead><tr><th>' + t('cheatsheet.th_letter_combo') + '</th><th>' + t('cheatsheet.th_pronunciation') + '</th><th>' + t('cheatsheet.th_example') + '</th></tr></thead><tbody>';
         for (const s of newSounds) {
-          html += '<tr><td>' + escHtml(s.combo || '') + '</td>'
+          html += '<tr><td>' + escHtml(wordField(s, 'combo', 'comboEn')) + '</td>'
                 + '<td>' + escHtml(wordField(s, 'pronunciation', 'pronunciationEn')) + '</td>'
-                + '<td>' + escHtml(s.example || '') + '</td></tr>';
+                + '<td>' + escHtml(wordField(s, 'example', 'exampleEn')) + '</td></tr>';
         }
         html += '</tbody></table></div>';
       }

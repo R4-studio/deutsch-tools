@@ -857,26 +857,30 @@ def apply_manual_rules(rules, translations, warn):
             manual_ids.add(r["id"])
     return manual_ids
 
-def compute_rules_field_candidates(rules, field, en_field, translations, manual_ids):
+def compute_ignoretag_candidates(items, field, en_field, cache, key_fn, manual_ids=frozenset()):
+    """Обобщённая версия — этап C (RULES) и этап D (VOCAB.note/warning,
+    TERMS.note). key_fn достаёт ключ кэша (id для RULES/TERMS, vocab_hash
+    для VOCAB — у VOCAB кэш общий с основным словом, тот же хэш)."""
     candidates = []
-    if translations is None:
+    if cache is None:
         return candidates
-    cache = translations["RULES"]
-    for r in rules:
-        rid = r.get("id")
-        if rid in manual_ids:
+    for it in items:
+        key = key_fn(it)
+        if key in manual_ids:
             continue
-        val = r.get(field)
+        val = it.get(field)
         if not val:
             continue
-        cached = cache.get(rid) or {}
+        cached = cache.get(key) or {}
+        if cached.get("source") == "manual":
+            continue  # #26: manual никогда не пересчитывается
         if cached.get(en_field) and cached.get(f"_src_{field}") == val:
-            r[en_field] = cached[en_field]
+            it[en_field] = cached[en_field]
         else:
-            candidates.append(r)
+            candidates.append(it)
     return candidates
 
-def translate_rules_field(candidates, field, en_field, rules_cache, warn, batch_size=40):
+def translate_ignoretag_field(candidates, field, en_field, cache, key_fn, warn, label, batch_size=40):
     """RU→EN с ignore-тегами, ПОСТРОЧНО — не всем полем целиком одним
     DeepL-запросом. Эмпирически найдено при первом прогоне: если в
     многострочном тексте на одной строке несколько <x>-тегов, DeepL's
@@ -895,12 +899,12 @@ def translate_rules_field(candidates, field, en_field, rules_cache, warn, batch_
     if not candidates:
         return report_rows
     today = date.today().isoformat()
-    verbatim = [r for r in candidates if not has_cyrillic(r[field])]
-    need_api = [r for r in candidates if has_cyrillic(r[field])]
-    for r in verbatim:
-        val = r[field]
-        r[en_field] = val
-        entry = rules_cache.setdefault(r["id"], {})
+    verbatim = [it for it in candidates if not has_cyrillic(it[field])]
+    need_api = [it for it in candidates if has_cyrillic(it[field])]
+    for it in verbatim:
+        val = it[field]
+        it[en_field] = val
+        entry = cache.setdefault(key_fn(it), {})
         entry.setdefault("source", "deepl")
         entry[f"_src_{field}"] = val
         entry[en_field] = val
@@ -908,13 +912,13 @@ def translate_rules_field(candidates, field, en_field, rules_cache, warn, batch_
     if not need_api:
         return report_rows
     if not DEEPL_API_KEY:
-        warn.append(f"DEEPL_API_KEY не задан — RULES.{en_field} не переведён ({len(need_api)} записей)")
+        warn.append(f"DEEPL_API_KEY не задан — {label}.{en_field} не переведён ({len(need_api)} записей)")
         return report_rows
-    print(f"  → RULES.{field} → {en_field} (ignore-теги, RU→EN, построчно): {len(need_api)}...")
+    print(f"  → {label}.{field} → {en_field} (ignore-теги, RU→EN, построчно): {len(need_api)}...")
 
-    # Разворачиваем все записи в плоский список строк (границы — по rule_lines).
-    rule_lines = [r[field].split("\n") for r in need_api]
-    flat_lines = [line for lines in rule_lines for line in lines]
+    # Разворачиваем все записи в плоский список строк (границы — по item_lines).
+    item_lines = [it[field].split("\n") for it in need_api]
+    flat_lines = [line for lines in item_lines for line in lines]
     translated_flat = [None] * len(flat_lines)
     to_send = [(i, wrap_latin_ignore_tags(line)) for i, line in enumerate(flat_lines) if line.strip()]
     for i, line in enumerate(flat_lines):
@@ -926,33 +930,36 @@ def translate_rules_field(candidates, field, en_field, rules_cache, warn, batch_
         try:
             out = _deepl_translate_batch_xml([w for _idx, w in chunk], DEEPL_API_KEY)
         except Exception as e:
-            warn.append(f"DeepL: ошибка перевода RULES.{field} батч строк {i}-{i + len(chunk)}: {e}")
+            warn.append(f"DeepL: ошибка перевода {label}.{field} батч строк {i}-{i + len(chunk)}: {e}")
             continue  # translated_flat[idx] остаётся None → эта запись уйдёт в отчёт ниже
         for (idx, _w), tr in zip(chunk, out):
             translated_flat[idx] = strip_ignore_tags(tr)
 
     ok = 0
     pos = 0
-    for r, lines in zip(need_api, rule_lines):
+    for it, lines in zip(need_api, item_lines):
         n = len(lines)
         chunk_tr = translated_flat[pos:pos + n]
         pos += n
+        key = key_fn(it)
+        name = it.get("de") or it.get("term") or it.get("title") or it.get("id") or ""
         if any(t is None for t in chunk_tr):
-            report_rows.append({"id": r["id"], "field": field, "reason": "ошибка API (см. WARN)"})
+            report_rows.append({"id": key, "label": label, "name": name, "field": field,
+                                 "reason": "ошибка API (см. WARN)"})
             continue
         tr_joined = "\n".join(chunk_tr)
-        is_ok, reason = check_rule_field_invariants(r[field], tr_joined)
+        is_ok, reason = check_rule_field_invariants(it[field], tr_joined)
         if not is_ok:
-            report_rows.append({"id": r["id"], "field": field, "reason": reason})
+            report_rows.append({"id": key, "label": label, "name": name, "field": field, "reason": reason})
             continue
-        r[en_field] = tr_joined
-        entry = rules_cache.setdefault(r["id"], {})
+        it[en_field] = tr_joined
+        entry = cache.setdefault(key, {})
         entry.setdefault("source", "deepl")
-        entry[f"_src_{field}"] = r[field]
+        entry[f"_src_{field}"] = it[field]
         entry[en_field] = tr_joined
         entry["date"] = today
         ok += 1
-    print(f"  ✓ RULES.{en_field}: переведено {ok}/{len(need_api)}, не прошло инвариант/ошибка: {len(need_api) - ok}")
+    print(f"  ✓ {label}.{en_field}: переведено {ok}/{len(need_api)}, не прошло инвариант/ошибка: {len(need_api) - ok}")
     return report_rows
 
 def write_rules_review_report(rules, translations, field_report_rows):
@@ -983,6 +990,88 @@ def write_rules_review_report(rules, translations, field_report_rows):
         lines.append(f"| {rid} | {title_short} | {source} | {has_title} | {has_content} | {has_note} | {fails} |")
     path.write_text("\n".join(lines) + "\n", encoding="utf-8")
     return path
+
+def write_notes_review_report(report_rows):
+    """Этап D: флаги ignore-тегов для VOCAB.note/warning и TERMS.note —
+    не прошедшие инварианты, поле не записано, откат на русский."""
+    REPORTS_DIR.mkdir(exist_ok=True)
+    path = REPORTS_DIR / "en_review_notes.md"
+    if not report_rows:
+        path.write_text("# en_review_notes — флагов нет\n\nВсе переводы прошли инварианты.\n", encoding="utf-8")
+        return path
+    rows = sorted(report_rows, key=lambda r: (r["label"], r["name"] or ""))
+    lines = [
+        "# en_review_notes — флаги ignore-тегов (VOCAB.note/warning, TERMS.note)",
+        "",
+        f"Прогон: {date.today().isoformat()}. Всего флагов: {len(rows)}.",
+        "Поле не попало в data.js (сайт покажет русский), пока не разберёшь и не занесёшь решение в translations.json.",
+        "",
+        "| источник | слово/id | поле | причина |",
+        "|---|---|---|---|",
+    ]
+    for r in rows:
+        lines.append(f"| {r['label']} | {r['name']} | {r['field']} | {r['reason']} |")
+    path.write_text("\n".join(lines) + "\n", encoding="utf-8")
+    return path
+
+# ═══════════════════════════════════════════════════════════════
+# TERMS / SOUNDS (этап E) — автоперевод убран полностью, значения только
+# из docs/en-fix/translations-terms-sounds.json, source: manual. Кэш —
+# translations.json["TERMS"]/["SOUNDS"] по id (та же логика загрузки,
+# что и load_manual_rules_batches для RULES, но один файл на обе секции).
+# ═══════════════════════════════════════════════════════════════
+def load_manual_terms_sounds(translations, warn):
+    if translations is None:
+        return
+    f = SCRIPT_DIR / "docs" / "en-fix" / "translations-terms-sounds.json"
+    if not f.exists():
+        warn.append(f"{f.name} не найден — TERMS/SOUNDS.en не обновлены")
+        return
+    try:
+        data = json.loads(f.read_text(encoding="utf-8"))
+    except (OSError, json.JSONDecodeError) as e:
+        warn.append(f"{f.name}: не читается ({e}) — TERMS/SOUNDS.en не обновлены")
+        return
+    for section in ("TERMS", "SOUNDS"):
+        cache = translations[section]
+        n = 0
+        for tid, entry in data.get(section, {}).items():
+            if entry.get("source") and entry.get("source") != "manual":
+                warn.append(f"{f.name}: {section}.{tid} без source=manual — пропущена")
+                continue
+            merged = dict(entry)
+            merged["source"] = "manual"
+            cache[tid] = merged
+            n += 1
+        print(f"  ✓ {section} manual: {n} записей из {f.name}")
+
+def apply_manual_terms(terms, translations, warn):
+    if translations is None:
+        return
+    cache = translations["TERMS"]
+    without_en = 0
+    for t in terms:
+        cached = cache.get(t.get("id"))
+        if cached and cached.get("source") == "manual":
+            if cached.get("en"):
+                t["en"] = cached["en"]
+            if cached.get("noteEn"):
+                t["noteEn"] = cached["noteEn"]
+        if not t.get("en"):
+            without_en += 1
+    if without_en:
+        warn.append(f"terms: {without_en} записей без en")
+
+def apply_manual_sounds(sounds, translations, warn):
+    if translations is None:
+        return
+    cache = translations["SOUNDS"]
+    for s in sounds:
+        cached = cache.get(s.get("id"))
+        if cached and cached.get("source") == "manual":
+            for en_field in ("comboEn", "pronunciationEn", "exampleEn"):
+                if cached.get(en_field):
+                    s[en_field] = cached[en_field]
 
 # ─── VOCAB.exampleEn — тот же VOCAB-кэш и тот же хэш, что у слова (exampleDe
 # и так часть хэша, см. vocab_hash), но отдельная пара план/прогон: пример
@@ -2711,36 +2800,62 @@ if __name__ == '__main__':
     report_path = write_vocab_review_report(vocab_report_rows)
     print(f"  ✓ отчёт: {report_path}")
 
-    # Остальные ru-поля VOCAB: примечание, альт. перевод, предупреждение — RU-источник,
-    # вне этапа B (см. BRIEF §2, таблица; note/warning — этап D, altEn отдельно).
-    translate_field_to_english(all_vocab, "note", "noteEn", old_en_map, WARN, "VOCAB")
+    # Альт. перевод VOCAB — RU-источник, вне этапов B–D (слабое место по брифу).
     translate_field_to_english(all_vocab, "altRu", "altEn", old_en_map, WARN, "VOCAB")
-    translate_field_to_english(all_vocab, "warning", "warningEn", old_en_map, WARN, "VOCAB")
 
     # RULES — этап C: гибрид (31 ручное исключение + 28 через ignore-теги).
     # Кэш — translations.json["RULES"], не старый data.js (см. докстринг
-    # блока выше). TERMS/SOUNDS остаются на старом RU-механизме — вне
-    # этапа C, их очередь в этапе E.
+    # блока выше).
     print("\n=== EN-перевод RULES (этап C — исключения + ignore-теги) ===")
+    notes_report_rows = []
     if translations is not None:
         load_manual_rules_batches(translations, WARN)
         rules_manual_ids = apply_manual_rules(rules, translations, WARN)
         print(f"  ✓ RULES manual применено: {len(rules_manual_ids)}/{len(rules)}")
         rules_report_rows = []
         for field, en_field in (("title", "titleEn"), ("content_md", "content_md_en"), ("note", "noteEn")):
-            candidates = compute_rules_field_candidates(rules, field, en_field, translations, rules_manual_ids)
-            rules_report_rows += translate_rules_field(candidates, field, en_field, translations["RULES"], WARN)
+            candidates = compute_ignoretag_candidates(rules, field, en_field, translations["RULES"],
+                                                       lambda r: r["id"], rules_manual_ids)
+            rules_report_rows += translate_ignoretag_field(candidates, field, en_field, translations["RULES"],
+                                                             lambda r: r["id"], WARN, "RULES")
         rules_report_path = write_rules_review_report(rules, translations, rules_report_rows)
         print(f"  ✓ отчёт: {rules_report_path}")
-        save_translations(translations)
     else:
         WARN.append("translations.json недоступен — RULES.titleEn/content_md_en/noteEn не обновлены в этом прогоне")
 
-    old_terms_map = _parse_old_array_by_id(old_content, "TERMS")
-    old_sounds_map = _parse_old_array_by_id(old_content, "SOUNDS")
-    translate_field_to_english(terms, "ru", "en", old_terms_map, WARN, "TERMS")
-    translate_field_to_english(terms, "note", "noteEn", old_terms_map, WARN, "TERMS")
-    translate_field_to_english(sounds, "pronunciation", "pronunciationEn", old_sounds_map, WARN, "SOUNDS")
+    # VOCAB.note/warning — этап D: те же ignore-теги, что для RULES (349/437
+    # примечаний содержат немецкий — сырой RU→EN их портил так же, как правила).
+    # Кэш — тот же VOCAB[hash], что у основного слова/exampleEn (этап B).
+    print("\n=== EN-перевод VOCAB.note/warning (этап D — ignore-теги) ===")
+    if translations is not None:
+        vcache = translations["VOCAB"]
+        for field, en_field in (("note", "noteEn"), ("warning", "warningEn")):
+            candidates = compute_ignoretag_candidates(all_vocab, field, en_field, vcache, vocab_hash)
+            notes_report_rows += translate_ignoretag_field(candidates, field, en_field, vcache,
+                                                             vocab_hash, WARN, "VOCAB")
+    else:
+        WARN.append("translations.json недоступен — VOCAB.noteEn/warningEn не обновлены в этом прогоне")
+
+    # TERMS/SOUNDS — этап E: автоперевод убран, значения только из
+    # translations-terms-sounds.json (source: manual). TERMS.note — этап D
+    # (ignore-теги), но фактически все 54 термина уже приходят с noteEn
+    # готовым в том же manual-файле, так что кандидатов для DeepL не будет,
+    # если файл полон — механизм всё равно оставлен как страховка на будущее.
+    print("\n=== EN-перевод TERMS/SOUNDS (этап E — только manual) ===")
+    if translations is not None:
+        load_manual_terms_sounds(translations, WARN)
+        apply_manual_terms(terms, translations, WARN)
+        apply_manual_sounds(sounds, translations, WARN)
+        tcandidates = compute_ignoretag_candidates(terms, "note", "noteEn", translations["TERMS"],
+                                                    lambda t: t["id"])
+        notes_report_rows += translate_ignoretag_field(tcandidates, "note", "noteEn", translations["TERMS"],
+                                                         lambda t: t["id"], WARN, "TERMS")
+        save_translations(translations)
+    else:
+        WARN.append("translations.json недоступен — TERMS/SOUNDS.en не обновлены в этом прогоне")
+
+    notes_report_path = write_notes_review_report(notes_report_rows)
+    print(f"  ✓ отчёт: {notes_report_path}")
 
     print("\n=== EN-перевод changelog.js ===")
     translate_changelog(SCRIPT_DIR / "changelog.js", WARN)
@@ -2778,7 +2893,8 @@ if __name__ == '__main__':
               "examples", "examplesEn", "note", "noteEn", "new"]
     T_KEYS = ["id", "term", "plural", "ru", "en", "topic", "domen", "group", "level",
               "priority", "source", "note", "noteEn"]
-    S_KEYS = ["id", "combo", "pronunciation", "pronunciationEn", "example", "translation", "domen", "group", "note"]
+    S_KEYS = ["id", "combo", "comboEn", "pronunciation", "pronunciationEn", "example", "exampleEn",
+              "translation", "domen", "group", "note"]
 
     out = []
     out.append("// ═══════════════════════════════════════════════════════════════")
