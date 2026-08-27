@@ -765,6 +765,225 @@ def write_arbiter_report(stats):
     path.write_text("\n".join(lines) + "\n", encoding="utf-8")
     return path
 
+# ═══════════════════════════════════════════════════════════════
+# RULES (этап C, BRIEF §C) — гибрид: 31 исключение из docs/en-fix/
+# translations-rules-batch*.json (source: manual, никогда не пересчитываются),
+# остальные 28 — DeepL RU→EN с ignore-тегами вокруг латинских (=немецких)
+# фрагментов. Кэш — translations.json["RULES"] по id (не хэш: id у RULES
+# стабильны, правятся редко — см. BRIEF §3). Диф — свой, без старого
+# data.js: каждая запись кэша хранит _src_<field> (значение поля-источника
+# на момент перевода), а не полагается на _parse_old_array_by_id — та же
+# причина, что и в этапе B (иначе старый RU-пивот перевод считался бы
+# «уже переведённым» навсегда, раз поле-источник не менялось).
+# ═══════════════════════════════════════════════════════════════
+LATIN_WORD_RE = re.compile(r"[A-Za-zÀ-ÖØ-öø-ÿ][A-Za-zÀ-ÖØ-öø-ÿ'\-]*")
+
+def wrap_latin_ignore_tags(text):
+    """Оборачивает каждый латинский токен в <x>…</x>. content_md/title/note
+    у RULES — русская проза кириллицей, поэтому любой латинский фрагмент по
+    определению немецкий (см. BRIEF §C). Markdown (**, |, →, 💡, ⚠) не входит
+    в класс символов регэкспа — не заворачивается, `**muss**` → `**<x>muss</x>**`."""
+    return LATIN_WORD_RE.sub(lambda m: f"<x>{m.group(0)}</x>", text)
+
+def strip_ignore_tags(text):
+    return text.replace("<x>", "").replace("</x>", "")
+
+def check_rule_field_invariants(original, translated):
+    """(ok, reason). Все четыре инварианта из BRIEF §C: кириллицы нет,
+    число строк совпадает, число | в каждой строке совпадает, каждый
+    латинский токен исходника присутствует в переводе дословно."""
+    if has_cyrillic(translated):
+        return False, "кириллица в результате"
+    orig_lines = original.split("\n")
+    tr_lines = translated.split("\n")
+    if len(orig_lines) != len(tr_lines):
+        return False, f"число строк не совпадает ({len(orig_lines)} → {len(tr_lines)})"
+    for idx, (ol, tl) in enumerate(zip(orig_lines, tr_lines), 1):
+        if ol.count("|") != tl.count("|"):
+            return False, f"строка {idx}: число | не совпадает ({ol.count('|')} → {tl.count('|')})"
+    missing = [tok for tok in dict.fromkeys(LATIN_WORD_RE.findall(original)) if tok not in translated]
+    if missing:
+        return False, f"пропали токены: {', '.join(missing[:6])}"
+    return True, None
+
+def _deepl_translate_batch_xml(texts, api_key, source_lang="RU", target_lang="EN", ignore_tags="x"):
+    params = [("text", t) for t in texts] + [
+        ("source_lang", source_lang), ("target_lang", target_lang),
+        ("tag_handling", "xml"), ("ignore_tags", ignore_tags),
+    ]
+    result = _deepl_request(params, api_key)
+    return [tr["text"] for tr in result["translations"]]
+
+def load_manual_rules_batches(translations, warn):
+    """Подтягивает docs/en-fix/translations-rules-batch*.json в
+    translations.json['RULES'] с source: manual. Источник — ручная работа,
+    авторитетный: перезаписывает существующую запись того же id (в отличие
+    от DeepL-переводов, которые никогда не трогают manual)."""
+    if translations is None:
+        return []
+    cache = translations["RULES"]
+    batch_dir = SCRIPT_DIR / "docs" / "en-fix"
+    files = sorted(batch_dir.glob("translations-rules-batch*.json")) if batch_dir.exists() else []
+    loaded_ids = []
+    for f in files:
+        try:
+            data = json.loads(f.read_text(encoding="utf-8"))
+        except (OSError, json.JSONDecodeError) as e:
+            warn.append(f"RULES manual batch {f.name}: не читается ({e})")
+            continue
+        for rid, entry in data.get("RULES", {}).items():
+            if entry.get("source") != "manual":
+                warn.append(f"RULES manual batch {f.name}: запись {rid} без source=manual — пропущена")
+                continue
+            cache[rid] = dict(entry)
+            loaded_ids.append(rid)
+    if loaded_ids:
+        print(f"  ✓ RULES manual: {len(loaded_ids)} записей из {len(files)} batch-файлов")
+    return loaded_ids
+
+def apply_manual_rules(rules, translations, warn):
+    """source: manual — всегда из кэша, никогда не пересчитывается (#26)."""
+    manual_ids = set()
+    if translations is None:
+        return manual_ids
+    cache = translations["RULES"]
+    for r in rules:
+        cached = cache.get(r.get("id"))
+        if cached and cached.get("source") == "manual":
+            for field, en_field in (("title", "titleEn"), ("content_md", "content_md_en"),
+                                     ("note", "noteEn"), ("examples", "examplesEn")):
+                if cached.get(en_field):
+                    r[en_field] = cached[en_field]
+            manual_ids.add(r["id"])
+    return manual_ids
+
+def compute_rules_field_candidates(rules, field, en_field, translations, manual_ids):
+    candidates = []
+    if translations is None:
+        return candidates
+    cache = translations["RULES"]
+    for r in rules:
+        rid = r.get("id")
+        if rid in manual_ids:
+            continue
+        val = r.get(field)
+        if not val:
+            continue
+        cached = cache.get(rid) or {}
+        if cached.get(en_field) and cached.get(f"_src_{field}") == val:
+            r[en_field] = cached[en_field]
+        else:
+            candidates.append(r)
+    return candidates
+
+def translate_rules_field(candidates, field, en_field, rules_cache, warn, batch_size=40):
+    """RU→EN с ignore-тегами, ПОСТРОЧНО — не всем полем целиком одним
+    DeepL-запросом. Эмпирически найдено при первом прогоне: если в
+    многострочном тексте на одной строке несколько <x>-тегов, DeepL's
+    tag_handling=xml непредсказуемо расставляет переводы разных строк по
+    отдельным строкам вывода (число строк расходилось в разы, 8→31 и
+    хуже) — обёртка ломала структуру ровно так, как предупреждал стоп-
+    критерий брифа. non_splitting_tags/outline_detection=0 не помогли
+    (первый вообще снял защиту ignore_tags). Однострочный вход — всегда
+    ровно однострочный выход, без исключений (проверено отдельно) —
+    поэтому переводим по одной строке за раз, объединяя строки разных
+    правил в общий батч для API. Поле целиком немецкое (кириллицы нет —
+    22 таких title) копируется как есть, без API: переводить нечего.
+    Инварианты — на каждую запись отдельно; не прошла → en_field не
+    пишется, строка в отчёт, штатный откат на русский (не ошибка)."""
+    report_rows = []
+    if not candidates:
+        return report_rows
+    today = date.today().isoformat()
+    verbatim = [r for r in candidates if not has_cyrillic(r[field])]
+    need_api = [r for r in candidates if has_cyrillic(r[field])]
+    for r in verbatim:
+        val = r[field]
+        r[en_field] = val
+        entry = rules_cache.setdefault(r["id"], {})
+        entry.setdefault("source", "deepl")
+        entry[f"_src_{field}"] = val
+        entry[en_field] = val
+        entry["date"] = today
+    if not need_api:
+        return report_rows
+    if not DEEPL_API_KEY:
+        warn.append(f"DEEPL_API_KEY не задан — RULES.{en_field} не переведён ({len(need_api)} записей)")
+        return report_rows
+    print(f"  → RULES.{field} → {en_field} (ignore-теги, RU→EN, построчно): {len(need_api)}...")
+
+    # Разворачиваем все записи в плоский список строк (границы — по rule_lines).
+    rule_lines = [r[field].split("\n") for r in need_api]
+    flat_lines = [line for lines in rule_lines for line in lines]
+    translated_flat = [None] * len(flat_lines)
+    to_send = [(i, wrap_latin_ignore_tags(line)) for i, line in enumerate(flat_lines) if line.strip()]
+    for i, line in enumerate(flat_lines):
+        if not line.strip():
+            translated_flat[i] = line  # пустая строка — нечего слать в API
+
+    for i in range(0, len(to_send), batch_size):
+        chunk = to_send[i:i + batch_size]
+        try:
+            out = _deepl_translate_batch_xml([w for _idx, w in chunk], DEEPL_API_KEY)
+        except Exception as e:
+            warn.append(f"DeepL: ошибка перевода RULES.{field} батч строк {i}-{i + len(chunk)}: {e}")
+            continue  # translated_flat[idx] остаётся None → эта запись уйдёт в отчёт ниже
+        for (idx, _w), tr in zip(chunk, out):
+            translated_flat[idx] = strip_ignore_tags(tr)
+
+    ok = 0
+    pos = 0
+    for r, lines in zip(need_api, rule_lines):
+        n = len(lines)
+        chunk_tr = translated_flat[pos:pos + n]
+        pos += n
+        if any(t is None for t in chunk_tr):
+            report_rows.append({"id": r["id"], "field": field, "reason": "ошибка API (см. WARN)"})
+            continue
+        tr_joined = "\n".join(chunk_tr)
+        is_ok, reason = check_rule_field_invariants(r[field], tr_joined)
+        if not is_ok:
+            report_rows.append({"id": r["id"], "field": field, "reason": reason})
+            continue
+        r[en_field] = tr_joined
+        entry = rules_cache.setdefault(r["id"], {})
+        entry.setdefault("source", "deepl")
+        entry[f"_src_{field}"] = r[field]
+        entry[en_field] = tr_joined
+        entry["date"] = today
+        ok += 1
+    print(f"  ✓ RULES.{en_field}: переведено {ok}/{len(need_api)}, не прошло инвариант/ошибка: {len(need_api) - ok}")
+    return report_rows
+
+def write_rules_review_report(rules, translations, field_report_rows):
+    """По каждому из 59 правил: source, что переведено, что не прошло."""
+    REPORTS_DIR.mkdir(exist_ok=True)
+    path = REPORTS_DIR / "en_review_rules.md"
+    cache = translations["RULES"] if translations else {}
+    fails_by_id = {}
+    for row in field_report_rows:
+        fails_by_id.setdefault(row["id"], []).append(f"{row['field']}: {row['reason']}")
+    lines = [
+        "# en_review_rules — статус перевода правил",
+        "",
+        f"Прогон: {date.today().isoformat()}. Всего правил: {len(rules)}.",
+        "",
+        "| id | title | source | titleEn | content_md_en | noteEn | не прошло инварианты |",
+        "|---|---|---|---|---|---|---|",
+    ]
+    for r in sorted(rules, key=lambda x: x["id"]):
+        rid = r["id"]
+        cached = cache.get(rid, {})
+        source = cached.get("source", "—")
+        has_title = "ok" if r.get("titleEn") else "—"
+        has_content = "ok" if r.get("content_md_en") else "—"
+        has_note = "ok" if (not r.get("note")) or r.get("noteEn") else "—"
+        fails = "; ".join(fails_by_id.get(rid, [])) or ""
+        title_short = (r.get("title") or "")[:45]
+        lines.append(f"| {rid} | {title_short} | {source} | {has_title} | {has_content} | {has_note} | {fails} |")
+    path.write_text("\n".join(lines) + "\n", encoding="utf-8")
+    return path
+
 # ─── VOCAB.exampleEn — тот же VOCAB-кэш и тот же хэш, что у слова (exampleDe
 # и так часть хэша, см. vocab_hash), но отдельная пара план/прогон: пример
 # переводится без контекста и без обратного перевода (короткое предложение,
@@ -2466,7 +2685,8 @@ if __name__ == '__main__':
               f"к переводу {len(conj_candidates)} записей, {conj_chars} символов")
         print(f"  REGEL_VERBS.en (verb, DE→EN): кэш-хитов {regel_cache_hits}, "
               f"к переводу {len(regel_candidates)} записей, {regel_chars} символов")
-        print(f"  RULES/TERMS/SOUNDS/changelog: не входят в этап B, в этом прогоне не трогаются")
+        print(f"  RULES: этап C, не входит в --dry-run этапа B (символы не посчитаны)")
+        print(f"  TERMS/SOUNDS/changelog: не входят ни в этап B, ни в этап C, не трогаются")
         if WARN:
             print(f"\n⚠ Предупреждения ({len(WARN)}):")
             for w in WARN:
@@ -2497,16 +2717,27 @@ if __name__ == '__main__':
     translate_field_to_english(all_vocab, "altRu", "altEn", old_en_map, WARN, "VOCAB")
     translate_field_to_english(all_vocab, "warning", "warningEn", old_en_map, WARN, "VOCAB")
 
-    # То же самое для остального контента cheatsheet, которое не входит в VOCAB:
-    # правила (заголовок + текст + примечание), термины (перевод + примечание),
-    # произношение (кириллическая транскрипция). Вне этапа B — не тронуты.
-    old_rules_map = _parse_old_array_by_id(old_content, "RULES")
+    # RULES — этап C: гибрид (31 ручное исключение + 28 через ignore-теги).
+    # Кэш — translations.json["RULES"], не старый data.js (см. докстринг
+    # блока выше). TERMS/SOUNDS остаются на старом RU-механизме — вне
+    # этапа C, их очередь в этапе E.
+    print("\n=== EN-перевод RULES (этап C — исключения + ignore-теги) ===")
+    if translations is not None:
+        load_manual_rules_batches(translations, WARN)
+        rules_manual_ids = apply_manual_rules(rules, translations, WARN)
+        print(f"  ✓ RULES manual применено: {len(rules_manual_ids)}/{len(rules)}")
+        rules_report_rows = []
+        for field, en_field in (("title", "titleEn"), ("content_md", "content_md_en"), ("note", "noteEn")):
+            candidates = compute_rules_field_candidates(rules, field, en_field, translations, rules_manual_ids)
+            rules_report_rows += translate_rules_field(candidates, field, en_field, translations["RULES"], WARN)
+        rules_report_path = write_rules_review_report(rules, translations, rules_report_rows)
+        print(f"  ✓ отчёт: {rules_report_path}")
+        save_translations(translations)
+    else:
+        WARN.append("translations.json недоступен — RULES.titleEn/content_md_en/noteEn не обновлены в этом прогоне")
+
     old_terms_map = _parse_old_array_by_id(old_content, "TERMS")
     old_sounds_map = _parse_old_array_by_id(old_content, "SOUNDS")
-
-    translate_field_to_english(rules, "title", "titleEn", old_rules_map, WARN, "RULES")
-    translate_field_to_english(rules, "content_md", "content_md_en", old_rules_map, WARN, "RULES")
-    translate_field_to_english(rules, "note", "noteEn", old_rules_map, WARN, "RULES")
     translate_field_to_english(terms, "ru", "en", old_terms_map, WARN, "TERMS")
     translate_field_to_english(terms, "note", "noteEn", old_terms_map, WARN, "TERMS")
     translate_field_to_english(sounds, "pronunciation", "pronunciationEn", old_sounds_map, WARN, "SOUNDS")
@@ -2544,7 +2775,7 @@ if __name__ == '__main__':
     Q_KEYS = ["id", "topic", "level", "difficulty", "type", "q",
               "opts", "ans", "words", "pronouns", "altAns", "hint", "explain"]
     R_KEYS = ["id", "title", "titleEn", "topic", "domen", "group", "level", "content_md", "content_md_en",
-              "examples", "note", "noteEn", "new"]
+              "examples", "examplesEn", "note", "noteEn", "new"]
     T_KEYS = ["id", "term", "plural", "ru", "en", "topic", "domen", "group", "level",
               "priority", "source", "note", "noteEn"]
     S_KEYS = ["id", "combo", "pronunciation", "pronunciationEn", "example", "translation", "domen", "group", "note"]
