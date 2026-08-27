@@ -14,6 +14,20 @@ window.CHANGELOG = [
       "Термины, 54 штуки: regelmäßig был «transitive verb» → regular verb, das Objekt был «supplement» → object, Wohin? совпадал с Wo? → Where to?",
       "Звуки, 17 штук: транскрипция переведена на IPA. Раньше [и:] превращалось в «[and:]», а [шт] — в «[pcs]»",
       "Примечания: 349 из 437 содержат немецкий — он теперь защищён от перевода"
+    ],
+    "titleEn": "English version: translation completely reworked",
+    "itemsEn": [
+      "Translation ran through Russian: German → Russian → English, which distorted meanings along the way. The source is now German directly.",
+      "Vocabulary, 1759 words. Ambiguity errors fixed: Eintritt was \"Login\" → entrance, backen was \"oven\" → to bake, Wäsche was \"underwear\" → laundry",
+      "Consistent verb form (to X) and correct capitalisation of nouns",
+      "Examples are translated from the German original, not from the Russian paraphrase",
+      "Rules, all 59. German examples and tables are no longer translated — Modalverben im Präteritum used to show six identical \"had to\" instead of musste/musstest/mussten",
+      "Adjektivdeklination shows its endings again",
+      "31 rules translated by hand, including those where the explanation leaned on Russian",
+      "22 rules had no English title at all — fixed",
+      "Terms, 54 entries: regelmäßig was \"transitive verb\" → regular verb, das Objekt was \"supplement\" → object, Wohin? was identical to Wo? → Where to?",
+      "Sounds, 17 entries: transcription switched to IPA. Previously [и:] became \"[and:]\" and [шт] became \"[pcs]\"",
+      "Notes: 349 of 437 contain German — it is now protected from translation"
     ]
   },
   {
