@@ -29,6 +29,7 @@ update_data.py — собирает data.js из database.xlsx
 - Тип вопроса build трактуется как алиас tiles (движок тренажёра знает только tiles).
 - Колонка studied игнорируется (пережиток, удаляется из xlsx).
 """
+import argparse
 import re
 import sys
 from pathlib import Path
@@ -38,6 +39,14 @@ try:
 except ImportError:
     print("Нужен openpyxl. pip install openpyxl")
     sys.exit(1)
+
+# Прогресс DeepL-переводов (тысячи запросов, минуты между печатями) должен
+# быть виден по мере выполнения, а не одним куском при выходе — иначе при
+# перенаправлении в файл/лог stdout копится в блочном буфере до конца процесса.
+try:
+    sys.stdout.reconfigure(line_buffering=True)
+except AttributeError:
+    pass  # старый Python без reconfigure — переживём без live-вывода
 
 SCRIPT_DIR = Path(__file__).parent
 XLSX_PATH = SCRIPT_DIR / "database.xlsx"
@@ -171,14 +180,19 @@ def item_to_js(item, key_order=None):
     return "  { " + ", ".join(parts) + " },"
 
 # ═══════════════════════════════════════════════════════════════
-# СЛОЙ 2 МУЛЬТИЯЗЫЧНОСТИ (бриф) — перевод VOCAB.ru → VOCAB.en через DeepL.
+# СЛОЙ 2 МУЛЬТИЯЗЫЧНОСТИ (docs/en-fix/BRIEF-en-fix.md) — DE→EN через DeepL.
 # Без DEEPL_API_KEY просто тихо пропускается — сайт от поля en не зависит,
-# это доп. данные для будущего переключателя языка контента.
+# это доп. данные для переключателя языка контента (сейчас выключен,
+# см. этап A: window.I18N_CONTENT_EN в i18n/i18n.js).
 # ═══════════════════════════════════════════════════════════════
+import hashlib
 import json
 import os
+import time
+import urllib.error
 import urllib.request
 import urllib.parse
+from datetime import date
 
 try:
     from dotenv import load_dotenv
@@ -187,60 +201,667 @@ except ImportError:
     pass  # dotenv не обязателен — можно просто выставить переменную окружения
 
 DEEPL_API_KEY = os.environ.get("DEEPL_API_KEY", "").strip()
+ANTHROPIC_API_KEY = os.environ.get("ANTHROPIC_API_KEY", "").strip()
+ARBITER_MODEL = "claude-haiku-4-5-20251001"  # GUARDRAILS #2: не менять без просьбы Ra
+TRANSLATIONS_JSON_PATH = SCRIPT_DIR / "translations.json"
+REPORTS_DIR = SCRIPT_DIR / "reports"
 
 def _deepl_base_url(api_key):
     # Free-тариф — ключи оканчиваются на ":fx", у него отдельный домен API.
     return "https://api-free.deepl.com/v2/translate" if api_key.endswith(":fx") \
         else "https://api.deepl.com/v2/translate"
 
-def _deepl_translate_batch(texts, api_key):
-    """Один запрос к DeepL на пачку строк RU→EN. Возвращает переводы в том же порядке."""
-    data = urllib.parse.urlencode(
-        [("text", t) for t in texts] + [("source_lang", "RU"), ("target_lang", "EN")]
-    ).encode("utf-8")
+def _deepl_request(params, api_key):
+    """POST к DeepL. Ретрай до 3 попыток только на 429 (rate limit),
+    растущая пауза — прочие ошибки сразу наверх, глушить их нельзя."""
+    data = urllib.parse.urlencode(params).encode("utf-8")
     req = urllib.request.Request(_deepl_base_url(api_key), data=data, headers={
         "Authorization": f"DeepL-Auth-Key {api_key}",
         "Content-Type": "application/x-www-form-urlencoded",
     })
-    with urllib.request.urlopen(req, timeout=30) as resp:
-        result = json.loads(resp.read().decode("utf-8"))
+    last_err = None
+    for attempt in range(3):
+        try:
+            with urllib.request.urlopen(req, timeout=30) as resp:
+                return json.loads(resp.read().decode("utf-8"))
+        except urllib.error.HTTPError as e:
+            last_err = e
+            if e.code == 429 and attempt < 2:
+                time.sleep(2 * (attempt + 1))
+                continue
+            raise
+    raise last_err
+
+def _deepl_translate_batch(texts, api_key, source_lang="RU", target_lang="EN"):
+    """Один запрос к DeepL на пачку строк. Возвращает переводы в том же порядке."""
+    params = [("text", t) for t in texts] + [("source_lang", source_lang), ("target_lang", target_lang)]
+    result = _deepl_request(params, api_key)
     return [tr["text"] for tr in result["translations"]]
 
-def translate_vocab_to_english(all_vocab, old_en_map, warn):
-    if not DEEPL_API_KEY:
-        if any(item.get("ru") for item in all_vocab):
-            warn.append("DEEPL_API_KEY не задан — перевод en пропущен (см. README, раздел «Мультиязычность»)")
-        return
+def _deepl_translate_one(text, api_key, source_lang, target_lang, context=None):
+    """Перевод одной строки с опциональным контекстом. Контекст не тарифицируется,
+    но DeepL считает его один на весь запрос — а у каждого VOCAB-слова свой
+    (артикль/часть речи/пример), поэтому тут не пачка, а один текст за раз."""
+    params = [("text", text), ("source_lang", source_lang), ("target_lang", target_lang)]
+    if context:
+        params.append(("context", context))
+    result = _deepl_request(params, api_key)
+    return result["translations"][0]["text"]
 
-    to_translate = []
+# ─── translations.json — кэш и источник правды для VOCAB.en/RULES/TERMS/SOUNDS
+# (см. BRIEF §3). Ведёт Claude Code, Ra файл не открывает — поэтому пустой
+# или битый файл это ошибка, а не сигнал молча перевести всё заново.
+TRANSLATIONS_SECTIONS = ("VOCAB", "CONJUGATIONS", "REGEL_VERBS", "RULES", "TERMS", "SOUNDS")
+
+def load_translations(warn):
+    """Единственный кэш и источник правды для всех переводимых полей —
+    старый _parse_old_array_by_id (диф по id против предыдущего data.js)
+    как источник кэша для VOCAB/CONJUGATIONS/REGEL_VERBS больше не
+    используется вообще (см. обсуждение этапа B): он не различал, ЧЕМ был
+    посчитан уже существующий en — старой RU-методикой или новой DE —
+    и молча оставлял 524 записи навсегда непереведёнными по-новому."""
+    empty = {k: {} for k in TRANSLATIONS_SECTIONS}
+    if not TRANSLATIONS_JSON_PATH.exists():
+        warn.append("translations.json не найден — будет создан заново, первый прогон переведёт всё")
+        return empty
+    try:
+        data = json.loads(TRANSLATIONS_JSON_PATH.read_text(encoding="utf-8"))
+    except (OSError, json.JSONDecodeError) as e:
+        warn.append(f"translations.json не читается ({e}) — переводы в этом прогоне НЕ ОБНОВЛЯЮТСЯ "
+                    f"(ни новые, ни повторное использование кэша), чтобы не потерять то, что уже "
+                    f"вручную починено. Почини файл (см. git-историю) и прогони заново.")
+        return None
+    for k in TRANSLATIONS_SECTIONS:
+        data.setdefault(k, {})
+    return data
+
+def save_translations(data):
+    TRANSLATIONS_JSON_PATH.write_text(
+        json.dumps(data, ensure_ascii=False, indent=2, sort_keys=True) + "\n", encoding="utf-8")
+
+def simple_hash(*parts):
+    raw = "|".join(p or "" for p in parts)
+    return hashlib.sha1(raw.encode("utf-8")).hexdigest()[:16]
+
+def vocab_hash(item):
+    """Ключ VOCAB в translations.json — хэш источника (de+gender+pos+exampleDe),
+    не id: assign_ids перевыдаёт id при каждом прогоне, ключ по id промахивается
+    блоками, стоит добавить/удалить слово выше по списку. exampleDe — часть
+    хэша не случайно: он же часть контекста для перевода en (см. ниже), так
+    что смена примера обоснованно инвалидирует и слово тоже."""
+    return simple_hash(item.get("de"), item.get("gender"), item.get("pos"), item.get("exampleDe"))
+
+POS_DE_LABEL = {"noun": "Nomen", "verb": "Verb", "adj": "Adjektiv", "adv": "Adverb",
+                "pron": "Pronomen", "num": "Numerale", "phrase": "Wendung"}
+GENDER_ARTICLE = {"m": "der", "f": "die", "n": "das", "pl": "die"}
+
+def build_vocab_context(item):
+    """Контекст для DeepL — не переводится и не тарифицируется, только
+    подсказка модели: артикль, часть речи, пример, альт. форма."""
+    parts = []
+    article = GENDER_ARTICLE.get(item.get("gender"))
+    if article:
+        parts.append(article)
+    pos_label = POS_DE_LABEL.get(item.get("pos"))
+    if pos_label:
+        parts.append(pos_label)
+    if item.get("exampleDe"):
+        parts.append(item["exampleDe"])
+    if item.get("altDe"):
+        parts.append(item["altDe"])
+    return " | ".join(parts) if parts else None
+
+def normalize_verb_en(text):
+    """«to <verb>» — одна форма на весь словарь, независимо от того, что
+    вернул DeepL (с to / без / Capitalized)."""
+    text = (text or "").strip()
+    if not text:
+        return text
+    m = re.match(r"^to\s+(.*)$", text, re.IGNORECASE)
+    core = m.group(1) if m else text
+    return "to " + core
+
+# Закрытый список — единственная категория собственных имён, реально
+# встречающаяся в VOCAB (проверено: ни одной отдельной записи для стран/
+# языков/личных имён в словаре нет, только дни недели и месяцы).
+PROPER_NOUN_EN = {
+    "monday", "tuesday", "wednesday", "thursday", "friday", "saturday", "sunday",
+    "january", "february", "march", "april", "may", "june", "july",
+    "august", "september", "october", "november", "december",
+}
+
+def is_proper_noun_en(text):
+    return (text or "").strip().lower() in PROPER_NOUN_EN
+
+def normalize_vocab_en(text, pos):
+    """pos==verb → normalize_verb_en(); verb/adj/adv/noun → строчная первая
+    буква — по-английски заглавная у DeepL для существительных унаследована
+    из немецкого написания, а не грамматика. Исключение — закрытый список
+    настоящих собственных (дни недели, месяцы)."""
+    text = (text or "").strip()
+    if not text:
+        return text
+    if pos == "verb":
+        text = normalize_verb_en(text)
+    if pos in ("verb", "adj", "adv") and text:
+        text = text[0].lower() + text[1:]
+    elif pos == "noun" and text and not is_proper_noun_en(text):
+        text = text[0].lower() + text[1:]
+    return text
+
+def build_backtranslation_text(item, en_text):
+    """Голый EN-текст неоднозначен для DeepL без артикля/инфинитив-маркера —
+    он читает его как что придётся (для глаголов — как цель: "to work" →
+    "um zu arbeiten"/"zur Arbeit" вместо инфинитива; для существительных
+    без артикля — не факт что как существительное вообще). Возвращаем
+    артикль/маркер перед обратным переводом, снимаем его сравнением через
+    normalize_de_for_compare (уже снимает der/die/das)."""
+    pos = item.get("pos")
+    if pos == "verb":
+        m = re.match(r"^to\s+(.*)$", en_text, re.IGNORECASE)
+        return m.group(1) if m else en_text
+    if pos == "noun" and not is_proper_noun_en(en_text):
+        return "the " + en_text
+    return en_text
+
+def has_cyrillic(s):
+    return bool(re.search(r"[А-Яа-яЁё]", s or ""))
+
+def normalize_de_for_compare(s):
+    """Для сверки обратного перевода: нижний регистр, без артикля."""
+    s = (s or "").strip().lower()
+    return re.sub(r"^(der|die|das)\s+", "", s)
+
+def compute_vocab_plan(all_vocab, translations, warn):
+    """Без обращения к API: делит all_vocab на кэш-хиты (уже есть en в
+    translations.json под текущим хэшем источника) и кандидатов на перевод.
+    Считает символы прямого перевода (de) для --dry-run. Если translations.json
+    не читается (load_translations вернул None) — кандидатов нет вообще: это
+    единственный источник кэша, фолбэка на старый data.js больше нет."""
+    candidates = []
+    cache_hits = 0
+    if translations is None:
+        return candidates, cache_hits, 0
+    vocab_cache = translations["VOCAB"]
     for item in all_vocab:
-        ru = item.get("ru")
-        if not ru:
+        if not item.get("de"):
             continue
-        old = old_en_map.get(item["id"])
-        if old and old.get("ru") == ru and old.get("en"):
-            item["en"] = old["en"]
+        h = vocab_hash(item)
+        cached = vocab_cache.get(h)
+        if item.get("new") and cached:
+            warn.append(f"VOCAB: «{item['de']}» помечено new=TRUE в xlsx, но перевод уже есть "
+                        f"в translations.json (hash {h}) — сверь вручную, скрипт не решает сам")
+        if cached and cached.get("en"):
+            cache_hits += 1
+            en_val = cached["en"]
+            # Самоисправление: если нормализация поменялась (напр. строчная
+            # буква у существительных), применяем её и к уже закэшированным
+            # deepl-переводам — без обращения к API, просто локальная строка.
+            # source: "manual" не трогаем никогда (§26 GUARDRAILS).
+            if cached.get("source") == "deepl":
+                renorm = normalize_vocab_en(en_val, item.get("pos"))
+                if renorm != en_val:
+                    cached["en"] = renorm
+                    en_val = renorm
+            item["en"] = en_val
         else:
-            to_translate.append(item)
+            candidates.append(item)
+    char_count = sum(len(it["de"]) for it in candidates)
+    return candidates, cache_hits, char_count
 
-    if not to_translate:
-        print("  ✓ EN-перевод: новых/изменённых слов нет, всё уже переведено раньше")
-        return
+def check_vocab_threshold(n_candidates, all_vocab, force):
+    """True — можно продолжать. False — превышен порог 20%, нужен --force."""
+    total = sum(1 for it in all_vocab if it.get("de"))
+    if total == 0:
+        return True
+    ratio = n_candidates / total
+    if ratio > 0.20 and not force:
+        print(f"\n✗ ОСТАНОВЛЕНО: перевод затронет {n_candidates}/{total} слов VOCAB "
+              f"({ratio:.0%}) — больше порога 20%.")
+        print("  Если это ожидаемо (первый прогон, массовая правка xlsx) — повтори с --force.")
+        return False
+    return True
 
-    print(f"  → EN-перевод через DeepL: {len(to_translate)} новых/изменённых слов...")
+def run_vocab_translation(candidates, vocab_cache, warn):
+    """Реальный прогон: DE→EN + контекст (фаза 1), обратный перевод EN→DE
+    (фаза 2), сверка. item['en'] пишется только для прошедших обе проверки;
+    остальные уходят в report_rows (поле en НЕ пишется — сайт покажет ru,
+    это штатный исход, не ошибка). Кэш обновляется только для успешных —
+    флаги не кэшируются, чтобы не запирать неразрешённый случай навсегда.
+
+    Фаза 1 — по одному слову за запрос: у DeepL context один на весь
+    запрос, а не на текст внутри пачки, а у каждого VOCAB-слова свой
+    контекст (артикль/часть речи/пример) — batch тут физически невозможен
+    без потери контекста, ради которого его и завели.
+    Фаза 2 — контекста не требует (обратный перевод переводит голое слово),
+    поэтому batch-ится обычным способом, BATCH=50."""
+    if not DEEPL_API_KEY:
+        warn.append("DEEPL_API_KEY не задан — VOCAB.en не переведён")
+        return [], 0
+    today = date.today().isoformat()
+    BATCH = 50
+
+    # Фаза 1: DE→EN + контекст, по одному слову — см. докстринг.
+    print(f"  → VOCAB.en фаза 1/2 (DE→EN + контекст, по слову): {len(candidates)}...")
+    forward_ok = []  # (item, en_text)
+    report_rows = []
+    for i, item in enumerate(candidates, 1):
+        context = build_vocab_context(item)
+        try:
+            raw_en = _deepl_translate_one(item["de"], DEEPL_API_KEY, "DE", "EN", context=context)
+        except Exception as e:
+            warn.append(f"DeepL: ошибка перевода VOCAB «{item['de']}»: {e}")
+            report_rows.append({"item": item, "en_deepl": "(ошибка API)", "back_de": "—"})
+            continue
+        en_text = normalize_vocab_en(raw_en, item.get("pos"))
+        if has_cyrillic(en_text):
+            report_rows.append({"item": item, "en_deepl": en_text, "back_de": "(кириллица в результате)"})
+            continue
+        forward_ok.append((item, en_text))
+        if i % 100 == 0:
+            print(f"    ... {i}/{len(candidates)}")
+
+    # Фаза 2: обратный перевод EN→DE, пачками — без контекста, batch допустим.
+    print(f"  → VOCAB.en фаза 2/2 (обратный перевод EN→DE, пачками по {BATCH}): "
+          f"{len(forward_ok)}...")
+    ok = 0
+    for i in range(0, len(forward_ok), BATCH):
+        chunk = forward_ok[i:i + BATCH]
+        bt_texts = [build_backtranslation_text(item, en_text) for item, en_text in chunk]
+        try:
+            back_translations = _deepl_translate_batch(
+                bt_texts, DEEPL_API_KEY, source_lang="EN", target_lang="DE")
+        except Exception as e:
+            warn.append(f"DeepL: ошибка обратного перевода батч {i}-{i + len(chunk)}: {e}")
+            for item, en_text in chunk:
+                report_rows.append({"item": item, "en_deepl": en_text, "back_de": "(ошибка API)"})
+            continue
+        for (item, en_text), back_de in zip(chunk, back_translations):
+            if normalize_de_for_compare(back_de) != normalize_de_for_compare(item["de"]):
+                report_rows.append({"item": item, "en_deepl": en_text, "back_de": back_de})
+                continue
+            item["en"] = en_text
+            vocab_cache[vocab_hash(item)] = {"de": item["de"], "en": en_text, "source": "deepl",
+                                              "backtranslation": back_de, "date": today}
+            ok += 1
+        print(f"    ... {min(i + BATCH, len(forward_ok))}/{len(forward_ok)}")
+    print(f"  ✓ VOCAB.en: переведено и подтверждено {ok}/{len(candidates)}, "
+          f"флагов на разбор: {len(report_rows)}")
+    return report_rows, ok
+
+def write_vocab_review_report(report_rows):
+    REPORTS_DIR.mkdir(exist_ok=True)
+    path = REPORTS_DIR / "en_review_vocab.md"
+    if not report_rows:
+        path.write_text(
+            "# en_review_vocab — флагов нет\n\n"
+            "Все переводы этого прогона прошли обратный перевод и проверку на кириллицу.\n",
+            encoding="utf-8")
+        return path
+    rows = sorted(report_rows, key=lambda r: (r["item"].get("pos") or "", r["item"].get("level") or "",
+                                               r["item"].get("de") or ""))
+    lines = [
+        "# en_review_vocab — флаги обратного перевода",
+        "",
+        f"Прогон: {date.today().isoformat()}. Всего флагов: {len(rows)}.",
+        "Слово НЕ попало в data.js (поле `en` не записано, сайт покажет русский), "
+        "пока не разберёшь тут и не занесёшь решение в translations.json.",
+        "",
+        "| id | de | ru | en (DeepL) | обратно в DE | pos | level |",
+        "|---|---|---|---|---|---|---|",
+    ]
+    for r in rows:
+        it = r["item"]
+        lines.append(f"| {it.get('id','')} | {it.get('de','')} | {it.get('ru','') or ''} | "
+                      f"{r.get('en_deepl','')} | {r.get('back_de','')} | {it.get('pos','')} | "
+                      f"{it.get('level','') or ''} |")
+    path.write_text("\n".join(lines) + "\n", encoding="utf-8")
+    return path
+
+# ═══════════════════════════════════════════════════════════════
+# АРБИТР НА HAIKU (--arbiter=haiku, режим миграции, BRIEF §7)
+# Разбирает ТОЛЬКО флаги обратного перевода VOCAB.en — не весь словарь,
+# не RULES/TERMS/SOUNDS (GUARDRAILS #28, #32). source: "haiku", не
+# "manual" (#27) — смешивать машинный разбор с человеческим запрещено.
+# ═══════════════════════════════════════════════════════════════
+# Строгая схема вердикта — structured output через tool use, а не текстовый
+# JSON: модель физически не может обернуть ответ в ```, потому что ответ
+# приходит не текстом, а готовым разобранным полем tool_use.input. Это
+# решает задачу на уровне протокола (см. обсуждение этапа B — попытка
+# "распарсить ```json...```" через строгий json.loads() на голом тексте
+# дала 100% skip: Haiku оборачивает JSON в markdown-фенсы вопреки прямому
+# запрету в промпте, и это не разово — второй артефакт после "to "/"the ").
+ARBITER_TOOL = {
+    "name": "submit_verdicts",
+    "description": "Вердикты по батчу слов словаря: ok / fix / skip для каждого id из запроса.",
+    "input_schema": {
+        "type": "object",
+        "properties": {
+            "verdicts": {
+                "type": "array",
+                "items": {
+                    "type": "object",
+                    "properties": {
+                        "id": {"type": "string"},
+                        "verdict": {"type": "string", "enum": ["ok", "fix", "skip"]},
+                        "en": {"type": "string"},
+                        "reason": {"type": "string"},
+                    },
+                    "required": ["id", "verdict"],
+                    "additionalProperties": False,
+                },
+            },
+        },
+        "required": ["verdicts"],
+        "additionalProperties": False,
+    },
+}
+
+def _anthropic_request(system_prompt, user_content, api_key, max_tokens=4096):
+    """POST к Anthropic Messages API с принудительным tool use (см. ARBITER_TOOL
+    выше). Ретрай до 3 попыток только на 429, остальные ошибки сразу наверх —
+    та же дисциплина, что у _deepl_request."""
+    payload = json.dumps({
+        "model": ARBITER_MODEL,
+        "max_tokens": max_tokens,
+        "system": system_prompt,
+        "messages": [{"role": "user", "content": user_content}],
+        "tools": [ARBITER_TOOL],
+        "tool_choice": {"type": "tool", "name": "submit_verdicts"},
+    }).encode("utf-8")
+    req = urllib.request.Request(
+        "https://api.anthropic.com/v1/messages",
+        data=payload,
+        headers={
+            "x-api-key": api_key,
+            "anthropic-version": "2023-06-01",
+            "content-type": "application/json",
+        },
+    )
+    last_err = None
+    for attempt in range(3):
+        try:
+            with urllib.request.urlopen(req, timeout=60) as resp:
+                return json.loads(resp.read().decode("utf-8"))
+        except urllib.error.HTTPError as e:
+            last_err = e
+            if e.code == 429 and attempt < 2:
+                time.sleep(2 * (attempt + 1))
+                continue
+            raise
+    raise last_err
+
+ARBITER_SYSTEM_PROMPT = """Ты — арбитр в пайплайне перевода немецко-русского словаря на английский (DE→EN).
+
+Каждое слово уже прошло: 1) перевод DeepL DE→EN (поле en_deepl), 2) обратный перевод EN→DE для проверки (поле back_de). Обратный перевод разошёлся с оригиналом (de) — это может быть ложное срабатывание (en_deepl верен, просто обратный перевод выбрал синоним или другую форму), а может быть реальная ошибка перевода.
+
+Для каждого слова в батче верни вердикт:
+- "ok" — en_deepl верен, расхождение — ложное срабатывание обратного перевода.
+- "fix" — en_deepl неверен, в поле "en" укажи правильный перевод.
+- "skip" — не уверен (многозначное слово, недостаточно контекста).
+
+Слова — из учебного словаря уровня A1–A2 (поле "level" в запросе). Выбирай
+перевод, который реально преподают на этом уровне, а не редкий/книжный
+синоним, даже если он тоже формально верен: "cheap", не "inexpensive";
+"begin", не "commence".
+
+При выборе значения многозначного слова опирайся на exampleDe и note —
+это конкретный контекст, в котором слово используется в этом словаре, а
+не на самое частотное значение слова в языке вообще.
+
+Конвенции для поля "en", если verdict=fix:
+- ровно один вариант перевода, без слэшей и без "/" (не "cheap/inexpensive").
+- глаголы — форма "to <verb>", один глагол.
+- прилагательные/наречия — со строчной буквы.
+- существительные — строчная буква, кроме настоящих собственных (дни недели, месяцы).
+
+Вызови submit_verdicts ровно один раз, с одним элементом verdicts на каждый id из входного массива (в любом порядке). Для verdict="fix" заполни поле "en". Для verdict="skip" заполни поле "reason" (коротко, по-русски)."""
+
+def build_arbiter_batch_payload(rows):
+    items = []
+    for r in rows:
+        it = r["item"]
+        items.append({
+            "id": it.get("id"),
+            "de": it.get("de"),
+            "article": GENDER_ARTICLE.get(it.get("gender")),
+            "pos": it.get("pos"),
+            "level": it.get("level"),
+            "ru": it.get("ru"),
+            "altRu": it.get("altRu"),
+            "exampleDe": it.get("exampleDe"),
+            "note": it.get("note"),
+            "en_deepl": r.get("en_deepl"),
+            "back_de": r.get("back_de"),
+        })
+    return json.dumps(items, ensure_ascii=False)
+
+def run_haiku_arbiter(report_rows, vocab_cache, warn):
+    """Возвращает (remaining_rows, stats). remaining_rows — то, что осталось
+    неразобранным (skip + сбои парсинга) и идёт в reports/en_review_vocab.md
+    как обычно. Разобранное (ok/fix) убирается из отчёта на ручной разбор —
+    оно уже разобрано, просто не человеком."""
+    empty_stats = {"ok": 0, "fix": 0, "skip": 0, "fix_list": [], "skip_list": [],
+                   "input_tokens": 0, "output_tokens": 0}
+    if not report_rows:
+        return report_rows, empty_stats
+    if not ANTHROPIC_API_KEY:
+        warn.append("ANTHROPIC_API_KEY не задан — арбитр Haiku пропущен, все флаги остаются на ручной разбор")
+        return report_rows, empty_stats
+
+    BATCH = 40
+    today = date.today().isoformat()
+    stats = dict(empty_stats)
+    stats["fix_list"] = []
+    stats["skip_list"] = []
+    remaining_rows = []
+
+    print(f"  → Арбитр Haiku ({ARBITER_MODEL}): {len(report_rows)} флагов, батчи по {BATCH}...")
+    for i in range(0, len(report_rows), BATCH):
+        chunk = report_rows[i:i + BATCH]
+        chunk_by_id = {r["item"].get("id"): r for r in chunk}
+        try:
+            resp = _anthropic_request(ARBITER_SYSTEM_PROMPT, build_arbiter_batch_payload(chunk), ANTHROPIC_API_KEY)
+        except Exception as e:
+            warn.append(f"Arbiter: ошибка запроса батч {i}-{i + len(chunk)}: {e}")
+            for r in chunk:
+                it = r["item"]
+                stats["skip"] += 1
+                stats["skip_list"].append({"id": it.get("id"), "de": it.get("de"), "reason": f"ошибка API: {e}"})
+                remaining_rows.append(r)
+            continue
+
+        usage = resp.get("usage", {})
+        stats["input_tokens"] += usage.get("input_tokens", 0)
+        stats["output_tokens"] += usage.get("output_tokens", 0)
+
+        # Structured output (tool use) — ответ уже разобранный JSON в
+        # tool_use.input, не текст. Не пришёл tool_use с ожидаемой формой —
+        # весь батч в skip (та же дисциплина #30, но на уровне протокола).
+        tool_block = next((b for b in resp.get("content", [])
+                            if b.get("type") == "tool_use" and b.get("name") == "submit_verdicts"), None)
+        verdicts = (tool_block or {}).get("input", {}).get("verdicts") if tool_block else None
+        if not isinstance(verdicts, list):
+            warn.append(f"Arbiter: нет tool_use submit_verdicts в ответе, батч {i}-{i + len(chunk)} — весь батч в skip")
+            for r in chunk:
+                it = r["item"]
+                stats["skip"] += 1
+                stats["skip_list"].append({"id": it.get("id"), "de": it.get("de"),
+                                            "reason": "ответ модели не распарсился (весь батч)"})
+                remaining_rows.append(r)
+            continue
+
+        verdicts_by_id = {v["id"]: v for v in verdicts if isinstance(v, dict) and v.get("id")}
+        for req_id, r in chunk_by_id.items():
+            it = r["item"]
+            v = verdicts_by_id.get(req_id)
+            # id из ответа сверяется с id из запроса — не совпал (или нет ответа) → skip (#25 брифа).
+            if not v:
+                stats["skip"] += 1
+                stats["skip_list"].append({"id": req_id, "de": it.get("de"), "reason": "нет ответа модели по этому id"})
+                remaining_rows.append(r)
+                continue
+            verdict = v.get("verdict")
+            if verdict == "ok":
+                en_text = r.get("en_deepl")
+                vocab_cache[vocab_hash(it)] = {"de": it.get("de"), "en": en_text, "source": "haiku",
+                                                "verdict": "ok", "backtranslation": r.get("back_de"), "date": today}
+                it["en"] = en_text
+                stats["ok"] += 1
+            elif verdict == "fix":
+                en_raw = v.get("en")
+                if not en_raw:
+                    stats["skip"] += 1
+                    stats["skip_list"].append({"id": req_id, "de": it.get("de"), "reason": "verdict=fix без поля en"})
+                    remaining_rows.append(r)
+                    continue
+                en_text = normalize_vocab_en(en_raw, it.get("pos"))
+                vocab_cache[vocab_hash(it)] = {"de": it.get("de"), "en": en_text, "source": "haiku",
+                                                "verdict": "fix", "date": today}
+                it["en"] = en_text
+                stats["fix"] += 1
+                stats["fix_list"].append({"id": req_id, "de": it.get("de"), "was": r.get("en_deepl"), "now": en_text})
+            elif verdict == "skip":
+                stats["skip"] += 1
+                stats["skip_list"].append({"id": req_id, "de": it.get("de"), "reason": v.get("reason") or "модель не уверена"})
+                remaining_rows.append(r)
+            else:
+                stats["skip"] += 1
+                stats["skip_list"].append({"id": req_id, "de": it.get("de"), "reason": f"неизвестный verdict: {verdict!r}"})
+                remaining_rows.append(r)
+        print(f"    ... {min(i + BATCH, len(report_rows))}/{len(report_rows)}")
+
+    print(f"  ✓ Арбитр: ok={stats['ok']} fix={stats['fix']} skip={stats['skip']}, "
+          f"токены Anthropic: {stats['input_tokens']} вход / {stats['output_tokens']} выход")
+    return remaining_rows, stats
+
+def write_arbiter_report(stats):
+    REPORTS_DIR.mkdir(exist_ok=True)
+    path = REPORTS_DIR / "en_arbiter.md"
+    total = stats["ok"] + stats["fix"] + stats["skip"]
+    lines = [
+        "# en_arbiter — разбор флагов через Claude Haiku",
+        "",
+        f"Прогон: {date.today().isoformat()}. Модель: {ARBITER_MODEL}.",
+        f"Всего флагов на входе: {total}. ok: {stats['ok']} · fix: {stats['fix']} · skip: {stats['skip']}.",
+        f"Токены Anthropic: {stats['input_tokens']} вход / {stats['output_tokens']} выход.",
+        "",
+        "## fix — кандидат DeepL был неверен, модель дала правильный вариант",
+        "",
+    ]
+    if stats["fix_list"]:
+        lines += ["| id | de | было (DeepL) | стало (Haiku) |", "|---|---|---|---|"]
+        for f in sorted(stats["fix_list"], key=lambda x: x["de"] or ""):
+            lines.append(f"| {f['id']} | {f['de']} | {f['was']} | {f['now']} |")
+    else:
+        lines.append("(пусто)")
+    lines += ["", "## skip — модель не уверена, остаются на разбор в чате (см. en_review_vocab.md)", ""]
+    if stats["skip_list"]:
+        lines += ["| id | de | причина |", "|---|---|---|"]
+        for s in sorted(stats["skip_list"], key=lambda x: x["de"] or ""):
+            lines.append(f"| {s['id']} | {s['de']} | {s['reason']} |")
+    else:
+        lines.append("(пусто)")
+    path.write_text("\n".join(lines) + "\n", encoding="utf-8")
+    return path
+
+# ─── VOCAB.exampleEn — тот же VOCAB-кэш и тот же хэш, что у слова (exampleDe
+# и так часть хэша, см. vocab_hash), но отдельная пара план/прогон: пример
+# переводится без контекста и без обратного перевода (короткое предложение,
+# не одно слово — сверка EN→DE тут не то же самое, что для слова, и не
+# специфицирована в брифе), поэтому не должен зависеть от того, прошло ли
+# слово обратный перевод.
+def compute_example_plan(all_vocab, translations, warn):
+    candidates = []
+    cache_hits = 0
+    if translations is None:
+        return candidates, cache_hits, 0
+    vocab_cache = translations["VOCAB"]
+    for item in all_vocab:
+        if not item.get("exampleDe"):
+            continue
+        cached = vocab_cache.get(vocab_hash(item))
+        if cached and cached.get("exampleEn"):
+            cache_hits += 1
+            item["exampleEn"] = cached["exampleEn"]
+        else:
+            candidates.append(item)
+    char_count = sum(len(it["exampleDe"]) for it in candidates)
+    return candidates, cache_hits, char_count
+
+def run_example_translation(candidates, vocab_cache, warn):
+    if not candidates:
+        return 0
+    if not DEEPL_API_KEY:
+        warn.append("DEEPL_API_KEY не задан — VOCAB.exampleEn не переведён")
+        return 0
+    print(f"  → VOCAB.exampleEn (exampleDe, DE→EN): {len(candidates)} записей...")
+    today = date.today().isoformat()
     BATCH = 50
     ok = 0
-    for i in range(0, len(to_translate), BATCH):
-        chunk = to_translate[i:i + BATCH]
+    for i in range(0, len(candidates), BATCH):
+        chunk = candidates[i:i + BATCH]
         try:
-            translations = _deepl_translate_batch([it["ru"] for it in chunk], DEEPL_API_KEY)
+            translated = _deepl_translate_batch([it["exampleDe"] for it in chunk], DEEPL_API_KEY, source_lang="DE")
         except Exception as e:
-            warn.append(f"DeepL: ошибка перевода батча {i}-{i + len(chunk)}: {e}")
+            warn.append(f"DeepL: ошибка перевода VOCAB.exampleDe батч {i}-{i + len(chunk)}: {e}")
             continue
-        for item, en_text in zip(chunk, translations):
-            item["en"] = en_text
+        for item, en_text in zip(chunk, translated):
+            item["exampleEn"] = en_text
+            entry = vocab_cache.setdefault(vocab_hash(item), {})
+            entry["de"] = item["de"]
+            entry["exampleEn"] = en_text
+            entry.setdefault("source", "deepl")  # не трогать, если запись уже "manual"
+            entry.setdefault("date", today)
             ok += 1
-    print(f"  ✓ EN-перевод: переведено {ok}/{len(to_translate)}")
+    print(f"  ✓ VOCAB.exampleEn: переведено {ok}/{len(candidates)}")
+    return ok
+
+# ─── CONJUGATIONS.en / REGEL_VERBS.en — свой раздел в translations.json,
+# хэш по verb (единственный источник, без контекста/обратного перевода —
+# см. BRIEF §4B: там только про VOCAB.en).
+def compute_verb_field_plan(items, field, cache, warn):
+    candidates = []
+    cache_hits = 0
+    for item in items:
+        val = item.get(field)
+        if not val:
+            continue
+        h = simple_hash(val)
+        cached = cache.get(h)
+        if cached and cached.get("en"):
+            cache_hits += 1
+            item["en"] = cached["en"]
+        else:
+            candidates.append(item)
+    char_count = sum(len(it[field]) for it in candidates)
+    return candidates, cache_hits, char_count
+
+def run_verb_field_translation(candidates, field, cache, warn, label):
+    if not candidates:
+        return 0
+    if not DEEPL_API_KEY:
+        warn.append(f"DEEPL_API_KEY не задан — {label}.en не переведён")
+        return 0
+    print(f"  → {label}.en ({field}, DE→EN): {len(candidates)} записей...")
+    today = date.today().isoformat()
+    BATCH = 50
+    ok = 0
+    for i in range(0, len(candidates), BATCH):
+        chunk = candidates[i:i + BATCH]
+        try:
+            translated = _deepl_translate_batch([it[field] for it in chunk], DEEPL_API_KEY, source_lang="DE")
+        except Exception as e:
+            warn.append(f"DeepL: ошибка перевода {label}.{field} батч {i}-{i + len(chunk)}: {e}")
+            continue
+        for item, en_text in zip(chunk, translated):
+            en_text = normalize_verb_en(en_text)
+            item["en"] = en_text
+            cache[simple_hash(item[field])] = {field: item[field], "en": en_text,
+                                                "source": "deepl", "date": today}
+            ok += 1
+    print(f"  ✓ {label}.en: переведено {ok}/{len(candidates)}")
+    return ok
 
 def _parse_old_array_by_id(old_content, const_name):
     """Достаёт id → полный словарь предыдущего прогона для любого const-массива
@@ -1690,6 +2311,20 @@ def extract_block(content, marker):
 # ОСНОВНОЙ ПРОЦЕСС
 # ═══════════════════════════════════════════════════════════════
 if __name__ == '__main__':
+    arg_parser = argparse.ArgumentParser(description="Собирает data.js из database.xlsx")
+    arg_parser.add_argument("--dry-run", action="store_true",
+                             help="Только посчитать, что будет переведено (VOCAB/CONJUGATIONS/"
+                                  "REGEL_VERBS/exampleEn) и сколько это символов — без обращения "
+                                  "к DeepL и без записи data.js/translations.json")
+    arg_parser.add_argument("--force", action="store_true",
+                             help="Продолжить перевод VOCAB, даже если он затрагивает больше 20%% словаря")
+    arg_parser.add_argument("--arbiter", choices=["none", "haiku"], default="none",
+                             help="Разбор флагов обратного перевода VOCAB.en. 'none' — все флаги в "
+                                  "reports/en_review_vocab.md для разбора в чате. 'haiku' — сначала "
+                                  f"прогоняет флаги через Claude Haiku ({ARBITER_MODEL}, ANTHROPIC_API_KEY), "
+                                  "нерешённое (verdict=skip) всё равно уходит в тот же отчёт.")
+    args = arg_parser.parse_args()
+
     WARN = []
 
     print(f"Читаю {XLSX_PATH}...")
@@ -1797,22 +2432,76 @@ if __name__ == '__main__':
     assign_ids(terms, "t", WARN, "terms", width=3)
     assign_ids(sounds, "s", WARN, "sounds", width=3)
 
-    print("\n=== EN-перевод словаря (мультиязычность, слой 2 — DeepL) ===")
+    print("\n=== EN-перевод словаря (мультиязычность, слой 2 — DeepL, этап B) ===")
+    # translations.json — единственный кэш для VOCAB.en/exampleEn/CONJUGATIONS.en/
+    # REGEL_VERBS.en (хэш-ключи по источнику). Старый _parse_old_array_by_id
+    # (диф по id против предыдущего data.js) для этих полей больше не
+    # используется — он не различал RU- и DE-сourced кэш (см. правку этапа B).
+    # Для RU-источника (note/altEn/warning ниже, RULES/TERMS/SOUNDS — вне
+    # этапа B) старый механизм остаётся как был.
     old_en_map = _parse_old_array_by_id(old_content, "VOCAB")
-    translate_vocab_to_english(all_vocab, old_en_map, WARN)
-    # Остальные ru-поля VOCAB: примечание, альт. перевод, перевод примера, предупреждение
+
+    translations = load_translations(WARN)
+    vocab_candidates, vocab_cache_hits, vocab_chars = compute_vocab_plan(all_vocab, translations, WARN)
+    example_candidates, example_cache_hits, example_chars = \
+        compute_example_plan(all_vocab, translations, WARN)
+    conj_candidates, conj_cache_hits, conj_chars = \
+        compute_verb_field_plan(conjugations, "verb", translations["CONJUGATIONS"] if translations else {}, WARN)
+    regel_candidates, regel_cache_hits, regel_chars = \
+        compute_verb_field_plan(regel_verbs, "verb", translations["REGEL_VERBS"] if translations else {}, WARN)
+
+    threshold_ok = check_vocab_threshold(len(vocab_candidates), all_vocab, args.force)
+
+    if args.dry_run:
+        print("\n=== --dry-run: без обращения к API ===")
+        print(f"  VOCAB.en (DE→EN + контекст + обратный перевод):")
+        print(f"    кэш-хиты (translations.json): {vocab_cache_hits}")
+        print(f"    к переводу: {len(vocab_candidates)} слов, {vocab_chars} символов (прямой перевод)")
+        print(f"    + обратный перевод (EN→DE) той же длины по каждому кандидату — "
+              f"по историческому замеру (докладу в BRIEF §4B) это ещё ~{int(vocab_chars * 1.2)} символов")
+        print(f"    порог 20%: {'ПРЕВЫШЕН, нужен --force' if not threshold_ok else 'не превышен'}")
+        print(f"  VOCAB.exampleEn (exampleDe, DE→EN): кэш-хитов {example_cache_hits}, "
+              f"к переводу {len(example_candidates)} записей, {example_chars} символов")
+        print(f"  CONJUGATIONS.en (verb, DE→EN): кэш-хитов {conj_cache_hits}, "
+              f"к переводу {len(conj_candidates)} записей, {conj_chars} символов")
+        print(f"  REGEL_VERBS.en (verb, DE→EN): кэш-хитов {regel_cache_hits}, "
+              f"к переводу {len(regel_candidates)} записей, {regel_chars} символов")
+        print(f"  RULES/TERMS/SOUNDS/changelog: не входят в этап B, в этом прогоне не трогаются")
+        if WARN:
+            print(f"\n⚠ Предупреждения ({len(WARN)}):")
+            for w in WARN:
+                print("   •", w)
+        print("\n(--dry-run: data.js и translations.json не изменены, к DeepL не обращались)")
+        sys.exit(0)
+
+    if not threshold_ok:
+        sys.exit(1)
+
+    vocab_report_rows = []
+    if translations is not None:
+        vocab_report_rows, _vocab_ok = run_vocab_translation(vocab_candidates, translations["VOCAB"], WARN)
+        run_example_translation(example_candidates, translations["VOCAB"], WARN)
+        run_verb_field_translation(conj_candidates, "verb", translations["CONJUGATIONS"], WARN, "CONJUGATIONS")
+        run_verb_field_translation(regel_candidates, "verb", translations["REGEL_VERBS"], WARN, "REGEL_VERBS")
+        if args.arbiter == "haiku":
+            vocab_report_rows, arbiter_stats = run_haiku_arbiter(vocab_report_rows, translations["VOCAB"], WARN)
+            arbiter_report_path = write_arbiter_report(arbiter_stats)
+            print(f"  ✓ отчёт арбитра: {arbiter_report_path}")
+        save_translations(translations)
+    report_path = write_vocab_review_report(vocab_report_rows)
+    print(f"  ✓ отчёт: {report_path}")
+
+    # Остальные ru-поля VOCAB: примечание, альт. перевод, предупреждение — RU-источник,
+    # вне этапа B (см. BRIEF §2, таблица; note/warning — этап D, altEn отдельно).
     translate_field_to_english(all_vocab, "note", "noteEn", old_en_map, WARN, "VOCAB")
     translate_field_to_english(all_vocab, "altRu", "altEn", old_en_map, WARN, "VOCAB")
-    translate_field_to_english(all_vocab, "exampleRu", "exampleEn", old_en_map, WARN, "VOCAB")
     translate_field_to_english(all_vocab, "warning", "warningEn", old_en_map, WARN, "VOCAB")
 
     # То же самое для остального контента cheatsheet, которое не входит в VOCAB:
     # правила (заголовок + текст + примечание), термины (перевод + примечание),
-    # спряжения (перевод глагола), произношение (кириллическая транскрипция).
+    # произношение (кириллическая транскрипция). Вне этапа B — не тронуты.
     old_rules_map = _parse_old_array_by_id(old_content, "RULES")
     old_terms_map = _parse_old_array_by_id(old_content, "TERMS")
-    old_conj_map = _parse_old_array_by_id(old_content, "CONJUGATIONS")
-    old_regel_map = _parse_old_array_by_id(old_content, "REGEL_VERBS")
     old_sounds_map = _parse_old_array_by_id(old_content, "SOUNDS")
 
     translate_field_to_english(rules, "title", "titleEn", old_rules_map, WARN, "RULES")
@@ -1820,8 +2509,6 @@ if __name__ == '__main__':
     translate_field_to_english(rules, "note", "noteEn", old_rules_map, WARN, "RULES")
     translate_field_to_english(terms, "ru", "en", old_terms_map, WARN, "TERMS")
     translate_field_to_english(terms, "note", "noteEn", old_terms_map, WARN, "TERMS")
-    translate_field_to_english(conjugations, "ru", "en", old_conj_map, WARN, "CONJUGATIONS")
-    translate_field_to_english(regel_verbs, "ru", "en", old_regel_map, WARN, "REGEL_VERBS")
     translate_field_to_english(sounds, "pronunciation", "pronunciationEn", old_sounds_map, WARN, "SOUNDS")
 
     print("\n=== EN-перевод changelog.js ===")
