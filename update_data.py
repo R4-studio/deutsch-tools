@@ -1074,6 +1074,52 @@ def apply_manual_sounds(sounds, translations, warn):
                 if cached.get(en_field):
                     s[en_field] = cached[en_field]
 
+def load_manual_vocab_skip(all_vocab, translations, warn):
+    """docs/en-fix/translations-vocab-skip.json — слова, размеченные вручную
+    после того как арбитр на Haiku пометил их skip. Файл ключуется по id из
+    data.js; кэш translations.json['VOCAB'] — по vocab_hash источника, поэтому
+    id → hash сопоставляем здесь по all_vocab.
+
+    source: "manual" (не перезаписывается никакими флагами, GUARDRAILS #26);
+    нормализация НЕ применяется — значения в файле уже по конвенциям
+    (глаголы 'to X', существительные строчная). Мержим поверх существующей
+    записи кэша: en/altEn/noteEn/source из файла перекрывают, прочее
+    (напр. _src_note/noteEn от этапа D) сохраняется."""
+    if translations is None:
+        return
+    f = SCRIPT_DIR / "docs" / "en-fix" / "translations-vocab-skip.json"
+    if not f.exists():
+        warn.append(f"{f.name} не найден — ручные VOCAB.skip не загружены")
+        return
+    try:
+        data = json.loads(f.read_text(encoding="utf-8"))
+    except (OSError, json.JSONDecodeError) as e:
+        warn.append(f"{f.name}: не читается ({e}) — ручные VOCAB.skip не загружены")
+        return
+    by_id = {it["id"]: it for it in all_vocab if it.get("id")}
+    cache = translations["VOCAB"]
+    today = date.today().isoformat()
+    n = 0
+    for vid, entry in data.get("VOCAB", {}).items():
+        if entry.get("source") and entry.get("source") != "manual":
+            warn.append(f"{f.name}: {vid} без source=manual — пропущен")
+            continue
+        item = by_id.get(vid)
+        if item is None:
+            warn.append(f"{f.name}: id {vid} нет в словаре (переехал/удалён?) — пропущен")
+            continue
+        h = vocab_hash(item)
+        merged = dict(cache.get(h) or {})
+        merged.update(entry)
+        merged["source"] = "manual"
+        merged.setdefault("de", item.get("de"))
+        if entry.get("altEn") and not entry.get("altEnSource"):
+            merged["altEnSource"] = "manual"
+        merged["date"] = today
+        cache[h] = merged
+        n += 1
+    print(f"  ✓ VOCAB skip manual: {n} записей из {f.name}")
+
 # ─── VOCAB.exampleEn — тот же VOCAB-кэш и тот же хэш, что у слова (exampleDe
 # и так часть хэша, см. vocab_hash), но отдельная пара план/прогон: пример
 # переводится без контекста и без обратного перевода (короткое предложение,
@@ -1777,7 +1823,7 @@ def to_int(v):
     except (ValueError, TypeError):
         return None
 
-def read_sheet(wb, name):
+def read_sheet(wb, name, warn=None):
     """Читает лист в список dict-ов. Пропускает строку легенды (опц./обяз.)
     и полностью пустые строки. Ключи — заголовки строки 1."""
     if name not in wb.sheetnames:
@@ -1793,6 +1839,14 @@ def read_sheet(wb, name):
     else:
         headers = row1_vals
         data_start = 2
+    # dict(zip(headers, row)) ниже молча схлопывает повторяющиеся заголовки —
+    # вторая колонка с тем же именем затирает первую. Логику не меняем, но
+    # предупреждаем (только для непустых имён; пустые/None — отдельный случай).
+    named = [str(h).strip() for h in headers if h is not None and str(h).strip()]
+    dupes = sorted({h for h in named if named.count(h) > 1})
+    if dupes and warn is not None:
+        warn.append(f"{name}: повтор заголовков колонок {dupes} — "
+                    f"при чтении остаётся только последняя одноимённая колонка")
     rows = []
     for row in ws.iter_rows(min_row=data_start, values_only=True):
         non_empty = [v for v in row if v is not None]
@@ -1835,25 +1889,33 @@ SCHEMA = {
         ("antonym", "antonym", "str"),
     ] + COMMON_META,
     "adjectives": [
-        ("de", "de", "str"), ("ru", "ru", "str"), ("alt-ru", "altRu", "str"),
+        ("de", "de", "str"), ("alt-de", "altDe", "str"),
+        ("ru", "ru", "str"), ("alt-ru", "altRu", "str"),
         ("comparative", "comparative", "str"), ("superlative", "superlative", "str"),
         ("antonym", "antonym", "str"), ("derived_from", "derivedFrom", "str"),
     ] + COMMON_META,
     "adverbs": [
-        ("de", "de", "str"), ("ru", "ru", "str"), ("alt-ru", "altRu", "str"),
+        ("de", "de", "str"), ("alt-de", "altDe", "str"),
+        ("ru", "ru", "str"), ("alt-ru", "altRu", "str"),
         ("antonym", "antonym", "str"),
     ] + COMMON_META,
     "phrases": [
-        ("de", "de", "str"), ("ru", "ru", "str"), ("context", "context", "str"),
+        ("de", "de", "str"), ("alt-de", "altDe", "str"),
+        ("ru", "ru", "str"), ("alt-ru", "altRu", "str"),
+        ("context", "context", "str"),
     ] + COMMON_META,
     "pronouns": [
-        ("de", "de", "str"), ("ru", "ru", "str"), ("kind", "kind", "str"),
+        ("de", "de", "str"), ("alt-de", "altDe", "str"),
+        ("ru", "ru", "str"), ("alt-ru", "altRu", "str"),
+        ("kind", "kind", "str"),
         ("case", "case", "str"), ("gender", "gender", "str"),
         ("level", "level", "str"), ("priority", "priority", "int"),
         ("source", "source", "str"), ("note", "note", "str"),
     ],
     "numbers": [
-        ("digit", "digit", "str"), ("de", "de", "str"), ("ru", "ru", "str"),
+        ("digit", "digit", "str"), ("de", "de", "str"),
+        ("alt-de", "altDe", "str"),
+        ("ru", "ru", "str"), ("alt-ru", "altRu", "str"),
         ("kind", "kind", "str"), ("transcription", "transcription", "str"),
         ("level", "level", "str"), ("priority", "priority", "int"),
         ("source", "source", "str"), ("note", "note", "str"),
@@ -2697,6 +2759,7 @@ def process_verbs(rows, warn):
     return vocab_items, regel_verbs, conjugations
 
 VERB_VOCAB_SCHEMA = [
+    ("alt-de", "altDe", "str"),
     ("ru", "ru", "str"), ("alt-ru", "altRu", "str"), ("type", "type", "str"),
     ("modal", "modal", "bool"), ("separable", "separable", "bool"),
     ("prefix", "prefix", "str"), ("reflexive", "reflexive", "bool"),
@@ -3041,11 +3104,11 @@ if __name__ == '__main__':
     print(f"  ✓ {sum(len(v) for v in TAXONOMY.values())} пар в {len(TAXONOMY)} страницах")
 
     print("\n=== nouns ===")
-    nouns = process_simple_vocab(read_sheet(wb, "nouns"), "nouns", "noun", WARN)
+    nouns = process_simple_vocab(read_sheet(wb, "nouns", WARN), "nouns", "noun", WARN)
     print(f"  ✓ {len(nouns)} существительных")
 
     print("\n=== verbs ===")
-    verbs_vocab, regel_verbs, conjugations = process_verbs(read_sheet(wb, "verbs"), WARN)
+    verbs_vocab, regel_verbs, conjugations = process_verbs(read_sheet(wb, "verbs", WARN), WARN)
     print(f"  ✓ {len(verbs_vocab)} в VOCAB, {len(regel_verbs)} regel, {len(conjugations)} unregel")
 
     print("\n=== ruForms (личные формы наст. времени, pymorphy3) ===")
@@ -3067,39 +3130,39 @@ if __name__ == '__main__':
                         f"(fallback на v.ru, проверить вручную при желании): {ru_forms_fail}")
 
     print("\n=== adjectives ===")
-    adjectives = process_simple_vocab(read_sheet(wb, "adjectives"), "adjectives", "adj", WARN)
+    adjectives = process_simple_vocab(read_sheet(wb, "adjectives", WARN), "adjectives", "adj", WARN)
     print(f"  ✓ {len(adjectives)} прилагательных")
 
     print("\n=== adverbs ===")
-    adverbs = process_simple_vocab(read_sheet(wb, "adverbs"), "adverbs", "adv", WARN)
+    adverbs = process_simple_vocab(read_sheet(wb, "adverbs", WARN), "adverbs", "adv", WARN)
     print(f"  ✓ {len(adverbs)} наречий")
 
     print("\n=== phrases ===")
-    phrases = process_simple_vocab(read_sheet(wb, "phrases"), "phrases", "phrase", WARN)
+    phrases = process_simple_vocab(read_sheet(wb, "phrases", WARN), "phrases", "phrase", WARN)
     print(f"  ✓ {len(phrases)} фраз")
 
     print("\n=== pronouns ===")
-    pronouns = process_pronouns(read_sheet(wb, "pronouns"))
+    pronouns = process_pronouns(read_sheet(wb, "pronouns", WARN))
     print(f"  ✓ {len(pronouns)} местоимений")
 
     print("\n=== numbers ===")
-    numbers = process_numbers(read_sheet(wb, "numbers"))
+    numbers = process_numbers(read_sheet(wb, "numbers", WARN))
     print(f"  ✓ {len(numbers)} чисел")
 
     print("\n=== terms ===")
-    terms = process_terms(read_sheet(wb, "terms"))
+    terms = process_terms(read_sheet(wb, "terms", WARN))
     print(f"  ✓ {len(terms)} терминов")
 
     print("\n=== sounds ===")
-    sounds = process_sounds(read_sheet(wb, "sounds"))
+    sounds = process_sounds(read_sheet(wb, "sounds", WARN))
     print(f"  ✓ {len(sounds)} звуков")
 
     print("\n=== rules ===")
-    rules = process_rules(read_sheet(wb, "rules"), WARN)
+    rules = process_rules(read_sheet(wb, "rules", WARN), WARN)
     print(f"  ✓ {len(rules)} правил")
 
     print("\n=== questions ===")
-    questions = process_questions(read_sheet(wb, "questions"), WARN)
+    questions = process_questions(read_sheet(wb, "questions", WARN), WARN)
     print(f"  ✓ {len(questions)} вопросов")
 
     # Валидация пар против Settings
@@ -3147,6 +3210,7 @@ if __name__ == '__main__':
     # прогон). Фолбэка на старый data.js больше нет нигде.
 
     translations = load_translations(WARN)
+    load_manual_vocab_skip(all_vocab, translations, WARN)
     vocab_candidates, vocab_cache_hits, vocab_chars = compute_vocab_plan(all_vocab, translations, WARN)
     example_candidates, example_cache_hits, example_chars = \
         compute_example_plan(all_vocab, translations, WARN)

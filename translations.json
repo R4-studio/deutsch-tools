@@ -3349,7 +3349,10 @@
       "source": "deepl"
     },
     "050bcce4e806ef20": {
+      "_src_altEn": "circa",
       "_src_note": "circa",
+      "altEn": "circa",
+      "altEnSource": "deepl",
       "backtranslation": "ca.",
       "date": "2026-08-27",
       "de": "ca.",
@@ -3604,7 +3607,10 @@
       "source": "deepl"
     },
     "0b3130be3bc4513f": {
+      "_src_altEn": "с приветом",
       "_src_note": "конец письма/сообщения",
+      "altEn": "Best regards",
+      "altEnSource": "deepl-ru",
       "date": "2026-08-27",
       "de": "LG (Liebe Grüße)",
       "en": "with love",
@@ -4681,7 +4687,10 @@
       "source": "deepl"
     },
     "1c8d7c53f65b34cc": {
+      "_src_altEn": "бред",
       "_src_note": "Das ist halt Quatsch! - Ну это же просто бред!",
+      "altEn": "nonsense",
+      "altEnSource": "deepl-ru",
       "date": "2026-08-27",
       "de": "der Quatsch",
       "en": "nonsense",
@@ -5283,6 +5292,9 @@
       "source": "deepl"
     },
     "28466efb0ded8bd2": {
+      "_src_altEn": "werden",
+      "altEn": "to become",
+      "altEnSource": "deepl",
       "backtranslation": "geboren werden",
       "date": "2026-08-27",
       "de": "geboren sein",
@@ -5291,7 +5303,10 @@
       "verdict": "ok"
     },
     "2851fbdf3dd66c2b": {
+      "_src_altEn": "z. B.",
       "_src_note": "сокр. z. B.",
+      "altEn": "e.g.",
+      "altEnSource": "deepl",
       "backtranslation": "zum Beispiel",
       "date": "2026-08-27",
       "de": "zum Beispiel",
@@ -5553,6 +5568,16 @@
       "source": "haiku",
       "verdict": "ok"
     },
+    "2c33b3c71b5267b2": {
+      "_src_altEn": "Besetzt",
+      "_src_note": "о столике",
+      "altEn": "Taken",
+      "altEnSource": "deepl",
+      "date": "2026-08-29",
+      "de": "Frei",
+      "noteEn": "About the table",
+      "source": "deepl"
+    },
     "2c463f50d4ee4847": {
       "_src_altEn": "встречать",
       "altEn": "to meet",
@@ -5586,7 +5611,10 @@
       "verdict": "ok"
     },
     "2cc8dc7ecbc9ed8e": {
+      "_src_altEn": "Приятного!",
       "_src_note": "перед событием | Ответ: Danke, gleichfalls!",
+      "altEn": "Enjoy!",
+      "altEnSource": "deepl-ru",
       "backtranslation": "Viel Spaß!",
       "date": "2026-08-27",
       "de": "Viel Spaß!",
@@ -5754,10 +5782,12 @@
       "source": "deepl"
     },
     "311415e569a4b093": {
+      "_src_note": "13–19: dreizehn, vierzehn, fünfzehn…",
       "backtranslation": "…zehn",
-      "date": "2026-08-27",
+      "date": "2026-08-29",
       "de": "…zehn",
       "en": "…ten",
+      "noteEn": "13–19: dreizehn, vierzehn, fünfzehn…",
       "source": "deepl"
     },
     "313af1648962f569": {
@@ -6474,7 +6504,10 @@
       "verdict": "ok"
     },
     "3bb10b909218a84f": {
+      "_src_altEn": "das heißt",
       "_src_note": "das heißt",
+      "altEn": "that is",
+      "altEnSource": "deepl",
       "backtranslation": "d. h.",
       "date": "2026-08-27",
       "de": "d.h.",
@@ -6751,6 +6784,12 @@
       "noteEn": "from Tag (daily) + - lich | täglich geöffnet – open daily | dreimal täglich – three times a day",
       "source": "deepl"
     },
+    "401b40500162e443": {
+      "date": "2026-08-29",
+      "de": "einfahren",
+      "en": "to drive in",
+      "source": "manual"
+    },
     "403e3025fcf83ae4": {
       "_src_note": "обычно мн. Handschuhe",
       "backtranslation": "Handschuh",
@@ -6854,7 +6893,10 @@
       "source": "deepl"
     },
     "41d32f23fd6c14d3": {
+      "_src_altEn": "в деревне",
       "_src_note": "↔ in der Stadt | Wir wohnen auf dem Land.",
+      "altEn": "in the countryside",
+      "altEnSource": "deepl-ru",
       "backtranslation": "auf dem Land",
       "date": "2026-08-27",
       "de": "auf dem Land",
@@ -7012,10 +7054,15 @@
       "verdict": "ok"
     },
     "440c7afc138367e0": {
+      "_src_altEn": "употреблять порциями",
       "_src_note": "на сленге может означать употребление наркотиков - трактовка зависит от контекста",
-      "date": "2026-08-27",
-      "noteEn": "In slang, it can refer to drug use—the meaning depends on the context",
-      "source": "deepl"
+      "altEn": "to eat in portions",
+      "altEnSource": "deepl-ru",
+      "date": "2026-08-29",
+      "de": "Teile konsumieren",
+      "en": "to use (drugs)",
+      "noteEn": "slang; may refer to drug use – depends on context",
+      "source": "manual"
     },
     "444f50c90544f08a": {
       "_src_note": "вязаная/тёплая; ≠ Hut",
@@ -7113,6 +7160,18 @@
       "date": "2026-08-27",
       "de": "ruhig",
       "en": "quiet",
+      "source": "deepl"
+    },
+    "45a91627f41b4ccb": {
+      "_src_altEn": "Mir geht es super",
+      "_src_note": "super / toll — усиление",
+      "altEn": "I'm doing great",
+      "altEnSource": "deepl",
+      "backtranslation": "Mir geht es gut",
+      "date": "2026-08-29",
+      "de": "Mir geht es gut",
+      "en": "I'm fine",
+      "noteEn": "super / toll — amplification",
       "source": "deepl"
     },
     "46026eb055cc67b1": {
@@ -7971,6 +8030,16 @@
       "en": "snow",
       "source": "deepl"
     },
+    "5531957be67ddf67": {
+      "_src_altEn": "es handelt von",
+      "_src_note": "sich um + Akkusativ: Es handelt sich um einen Fehler | von + Dativ (о книге, фильме): Das Buch handelt von der Liebe",
+      "altEn": "it is about",
+      "altEnSource": "deepl",
+      "date": "2026-08-29",
+      "de": "es handelt sich um",
+      "noteEn": "sich um + Akkusativ: Es handelt sich um einen Fehler | von + Dativ (about the book and the movie): Das Buch handelt von der Liebe",
+      "source": "deepl"
+    },
     "55335520d16f36fa": {
       "backtranslation": "Fragen",
       "date": "2026-08-27",
@@ -8345,6 +8414,12 @@
       "en": "six",
       "source": "deepl"
     },
+    "5d2ab54d9a5a413d": {
+      "date": "2026-08-29",
+      "de": "Wolke",
+      "en": "cloud",
+      "source": "manual"
+    },
     "5d31a331e6c7e16e": {
       "backtranslation": "Hausnummer",
       "date": "2026-08-27",
@@ -8606,7 +8681,10 @@
       "source": "deepl"
     },
     "62027567a804c036": {
+      "_src_altEn": "бином",
       "_src_note": "математический термин",
+      "altEn": "binomial",
+      "altEnSource": "deepl-ru",
       "backtranslation": "Binomialformel",
       "date": "2026-08-27",
       "de": "binomische Formel",
@@ -8797,7 +8875,10 @@
       "source": "deepl"
     },
     "64a436e2b11bdd81": {
+      "_src_altEn": "zum Beispiel",
       "_src_note": "zum Beispiel",
+      "altEn": "for example",
+      "altEnSource": "deepl",
       "backtranslation": "z. B.,",
       "date": "2026-08-27",
       "de": "z.B.",
@@ -9178,9 +9259,13 @@
       "verdict": "fix"
     },
     "6ad53d43a7ab6d1e": {
-      "_src_note": "es handelt von / sich um – устойчивая конструкция",
-      "date": "2026-08-27",
-      "noteEn": "es handelt von / sich um – a sturdy design",
+      "_src_altEn": "торговать",
+      "_src_note": "es handelt sich um – речь идёт о (см. фразы)",
+      "altEn": "to trade",
+      "altEnSource": "deepl-ru",
+      "date": "2026-08-29",
+      "de": "handeln",
+      "noteEn": "es handelt sich um – this refers to (see phrases)",
       "source": "deepl"
     },
     "6af1314693a6b0c3": {
@@ -9747,6 +9832,16 @@
       "en": "windy",
       "source": "deepl"
     },
+    "74290676166b4e32": {
+      "_src_altEn": "beiden",
+      "_src_note": "зависит от падежа",
+      "altEn": "both",
+      "altEnSource": "deepl",
+      "date": "2026-08-29",
+      "de": "beide",
+      "noteEn": "depends on the case",
+      "source": "deepl"
+    },
     "74334637f89a7bab": {
       "backtranslation": "Land",
       "date": "2026-08-27",
@@ -9882,6 +9977,18 @@
       "noteEn": "weitere Informationen – Additional Information",
       "source": "haiku",
       "verdict": "ok"
+    },
+    "76c8d952e2111715": {
+      "_src_altEn": "keinen",
+      "_src_note": "отрицает существительное | Das ist kein Brot | Ich habe keinen Hund",
+      "altEn": "no",
+      "altEnSource": "deepl",
+      "backtranslation": "keine",
+      "date": "2026-08-29",
+      "de": "keine",
+      "en": "none",
+      "noteEn": "negates a noun | Das ist kein Brot | Ich habe keinen Hund",
+      "source": "deepl"
     },
     "7701ed27d386a047": {
       "_src_note": "(мебель и т.п.)",
@@ -10184,6 +10291,9 @@
       "verdict": "ok"
     },
     "7be2002dddb267aa": {
+      "_src_altEn": "нам",
+      "altEn": "us",
+      "altEnSource": "deepl-ru",
       "backtranslation": "uns",
       "date": "2026-08-27",
       "de": "uns",
@@ -10380,6 +10490,16 @@
       "date": "2026-08-27",
       "de": "fahren",
       "en": "to drive",
+      "source": "deepl"
+    },
+    "7f387735eb2d8e66": {
+      "_src_altEn": "Mir geht es schlecht",
+      "altEn": "I feel terrible",
+      "altEnSource": "deepl",
+      "backtranslation": "Mir geht es nicht gut",
+      "date": "2026-08-29",
+      "de": "Mir geht es nicht gut",
+      "en": "I'm not feeling well",
       "source": "deepl"
     },
     "7f8d9bb7b978f21c": {
@@ -10738,12 +10858,12 @@
       "source": "deepl"
     },
     "877524228bdf0cac": {
-      "_src_note": "Ich arbeite nicht",
+      "_src_note": "отрицает глагол или признак | Ich arbeite nicht | Das ist nicht schön",
       "backtranslation": "nicht",
-      "date": "2026-08-27",
+      "date": "2026-08-29",
       "de": "nicht",
       "en": "not",
-      "noteEn": "Ich arbeite nicht",
+      "noteEn": "negates a verb or an attribute | Ich arbeite nicht | Das ist nicht schön",
       "source": "deepl"
     },
     "879194d1f15368aa": {
@@ -10781,6 +10901,9 @@
       "verdict": "ok"
     },
     "87f90c1c0f4f82ac": {
+      "_src_altEn": "быть законченным",
+      "altEn": "to be finished",
+      "altEnSource": "deepl-ru",
       "date": "2026-08-27",
       "de": "fertig sein",
       "en": "to be ready",
@@ -11295,6 +11418,16 @@
       "de": "lesen",
       "en": "to read",
       "exampleEn": "I'm reading the newspaper.",
+      "source": "deepl"
+    },
+    "91aefdb34caaa68c": {
+      "_src_altEn": "einen Termin ausmachen",
+      "altEn": "set a date",
+      "altEnSource": "deepl",
+      "backtranslation": "einen Termin vereinbaren",
+      "date": "2026-08-29",
+      "de": "einen Termin vereinbaren",
+      "en": "schedule an appointment",
       "source": "deepl"
     },
     "91b9210f1812a1b3": {
@@ -12462,7 +12595,10 @@
       "source": "deepl"
     },
     "a69a11ccb63b36b4": {
+      "_src_altEn": "Имеется …",
       "_src_note": "Es gibt keinen Tisch frei",
+      "altEn": "There is …",
+      "altEnSource": "deepl-ru",
       "backtranslation": "Es gibt …",
       "date": "2026-08-27",
       "de": "Es gibt …",
@@ -12484,6 +12620,12 @@
       "en": "one / one",
       "source": "haiku",
       "verdict": "ok"
+    },
+    "a722ce7050e4e9e1": {
+      "date": "2026-08-29",
+      "de": "Haar",
+      "en": "hair",
+      "source": "manual"
     },
     "a762ad1302143b0b": {
       "_src_altEn": "фиксированный",
@@ -12888,6 +13030,13 @@
       "en": "to pet",
       "source": "deepl"
     },
+    "ae24c3f848e45b2e": {
+      "date": "2026-08-29",
+      "de": "Paketbotin",
+      "en": "parcel courier",
+      "noteEn": "female form of Paketbote",
+      "source": "manual"
+    },
     "ae32a2c98550560d": {
       "backtranslation": "Fähigkeit",
       "date": "2026-08-27",
@@ -13003,6 +13152,18 @@
       "date": "2026-08-27",
       "de": "grau",
       "en": "gray",
+      "source": "deepl"
+    },
+    "b160cf0fef6ae32e": {
+      "_src_altEn": "ein",
+      "_src_note": "eins — при счёте, ein — перед существительным: ein Buch",
+      "altEn": "one",
+      "altEnSource": "deepl",
+      "backtranslation": "eins",
+      "date": "2026-08-29",
+      "de": "eins",
+      "en": "one",
+      "noteEn": "eins — when counting: ein — before a noun: ein Buch",
       "source": "deepl"
     },
     "b1670371e01351d4": {
@@ -13503,6 +13664,12 @@
       "en": "chair",
       "source": "deepl"
     },
+    "ba0c9df29d5840a3": {
+      "_src_note": "круглые десятки от 20: zwanzig, vierzig…",
+      "date": "2026-08-29",
+      "noteEn": "Numbers ending in 0 starting at 20: zwanzig, vierzig…",
+      "source": "deepl"
+    },
     "ba1757d32f3112a3": {
       "_src_altEn": "мойка",
       "_src_note": "spülen + Becken | ↔ Waschbecken (в ванной)",
@@ -13968,7 +14135,10 @@
       "source": "deepl"
     },
     "c0c0b67735095e18": {
+      "_src_altEn": "Bescheid geben",
       "_src_note": "informieren | Ich sage Ihnen Bescheid. – Я дам вам знать",
+      "altEn": "Let someone know",
+      "altEnSource": "deepl",
       "date": "2026-08-27",
       "de": "Bescheid sagen",
       "en": "to let someone know",
@@ -14129,6 +14299,12 @@
       "en": "here",
       "source": "deepl"
     },
+    "c3851cf9e18681ff": {
+      "date": "2026-08-29",
+      "de": "hierlassen",
+      "en": "to leave here",
+      "source": "manual"
+    },
     "c38dc07193a9b547": {
       "date": "2026-08-27",
       "de": "abfahren",
@@ -14190,7 +14366,10 @@
       "verdict": "ok"
     },
     "c41bb747c87cb7f6": {
+      "_src_altEn": "beziehungsweise",
       "_src_note": "beziehungsweise",
+      "altEn": "or",
+      "altEnSource": "deepl",
       "date": "2026-08-27",
       "de": "bzw.",
       "en": "respectively",
@@ -14228,7 +14407,10 @@
       "verdict": "fix"
     },
     "c49902e6432daf40": {
+      "_src_altEn": "und so weiter",
       "_src_note": "und so weiter",
+      "altEn": "and so on",
+      "altEnSource": "deepl",
       "backtranslation": "usw.",
       "date": "2026-08-27",
       "de": "usw.",
@@ -15135,9 +15317,11 @@
     },
     "d7797d12380b1757": {
       "_src_note": "разговорное",
-      "date": "2026-08-27",
+      "date": "2026-08-29",
+      "de": "dann kein",
+      "en": "then no",
       "noteEn": "colloquial",
-      "source": "deepl"
+      "source": "manual"
     },
     "d7a5b810ea5715f5": {
       "_src_altEn": "сидеть вместе",
@@ -15646,6 +15830,14 @@
       "de": "Bruder",
       "en": "brother",
       "source": "deepl"
+    },
+    "dfa082c2db5822d9": {
+      "altEn": "after that",
+      "altEnSource": "manual",
+      "date": "2026-08-29",
+      "de": "darauf",
+      "en": "on it",
+      "source": "manual"
     },
     "dfabd08b1aab074d": {
       "backtranslation": "hart",
@@ -16775,9 +16967,9 @@
       "source": "deepl"
     },
     "f19e497eda0d0c62": {
-      "_src_altEn": "Парень (партнёр)",
+      "_src_altEn": "парень (партнёр)",
       "_src_warning": "Das ist mein Freund = это мой парень; Das ist ein Freund von mir = просто друг",
-      "altEn": "boyfriend (partner)",
+      "altEn": "guy (partner)",
       "altEnSource": "deepl-ru",
       "backtranslation": "der Freund",
       "date": "2026-08-27",
@@ -16980,6 +17172,15 @@
       "de": "Vergangenheit",
       "en": "past",
       "source": "deepl"
+    },
+    "f4b4f64aecef30a6": {
+      "_src_altEn": "nächst-",
+      "altEn": "next-",
+      "altEnSource": "deepl",
+      "date": "2026-08-29",
+      "de": "nächste",
+      "en": "next",
+      "source": "manual"
     },
     "f4b893cbfd82940c": {
       "_src_altEn": "die Taxifahrerin",
@@ -17531,6 +17732,16 @@
       "date": "2026-08-27",
       "de": "links",
       "en": "left",
+      "source": "deepl"
+    },
+    "fd904fc2b42fdd11": {
+      "_src_altEn": "jede",
+      "_src_note": "jeder (m) / jede (f) / jedes (n) — склоняется как der/die/das",
+      "altEn": "every",
+      "altEnSource": "deepl",
+      "date": "2026-08-29",
+      "de": "jeder",
+      "noteEn": "jeder (m) / jede (f) / jedes (n) — inflected as der / die / das",
       "source": "deepl"
     },
     "fdbf7d2222f47453": {
