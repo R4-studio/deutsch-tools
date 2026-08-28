@@ -874,12 +874,14 @@ def compute_ignoretag_candidates(items, field, en_field, cache, key_fn, manual_i
             continue
         cached = cache.get(key) or {}
         if cached.get("source") == "manual":
-            # #26: manual не пересчитывается. Но если под той же ячейкой кэша
-            # уже лежит переведённый en_field (машинный noteEn/warningEn — а
-            # ручным сделали только en, через translations-vocab-skip.json) —
-            # применяем его, иначе загрузка skip-слова тихо снимала бы у слова
-            # английское примечание.
-            if cached.get(en_field) and cached.get(f"_src_{field}") == val:
+            # #26: manual не пересчитывается. Но уже переведённый en_field
+            # применяем как есть — ручной noteEn из translations-vocab-skip.json
+            # либо машинный, попавший в ту же ячейку кэша, что и ручной en.
+            # Без этого загрузка skip-слова тихо снимала бы у слова английское
+            # примечание (source: manual выключал этап D для всей ячейки).
+            # Как и manual en в compute_vocab_plan — применяется безусловно,
+            # свежесть manual-значений на человеке.
+            if cached.get(en_field):
                 it[en_field] = cached[en_field]
             continue
         if cached.get(en_field) and cached.get(f"_src_{field}") == val:
