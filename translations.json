@@ -5571,12 +5571,13 @@
     "2c33b3c71b5267b2": {
       "_src_altEn": "Besetzt",
       "_src_note": "о столике",
-      "altEn": "Taken",
-      "altEnSource": "deepl",
+      "altEn": "occupied",
+      "altEnSource": "manual",
       "date": "2026-08-29",
       "de": "Frei",
+      "en": "free",
       "noteEn": "About the table",
-      "source": "deepl"
+      "source": "manual"
     },
     "2c463f50d4ee4847": {
       "_src_altEn": "встречать",
@@ -7056,8 +7057,8 @@
     "440c7afc138367e0": {
       "_src_altEn": "употреблять порциями",
       "_src_note": "на сленге может означать употребление наркотиков - трактовка зависит от контекста",
-      "altEn": "to eat in portions",
-      "altEnSource": "deepl-ru",
+      "altEn": "to use in doses",
+      "altEnSource": "manual",
       "date": "2026-08-29",
       "de": "Teile konsumieren",
       "en": "to use (drugs)",
@@ -9839,8 +9840,9 @@
       "altEnSource": "deepl",
       "date": "2026-08-29",
       "de": "beide",
+      "en": "both",
       "noteEn": "depends on the case",
-      "source": "deepl"
+      "source": "manual"
     },
     "74334637f89a7bab": {
       "backtranslation": "Land",
@@ -17741,8 +17743,9 @@
       "altEnSource": "deepl",
       "date": "2026-08-29",
       "de": "jeder",
+      "en": "every",
       "noteEn": "jeder (m) / jede (f) / jedes (n) — inflected as der / die / das",
-      "source": "deepl"
+      "source": "manual"
     },
     "fdbf7d2222f47453": {
       "_src_note": "обучение навыкам, без получения профессии/диплома | ↔ studieren (получение профессии/диплома)",
