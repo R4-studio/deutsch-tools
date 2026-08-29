@@ -212,22 +212,24 @@ def _deepl_base_url(api_key):
         else "https://api.deepl.com/v2/translate"
 
 def _deepl_request(params, api_key):
-    """POST к DeepL. Ретрай до 3 попыток только на 429 (rate limit),
-    растущая пауза — прочие ошибки сразу наверх, глушить их нельзя."""
+    """POST к DeepL. Ретрай до 5 попыток только на 429 (rate limit), растущая
+    пауза с потолком 30с — прочие ошибки сразу наверх, глушить их нельзя.
+    5, а не 3: этап G шлёт altEn по одному слову (308 запросов подряд) и на
+    3 попытках ловил 429; лишняя терпеливость дешевле флага-ложняка."""
     data = urllib.parse.urlencode(params).encode("utf-8")
     req = urllib.request.Request(_deepl_base_url(api_key), data=data, headers={
         "Authorization": f"DeepL-Auth-Key {api_key}",
         "Content-Type": "application/x-www-form-urlencoded",
     })
     last_err = None
-    for attempt in range(3):
+    for attempt in range(5):
         try:
             with urllib.request.urlopen(req, timeout=30) as resp:
                 return json.loads(resp.read().decode("utf-8"))
         except urllib.error.HTTPError as e:
             last_err = e
-            if e.code == 429 and attempt < 2:
-                time.sleep(2 * (attempt + 1))
+            if e.code == 429 and attempt < 4:
+                time.sleep(min(2 ** attempt, 30))
                 continue
             raise
     raise last_err
@@ -254,12 +256,11 @@ def _deepl_translate_one(text, api_key, source_lang, target_lang, context=None):
 TRANSLATIONS_SECTIONS = ("VOCAB", "CONJUGATIONS", "REGEL_VERBS", "RULES", "TERMS", "SOUNDS")
 
 def load_translations(warn):
-    """Единственный кэш и источник правды для всех переводимых полей —
-    старый _parse_old_array_by_id (диф по id против предыдущего data.js)
-    как источник кэша для VOCAB/CONJUGATIONS/REGEL_VERBS больше не
-    используется вообще (см. обсуждение этапа B): он не различал, ЧЕМ был
-    посчитан уже существующий en — старой RU-методикой или новой DE —
-    и молча оставлял 524 записи навсегда непереведёнными по-новому."""
+    """Единственный кэш и источник правды для всех переводимых полей.
+    Старого механизма (диф по id против предыдущего data.js регуляркой,
+    _parse_old_array_by_id) больше нет — удалён на этапе G: id перевыдаётся
+    каждый прогон, кэш промахивался блоками, при неудачном парсинге функция
+    молча возвращала пустоту и весь словарь уходил в переперевод."""
     empty = {k: {} for k in TRANSLATIONS_SECTIONS}
     if not TRANSLATIONS_JSON_PATH.exists():
         warn.append("translations.json не найден — будет создан заново, первый прогон переведёт всё")
@@ -772,9 +773,9 @@ def write_arbiter_report(stats):
 # фрагментов. Кэш — translations.json["RULES"] по id (не хэш: id у RULES
 # стабильны, правятся редко — см. BRIEF §3). Диф — свой, без старого
 # data.js: каждая запись кэша хранит _src_<field> (значение поля-источника
-# на момент перевода), а не полагается на _parse_old_array_by_id — та же
-# причина, что и в этапе B (иначе старый RU-пивот перевод считался бы
-# «уже переведённым» навсегда, раз поле-источник не менялось).
+# на момент перевода) — иначе старый RU-пивот перевод считался бы «уже
+# переведённым» навсегда, раз поле-источник не менялось. Тот же приём —
+# _src_altEn на этапе G.
 # ═══════════════════════════════════════════════════════════════
 LATIN_WORD_RE = re.compile(r"[A-Za-zÀ-ÖØ-öø-ÿ][A-Za-zÀ-ÖØ-öø-ÿ'\-]*")
 
@@ -873,7 +874,16 @@ def compute_ignoretag_candidates(items, field, en_field, cache, key_fn, manual_i
             continue
         cached = cache.get(key) or {}
         if cached.get("source") == "manual":
-            continue  # #26: manual никогда не пересчитывается
+            # #26: manual не пересчитывается. Но уже переведённый en_field
+            # применяем как есть — ручной noteEn из translations-vocab-skip.json
+            # либо машинный, попавший в ту же ячейку кэша, что и ручной en.
+            # Без этого загрузка skip-слова тихо снимала бы у слова английское
+            # примечание (source: manual выключал этап D для всей ячейки).
+            # Как и manual en в compute_vocab_plan — применяется безусловно,
+            # свежесть manual-значений на человеке.
+            if cached.get(en_field):
+                it[en_field] = cached[en_field]
+            continue
         if cached.get(en_field) and cached.get(f"_src_{field}") == val:
             it[en_field] = cached[en_field]
         else:
@@ -1073,6 +1083,52 @@ def apply_manual_sounds(sounds, translations, warn):
                 if cached.get(en_field):
                     s[en_field] = cached[en_field]
 
+def load_manual_vocab_skip(all_vocab, translations, warn):
+    """docs/en-fix/translations-vocab-skip.json — слова, размеченные вручную
+    после того как арбитр на Haiku пометил их skip. Файл ключуется по id из
+    data.js; кэш translations.json['VOCAB'] — по vocab_hash источника, поэтому
+    id → hash сопоставляем здесь по all_vocab.
+
+    source: "manual" (не перезаписывается никакими флагами, GUARDRAILS #26);
+    нормализация НЕ применяется — значения в файле уже по конвенциям
+    (глаголы 'to X', существительные строчная). Мержим поверх существующей
+    записи кэша: en/altEn/noteEn/source из файла перекрывают, прочее
+    (напр. _src_note/noteEn от этапа D) сохраняется."""
+    if translations is None:
+        return
+    f = SCRIPT_DIR / "docs" / "en-fix" / "translations-vocab-skip.json"
+    if not f.exists():
+        warn.append(f"{f.name} не найден — ручные VOCAB.skip не загружены")
+        return
+    try:
+        data = json.loads(f.read_text(encoding="utf-8"))
+    except (OSError, json.JSONDecodeError) as e:
+        warn.append(f"{f.name}: не читается ({e}) — ручные VOCAB.skip не загружены")
+        return
+    by_id = {it["id"]: it for it in all_vocab if it.get("id")}
+    cache = translations["VOCAB"]
+    today = date.today().isoformat()
+    n = 0
+    for vid, entry in data.get("VOCAB", {}).items():
+        if entry.get("source") and entry.get("source") != "manual":
+            warn.append(f"{f.name}: {vid} без source=manual — пропущен")
+            continue
+        item = by_id.get(vid)
+        if item is None:
+            warn.append(f"{f.name}: id {vid} нет в словаре (переехал/удалён?) — пропущен")
+            continue
+        h = vocab_hash(item)
+        merged = dict(cache.get(h) or {})
+        merged.update(entry)
+        merged["source"] = "manual"
+        merged.setdefault("de", item.get("de"))
+        if entry.get("altEn") and not entry.get("altEnSource"):
+            merged["altEnSource"] = "manual"
+        merged["date"] = today
+        cache[h] = merged
+        n += 1
+    print(f"  ✓ VOCAB skip manual: {n} записей из {f.name}")
+
 # ─── VOCAB.exampleEn — тот же VOCAB-кэш и тот же хэш, что у слова (exampleDe
 # и так часть хэша, см. vocab_hash), но отдельная пара план/прогон: пример
 # переводится без контекста и без обратного перевода (короткое предложение,
@@ -1171,61 +1227,222 @@ def run_verb_field_translation(candidates, field, cache, warn, label):
     print(f"  ✓ {label}.en: переведено {ok}/{len(candidates)}")
     return ok
 
-def _parse_old_array_by_id(old_content, const_name):
-    """Достаёт id → полный словарь предыдущего прогона для любого const-массива
-    по имени (VOCAB/RULES/TERMS/CONJUGATIONS/REGEL_VERBS/SOUNDS) — по этому
-    сверяем, что реально изменилось, и зовём DeepL только для новых/изменённых
-    значений (diff-логика, без отдельного файла-кэша)."""
-    m = re.search(rf"const {const_name} = (\[.*?\n\]);", old_content, re.S)
-    if not m:
-        return {}
-    raw = m.group(1)
-    raw = re.sub(r"^\s*//.*$", "", raw, flags=re.MULTILINE)
-    raw = re.sub(r'([{,]\s*)([a-zA-Z_][a-zA-Z0-9_]*)\s*:', r'\1"\2":', raw)
-    raw = re.sub(r",(\s*[\]}])", r"\1", raw)
-    try:
-        items = json.loads(raw)
-    except json.JSONDecodeError:
-        return {}
-    return {it["id"]: it for it in items if it.get("id")}
+# ─── VOCAB.altEn — этап G. Раньше был единственным полем на старом кэше
+# (_parse_old_array_by_id: диф по id против предыдущего data.js). id перевыдаётся
+# каждый прогон → кэш промахивался → 289 значений уходили в DeepL всякий раз,
+# результат нестабилен. Теперь — тот же механизм, что en/exampleEn (этап B):
+# кэш в translations.json["VOCAB"] по vocab_hash, инвалидация по _src_altEn.
+# Источник: altDe (DE→EN) либо altRu (RU→EN, помечается altEnSource="deepl-ru").
+# Обратного перевода нет ни на одной ветке (решение по §4 брифа): altDe —
+# выверенные вручную формы без многозначности, детектор давал только ложные
+# срабатывания; altRu защищён контекстом (de как якорь) и пометкой deepl-ru.
+def _alt_en_source(item):
+    """Ветка источника altEn (BRIEF этап G §2.2). Возвращает
+    (branch|None, source_lang|None, source_value|None)."""
+    if item.get("altDe"):
+        return "altDe", "DE", item["altDe"]
+    if item.get("altRu"):
+        return "altRu", "RU", item["altRu"]
+    return None, None, None
 
-def translate_field_to_english(items, field, en_field, old_map, warn, label):
-    """Обобщённая версия translate_vocab_to_english — переводит item[field] →
-    item[en_field] через DeepL для любого списка (RULES.title/content_md/note,
-    TERMS.ru/note, CONJUGATIONS.ru, REGEL_VERBS.ru, SOUNDS.pronunciation, ...).
-    Diff-логика та же: сверяем с old_map по id, зовём DeepL только для
-    новых/изменённых значений поля."""
-    if not DEEPL_API_KEY:
-        return
+def build_alt_context(item):
+    """Контекст для перевода altEn — не тарифицируется. de как якорь: для
+    altRu-ветки это главный дизамбигуатор (перевод не должен уходить в
+    русский пивот), для altDe — подтверждение синонимии. Плюс артикль,
+    часть речи, exampleDe — как для основного слова на этапе B."""
+    parts = []
+    if item.get("de"):
+        parts.append(item["de"])
+    article = GENDER_ARTICLE.get(item.get("gender"))
+    if article:
+        parts.append(article)
+    pos_label = POS_DE_LABEL.get(item.get("pos"))
+    if pos_label:
+        parts.append(pos_label)
+    if item.get("exampleDe"):
+        parts.append(item["exampleDe"])
+    return " | ".join(parts) if parts else None
 
-    to_translate = []
-    for item in items:
-        val = item.get(field)
-        if not val or not isinstance(val, str) or not re.search(r"[А-Яа-яЁё]", val):
+def compute_alt_en_plan(all_vocab, translations, warn):
+    """Без API: делит vocab на кэш-хиты altEn и кандидатов. Кэш —
+    translations.json['VOCAB'] по vocab_hash, инвалидация по _src_altEn
+    (значение источника на момент перевода — совпало → в DeepL не идём,
+    даже если это закэшированный флаг). altEnSource=='manual' не
+    пересчитывается никогда (GUARDRAILS #26). Возвращает
+    (candidates, cache_hits, flagged_cached, skipped, chars_de, chars_ru)."""
+    candidates, cache_hits, flagged_cached, skipped = [], 0, 0, 0
+    chars_de = chars_ru = 0
+    if translations is None:
+        return candidates, cache_hits, flagged_cached, skipped, 0, 0
+    vcache = translations["VOCAB"]
+    for item in all_vocab:
+        branch, _src_lang, src_val = _alt_en_source(item)
+        if branch is None:
+            skipped += 1
             continue
-        old = old_map.get(item.get("id"), {})
-        if old.get(field) == val and old.get(en_field):
-            item[en_field] = old[en_field]
+        entry = vcache.get(vocab_hash(item)) or {}
+        if entry.get("altEnSource") == "manual":
+            if entry.get("altEn"):
+                item["altEn"] = entry["altEn"]
+            cache_hits += 1
+            continue
+        if entry.get("_src_altEn") == src_val:
+            if entry.get("altEn"):
+                en_val = entry["altEn"]
+                renorm = normalize_vocab_en(en_val, item.get("pos"))
+                if renorm != en_val:  # нормализация поменялась — локально, без API
+                    entry["altEn"] = renorm
+                    en_val = renorm
+                item["altEn"] = en_val
+                cache_hits += 1
+            else:  # закэшированный флаг — источник не менялся, заново не гоняем
+                flagged_cached += 1
+            continue
+        candidates.append(item)
+        if branch == "altDe":
+            chars_de += len(src_val)
         else:
-            to_translate.append(item)
+            chars_ru += len(src_val)
+    return candidates, cache_hits, flagged_cached, skipped, chars_de, chars_ru
 
-    if not to_translate:
-        return
+def _cache_alt_en(vocab_cache, item, en_text, src_val, alt_source, today):
+    entry = vocab_cache.setdefault(vocab_hash(item), {})
+    entry.setdefault("de", item.get("de"))
+    entry["altEn"] = en_text
+    entry["_src_altEn"] = src_val
+    entry["altEnSource"] = alt_source
+    entry.setdefault("date", today)
+    entry.pop("altEnStatus", None)
+    entry.pop("altEnFlag", None)
 
-    print(f"  → {label}.{field} → {en_field}: {len(to_translate)} новых/изменённых...")
-    BATCH = 50
-    ok = 0
-    for i in range(0, len(to_translate), BATCH):
-        chunk = to_translate[i:i + BATCH]
+def _cache_alt_en_flag(vocab_cache, item, src_val, reason, today):
+    """Кэшируем исход флага (кириллица) по _src_altEn — иначе прогон 2 гоняет
+    его в DeepL заново и стабильности нет по определению. Инвалидируется
+    сменой источника или ручным разбором (altEnSource: manual). API-ошибки
+    НЕ кэшируем — транзиентны."""
+    entry = vocab_cache.setdefault(vocab_hash(item), {})
+    entry.setdefault("de", item.get("de"))
+    entry["_src_altEn"] = src_val
+    entry["altEnStatus"] = "flagged"
+    entry["altEnFlag"] = reason
+    entry.setdefault("date", today)
+    entry.pop("altEn", None)
+    entry.pop("altEnSource", None)
+
+def run_alt_en_translation(candidates, vocab_cache, warn):
+    """altDe: DE→EN + context. altRu: RU→EN + context. Обратного перевода нет
+    ни на одной ветке (решение по §4 брифа): altDe — 42 выверенные вручную
+    формы, в основном женский род профессий, многозначности нет и детектор
+    давал только ложные срабатывания (12/12); altRu защищён контекстом (de
+    как якорь) и пометкой deepl-ru для будущей ревизии.
+    Нормализация normalize_vocab_en (глаголы → to X, существительные строчная).
+    Кириллица в результате → altEn не пишется, исход флага кэшируется,
+    штатный откат на русский. API-ошибка → флаг в отчёт без кэша.
+    Возвращает (report_rows, n_de, n_ru)."""
+    if not candidates:
+        return [], 0, 0
+    if not DEEPL_API_KEY:
+        warn.append(f"DEEPL_API_KEY не задан — VOCAB.altEn не переведён ({len(candidates)} записей)")
+        return [], 0, 0
+    today = date.today().isoformat()
+    report_rows = []
+    n_de = n_ru = 0
+
+    print(f"  → VOCAB.altEn (по слову, DE/RU→EN + контекст): {len(candidates)}...")
+    for i, item in enumerate(candidates, 1):
+        branch, src_lang, src_val = _alt_en_source(item)
+        context = build_alt_context(item)
+        if i > 1:
+            time.sleep(0.15)  # троттлинг: 308 одиночных запросов подряд ловили 429
         try:
-            translations = _deepl_translate_batch([it[field] for it in chunk], DEEPL_API_KEY)
+            raw_en = _deepl_translate_one(src_val, DEEPL_API_KEY, src_lang, "EN", context=context)
         except Exception as e:
-            warn.append(f"DeepL: ошибка перевода {label}.{field} батч {i}-{i + len(chunk)}: {e}")
+            warn.append(f"DeepL: ошибка перевода VOCAB.altEn «{item.get('de')}» ({branch}): {e}")
+            report_rows.append({"item": item, "branch": branch, "alt_en": "(ошибка API)",
+                                 "reason": "ошибка API", "cached": False})
             continue
-        for item, en_text in zip(chunk, translations):
-            item[en_field] = en_text
-            ok += 1
-    print(f"  ✓ {label}.{en_field}: переведено {ok}/{len(to_translate)}")
+        en_text = normalize_vocab_en(raw_en, item.get("pos"))
+        if has_cyrillic(en_text):
+            _cache_alt_en_flag(vocab_cache, item, src_val, "кириллица в результате", today)
+            report_rows.append({"item": item, "branch": branch, "alt_en": en_text,
+                                 "reason": "кириллица в результате", "cached": True})
+            continue
+        item["altEn"] = en_text
+        _cache_alt_en(vocab_cache, item, en_text, src_val,
+                      "deepl" if branch == "altDe" else "deepl-ru", today)
+        if branch == "altDe":
+            n_de += 1
+        else:
+            n_ru += 1
+        if i % 100 == 0:
+            print(f"    ... {i}/{len(candidates)}")
+
+    print(f"  ✓ VOCAB.altEn: altDe {n_de}, altRu {n_ru}, флагов {len(report_rows)}")
+    return report_rows, n_de, n_ru
+
+def write_alt_en_report(report_rows, n_de, n_ru, skipped, cache_hits, flagged_cached, vocab_cache):
+    REPORTS_DIR.mkdir(exist_ok=True)
+    path = REPORTS_DIR / "en_review_altEn.md"
+    by_source = {}
+    for e in (vocab_cache or {}).values():
+        s = e.get("altEnSource")
+        if s or e.get("altEnStatus") == "flagged":
+            by_source[s or "flagged"] = by_source.get(s or "flagged", 0) + 1
+    total_line = ", ".join(f"{k}: {v}" for k, v in sorted(by_source.items())) or "—"
+    lines = [
+        "# en_review_altEn — статус перевода VOCAB.altEn (этап G)",
+        "",
+        f"Прогон: {date.today().isoformat()}.",
+        f"Переведено в этом прогоне: altDe {n_de}, altRu {n_ru}. "
+        f"Кэш-хиты: {cache_hits} (+ {flagged_cached} закэшированных флагов). "
+        f"Пропущено (нет ни altDe, ни altRu): {skipped}. Новых флагов: {len(report_rows)}.",
+        "",
+        f"Всего в translations.json по altEnSource: {total_line}.",
+        "",
+        "altEn считается: altDe заполнено → DeepL DE→EN + контекст; иначе altRu → "
+        "DeepL RU→EN + контекст (пометка altEnSource: deepl-ru). Обратного перевода нет "
+        "(altDe — ручные формы, altRu — сравнивать не с чем).",
+        "",
+    ]
+    if report_rows:
+        lines += [
+            "Поле `altEn` НЕ записано в data.js (сайт покажет русский). Исход закэширован "
+            "(`altEnStatus: flagged`) — заново переводиться не будет, пока не сменится источник "
+            "или не занесёшь решение вручную (`altEnSource: manual`, `altEn: ...`).",
+            "",
+            "| id | de | ветка | источник | altEn (DeepL) | причина | закэширован |",
+            "|---|---|---|---|---|---|---|",
+        ]
+        for r in sorted(report_rows, key=lambda x: (x["branch"], x["item"].get("de") or "")):
+            it = r["item"]
+            src = it.get("altDe") if r["branch"] == "altDe" else it.get("altRu")
+            lines.append(f"| {it.get('id','')} | {it.get('de','')} | {r['branch']} | {src or ''} | "
+                          f"{r.get('alt_en','')} | {r.get('reason','')} | "
+                          f"{'да' if r.get('cached') else 'нет (транзиент)'} |")
+    else:
+        lines.append("Новых флагов нет — всё прошло нормализацию и проверку на кириллицу.")
+
+    lines += [
+        "",
+        "## Предсуществующий дефект (§5 брифа, подтверждён — не чинить в рамках G)",
+        "",
+        "`vocab_hash` для местоимений сводится к `de`+`pos` (нет `gender`, нет `exampleDe`). "
+        "Личные местоимения ich/du/wir/ihr/sie заведены в словаре дважды: как личные и внутри "
+        "таблицы притяжательных (p0011–p0017). Две разные записи делят одну ячейку кэша "
+        "`translations.json['VOCAB']` и переписывают друг другу поля при каждом прогоне.",
+        "",
+        "Видимое следствие: запись хэша `9e86d0c90b78e6d7` (`du`) осциллирует между "
+        "`noteEn: \"deine\"` (притяжательная, note = чистый немецкий, копируется дословно — "
+        "результат корректный) и `noteEn: \"informally (duzen)\"` (личная). Осциллирует только "
+        "`du`/`dein` — единственная пара, где `note` заполнено у обеих записей; ich/mein, "
+        "sie/ihr, wir/unser, ihr/euer молчат случайно (note только у притяжательной). "
+        "altEn это не затрагивает — ни у одной из пар нет `altRu`/`altDe`.",
+        "",
+        "Корень — таблица притяжательных местоимений внутри словаря; правится переносом её "
+        "в раздел правил, а не патчем `vocab_hash`.",
+    ]
+    path.write_text("\n".join(lines) + "\n", encoding="utf-8")
+    return path
 
 def _deepl_usage(api_key):
     """GET /v2/usage — израсходовано символов за период. Для baseline до/после
@@ -1615,7 +1832,7 @@ def to_int(v):
     except (ValueError, TypeError):
         return None
 
-def read_sheet(wb, name):
+def read_sheet(wb, name, warn=None):
     """Читает лист в список dict-ов. Пропускает строку легенды (опц./обяз.)
     и полностью пустые строки. Ключи — заголовки строки 1."""
     if name not in wb.sheetnames:
@@ -1631,6 +1848,14 @@ def read_sheet(wb, name):
     else:
         headers = row1_vals
         data_start = 2
+    # dict(zip(headers, row)) ниже молча схлопывает повторяющиеся заголовки —
+    # вторая колонка с тем же именем затирает первую. Логику не меняем, но
+    # предупреждаем (только для непустых имён; пустые/None — отдельный случай).
+    named = [str(h).strip() for h in headers if h is not None and str(h).strip()]
+    dupes = sorted({h for h in named if named.count(h) > 1})
+    if dupes and warn is not None:
+        warn.append(f"{name}: повтор заголовков колонок {dupes} — "
+                    f"при чтении остаётся только последняя одноимённая колонка")
     rows = []
     for row in ws.iter_rows(min_row=data_start, values_only=True):
         non_empty = [v for v in row if v is not None]
@@ -1673,25 +1898,33 @@ SCHEMA = {
         ("antonym", "antonym", "str"),
     ] + COMMON_META,
     "adjectives": [
-        ("de", "de", "str"), ("ru", "ru", "str"), ("alt-ru", "altRu", "str"),
+        ("de", "de", "str"), ("alt-de", "altDe", "str"),
+        ("ru", "ru", "str"), ("alt-ru", "altRu", "str"),
         ("comparative", "comparative", "str"), ("superlative", "superlative", "str"),
         ("antonym", "antonym", "str"), ("derived_from", "derivedFrom", "str"),
     ] + COMMON_META,
     "adverbs": [
-        ("de", "de", "str"), ("ru", "ru", "str"), ("alt-ru", "altRu", "str"),
+        ("de", "de", "str"), ("alt-de", "altDe", "str"),
+        ("ru", "ru", "str"), ("alt-ru", "altRu", "str"),
         ("antonym", "antonym", "str"),
     ] + COMMON_META,
     "phrases": [
-        ("de", "de", "str"), ("ru", "ru", "str"), ("context", "context", "str"),
+        ("de", "de", "str"), ("alt-de", "altDe", "str"),
+        ("ru", "ru", "str"), ("alt-ru", "altRu", "str"),
+        ("context", "context", "str"),
     ] + COMMON_META,
     "pronouns": [
-        ("de", "de", "str"), ("ru", "ru", "str"), ("kind", "kind", "str"),
+        ("de", "de", "str"), ("alt-de", "altDe", "str"),
+        ("ru", "ru", "str"), ("alt-ru", "altRu", "str"),
+        ("kind", "kind", "str"),
         ("case", "case", "str"), ("gender", "gender", "str"),
         ("level", "level", "str"), ("priority", "priority", "int"),
         ("source", "source", "str"), ("note", "note", "str"),
     ],
     "numbers": [
-        ("digit", "digit", "str"), ("de", "de", "str"), ("ru", "ru", "str"),
+        ("digit", "digit", "str"), ("de", "de", "str"),
+        ("alt-de", "altDe", "str"),
+        ("ru", "ru", "str"), ("alt-ru", "altRu", "str"),
         ("kind", "kind", "str"), ("transcription", "transcription", "str"),
         ("level", "level", "str"), ("priority", "priority", "int"),
         ("source", "source", "str"), ("note", "note", "str"),
@@ -2535,6 +2768,7 @@ def process_verbs(rows, warn):
     return vocab_items, regel_verbs, conjugations
 
 VERB_VOCAB_SCHEMA = [
+    ("alt-de", "altDe", "str"),
     ("ru", "ru", "str"), ("alt-ru", "altRu", "str"), ("type", "type", "str"),
     ("modal", "modal", "bool"), ("separable", "separable", "bool"),
     ("prefix", "prefix", "str"), ("reflexive", "reflexive", "bool"),
@@ -2879,11 +3113,11 @@ if __name__ == '__main__':
     print(f"  ✓ {sum(len(v) for v in TAXONOMY.values())} пар в {len(TAXONOMY)} страницах")
 
     print("\n=== nouns ===")
-    nouns = process_simple_vocab(read_sheet(wb, "nouns"), "nouns", "noun", WARN)
+    nouns = process_simple_vocab(read_sheet(wb, "nouns", WARN), "nouns", "noun", WARN)
     print(f"  ✓ {len(nouns)} существительных")
 
     print("\n=== verbs ===")
-    verbs_vocab, regel_verbs, conjugations = process_verbs(read_sheet(wb, "verbs"), WARN)
+    verbs_vocab, regel_verbs, conjugations = process_verbs(read_sheet(wb, "verbs", WARN), WARN)
     print(f"  ✓ {len(verbs_vocab)} в VOCAB, {len(regel_verbs)} regel, {len(conjugations)} unregel")
 
     print("\n=== ruForms (личные формы наст. времени, pymorphy3) ===")
@@ -2905,39 +3139,39 @@ if __name__ == '__main__':
                         f"(fallback на v.ru, проверить вручную при желании): {ru_forms_fail}")
 
     print("\n=== adjectives ===")
-    adjectives = process_simple_vocab(read_sheet(wb, "adjectives"), "adjectives", "adj", WARN)
+    adjectives = process_simple_vocab(read_sheet(wb, "adjectives", WARN), "adjectives", "adj", WARN)
     print(f"  ✓ {len(adjectives)} прилагательных")
 
     print("\n=== adverbs ===")
-    adverbs = process_simple_vocab(read_sheet(wb, "adverbs"), "adverbs", "adv", WARN)
+    adverbs = process_simple_vocab(read_sheet(wb, "adverbs", WARN), "adverbs", "adv", WARN)
     print(f"  ✓ {len(adverbs)} наречий")
 
     print("\n=== phrases ===")
-    phrases = process_simple_vocab(read_sheet(wb, "phrases"), "phrases", "phrase", WARN)
+    phrases = process_simple_vocab(read_sheet(wb, "phrases", WARN), "phrases", "phrase", WARN)
     print(f"  ✓ {len(phrases)} фраз")
 
     print("\n=== pronouns ===")
-    pronouns = process_pronouns(read_sheet(wb, "pronouns"))
+    pronouns = process_pronouns(read_sheet(wb, "pronouns", WARN))
     print(f"  ✓ {len(pronouns)} местоимений")
 
     print("\n=== numbers ===")
-    numbers = process_numbers(read_sheet(wb, "numbers"))
+    numbers = process_numbers(read_sheet(wb, "numbers", WARN))
     print(f"  ✓ {len(numbers)} чисел")
 
     print("\n=== terms ===")
-    terms = process_terms(read_sheet(wb, "terms"))
+    terms = process_terms(read_sheet(wb, "terms", WARN))
     print(f"  ✓ {len(terms)} терминов")
 
     print("\n=== sounds ===")
-    sounds = process_sounds(read_sheet(wb, "sounds"))
+    sounds = process_sounds(read_sheet(wb, "sounds", WARN))
     print(f"  ✓ {len(sounds)} звуков")
 
     print("\n=== rules ===")
-    rules = process_rules(read_sheet(wb, "rules"), WARN)
+    rules = process_rules(read_sheet(wb, "rules", WARN), WARN)
     print(f"  ✓ {len(rules)} правил")
 
     print("\n=== questions ===")
-    questions = process_questions(read_sheet(wb, "questions"), WARN)
+    questions = process_questions(read_sheet(wb, "questions", WARN), WARN)
     print(f"  ✓ {len(questions)} вопросов")
 
     # Валидация пар против Settings
@@ -2977,18 +3211,20 @@ if __name__ == '__main__':
     assign_ids(sounds, "s", WARN, "sounds", width=3)
 
     print("\n=== EN-перевод словаря (мультиязычность, слой 2 — DeepL, этап B) ===")
-    # translations.json — единственный кэш для VOCAB.en/exampleEn/CONJUGATIONS.en/
-    # REGEL_VERBS.en (хэш-ключи по источнику). Старый _parse_old_array_by_id
-    # (диф по id против предыдущего data.js) для этих полей больше не
-    # используется — он не различал RU- и DE-сourced кэш (см. правку этапа B).
-    # Для RU-источника (note/altEn/warning ниже, RULES/TERMS/SOUNDS — вне
-    # этапа B) старый механизм остаётся как был.
-    old_en_map = _parse_old_array_by_id(old_content, "VOCAB")
+    # translations.json — единственный кэш для всех переводимых полей VOCAB
+    # (en/exampleEn/altEn/note/warning) и CONJUGATIONS/REGEL_VERBS, хэш-ключи по
+    # источнику. Старый _parse_old_array_by_id (диф по id против предыдущего
+    # data.js) удалён на этапе G — это было последнее место, где промах кэша
+    # приводил к молчаливому полному перепереводу (id перевыдаётся каждый
+    # прогон). Фолбэка на старый data.js больше нет нигде.
 
     translations = load_translations(WARN)
+    load_manual_vocab_skip(all_vocab, translations, WARN)
     vocab_candidates, vocab_cache_hits, vocab_chars = compute_vocab_plan(all_vocab, translations, WARN)
     example_candidates, example_cache_hits, example_chars = \
         compute_example_plan(all_vocab, translations, WARN)
+    alt_en_candidates, alt_en_cache_hits, alt_en_flagged_cached, alt_en_skipped, \
+        alt_en_chars_de, alt_en_chars_ru = compute_alt_en_plan(all_vocab, translations, WARN)
     conj_candidates, conj_cache_hits, conj_chars = \
         compute_verb_field_plan(conjugations, "verb", translations["CONJUGATIONS"] if translations else {}, WARN)
     regel_candidates, regel_cache_hits, regel_chars = \
@@ -3009,6 +3245,11 @@ if __name__ == '__main__':
         print(f"    порог 20%: {'ПРЕВЫШЕН, нужен --force' if not threshold_ok else 'не превышен'}")
         print(f"  VOCAB.exampleEn (exampleDe, DE→EN): кэш-хитов {example_cache_hits}, "
               f"к переводу {len(example_candidates)} записей, {example_chars} символов")
+        print(f"  VOCAB.altEn (этап G — altDe DE→EN / altRu RU→EN + контекст, без обратного перевода):")
+        print(f"    кэш-хитов {alt_en_cache_hits} (+{alt_en_flagged_cached} закэш. флагов), "
+              f"к переводу {len(alt_en_candidates)} записей "
+              f"({alt_en_chars_de} символов altDe + {alt_en_chars_ru} altRu), "
+              f"пропущено (нет альт. формы) {alt_en_skipped}")
         print(f"  CONJUGATIONS.en (verb, DE→EN): кэш-хитов {conj_cache_hits}, "
               f"к переводу {len(conj_candidates)} записей, {conj_chars} символов")
         print(f"  REGEL_VERBS.en (verb, DE→EN): кэш-хитов {regel_cache_hits}, "
@@ -3031,9 +3272,16 @@ if __name__ == '__main__':
         sys.exit(1)
 
     vocab_report_rows = []
+    alt_en_report_rows = []
+    alt_en_n_de = alt_en_n_ru = 0
+    usage_before, usage_limit = _deepl_usage(DEEPL_API_KEY)
+    if usage_before is not None:
+        print(f"  DeepL /usage до прогона: {usage_before:,}/{usage_limit:,} символов")
     if translations is not None:
         vocab_report_rows, _vocab_ok = run_vocab_translation(vocab_candidates, translations["VOCAB"], WARN)
         run_example_translation(example_candidates, translations["VOCAB"], WARN)
+        alt_en_report_rows, alt_en_n_de, alt_en_n_ru = \
+            run_alt_en_translation(alt_en_candidates, translations["VOCAB"], WARN)
         run_verb_field_translation(conj_candidates, "verb", translations["CONJUGATIONS"], WARN, "CONJUGATIONS")
         run_verb_field_translation(regel_candidates, "verb", translations["REGEL_VERBS"], WARN, "REGEL_VERBS")
         if args.arbiter == "haiku":
@@ -3043,9 +3291,11 @@ if __name__ == '__main__':
         save_translations(translations)
     report_path = write_vocab_review_report(vocab_report_rows)
     print(f"  ✓ отчёт: {report_path}")
-
-    # Альт. перевод VOCAB — RU-источник, вне этапов B–D (слабое место по брифу).
-    translate_field_to_english(all_vocab, "altRu", "altEn", old_en_map, WARN, "VOCAB")
+    alt_en_report_path = write_alt_en_report(
+        alt_en_report_rows, alt_en_n_de, alt_en_n_ru, alt_en_skipped,
+        alt_en_cache_hits, alt_en_flagged_cached,
+        translations["VOCAB"] if translations is not None else {})
+    print(f"  ✓ отчёт: {alt_en_report_path}")
 
     # RULES — этап C: гибрид (31 ручное исключение + 28 через ignore-теги).
     # Кэш — translations.json["RULES"], не старый data.js (см. докстринг
@@ -3265,6 +3515,11 @@ if __name__ == '__main__':
         for r in new_rules:
             mark = " ↻ aktualisiert" if r.get("_newUpdate") else ""
             print(f"   • {r['title']}{mark}")
+
+    usage_after, _lim = _deepl_usage(DEEPL_API_KEY)
+    if usage_after is not None:
+        delta = f" (Δ {usage_after - usage_before:+,})" if usage_before is not None else ""
+        print(f"\nDeepL /usage после прогона: {usage_after:,}/{_lim:,} символов{delta}")
 
     if WARN:
         print(f"\n⚠ Предупреждения ({len(WARN)}):")
