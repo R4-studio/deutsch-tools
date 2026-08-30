@@ -2537,6 +2537,11 @@ function buildPraesensPool(verbItems, conjugations) {
   for (const item of verbItems) {
     if (item.de.includes(" ")) continue;  // разделяемые — пропускаем
     if (!item.ru) continue;
+    // У русского перевода нет личных форм (быть-конструкции, предикативы,
+    // безличные) — ставится update_data.py: колонкой no_ru_forms в xlsx либо
+    // автоматически по разбору. Без этого плитка выходила инфинитивом:
+    // «Я стоить того.», «Я разрешено.»
+    if (item.ruNoForms) continue;
 
     const forms = [0,1,2,3,4,5].map(i => getConjForm(item.de, i, conjugations));
     // Берём 2 случайных шаблона для разнообразия

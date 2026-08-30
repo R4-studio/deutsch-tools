@@ -1765,31 +1765,51 @@ RU_PRAESENS_PERSONS = [("1per", "sing"), ("2per", "sing"), ("3per", "sing"),
                         ("1per", "plur"), ("2per", "plur"), ("3per", "plur")]
 
 def generate_ru_forms(ru_text):
-    """6 личных форм наст. времени (я/ты/он/мы/вы/они) из русского инфинитива.
-    Возвращает список из 6 строк либо None, если сгенерировать не удалось —
-    вызывающий код в этом случае должен фолбэкнуться на сырой ru_text
-    (несовершенный вид без пары, идиома/фраза, слово вне словаря и т.п.).
+    """6 личных форм (я/ты/он/мы/вы/они) из русского инфинитива.
+
+    Возвращает пару (forms, reason):
+      (список из 6 строк, None) — получилось
+      (None, "no_infn")  — голова не распознана как инфинитив. Это ОШИБКА
+                           в поле ru («шопинг», «должен», «разрешено») —
+                           вызывающий код обязан про неё предупредить.
+      (None, "no_forms") — голова разобрана, но форм нет: несовершенный вид
+                           без синтетического будущего («стоить того»).
+                           Это факт языка, а не сбой — предупреждать не о чем,
+                           запись помечается ruNoForms.
 
     Спрягает только первое слово (голову) — хвост фразы вида "ходить по
     магазинам" переносится как есть после проспрягованной формы: "хожу по
-    магазинам". Для омографов совершенного/несовершенного вида с одинаковым
-    инфинитивом (находить, выглядеть, уходить...) предпочитает несовершенный
-    разбор — у совершенного вида в русском нет наст. времени в принципе
-    (inflect(pres) для него всегда вернёт None), а у несовершенного есть."""
+    магазинам".
+
+    Время выбирается по виду. Несовершенный → pres (говорю, хожу).
+    Совершенный → futr, простое будущее (скажу, брошу, поставлю): наст.
+    времени у него нет в принципе, но formы есть, и «Я скажу» в тренажёре
+    несопоставимо лучше, чем инфинитив «Я сказать». Смещение времени —
+    следствие того, что в поле ru местами стоит совершенный вид там, где
+    немецкий даёт настоящее (sagen = говорить, а не сказать); лечится
+    в данных, а не здесь.
+
+    Для омографов вида с одинаковым инфинитивом (находить, выглядеть,
+    уходить...) предпочитается несовершенный разбор — у него есть настоящее."""
     if not _MORPH or not ru_text:
-        return None
+        return None, "no_infn"
     parts = ru_text.strip().split(None, 1)
     head = parts[0]
     rest = (" " + parts[1]) if len(parts) > 1 else ""
     parses = [p for p in _MORPH.parse(head) if "INFN" in p.tag]
     if not parses:
-        return None
+        return None, "no_infn"
     impf = [p for p in parses if "impf" in p.tag]
     chosen = impf[0] if impf else parses[0]
-    forms = [chosen.inflect({"pres", per, num}) for per, num in RU_PRAESENS_PERSONS]
+    tense = "pres" if impf else "futr"
+    forms = [chosen.inflect({tense, per, num}) for per, num in RU_PRAESENS_PERSONS]
     if any(f is None for f in forms):
-        return None
-    return [f.word + rest for f in forms]
+        # Несовершенный без синтетических форм — пробуем futr на всякий
+        # случай (быть → буду), иначе форм нет.
+        forms = [chosen.inflect({"futr", per, num}) for per, num in RU_PRAESENS_PERSONS]
+        if any(f is None for f in forms):
+            return None, "no_forms"
+    return [f.word + rest for f in forms], None
 
 # ═══════════════════════════════════════════════════════════════
 # Утилиты для чтения xlsx
@@ -2783,6 +2803,10 @@ VERB_VOCAB_SCHEMA = [
     ("example_de", "exampleDe", "str"), ("example_ru", "exampleRu", "str"),
     ("quiz_use", "quizUse", "boolT"), ("strict_order", "strictOrder", "boolT"),
     ("warning", "warning", "str"), ("label", "label", "str"), ("note", "note", "str"),
+    # Override для ruForms: TRUE = у русского перевода личных форм нет
+    # (быть-конструкции, предикативы, безличные). Колонки может не быть
+    # в xlsx — тогда r.get() вернёт None и признак просто не проставится.
+    ("no_ru_forms", "noRuForms", "bool"),
 ]
 def apply_schema_verb(r):
     out = {}
@@ -3128,18 +3152,32 @@ if __name__ == '__main__':
         print("  ⚠ pymorphy3 не установлен — пропускаю (pip install pymorphy3 pymorphy3-dicts-ru)")
         WARN.append("pymorphy3 не установлен — ruForms не сгенерированы, tiles Ур.4 используют сырой v.ru")
     else:
-        ru_forms_fail = []
+        # Три исхода, а не два:
+        #   ruForms      — формы сгенерированы
+        #   ruNoForms    — форм нет: колонка no_ru_forms в xlsx (override)
+        #                  либо голова разобрана, но вид не даёт форм (авто).
+        #                  Тренажёр такие глаголы пропускает, WARN молчит.
+        #   ru_forms_fail — голова не инфинитив: ошибка в поле ru, в WARN.
+        ru_forms_fail, marked_manual, marked_auto = [], [], []
         for v in verbs_vocab:
-            forms = generate_ru_forms(v.get("ru"))
+            if v.get("noRuForms"):
+                v["ruNoForms"] = True
+                marked_manual.append(v.get("de"))
+                continue
+            forms, reason = generate_ru_forms(v.get("ru"))
             if forms:
                 v["ruForms"] = forms
+            elif reason == "no_forms":
+                v["ruNoForms"] = True
+                marked_auto.append(v.get("de"))
             else:
                 ru_forms_fail.append(v.get("ru") or v.get("de"))
-        print(f"  ✓ {len(verbs_vocab) - len(ru_forms_fail)}/{len(verbs_vocab)} глаголов проспрягано, "
-              f"{len(ru_forms_fail)} — fallback на v.ru")
+        ok = len(verbs_vocab) - len(ru_forms_fail) - len(marked_manual) - len(marked_auto)
+        print(f"  ✓ {ok}/{len(verbs_vocab)} глаголов проспрягано; "
+              f"без форм: {len(marked_manual)} по колонке no_ru_forms, {len(marked_auto)} по разбору")
         if ru_forms_fail:
-            WARN.append(f"ruForms: не удалось проспрягать {len(ru_forms_fail)} глаголов "
-                        f"(fallback на v.ru, проверить вручную при желании): {ru_forms_fail}")
+            WARN.append(f"ruForms: у {len(ru_forms_fail)} глаголов поле ru не начинается с инфинитива — "
+                        f"поправь перевод либо поставь no_ru_forms=TRUE: {ru_forms_fail}")
 
     print("\n=== adjectives ===")
     adjectives = process_simple_vocab(read_sheet(wb, "adjectives", WARN), "adjectives", "adj", WARN)
@@ -3376,7 +3414,7 @@ if __name__ == '__main__':
                   "comparative", "superlative", "antonym", "derivedFrom",
                   "kind", "case", "digit", "transcription", "context",
                   "type", "modal", "separable", "prefix", "reflexive", "impersonal",
-                  "aux", "partizip2", "praeteritum", "ruForms",
+                  "aux", "partizip2", "praeteritum", "ruForms", "ruNoForms",
                   "priority", "source", "exampleDe", "exampleRu", "exampleEn", "quizUse",
                   "strictOrder", "warning", "warningEn", "label"]
     REGEL_KEYS = ["id", "verb", "ru", "en", "forms", "partizip2", "aux", "praeteritum",
