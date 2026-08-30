@@ -389,9 +389,6 @@ def compute_vocab_plan(all_vocab, translations, warn):
             continue
         h = vocab_hash(item)
         cached = vocab_cache.get(h)
-        if item.get("new") and cached:
-            warn.append(f"VOCAB: «{item['de']}» помечено new=TRUE в xlsx, но перевод уже есть "
-                        f"в translations.json (hash {h}) — сверь вручную, скрипт не решает сам")
         if cached and cached.get("en"):
             cache_hits += 1
             en_val = cached["en"]
@@ -2258,6 +2255,9 @@ GERMAN_LABELS = {
     "communication:text":       ("notes",       "Text & Brief"),
     "grammar:adverbs":          ("shuffle",     "Adverbien"),
     "grammar:wordformation":    ("ruleset",     "Wortbildung"),
+    # ★ таксономия: питание и защита прав потребителей (август 2026)
+    "products:nutrition":       ("dining",      "Ernährung"),
+    "society:consumer":         ("scale",       "Verbraucherschutz"),
 }
 
 # РУССКИЕ ПЕРЕВОДЫ (для тултипов на фронте)
@@ -2426,6 +2426,9 @@ RUSSIAN_LABELS = {
     "communication:text":       "Текст и письмо",
     "grammar:adverbs":          "Наречия",
     "grammar:wordformation":    "Словообразование",
+    # ★ таксономия: питание и защита прав потребителей (август 2026)
+    "products:nutrition":       "Питание",
+    "society:consumer":         "Защита прав потребителей",
 }
 
 BLOCK_META_RU = {
