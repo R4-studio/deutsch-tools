@@ -2413,10 +2413,12 @@
       "titleEn": "sein or haben?"
     },
     "r0005": {
-      "_src_content_md": "sein – быть\nich | war |\ndu | warst |\ner/sie/es | war |\nwir | waren |\nihr | wart |\nsie/Sie | waren |\nhaben – иметь\nich | hatte |\ndu | hattest |\ner/sie/es | hatte |\nwir | hatten |\nihr | hattet |\nsie/Sie | hatten |\n💡 Wie war das Treffen? – Das Treffen **war** toll! / Wir **hatten** viel Spaß!",
+      "_src_content_md": "sein – быть\nich | war |\ndu | warst |\ner/sie/es | war |\nwir | waren |\nihr | wart |\nsie/Sie | waren |\nhaben – иметь\nich | hatte |\ndu | hattest |\ner/sie/es | hatte |\nwir | hatten |\nihr | hattet |\nsie/Sie | hatten |",
+      "_src_note": "💡 Wie war das Treffen? – Das Treffen **war** toll! / Wir **hatten** viel Spaß!",
       "_src_title": "Präteritum: sein",
-      "content_md_en": "sein – to be\nich | war |\ndu | warst |\ner / sie / es | war |\nwir | waren |\nihr | wart |\nsie / Sie | waren |\nhaben – to have\nich | hatte |\ndu | hattest |\ner / sie / es | hatte |\nwir | hatten |\nihr | hattet |\nsie / Sie | hatten |\n💡 Wie war das Treffen? – Das Treffen **war** toll! / Wir **hatten** viel Spaß!",
-      "date": "2026-08-27",
+      "content_md_en": "sein – to be\nich | war |\ndu | warst |\ner/sie/es | war |\nwir | waren |\nihr | wart |\nsie/Sie | waren |\nhaben – to have\nich | hatte |\ndu | hattest |\ner/sie/es | hatte |\nwir | hatten |\nihr | hattet |\nsie/Sie | hatten |",
+      "date": "2026-09-01",
+      "noteEn": "💡 Wie war das Treffen? – Das Treffen **war** toll! / Wir **hatten** viel Spaß!",
       "source": "deepl",
       "titleEn": "Präteritum: sein"
     },
@@ -2437,10 +2439,12 @@
       "titleEn": "Reflexive pronounsich"
     },
     "r0008": {
-      "_src_content_md": "В предложениях с **модальным глаголом (Modalverb)** и **смысловым глаголом (Infinitiv)** используется особый порядок слов:\n**Элемент** |\n**Позиция в предложении** |\n**Пример** |\nModalverb (спрягаемый глагол) |\n2-я позиция |\nIch **kann** ... |\nInfinitiv (основной глагол) |\nВ конце предложения |\n... den Raum **vorbereiten**. |\n👉 **Разделяемые глаголы (trennbare Verben)** в предложениях с Modalverb + Infinitiv **не разделяются** и остаются в конце предложения целиком.\n**Пример:** Ich kann am Freitag den Raum **vorbereiten**.",
+      "_src_content_md": "В предложениях с **модальным глаголом (Modalverb)** и **смысловым глаголом (Infinitiv)** используется особый порядок слов:\n**Элемент** | **Позиция в предложении** | **Пример** |\nModalverb (спрягаемый глагол) | 2-я позиция | Ich **kann** ... |\nInfinitiv (основной глагол) | В конце предложения | ... den Raum **vorbereiten**. |",
+      "_src_note": "💡 **Разделяемые глаголы (trennbare Verben)** в предложениях с Modalverb + Infinitiv **не разделяются** и остаются в конце предложения целиком.\n**Пример:** Ich kann am Freitag den Raum **vorbereiten**.",
       "_src_title": "Порядок слов с Modalverb",
-      "content_md_en": "Sentences with a **Modalverb** and a **Infinitiv** follow a specific word order:\n**Element** |\n**Position in the sentence** |\n**Element** |\nModalverb(conjugated verb) |\n2nd position |\nIch **kann** ... |\nInfinitiv(main verb) |\nAt the end of the sentence |\n... den Raum **vorbereiten**. |\n👉 **trennbare ( Verben)** in sentences with Modalverb + Infinitiv **are not split** and remain in full at the end of the sentence.\n**Example:** Ich kann am Freitag den Raum **vorbereiten**.",
-      "date": "2026-08-27",
+      "content_md_en": "Sentences containing a **Modalverb** and a **Infinitiv** follow a specific word order:\n**Element** | **Position in the sentence** | **Example** |\nModalverb (conjugated verb) | 2nd position | Ich **kann** ... |\nInfinitiv (main verb) | At the end of the sentence | ... den Raum **vorbereiten**. |",
+      "date": "2026-09-01",
+      "noteEn": "💡 **Separable verbs (trennbare Verben)** in sentences with \"Modalverb\" + \"Infinitiv\" **are not separated** and remain at the end of the sentence as a single unit.\n**Example:** Ich kann am Freitag den Raum **vorbereiten**.",
       "source": "deepl",
       "titleEn": "Word Order with \"Modalverb\""
     },
@@ -2493,10 +2497,12 @@
       "titleEn": "sein and ihr – possessive"
     },
     "r0015": {
-      "_src_content_md": "### Partizip II: правило приставки ge-\n**Инфинитив** | **Partizip II** | **Перевод** |\nöffnen | geöffnet | открытый |\nschließen | geschlossen | закрытый |\nmachen | gemacht | сделанный |\n⚠ **ge- НЕ добавляется в двух случаях:**\n1. Глаголы с неотделяемой приставкой (be-, er-, ver-, ent-, zer-): **besuchen → besucht**, verstehen → verstanden\n2. Глаголы на **-ieren**: organisieren → **organisiert**, fotografieren → fotografiert",
+      "_src_content_md": "### Partizip II: правило приставки ge-\n**Инфинитив** | **Partizip II** | **Перевод** |\nöffnen | geöffnet | открытый |\nschließen | geschlossen | закрытый |\nmachen | gemacht | сделанный |",
+      "_src_note": "⚠ **ge- НЕ добавляется в двух случаях:**\n1. Глаголы с неотделяемой приставкой (be-, er-, ver-, ent-, zer-): **besuchen → besucht**, verstehen → verstanden\n2. Глаголы на **-ieren**: organisieren → **organisiert**, fotografieren → fotografiert",
       "_src_title": "Partizip II: правило приставки ge-",
-      "content_md_en": "### Partizip II: prefix rule ge-\n**Infinitive** | **Partizip II** | **Translation** |\nöffnen | geöffnet | open |\nschließen | geschlossen | private |\nmachen | gemacht | created |\n⚠ **\"ge-\" is NOT added in two cases:**\n1. Verbs with an inseparable prefix (be-, er-, ver-, ent-, zer-): **besuchen → besucht**, verstehen → verstanden\n2. Verbs ending in **-ieren**: organisieren → **organisiert**, fotografieren → fotografiert",
-      "date": "2026-08-27",
+      "content_md_en": "### Partizip II: prefix rule ge-\n**Infinitive** | **Partizip II** | **Translation** |\nöffnen | geöffnet | open |\nschließen | geschlossen | private |\nmachen | gemacht | created |",
+      "date": "2026-09-01",
+      "noteEn": "⚠ **\"ge-\" is NOT added in two cases:**\n1. Verbs with inseparable prefixes (be-, er-, ver-, ent-, zer-): **besuchen → besucht**, verstehen → verstanden\n2. Verbs ending in **-ieren**: organisieren → **organisiert**, fotografieren → fotografiert",
       "source": "deepl",
       "titleEn": "Partizip II: prefix rule ge-"
     },
@@ -2509,10 +2515,12 @@
       "titleEn": "gern + verb construction"
     },
     "r0017": {
-      "_src_content_md": "**Wohin?** (куда?) – вопрос о направлении движения. Используется **in + Akkusativ**.\n**Артикль** | **+ in** | **Пример** |\nder (m) | in **den** | Ich gehe **in den Park** – иду в парк |\ndas (n) | in **das** = **ins** | Ich gehe **ins Kino** – иду в кино |\ndie (f) | in **die** | Ich gehe **in die Kneipe** – иду в паб |\n💡 **in + das = ins** (слитная форма) | **in + dem = im** (для Wo? – где?)\n⚠ Различай: **Wohin?** → Akkusativ (in den, ins, in die) | **Wo?** → Dativ (im, im, in der)",
+      "_src_content_md": "**Wohin?** (куда?) – вопрос о направлении движения. Используется **in + Akkusativ**.\n**Артикль** | **+ in** | **Пример** |\nder (m) | in **den** | Ich gehe **in den Park** – иду в парк |\ndas (n) | in **das** = **ins** | Ich gehe **ins Kino** – иду в кино |\ndie (f) | in **die** | Ich gehe **in die Kneipe** – иду в паб |",
+      "_src_note": "💡 **in + das = ins** (слитная форма) | **in + dem = im** (для Wo? – где?)\n⚠ Различай: **Wohin?** → Akkusativ (in den, ins, in die) | **Wo?** → Dativ (im, im, in der)",
       "_src_title": "wohin vs wo",
-      "content_md_en": "**Wohin?** (Where to?) – a question about the direction of travel. Use **in + Akkusativ**.\n**Article** | **+ in** | **Example** |\nder(m) | in **den** | Ich gehe **in den Park** – I’m going to the park |\ndas(n) | in **das** = **ins** | Ich gehe **ins Kino** – I’m going to the movies |\ndie(f) | in **die** | Ich gehe **in die Kneipe** – I’m going to the pub |\n💡 **in + das = ins** (hyphenated form) | **in + dem = im** (for Wo? – where?)\n⚠ Distinguish between: **Wohin?** → Akkusativ (in den, ins, in die) | **Wo?** → Dativ (im, im, in der)",
-      "date": "2026-08-27",
+      "content_md_en": "**\"Wohin?\"** (Where?) – a question about the direction of travel. The following is used: **\"in + Akkusativ\"**.\n**Article** | **+ in** | **Example** |\nder (m) | in **den** | Ich gehe **in den Park** – I'm going to the park |\ndas (n) | in **das** = **ins** | Ich gehe **ins Kino** – I'm going to the movies |\ndie (f) | in **die** | Ich gehe **in die Kneipe** – I'm going to the pub |",
+      "date": "2026-09-01",
+      "noteEn": "💡 **in + das = ins** (hyphenated form) | **in + dem = im** (for Wo? – where?)\n⚠ Note the difference: **Wohin?** → Akkusativ (in den, ins, in die) | **Wo?** → Dativ (im, im, in der)",
       "source": "deepl",
       "titleEn": "wohin vs wo"
     },
@@ -2522,10 +2530,12 @@
       "titleEn": "sollen vs müssen"
     },
     "r0019": {
-      "_src_content_md": "Прилагательное в словаре стоит **без окончания** (groß, schön, nächst, gut). Но **перед существительным** оно ВСЕГДА получает окончание – зависит от рода, числа и падежа.\n📍 Две позиции прилагательного:\n**Позиция** | **Окончание** | **Пример** |\nПосле sein / werden / bleiben | ❌ нет окончания | Das Haus ist **groß** | Er bleibt **gesund** |\nПеред существительным | ✅ есть окончание | ein **großes** Haus | der **gesunde** Mann |\n📍 Окончания после **определённого артикля** (der/die/das):\n**Падеж** | **m (der)** | **f (die)** | **n (das)** | **Pl (die)** |\nNom | -e | -e | -e | -en |\nAkk | **-en** | -e | -e | -en |\nDat | -en | -en | -en | -en |\n📍 Примеры с **nächst** (следующий):\n**Падеж / Род** | **Форма** | **Перевод** |\nf, Nom/Akk | nächst**e** Woche | следующая неделя / на следующей неделе |\nm, Akk | nächst**en** Montag | в следующий понедельник |\nn, Nom/Akk | nächst**es** Jahr | следующий год |\nDat (любой род) | im nächst**en** Jahr | в следующем году |\n💡 Простое правило: **в Dativ всегда -en** | в Akk у m-рода тоже **-en** | остальное обычно **-e**\n⚠ Без артикля (неопределённый/нулевой) – окончания немного другие. Это уровень A2+, пока запомни базовый случай.",
+      "_src_content_md": "Прилагательное в словаре стоит **без окончания** (groß, schön, nächst, gut). Но **перед существительным** оно ВСЕГДА получает окончание – зависит от рода, числа и падежа.\n Две позиции прилагательного:\n**Позиция** | **Окончание** | **Пример** |\nПосле sein / werden / bleiben | ❌ нет окончания | Das Haus ist **groß** | Er bleibt **gesund** |\nПеред существительным | ✅ есть окончание | ein **großes** Haus | der **gesunde** Mann |\n Окончания после **определённого артикля** (der/die/das):\n**Падеж** | **m (der)** | **f (die)** | **n (das)** | **Pl (die)** |\nNom | -e | -e | -e | -en |\nAkk | **-en** | -e | -e | -en |\nDat | -en | -en | -en | -en |",
+      "_src_note": "💡 Простое правило: **в Dativ всегда -en** | в Akk у m-рода тоже **-en** | остальное обычно **-e**\n⚠ Без артикля (неопределённый/нулевой) – окончания немного другие. Это уровень A2+, пока запомни базовый случай.",
       "_src_title": "Прилагательное в словарной форме",
-      "content_md_en": "In the dictionary, an adjective appears **without an ending** (groß, schön, nächst, gut). However, **when used before a noun**, it ALWAYS takes an ending—which depends on gender, number, and case.\n📍 Two positions for an adjective:\n**Position** | **Ending** | **Example** |\nAfter sein / werden / bleiben | ❌ no ending | Das Haus ist **groß** | Er bleibt **gesund** |\nBefore a noun | ✅ ending present | ein **großes** Haus | der **gesunde** Mann |\n📍 Endings after **definite articles** (der / die / das):\n**Case** | **m (der)** | **f (die)** | **n (das)** | **Pl (die)** |\nNom| - e | - e | - e | - en |\nAkk | **- en** | - e | - e | - en |\nDat | - en | - en | - en | - en |\n📍 Examples from **nächst** (next):\n**Case / Gender** | **Form** | **Translation** |\nf, Nom / Akk | nächst**e** Woche | next week / next week |\nm, Akk | nächst**en** Montag | next Monday |\nn, Nom / Akk | nächst**es** Jahr | next year |\nDat (any gender) | im nächst**en** Jahr | next year |\n💡 Simple rule: **in \"Dativ\" it’s always \"en\"** | in \"Akk\" and \"m-,\" regardless of gender, it’s also **\"en\"** | the rest is usually **\"e\"**\n⚠ Without an article (indefinite/zero) – the endings are slightly different. This is A Level 2+; for now, just memorize the basic case.",
-      "date": "2026-08-27",
+      "content_md_en": "In the dictionary, the adjective appears **without an ending** (groß, schön, nächst, gut). But **when used before a noun**, it ALWAYS takes an ending—depending on gender, number, and case.\n The two uses of an adjective:\n**Position** | **Ending** | **Example** |\nAfter sein / werden / bleiben | ❌ no ending | Das Haus ist **groß** | Er bleibt **gesund** |\nBefore a noun | ✅ has an ending | ein **großes** Haus | der **gesunde** Mann |\n Endings following the **definite article** (der / die / das):\n**Case** | **m (der)** | **f (die)** | **n (das)** | **Pl (die)** |\nNom | -e | -e | -e | -en |\nAkk | **-en** | -e | -e | -en |\nDat | -en | -en | -en | -en |",
+      "date": "2026-09-01",
+      "noteEn": "💡 A simple rule: **in Dativ, it's always en** | in Akk, for m-, it's also **en** | for everything else, it's usually **e**\n⚠ Without an article (indefinite/zero) – the endings are slightly different. This is Level A 2+; for now, just memorize the basic form.",
       "source": "deepl",
       "titleEn": "Adjective in its dictionary form"
     },
@@ -2581,12 +2591,12 @@
       "titleEn": "Verben mit Dativ und Akkusativ"
     },
     "r0028": {
-      "_src_content_md": "### Artikelformen: Nominativ / Dativ / Akkusativ\n\n**bestimmter Artikel (der/die/das)**\n\n| | Nom | Dativ | Akkusativ |\n\n| m | der | dem | den |\n| f | die | der | die |\n| n | das | dem | das |\n| Pl | die | den | die |\n\n**unbestimmter Artikel (ein/eine)**\n\n| | Nom | Dativ | Akkusativ |\n\n| m | ein | einem | einen |\n| f | eine | einer | eine |\n| n | ein | einem | ein |\n| Pl | – | – | – |\n\n💡 Меняется только **m** в Akkusativ: der→den, ein→einen\n💡 Dativ **Pl** всегда: den + существительное + **-n** (den Kindern, den Männern)\n💡 unbestimmter Artikel во Pl – отсутствует",
-      "_src_note": "Nominativ – субъект (Wer?). Akkusativ – прямой объект (Wen? Was?). Dativ – косвенный объект (Wem?). Изменения: m Akk: der→den, ein→einen. Dativ Pl: +n к существительному.",
+      "_src_content_md": "### Artikelformen: Nominativ / Dativ / Akkusativ\n\n**bestimmter Artikel (der/die/das)**\n\n| | Nom | Dativ | Akkusativ |\n\n| m | der | dem | den |\n| f | die | der | die |\n| n | das | dem | das |\n| Pl | die | den | die |\n\n**unbestimmter Artikel (ein/eine)**\n\n| | Nom | Dativ | Akkusativ |\n\n| m | ein | einem | einen |\n| f | eine | einer | eine |\n| n | ein | einem | ein |\n| Pl | – | – | – |",
+      "_src_note": "Nominativ – субъект (Wer?). Akkusativ – прямой объект (Wen? Was?). Dativ – косвенный объект (Wem?). Изменения: m Akk: der→den, ein→einen. Dativ Pl: +n к существительному.\n\n💡 Меняется только **m** в Akkusativ: der→den, ein→einen\n💡 Dativ **Pl** всегда: den + существительное + **-n** (den Kindern, den Männern)\n💡 unbestimmter Artikel во Pl – отсутствует",
       "_src_title": "Artikelformen: Nom / Dativ / Akkusativ",
-      "content_md_en": "### Artikelformen: Nominativ / Dativ / Akkusativ\n\n**bestimmter Artikel (der/die/das)**\n\n| | Nom | Dativ | Akkusativ |\n\n| m | der | dem | den |\n| f | die | der | die |\n| n | das | dem | das |\n| Pl | die | den | die |\n\n**unbestimmter Artikel (ein/eine)**\n\n| | Nom | Dativ | Akkusativ |\n\n| m | ein | einem | einen |\n| f | eine | einer | eine |\n| n | ein | einem | ein |\n| Pl | – | – | – |\n\n💡 Only **m** changes in Akkusativ: der → den, ein → einen\n💡 Dativ **Pl** always follows this pattern: den + noun + **- n** (den Kindern, den Männern)\n💡 unbestimmter Artikel on Pl – not available",
-      "date": "2026-08-27",
-      "noteEn": "Nominativ – subject (Wer?). Akkusativ – direct object (Wen? Was?). Dativ – indirect object (Wem?). Changes: m Akk: der→den, ein→einen. Dativ Pl: +n to the noun.",
+      "content_md_en": "### Artikelformen: Nominativ / Dativ / Akkusativ\n\n**bestimmter Artikel (der/die/das)**\n\n| | Nom | Dativ | Akkusativ |\n\n| m | der | dem | den |\n| f | die | der | die |\n| n | das | dem | das |\n| Pl | die | den | die |\n\n**unbestimmter Artikel (ein/eine)**\n\n| | Nom | Dativ | Akkusativ |\n\n| m | ein | einem | einen |\n| f | eine | einer | eine |\n| n | ein | einem | ein |\n| Pl | – | – | – |",
+      "date": "2026-09-01",
+      "noteEn": "Nominativ – subject (Wer?). Akkusativ – direct object (Wen? Was?). Dativ – indirect object (Wem?). Changes: m Akk: der→den, ein→einen. Dativ Pl: +n to the noun.\n\n💡 Only **m** changes in Akkusativ: der→den, ein→einen\n💡 Dativ **Pl** always follows this pattern: den + noun + **- n** (den Kindern, den Männern)\n💡 unbestimmter Artikel on Pl – not available",
       "source": "deepl",
       "titleEn": "Artikelformen: Nom / Dativ / Akkusativ"
     },
@@ -2759,11 +2769,11 @@
       "titleEn": "Fugenelemente – Connectors at Komposita"
     },
     "r0053": {
-      "_src_content_md": "### Позиции в немецком предложении\nПозиция 0 – место перед первым смысловым элементом (для сочинительных союзов).\nПозиция 1 – первый смысловой элемент предложения (подлежащее или что-то другое).\nПозиция 2 – глагол (в обычном порядке) или подлежащее (при инверсии).\nПозиция 3 – конец предложения (куда уходит глагол в придаточных).\n\n### Подчинительные союзы – глагол в конец (Position 3)\nweil, da (потому что) – weil ich krank bin\ndass (что) – ich weiß, dass er kommt\nobwohl (хотя)\nwenn (если/когда)\nals (когда, однократно в прошлом)\nwährend (пока, в то время как)\nbevor (прежде чем)\nnachdem (после того как)\ndamit (чтобы)\nob (ли)\n\n### Наречия-коннекторы – инверсия (Position 2, подлежащее после глагола)\ndeshalb, deswegen, daher, darum (поэтому)\ntrotzdem (несмотря на это)\ndann (потом, тогда)\ndanach (после этого)\nsonst (иначе)\naußerdem (кроме того)\nПример: Es regnet. Deshalb bleibe ich zu Hause. – глагол bleibe идёт сразу после deshalb, подлежащее ich смещается после глагола.\n\n### Сочинительные союзы – ничего не меняют (Position 0)\naber (но)\nund (и)\noder (или)\ndenn (так как/потому что – но это НЕ weil!)\nsondern (а, но)\nПосле них порядок слов остаётся обычным, союз просто стоит перед предложением на позиции 0, не занимая позицию 1.",
+      "_src_content_md": "[sub] weil · denn · deshalb и порядок слов\n### Позиции в немецком предложении\nПозиция 0 – место перед первым смысловым элементом (для сочинительных союзов).\nПозиция 1 – первый смысловой элемент предложения (подлежащее или что-то другое).\nПозиция 2 – глагол (в обычном порядке) или подлежащее (при инверсии).\nПозиция 3 – конец предложения (куда уходит глагол в придаточных).\n### Подчинительные союзы – глагол в конец (Position 3) [collapse]\nweil, da (потому что) – weil ich krank bin\ndass (что) – ich weiß, dass er kommt\nobwohl (хотя)\nwenn (если/когда)\nals (когда, однократно в прошлом)\nwährend (пока, в то время как)\nbevor (прежде чем)\nnachdem (после того как)\ndamit (чтобы)\nob (ли)\n### Наречия-коннекторы – инверсия (Position 2, подлежащее после глагола) [collapse]\ndeshalb, deswegen, daher, darum (поэтому)\ntrotzdem (несмотря на это)\ndann (потом, тогда)\ndanach (после этого)\nsonst (иначе)\naußerdem (кроме того)\nПример: Es regnet. Deshalb bleibe ich zu Hause. – глагол bleibe идёт сразу после deshalb, подлежащее ich смещается после глагола.\n### Сочинительные союзы – ничего не меняют (Position 0) [collapse]\naber (но)\nund (и)\noder (или)\ndenn (так как/потому что – но это НЕ weil!)\nsondern (а, но)\nПосле них порядок слов остаётся обычным, союз просто стоит перед предложением на позиции 0, не занимая позицию 1.",
       "_src_note": "см. также r0054 (um...zu vs damit) - это разбор, когда выбирать какую конструкцию с damit",
       "_src_title": "Позиции в предложении: союзы и порядок слов (Weil vs Denn vs Deshalb)",
-      "content_md_en": "### Word Order in German Sentences\nPosition 0—the spot before the first semantic element (for coordinating conjunctions).\nPosition 1 – the first semantic element of the sentence (the subject or something else).\nPosition 2 – verb (in the usual order) or subject (in inversion).\nPosition 3 – the end of the sentence (where the verb goes in subordinate clauses).\n\n### Subordinating Conjunctions – Verb at the End (Position 3)\nweil, da (because) – weil ich krank bin\ndass (that) – ich weiß, dass er kommt\nobwohl (although)\nwenn (if/when)\nals (when, once in the past)\nwährend (for now, while)\nbevor (before)\nnachdem (after)\ndamit (so that)\nob (li)\n\n### Connective adverbs – inversion (Position 2, subject after the verb)\ndeshalb, deswegen, daher, darum (therefore)\ntrotzdem (despite this)\ndann (later, then)\ndanach (after that)\nsonst (otherwise)\naußerdem (in addition)\nExample: Es regnet. Deshalb bleibe ich zu Hause. – The verb bleibe comes immediately after deshalb, and the subject ich is placed after the verb.\n\n### Coordinating Conjunctions—They Don't Change a Thing (Position 0)\naber (but)\nund (i)\noder (or)\ndenn (since/because—but this is NOT \"weil\"!)\nsondern (ah, but)\nAfter these, the word order remains normal; the conjunction simply appears at position 0 in the sentence, without occupying position 1.",
-      "date": "2026-08-27",
+      "content_md_en": "[sub] weil · denn · deshalb and word order\n### Word Order in German Sentences\nPosition 0—the spot before the first semantic element (for coordinating conjunctions).\nPosition 1 – the first semantic element of the sentence (the subject or something else).\nPosition 2 – verb (in the usual order) or subject (in inversion).\nPosition 3 – the end of the sentence (where the verb goes in subordinate clauses).\n### Subordinating Conjunctions – Verb at the End (Position 3) [collapse]\nweil, da (because) – weil ich krank bin\ndass (that) – ich weiß, dass er kommt\nobwohl (although)\nwenn (if/when)\nals (when, once in the past)\nwährend (for now, while)\nbevor (before)\nnachdem (after)\ndamit (so that)\nob (li)\n### Connective adverbs – inversion (Position 2, subject after the verb) [collapse]\ndeshalb, deswegen, daher, darum (therefore)\ntrotzdem (despite this)\ndann (later, then)\ndanach (after that)\nsonst (otherwise)\naußerdem (in addition)\nExample: Es regnet. Deshalb bleibe ich zu Hause. – The verb bleibe comes immediately after deshalb, and the subject ich is placed after the verb.\n### Coordinating Conjunctions—They Don’t Change a Thing (Position 0) [collapse]\naber (but)\nund (i)\noder (or)\ndenn (since/because—but this is NOT weil!)\nsondern (ah, but)\nAfter these, word order remains normal; the conjunction simply appears at position 0 at the beginning of the sentence, without occupying position 1.",
+      "date": "2026-09-01",
       "noteEn": "See also r 0054 (um... zu vs damit) — this is a discussion on how to choose the right design from damit",
       "source": "deepl",
       "titleEn": "Sentence Structure: Conjunctions and Word Order (Weil vs Denn vs Deshalb)"
@@ -3465,7 +3475,7 @@
     "0405905f097a9896": {
       "altEn": "after all",
       "altEnSource": "manual",
-      "date": "2026-08-30",
+      "date": "2026-09-01",
       "de": "schließlich",
       "en": "finally",
       "source": "manual"
@@ -3637,7 +3647,7 @@
       "source": "deepl"
     },
     "088a86074271d947": {
-      "date": "2026-08-30",
+      "date": "2026-09-01",
       "de": "Schadenssumme",
       "en": "amount of damages",
       "source": "manual"
@@ -3728,7 +3738,7 @@
     },
     "097ba3d3d2026d08": {
       "_src_note": "субстантивированное прилагательное, в перечнях без артикля",
-      "date": "2026-08-30",
+      "date": "2026-09-01",
       "de": "Digitales",
       "en": "digital matters",
       "noteEn": "a nominalised adjective, used without an article in lists",
@@ -3800,7 +3810,7 @@
       "source": "deepl"
     },
     "0ab8f937023e255d": {
-      "date": "2026-08-30",
+      "date": "2026-09-01",
       "de": "seither",
       "en": "since then",
       "source": "manual"
@@ -3912,7 +3922,7 @@
       "source": "deepl"
     },
     "0c297383748cf8db": {
-      "date": "2026-08-30",
+      "date": "2026-09-01",
       "de": "Verbraucherthema",
       "en": "consumer issue",
       "source": "manual"
@@ -3953,7 +3963,7 @@
       "_src_note": "eine Versicherung / einen Vertrag abschließen – заключить страховку / договор",
       "altEn": "to take out (insurance), to sign (a contract)",
       "altEnSource": "manual",
-      "date": "2026-08-30",
+      "date": "2026-09-01",
       "de": "abschließen",
       "en": "to lock",
       "noteEn": "eine Versicherung / einen Vertrag abschließen – to take out insurance / to sign a contract",
@@ -4160,7 +4170,7 @@
     },
     "0f1e18b90dd4f10f": {
       "_src_note": "разговорное сокращение от Haftpflichtversicherung",
-      "date": "2026-08-30",
+      "date": "2026-09-01",
       "de": "Haftpflicht",
       "en": "personal liability",
       "noteEn": "short for Haftpflichtversicherung",
@@ -4233,7 +4243,7 @@
       "_src_altEn": "нечаянно",
       "altEn": "unintentionally",
       "altEnSource": "deepl-ru",
-      "date": "2026-08-30",
+      "date": "2026-09-01",
       "de": "aus Versehen",
       "en": "by mistake",
       "source": "manual"
@@ -4347,7 +4357,7 @@
       "source": "deepl"
     },
     "1395e6f3bfe79cb8": {
-      "date": "2026-08-30",
+      "date": "2026-09-01",
       "de": "den Versicherungsbeitrag per Überweisung zahlen",
       "en": "to pay the insurance premium by bank transfer",
       "source": "manual"
@@ -4453,7 +4463,7 @@
     },
     "15306aabaf6e238c": {
       "_src_note": "die Versicherung gilt ab / für – страховка действует с / для",
-      "date": "2026-08-30",
+      "date": "2026-09-01",
       "de": "gelten",
       "en": "to be valid",
       "noteEn": "die Versicherung gilt ab / für – the policy is valid from / for",
@@ -4505,7 +4515,7 @@
       "_src_altEn": "требование",
       "altEn": "claim",
       "altEnSource": "deepl-ru",
-      "date": "2026-08-30",
+      "date": "2026-09-01",
       "de": "Anspruch",
       "en": "claim",
       "source": "manual"
@@ -4750,7 +4760,7 @@
       "verdict": "ok"
     },
     "18f00310fe7ec3d1": {
-      "date": "2026-08-30",
+      "date": "2026-09-01",
       "de": "Verbraucherzentrale",
       "en": "consumer advice centre",
       "source": "manual"
@@ -5007,7 +5017,7 @@
     "1c785a31bc5e53b0": {
       "altEn": "plan",
       "altEnSource": "manual",
-      "date": "2026-08-30",
+      "date": "2026-09-01",
       "de": "Tarif",
       "en": "rate",
       "source": "manual"
@@ -5045,7 +5055,7 @@
     "1ce1b1446b533cbf": {
       "altEn": "viewing",
       "altEnSource": "manual",
-      "date": "2026-08-30",
+      "date": "2026-09-01",
       "de": "Besichtigung",
       "en": "tour",
       "source": "manual"
@@ -5136,7 +5146,7 @@
       "_src_altEn": "застраховать",
       "altEn": "to insure",
       "altEnSource": "deepl-ru",
-      "date": "2026-08-30",
+      "date": "2026-09-01",
       "de": "absichern",
       "en": "to safeguard",
       "source": "manual"
@@ -5526,7 +5536,7 @@
       "_src_note": "наречие «точно»: Das ist bestimmt richtig | прилагательное «определённый»: bestimmte Produkte",
       "altEn": "certain",
       "altEnSource": "manual",
-      "date": "2026-08-30",
+      "date": "2026-09-01",
       "de": "bestimmt",
       "en": "definitely",
       "noteEn": "adverb: Das ist bestimmt richtig | adjective: bestimmte Produkte",
@@ -5956,7 +5966,7 @@
       "_src_note": "о столике",
       "altEn": "occupied",
       "altEnSource": "manual",
-      "date": "2026-08-30",
+      "date": "2026-09-01",
       "de": "Frei",
       "en": "free",
       "noteEn": "About the table",
@@ -6050,7 +6060,7 @@
       "source": "deepl"
     },
     "2d7b0a96c86d5809": {
-      "date": "2026-08-30",
+      "date": "2026-09-01",
       "de": "wegen Krankheit vorzeitig beenden",
       "en": "to end early due to illness",
       "source": "manual"
@@ -6145,7 +6155,7 @@
     },
     "2f6ce7e4a73ad113": {
       "_src_note": "синоним Vorstellungsgespräch",
-      "date": "2026-08-30",
+      "date": "2026-09-01",
       "de": "Bewerbungsgespräch",
       "en": "job interview",
       "noteEn": "same as Vorstellungsgespräch",
@@ -6779,7 +6789,7 @@
       "_src_altEn": "увольняться",
       "altEn": "to resign",
       "altEnSource": "manual",
-      "date": "2026-08-30",
+      "date": "2026-09-01",
       "de": "kündigen",
       "en": "to terminate",
       "source": "manual"
@@ -6929,7 +6939,7 @@
       "altEn": "amount",
       "altEnSource": "manual",
       "backtranslation": "Höhe",
-      "date": "2026-08-30",
+      "date": "2026-09-01",
       "de": "Höhe",
       "en": "height",
       "noteEn": "↔ Breite, Tiefe | die Höhe des Beitrags – the amount of the contribution",
@@ -7168,7 +7178,7 @@
     },
     "3ed2b27b903b0be7": {
       "_src_note": "sich ernähren von + Dativ",
-      "date": "2026-08-30",
+      "date": "2026-09-01",
       "de": "ernähren",
       "en": "to eat",
       "noteEn": "sich ernähren von + Dativ – to live on",
@@ -7256,7 +7266,7 @@
       "source": "deepl"
     },
     "401b40500162e443": {
-      "date": "2026-08-30",
+      "date": "2026-09-01",
       "de": "einfahren",
       "en": "to drive in",
       "source": "manual"
@@ -7422,7 +7432,7 @@
       "source": "deepl"
     },
     "42249483903cefeb": {
-      "date": "2026-08-30",
+      "date": "2026-09-01",
       "de": "folgend",
       "en": "following",
       "source": "manual"
@@ -7555,7 +7565,7 @@
       "_src_note": "на сленге может означать употребление наркотиков - трактовка зависит от контекста",
       "altEn": "to use in doses",
       "altEnSource": "manual",
-      "date": "2026-08-30",
+      "date": "2026-09-01",
       "de": "Teile konsumieren",
       "en": "to use (drugs)",
       "noteEn": "slang; may refer to drug use – depends on context",
@@ -7741,7 +7751,7 @@
       "source": "deepl"
     },
     "471d0acfadd2f111": {
-      "date": "2026-08-30",
+      "date": "2026-09-01",
       "de": "Essverhalten",
       "en": "eating behaviour",
       "source": "manual"
@@ -7815,7 +7825,7 @@
       "_src_altEn": "увеличиваться",
       "altEn": "to increase",
       "altEnSource": "manual",
-      "date": "2026-08-30",
+      "date": "2026-09-01",
       "de": "zunehmen",
       "en": "to gain weight",
       "source": "manual"
@@ -7973,7 +7983,7 @@
     "4aec861937e3c809": {
       "altEn": "over it",
       "altEnSource": "manual",
-      "date": "2026-08-30",
+      "date": "2026-09-01",
       "de": "darüber",
       "en": "about it",
       "source": "manual"
@@ -8144,7 +8154,7 @@
       "_src_note": "befreit von + Dativ – освобождён от",
       "altEn": "to exempt",
       "altEnSource": "manual",
-      "date": "2026-08-30",
+      "date": "2026-09-01",
       "de": "befreien",
       "en": "to free",
       "noteEn": "befreit von + Dativ – exempt from",
@@ -8366,7 +8376,7 @@
       "source": "deepl"
     },
     "4ff9d83e745586b9": {
-      "date": "2026-08-30",
+      "date": "2026-09-01",
       "de": "Lastschrift",
       "en": "direct debit",
       "source": "manual"
@@ -8578,7 +8588,7 @@
       "verdict": "ok"
     },
     "53978fb479ead86a": {
-      "date": "2026-08-30",
+      "date": "2026-09-01",
       "de": "einschließen",
       "en": "to include",
       "source": "manual"
@@ -8633,7 +8643,7 @@
       "_src_note": "sich um + Akkusativ: Es handelt sich um einen Fehler | von + Dativ (о книге, фильме): Das Buch handelt von der Liebe",
       "altEn": "it concerns",
       "altEnSource": "manual",
-      "date": "2026-08-30",
+      "date": "2026-09-01",
       "de": "es handelt sich um",
       "en": "it is about",
       "noteEn": "sich um + Akkusativ: Es handelt sich um einen Fehler | von + Dativ (a book, a film): Das Buch handelt von der Liebe",
@@ -8722,7 +8732,7 @@
       "_src_note": "sich engagieren für + Akkusativ",
       "altEn": "to invest",
       "altEnSource": "deepl-ru",
-      "date": "2026-08-30",
+      "date": "2026-09-01",
       "de": "engagieren",
       "en": "to get involved",
       "noteEn": "sich engagieren für + Akkusativ",
@@ -8831,13 +8841,13 @@
       "_src_altEn": "причинять",
       "altEn": "to cause",
       "altEnSource": "deepl-ru",
-      "date": "2026-08-30",
+      "date": "2026-09-01",
       "de": "verursachen",
       "en": "to cause",
       "source": "manual"
     },
     "57e4a40b9e2a30d9": {
-      "date": "2026-08-30",
+      "date": "2026-09-01",
       "de": "mitversichert",
       "en": "covered by the same policy",
       "source": "manual"
@@ -8932,7 +8942,7 @@
       "altEn": "doctor's office",
       "altEnSource": "manual",
       "backtranslation": "die Praxis",
-      "date": "2026-08-30",
+      "date": "2026-09-01",
       "de": "Praxis",
       "en": "practice",
       "source": "manual"
@@ -8968,7 +8978,7 @@
     "5a44da9432843fe8": {
       "altEn": "now and then",
       "altEnSource": "manual",
-      "date": "2026-08-30",
+      "date": "2026-09-01",
       "de": "zwischendurch",
       "en": "in between",
       "source": "manual"
@@ -9085,7 +9095,7 @@
       "source": "deepl"
     },
     "5d2ab54d9a5a413d": {
-      "date": "2026-08-30",
+      "date": "2026-09-01",
       "de": "Wolke",
       "en": "cloud",
       "source": "manual"
@@ -9829,7 +9839,7 @@
       "source": "deepl"
     },
     "68664d6058c3b0e2": {
-      "date": "2026-08-30",
+      "date": "2026-09-01",
       "de": "Einzelreise",
       "en": "individual trip",
       "source": "manual"
@@ -9995,7 +10005,7 @@
       "_src_note": "es handelt sich um – речь идёт о (см. фразы)",
       "altEn": "to trade",
       "altEnSource": "manual",
-      "date": "2026-08-30",
+      "date": "2026-09-01",
       "de": "handeln",
       "en": "to act",
       "noteEn": "es handelt sich um – this refers to (see phrases)",
@@ -10591,7 +10601,7 @@
       "_src_note": "зависит от падежа",
       "altEn": "both",
       "altEnSource": "deepl",
-      "date": "2026-08-30",
+      "date": "2026-09-01",
       "de": "beide",
       "en": "both",
       "noteEn": "depends on the case",
@@ -10600,7 +10610,7 @@
     "742cacb5e638662e": {
       "altEn": "adviser",
       "altEnSource": "manual",
-      "date": "2026-08-30",
+      "date": "2026-09-01",
       "de": "Ratgeber",
       "en": "guide",
       "source": "manual"
@@ -11033,7 +11043,7 @@
     "7ae3aa725c656bb3": {
       "altEn": "law",
       "altEnSource": "manual",
-      "date": "2026-08-30",
+      "date": "2026-09-01",
       "de": "Recht",
       "en": "right",
       "source": "manual"
@@ -11323,7 +11333,7 @@
       "source": "deepl"
     },
     "7f4c862a5d2cdd22": {
-      "date": "2026-08-30",
+      "date": "2026-09-01",
       "de": "Es lohnt sich nicht",
       "en": "It's not worth it",
       "source": "manual"
@@ -11621,7 +11631,7 @@
     "853ded54c14695e6": {
       "altEn": "credit",
       "altEnSource": "manual",
-      "date": "2026-08-30",
+      "date": "2026-09-01",
       "de": "Kredit",
       "en": "loan",
       "source": "manual"
@@ -12379,7 +12389,7 @@
       "_src_altEn": "изменять",
       "altEn": "to change",
       "altEnSource": "deepl-ru",
-      "date": "2026-08-30",
+      "date": "2026-09-01",
       "de": "ändern",
       "en": "to change",
       "source": "manual"
@@ -12634,7 +12644,7 @@
       "source": "deepl"
     },
     "9575033844413be0": {
-      "date": "2026-08-30",
+      "date": "2026-09-01",
       "de": "verärgert",
       "en": "annoyed",
       "source": "manual"
@@ -12849,7 +12859,7 @@
       "source": "deepl"
     },
     "997b1379518ccc83": {
-      "date": "2026-08-30",
+      "date": "2026-09-01",
       "de": "Versicherungsbeitrag",
       "en": "insurance premium",
       "source": "manual"
@@ -13328,7 +13338,7 @@
     "a28f200e4625a9af": {
       "altEn": "barely enough",
       "altEnSource": "manual",
-      "date": "2026-08-30",
+      "date": "2026-09-01",
       "de": "knapp",
       "en": "tight",
       "source": "manual"
@@ -13612,7 +13622,7 @@
       "verdict": "ok"
     },
     "a722ce7050e4e9e1": {
-      "date": "2026-08-30",
+      "date": "2026-09-01",
       "de": "Haar",
       "en": "hair",
       "source": "manual"
@@ -14044,7 +14054,7 @@
     "adb4adb1dcaf0759": {
       "altEn": "one-time",
       "altEnSource": "manual",
-      "date": "2026-08-30",
+      "date": "2026-09-01",
       "de": "einmalig",
       "en": "one-off",
       "source": "manual"
@@ -14078,7 +14088,7 @@
       "source": "deepl"
     },
     "ae24c3f848e45b2e": {
-      "date": "2026-08-30",
+      "date": "2026-09-01",
       "de": "Paketbotin",
       "en": "parcel courier",
       "noteEn": "female form of Paketbote",
@@ -14191,7 +14201,7 @@
       "verdict": "ok"
     },
     "b05046ae2b7970db": {
-      "date": "2026-08-30",
+      "date": "2026-09-01",
       "de": "Essgewohnheit",
       "en": "eating habit",
       "source": "manual"
@@ -14239,7 +14249,7 @@
       "source": "deepl"
     },
     "b1a2aa37d13954cf": {
-      "date": "2026-08-30",
+      "date": "2026-09-01",
       "de": "Frischhaltedose",
       "en": "food storage container",
       "source": "manual"
@@ -14406,7 +14416,7 @@
       "_src_altEn": "трапеза",
       "altEn": "meal",
       "altEnSource": "deepl-ru",
-      "date": "2026-08-30",
+      "date": "2026-09-01",
       "de": "Mahlzeit",
       "en": "meal",
       "source": "manual"
@@ -14674,7 +14684,7 @@
       "source": "deepl"
     },
     "b81f0d5b85a95021": {
-      "date": "2026-08-30",
+      "date": "2026-09-01",
       "de": "Einzelperson",
       "en": "individual",
       "source": "manual"
@@ -14783,7 +14793,7 @@
     },
     "ba0c9df29d5840a3": {
       "_src_note": "круглые десятки от 20: zwanzig, vierzig…",
-      "date": "2026-08-30",
+      "date": "2026-09-01",
       "de": "…zig",
       "en": "-ty",
       "noteEn": "the suffix in zwanzig, dreißig — like English -ty in twenty, thirty",
@@ -15214,7 +15224,7 @@
     "bf991869fcc35145": {
       "altEn": "event",
       "altEnSource": "manual",
-      "date": "2026-08-30",
+      "date": "2026-09-01",
       "de": "Aktion",
       "en": "campaign",
       "source": "manual"
@@ -15327,7 +15337,7 @@
       "source": "deepl"
     },
     "c1212f541b6753b1": {
-      "date": "2026-08-30",
+      "date": "2026-09-01",
       "de": "hingehen",
       "en": "to go there",
       "source": "manual"
@@ -15462,7 +15472,7 @@
       "source": "deepl"
     },
     "c3851cf9e18681ff": {
-      "date": "2026-08-30",
+      "date": "2026-09-01",
       "de": "hierlassen",
       "en": "to leave here",
       "source": "manual"
@@ -15806,7 +15816,7 @@
     "ca6c400710714caa": {
       "altEn": "field",
       "altEnSource": "manual",
-      "date": "2026-08-30",
+      "date": "2026-09-01",
       "de": "Bereich",
       "en": "area",
       "source": "manual"
@@ -15815,7 +15825,7 @@
       "_src_altEn": "обжечь",
       "altEn": "to scorch",
       "altEnSource": "deepl-ru",
-      "date": "2026-08-30",
+      "date": "2026-09-01",
       "de": "verbrennen",
       "en": "to burn",
       "source": "manual"
@@ -16309,7 +16319,7 @@
       "_src_altEn": "Maklerin",
       "altEn": "agent",
       "altEnSource": "manual",
-      "date": "2026-08-30",
+      "date": "2026-09-01",
       "de": "Makler",
       "en": "broker",
       "source": "manual"
@@ -16413,7 +16423,7 @@
       "_src_altEn": "пораниться",
       "altEn": "to hurt oneself",
       "altEnSource": "manual",
-      "date": "2026-08-30",
+      "date": "2026-09-01",
       "de": "verletzen",
       "en": "to injure",
       "source": "manual"
@@ -16427,7 +16437,7 @@
       "source": "deepl"
     },
     "d443b25cbad9c0ac": {
-      "date": "2026-08-30",
+      "date": "2026-09-01",
       "de": "voraussichtlich",
       "en": "presumably",
       "source": "manual"
@@ -16572,7 +16582,7 @@
     },
     "d7797d12380b1757": {
       "_src_note": "разговорное",
-      "date": "2026-08-30",
+      "date": "2026-09-01",
       "de": "dann kein",
       "en": "then no",
       "noteEn": "colloquial",
@@ -17122,7 +17132,7 @@
     "dfa082c2db5822d9": {
       "altEn": "after that",
       "altEnSource": "manual",
-      "date": "2026-08-30",
+      "date": "2026-09-01",
       "de": "darauf",
       "en": "on it",
       "source": "manual"
@@ -17153,7 +17163,7 @@
     },
     "dfcf7fe18eb69239": {
       "_src_note": "употребляется безлично: es lohnt sich / es lohnt sich nicht",
-      "date": "2026-08-30",
+      "date": "2026-09-01",
       "de": "lohnen",
       "en": "to be worth it",
       "noteEn": "used impersonally: es lohnt sich / es lohnt sich nicht",
@@ -17424,7 +17434,7 @@
       "source": "deepl"
     },
     "e4245547de468b6b": {
-      "date": "2026-08-30",
+      "date": "2026-09-01",
       "de": "Schokoriegel",
       "en": "chocolate bar",
       "source": "manual"
@@ -17511,7 +17521,7 @@
       "source": "deepl"
     },
     "e51ebcb1ccaa24ab": {
-      "date": "2026-08-30",
+      "date": "2026-09-01",
       "de": "Überweisung",
       "en": "bank transfer",
       "source": "manual"
@@ -17855,7 +17865,7 @@
       "verdict": "ok"
     },
     "eaacb7ad1e8ec784": {
-      "date": "2026-08-30",
+      "date": "2026-09-01",
       "de": "mit anderen zusammen",
       "en": "together with others",
       "source": "manual"
@@ -17903,7 +17913,7 @@
       "source": "deepl"
     },
     "eb58b681b03a2e0a": {
-      "date": "2026-08-30",
+      "date": "2026-09-01",
       "de": "Drittel",
       "en": "third",
       "source": "manual"
@@ -17969,7 +17979,7 @@
       "source": "deepl"
     },
     "ec251f1ff2bb9e78": {
-      "date": "2026-08-30",
+      "date": "2026-09-01",
       "de": "gestresst",
       "en": "stressed",
       "source": "manual"
@@ -18057,7 +18067,7 @@
       "source": "deepl"
     },
     "ed6bb59614208670": {
-      "date": "2026-08-30",
+      "date": "2026-09-01",
       "de": "Nussecke",
       "en": "nut triangle",
       "noteEn": "a German pastry",
@@ -18121,7 +18131,7 @@
       "verdict": "ok"
     },
     "ee36c0013270cc0b": {
-      "date": "2026-08-30",
+      "date": "2026-09-01",
       "de": "Ding",
       "en": "thing",
       "source": "manual"
@@ -18482,13 +18492,13 @@
       "source": "deepl"
     },
     "f2628188fee626ed": {
-      "date": "2026-08-30",
+      "date": "2026-09-01",
       "de": "berufstätig",
       "en": "employed",
       "source": "manual"
     },
     "f299feec2fcacd26": {
-      "date": "2026-08-30",
+      "date": "2026-09-01",
       "de": "zufügen",
       "en": "to inflict",
       "source": "manual"
@@ -18506,7 +18516,7 @@
       "_src_altEn": "рухнуть",
       "altEn": "to collapse",
       "altEnSource": "deepl-ru",
-      "date": "2026-08-30",
+      "date": "2026-09-01",
       "de": "stürzen",
       "en": "to fall",
       "source": "manual"
@@ -18614,7 +18624,7 @@
       "_src_altEn": "nächst-",
       "altEn": "next-",
       "altEnSource": "deepl",
-      "date": "2026-08-30",
+      "date": "2026-09-01",
       "de": "nächste",
       "en": "next",
       "noteEn": "superlative of nah (near) | declines: nächste Woche (f) | nächsten Montag (m, Akk) | im nächsten Jahr (Dat) | see the rule on Adjektivdeklination",
@@ -18747,7 +18757,7 @@
       "verdict": "ok"
     },
     "f64209bd3ed62f2a": {
-      "date": "2026-08-30",
+      "date": "2026-09-01",
       "de": "Fastfood",
       "en": "fast food",
       "source": "manual"
@@ -19080,7 +19090,7 @@
       "source": "deepl"
     },
     "fb10387e26a644e8": {
-      "date": "2026-08-30",
+      "date": "2026-09-01",
       "de": "Beratungsstelle",
       "en": "advice centre",
       "source": "manual"
@@ -19125,14 +19135,14 @@
       "_src_altEn": "Versicherungsvertreterin",
       "altEn": "female insurance agent",
       "altEnSource": "deepl",
-      "date": "2026-08-30",
+      "date": "2026-09-01",
       "de": "Versicherungsvertreter",
       "en": "insurance agent",
       "source": "manual"
     },
     "fb64d728fb6d4193": {
       "_src_note": "auswärts essen – есть не дома",
-      "date": "2026-08-30",
+      "date": "2026-09-01",
       "de": "auswärts",
       "en": "away from home",
       "noteEn": "auswärts essen – to eat out",
@@ -19148,7 +19158,7 @@
       "verdict": "ok"
     },
     "fb9778d6365d31b1": {
-      "date": "2026-08-30",
+      "date": "2026-09-01",
       "de": "Institution",
       "en": "institution",
       "source": "manual"
@@ -19248,7 +19258,7 @@
       "_src_note": "jeder (m) / jede (f) / jedes (n) — склоняется как der/die/das",
       "altEn": "every",
       "altEnSource": "deepl",
-      "date": "2026-08-30",
+      "date": "2026-09-01",
       "de": "jeder",
       "en": "every",
       "noteEn": "jeder (m) / jede (f) / jedes (n) — inflected as der / die / das",

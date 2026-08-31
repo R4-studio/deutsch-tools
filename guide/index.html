@@ -1,0 +1,360 @@
+<!DOCTYPE html>
+<html lang="ru"><head><meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Разметка правил — Deutsch Tools</title>
+<meta name="robots" content="noindex">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>📝</text></svg>">
+<script>
+// Тема — общая с сайтом (тот же origin, тот же localStorage.theme: auto|dark|light)
+(function () {
+  var want = localStorage.getItem('theme') || 'auto';
+  var resolved = want;
+  if (want === 'auto') {
+    resolved = (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) ? 'dark' : 'light';
+  }
+  document.documentElement.classList.add('theme-' + resolved);
+})();
+</script>
+<style>
+  :root {
+    --bg: #fafafa;
+    --surface: #f4f4f5;
+    --text: #26262a;
+    --muted: #6a6a72;
+    --border: #e3e3e6;
+    --cyan: #0b91b2;
+    --red: #d3184a;
+    --amber: #b9760a;
+    --green: #0b7a40;
+    --code-bg: #f2f2f3;
+  }
+  html.theme-dark {
+    --bg: #0e0e0e;
+    --surface: #171717;
+    --text: #f2f2f2;
+    --muted: #a1a1a6;
+    --border: #2a2a2a;
+    --cyan: #23b4db;
+    --red: #ee4163;
+    --amber: #f39b00;
+    --green: #8beea8;
+    --code-bg: #131313;
+  }
+  @media (prefers-color-scheme: dark) {
+    html:not(.theme-light) {
+      --bg: #0e0e0e;
+      --surface: #171717;
+      --text: #f2f2f2;
+      --muted: #a1a1a6;
+      --border: #2a2a2a;
+      --cyan: #23b4db;
+      --red: #ee4163;
+      --amber: #f39b00;
+      --green: #8beea8;
+      --code-bg: #131313;
+    }
+  }
+
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    background: var(--bg);
+    color: var(--text);
+    font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+    font-size: 15px;
+    line-height: 1.62;
+    -webkit-font-smoothing: antialiased;
+  }
+  .mono { font-family: ui-monospace, "SF Mono", "JetBrains Mono", Menlo, Consolas, "Liberation Mono", monospace; }
+  .wrap { max-width: 760px; margin: 0 auto; padding: 56px 24px 120px; }
+
+  header { margin-bottom: 44px; }
+  .kicker {
+    font-family: ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+    font-size: 12px; letter-spacing: .08em; text-transform: uppercase;
+    color: var(--cyan); margin: 0 0 12px;
+  }
+  h1 { font-size: 30px; line-height: 1.15; margin: 0 0 14px; letter-spacing: -0.02em; }
+  .lede { color: var(--muted); font-size: 15.5px; margin: 0; max-width: 60ch; }
+
+  .meta {
+    display: grid; grid-template-columns: max-content 1fr; gap: 4px 16px;
+    margin: 26px 0 0; padding: 16px 18px;
+    background: var(--surface); border: 1px solid var(--border); border-radius: 12px;
+    font-size: 13.5px;
+  }
+  .meta dt { color: var(--muted); }
+  .meta dd { margin: 0; }
+
+  nav.toc {
+    margin: 34px 0 0; padding: 0; list-style: none;
+    columns: 2; column-gap: 28px;
+    font-size: 13.5px;
+  }
+  @media (max-width: 560px) { nav.toc { columns: 1; } }
+  nav.toc a {
+    display: block; padding: 5px 0; color: var(--text); text-decoration: none;
+  }
+  nav.toc a:hover { color: var(--cyan); }
+  nav.toc a b {
+    font-family: ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+    color: var(--muted); font-weight: 600; margin-right: 9px; font-size: 12px;
+  }
+
+  section { margin-top: 52px; scroll-margin-top: 24px; }
+  h2 {
+    font-size: 20px; letter-spacing: -0.01em; margin: 0 0 18px;
+    padding-bottom: 10px; border-bottom: 1px solid var(--border);
+    display: flex; align-items: baseline; gap: 12px;
+  }
+  h2 .n {
+    font-family: ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+    font-size: 13px; font-weight: 600; color: var(--cyan);
+  }
+  h3 { font-size: 15.5px; margin: 30px 0 10px; }
+  h3 code { font-size: 14px; }
+  p { margin: 12px 0; }
+  p code, li code, td code, dd code {
+    font-family: ui-monospace, "SF Mono", Menlo, Consolas, "Liberation Mono", monospace;
+    font-size: .86em; background: var(--code-bg); border: 1px solid var(--border);
+    padding: 1px 5px; border-radius: 5px; white-space: nowrap;
+  }
+  a { color: var(--cyan); }
+  strong { font-weight: 650; }
+
+  pre {
+    margin: 14px 0; padding: 15px 16px;
+    background: var(--code-bg); border: 1px solid var(--border); border-radius: 10px;
+    overflow-x: auto;
+    font-family: ui-monospace, "SF Mono", Menlo, Consolas, "Liberation Mono", monospace;
+    font-size: 12.75px; line-height: 1.6; color: var(--text);
+  }
+  pre .c { color: var(--muted); }
+  pre .m { color: var(--cyan); font-weight: 600; }
+  pre .b { color: var(--text); font-weight: 700; }
+
+  .table-scroll { overflow-x: auto; margin: 16px 0; border: 1px solid var(--border); border-radius: 10px; }
+  table { border-collapse: collapse; width: 100%; font-size: 13.5px; }
+  th, td { text-align: left; padding: 9px 14px; border-bottom: 1px solid var(--border); vertical-align: top; }
+  thead th { background: var(--surface); font-weight: 650; white-space: nowrap; }
+  tbody tr:last-child td { border-bottom: none; }
+
+  ul, ol { margin: 12px 0; padding-left: 22px; }
+  li { margin: 6px 0; }
+
+  .callout {
+    margin: 16px 0; padding: 12px 16px;
+    background: var(--surface); border-radius: 8px;
+    border-left: 3px solid var(--border);
+    font-size: 13.5px;
+  }
+  .callout.warn { border-left-color: var(--red); }
+  .callout .lbl {
+    font-family: ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+    font-size: 11px; letter-spacing: .06em; text-transform: uppercase;
+    display: block; margin-bottom: 3px; color: var(--red);
+  }
+
+  .swatch {
+    display: inline-block; width: 10px; height: 10px; border-radius: 3px;
+    vertical-align: middle; margin-right: 7px;
+  }
+  footer {
+    margin-top: 70px; padding-top: 20px; border-top: 1px solid var(--border);
+    color: var(--muted); font-size: 13px;
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+<header>
+  <p class="kicker">Deutsch Tools · Справочник</p>
+  <h1>Разметка правил под карточный вид</h1>
+  <p class="lede">Как писать правило в <code>database.xlsx</code>, чтобы оно рендерилось карточкой с чек-листами, развилками и раскрывашками — а не плоским текстом.</p>
+  <dl class="meta">
+    <dt>Для кого</dt><dd>тот, кто ведёт лист <code>rules</code> в <code>database.xlsx</code></dd>
+    <dt>Когда</dt><dd>при добавлении нового правила или переработке старого</dd>
+    <dt>Где</dt><dd>одна ячейка — колонка <code>content_md</code>. Новых колонок нет</dd>
+    <dt>Без маркеров</dt><dd>рендерится чистой карточкой: шапка → абзацы → таблицы → плашка. Ничего не ломается</dd>
+  </dl>
+</header>
+
+<nav class="toc">
+  <a href="#anatomy"><b>1</b>Что рисует карточку</a>
+  <a href="#markers"><b>2</b>Маркеры разметки</a>
+  <a href="#tables"><b>3</b>Таблицы</a>
+  <a href="#hints"><b>4</b>Подсказки 💡 / ⚠</a>
+  <a href="#fields"><b>5</b>Поля рядом с content_md</a>
+  <a href="#inline"><b>6</b>Инлайн-разметка</a>
+  <a href="#en"><b>7</b>Английский перевод</a>
+  <a href="#test"><b>8</b>Кнопка «к тесту»</a>
+  <a href="#example"><b>9</b>Пример целиком</a>
+</nav>
+
+<section id="anatomy">
+  <h2><span class="n">01</span> Что рисует карточку</h2>
+  <div class="table-scroll"><table>
+    <thead><tr><th>Блок</th><th>Откуда берётся</th></tr></thead>
+    <tbody>
+      <tr><td>Шапка: <code>domen · group</code> → заголовок → подзаголовок</td><td>поля <code>domen</code>/<code>group</code>, <code>title</code>, маркер <code>[sub]</code></td></tr>
+      <tr><td>Нумерованный чек-лист (кружки с цифрами)</td><td>список <code>1.</code> <code>2.</code> <code>3.</code></td></tr>
+      <tr><td>Парные карточки-исходы (Да / Нет)</td><td>фенс <code>:::outcomes … :::</code></td></tr>
+      <tr><td>Раскрывашка с шевроном</td><td><code>### Заголовок [collapse]</code></td></tr>
+      <tr><td>Обычная подсекция</td><td><code>### Заголовок</code></td></tr>
+      <tr><td>Таблица с вертикальной окраской колонок</td><td>строки <code>a | b | c |</code></td></tr>
+      <tr><td>Подсказка (жёлтая / красная)</td><td>строка с эмодзи-маркером в начале</td></tr>
+      <tr><td>Плашка-примечание снизу</td><td>поле <code>note</code> (не <code>content_md</code>)</td></tr>
+      <tr><td>Зелёная ссылка «см. также»</td><td>id вида <code>r0054</code> внутри поля <code>note</code></td></tr>
+      <tr><td>Кнопка «к тесту»</td><td>всегда, пока в состоянии «скоро»</td></tr>
+    </tbody>
+  </table></div>
+</section>
+
+<section id="markers">
+  <h2><span class="n">02</span> Маркеры разметки</h2>
+
+  <h3><code>[sub]</code> — подзаголовок</h3>
+  <p>Самая <strong>первая непустая строка</strong> ячейки. Мелкий серый текст под заголовком.</p>
+<pre class="mono"><span class="m">[sub]</span> для возвратного местоимения (себя / себе)
+<span class="m">###</span> Порядок проверки
+1. Ищем глагол.</pre>
+  <p>Хочешь короткий заголовок как в макете («Akkusativ или Dativ») — укороти поле <code>title</code>, а полную формулировку положи в <code>[sub]</code>.</p>
+
+  <h3>Чек-лист шагов — без маркера</h3>
+  <p>Просто нумерованный список: две и больше строк подряд, каждая с <code>N. </code>. Строки без номера приклеиваются к предыдущему шагу.</p>
+<pre class="mono">1. Ищем глагол.
+2. Ищем, на кого или на что направлено действие.
+3. Вычёркиваем всё после предлога (für, über, auf, zum, mit, in).</pre>
+
+  <h3><code>:::outcomes</code> — парные карточки-исходы</h3>
+  <p>Для правил-развилок. Между <code>:::outcomes</code> и <code>:::</code> — 2–4 строки формата <code>метка → акцент | подпись</code> (часть после <code>|</code> опциональна).</p>
+<pre class="mono"><span class="m">:::outcomes</span>
+Да → Dativ <span class="c">|</span> объект остался — местоимение стоит в Дательном
+Нет → Akkusativ <span class="c">|</span> объекта не осталось — местоимение в Винительном
+<span class="m">:::</span></pre>
+  <p>Цвет левого бордера: <span class="swatch" style="background:var(--cyan)"></span><code>Dativ</code> → циан, <span class="swatch" style="background:var(--red)"></span><code>Akkusativ</code> → красный, иначе по порядку (циан, красный, янтарь).</p>
+
+  <h3><code>### Заголовок [collapse]</code> — раскрывашка</h3>
+  <p>Секция (заголовок + всё до следующего <code>###</code> или фенса) прячется в сворачиваемый блок. Без <code>[collapse]</code> — обычная открытая подсекция.</p>
+<pre class="mono"><span class="m">###</span> Как разбирать исключения: wo и wie <span class="m">[collapse]</span>
+wo и wie могут работать в двух режимах — определяется вопросом к придаточному.
+...</pre>
+  <p>Складывай в раскрывашки то, что <strong>не обязательно</strong> для беглого прочтения: разборы исключений, «почему так», второй уровень примеров.</p>
+  <div class="callout warn">
+    <span class="lbl">осторожно</span>
+    Вложенных <code>###</code> внутри раскрывашки быть не должно — следующий <code>###</code> её закрывает. Разбивай на отдельные подсекции. Первый <code>### &lt;точь-в-точь как title&gt;</code> рендерер выкидывает сам.
+  </div>
+</section>
+
+<section id="tables">
+  <h2><span class="n">03</span> Таблицы</h2>
+  <p>Одна строка = одна строка таблицы. Ячейки разделяются <code>|</code>, <strong>в конце строки тоже <code>|</code></strong>. Первая строка — шапка.</p>
+<pre class="mono"><span class="b">**Элемент**</span> <span class="c">|</span> <span class="b">**Позиция в предложении**</span> <span class="c">|</span> <span class="b">**Пример**</span> <span class="c">|</span>
+Modalverb (спрягаемый глагол) <span class="c">|</span> 2-я позиция <span class="c">|</span> Ich **kann** ... <span class="c">|</span>
+Infinitiv (основной глагол) <span class="c">|</span> В конце предложения <span class="c">|</span> ... den Raum **vorbereiten**. <span class="c">|</span></pre>
+
+  <h3>Вертикальная окраска колонок</h3>
+  <p>Каждая колонка получает цветную линию слева. Падежи держат закреплённый цвет:</p>
+  <div class="table-scroll"><table>
+    <thead><tr><th>В шапке колонки</th><th>Цвет</th></tr></thead>
+    <tbody>
+      <tr><td><code>Akkusativ</code> или <code>Wen?</code></td><td><span class="swatch" style="background:var(--red)"></span>красный</td></tr>
+      <tr><td><code>Dativ</code> или <code>Wem?</code></td><td><span class="swatch" style="background:var(--cyan)"></span>циан</td></tr>
+      <tr><td><code>Genitiv</code> или <code>Wessen?</code></td><td><span class="swatch" style="background:var(--amber)"></span>янтарь</td></tr>
+      <tr><td><code>Nominativ</code> или <code>Wer?</code></td><td><span class="swatch" style="background:var(--border)"></span>серый</td></tr>
+      <tr><td>всё остальное</td><td>1-я колонка серая, дальше циан → красный → янтарь → зелёный</td></tr>
+    </tbody>
+  </table></div>
+  <p>Ничего специально делать не надо — достаточно назвать колонку падежом.</p>
+
+  <div class="callout warn">
+    <span class="lbl">частые ошибки</span>
+    <ul style="margin:6px 0 0">
+      <li><strong>Каждая ячейка на своей строке</strong> с одиноким <code>|</code> в конце — таблица разваливается в столбик абзацев. Пиши строку целиком: <code>a | b | c |</code>.</li>
+      <li><strong>Нет замыкающего <code>|</code></strong> — строка <code>a | b</code> (один разделитель) не считается строкой таблицы. Ставь <code>a | b |</code>.</li>
+      <li>Для строки таблицы нужно <strong>минимум два <code>|</code></strong>.</li>
+    </ul>
+  </div>
+</section>
+
+<section id="hints">
+  <h2><span class="n">04</span> Подсказки 💡 / ⚠</h2>
+  <p>Строка, начинающаяся с эмодзи-маркера, рендерится мелкой подсказкой с иконкой и цветной линией слева. Между маркером и текстом — один пробел.</p>
+  <div class="table-scroll"><table>
+    <thead><tr><th>Маркер</th><th>Вид</th><th>Для чего</th></tr></thead>
+    <tbody>
+      <tr><td><code>💡</code></td><td><span class="swatch" style="background:var(--amber)"></span>жёлтый</td><td>совет, лайфхак, проверка</td></tr>
+      <tr><td><code>⚠</code> <code>❗</code> <code>✗</code></td><td><span class="swatch" style="background:var(--red)"></span>красный</td><td>предупреждение, частая ошибка, «не путать»</td></tr>
+      <tr><td><code>📍</code> <code>🔑</code> <code>✓</code> <code>👉</code></td><td><span class="swatch" style="background:var(--border)"></span>нейтральный</td><td>прочее</td></tr>
+    </tbody>
+  </table></div>
+<pre class="mono"><span class="m">💡</span> Проверка: одно лицо делает оба действия → um...zu. Разные → damit.
+<span class="m">⚠</span> Не путать с aber: sondern обязательно после nicht/kein.</pre>
+</section>
+
+<section id="fields">
+  <h2><span class="n">05</span> Поля рядом с <code>content_md</code></h2>
+
+  <h3><code>note</code> → плашка-примечание</h3>
+  <p>Отдельная колонка. Рендерится плашкой внизу карточки: янтарный бордер слева, <strong>текст нейтральный</strong> (не окрашивается), акцент только на бордере и на отдельных <code>**жирных**</code> словах. Сюда — важное дополнение или исключение, которое не влезло в поток.</p>
+
+  <h3>Ссылка «см. также»</h3>
+  <p>Если в поле <code>note</code> встречается id другого правила (<code>r0054</code>), под карточкой появляется зелёная ссылка <code style="color:var(--green)">r0054 — &lt;заголовок&gt;</code>, кликом перематывает к нему.</p>
+<pre class="mono"><span class="c">note:</span>  См. также r0054 (um...zu vs damit) — там разбор,
+       когда какую конструкцию.</pre>
+  <p>id языконезависим — берётся из русского <code>note</code>, ссылку получают обе версии. Нет id — нет ссылки, просто кнопка «к тесту».</p>
+
+  <h3><code>examples</code></h3>
+  <p>Отдельная колонка, на карточке пока <strong>не отображается</strong> (осталась с прошлого рендера). Примеры кладём прямо в <code>content_md</code>.</p>
+</section>
+
+<section id="inline">
+  <h2><span class="n">06</span> Инлайн-разметка (везде)</h2>
+  <ul>
+    <li><code>**жирный**</code></li>
+    <li><code>&lt;span class="g-m"&gt;der Mann&lt;/span&gt;</code> — окраска артикля по роду: <code>g-m</code> муж., <code>g-f</code> жен., <code>g-n</code> ср., <code>g-pl</code> мн.</li>
+  </ul>
+</section>
+
+<section id="en">
+  <h2><span class="n">07</span> Английский перевод</h2>
+  <ul>
+    <li>Правила, которые переводит <strong>DeepL</strong>, подхватывают маркеры автоматически при следующем <code>python update_data.py</code> — маркеры ASCII, проходят через ignore-теги, число строк сохраняется.</li>
+    <li>~33 правила переведены <strong>вручную</strong> (<code>docs/en-fix/translations-rules-batch*.json</code>, <code>source: manual</code>) — их <code>content_md_en</code> пересчёт <strong>не трогает</strong>. Добавил разметку в русский <code>content_md</code> такого правила — те же маркеры надо руками дописать в его запись в batch-файле, иначе английская версия останется плоской.</li>
+    <li>Отчёт после прогона — <code>reports/en_review_rules.md</code>.</li>
+  </ul>
+</section>
+
+<section id="test">
+  <h2><span class="n">08</span> Кнопка «к тесту»</h2>
+  <p>Рендерится всегда, пока в состоянии «скоро» (неактивна, <code>скоро</code> проступает при наведении и по тапу). Полноценный тест по конкретному правилу — отдельная задача: <code>ruleId</code> в <code>QUESTIONS</code> + разбор URL-параметра в <code>trainer.html</code>.</p>
+</section>
+
+<section id="example">
+  <h2><span class="n">09</span> Пример целиком — r0056</h2>
+<pre class="mono"><span class="m">[sub]</span> для возвратного местоимения (себя / себе)
+<span class="m">###</span> Порядок проверки
+1. Ищем глагол.
+2. Ищем, на кого или на что направлено действие.
+3. Вычёркиваем всё, что стоит после предлога (für, über, auf, zum, mit, in – любой).
+4. Осталось ли то, непосредственно на что направлено действие глагола?
+<span class="m">:::outcomes</span>
+Да → Dativ <span class="c">|</span> объект остался — возвратное местоимение стоит в Дательном (Dativ)
+Нет → Akkusativ <span class="c">|</span> объекта не осталось — возвратное местоимение стоит в Винительном (Akkusativ)
+<span class="m">:::</span>
+<span class="m">###</span> Почему после предлога вычёркиваем существительное? <span class="m">[collapse]</span>
+Существительное после предлога связано с предлогом, а не с тем, на что направлено
+действие глагола напрямую. Поэтому оно не влияет на выбор падежа.
+zum Geburtstag → когда?
+für ein Gericht → для чего?
+<span class="m">###</span> Как разбирать исключения: wo и wie <span class="m">[collapse]</span>
+wo и wie могут работать в двух режимах – определяется вопросом к придаточному.
+...</pre>
+  <p><code>note</code>: <span style="color:var(--muted)">Часть глаголов вообще не участвует в этой развилке — они жёстко требуют Dativ (helfen, gefallen, danken и т.п.).</span></p>
+</section>
+
+<footer>
+  Рендерер: <code>renderRuleCard</code> в <code>cheatsheet.html</code>. Ветка <code>feature/rules-card-redesign</code>.
+</footer>
+</div>
+</body></html>

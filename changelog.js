@@ -1,5 +1,5 @@
 window.CHANGELOG = [
-    {
+  {
     "date": "2026-08-30",
     "title": "Обновление базы: страхование, питание, потребительские права",
     "items": [
@@ -14,6 +14,20 @@ window.CHANGELOG = [
       "2 новых правила:",
       "trotzdem vs deshalb/deswegen — уступка и следствие",
       "Genitiv Plural — один артикль на все роды"
+    ],
+    "titleEn": "Database Update: Insurance, Food, Consumer Rights",
+    "itemsEn": [
+      "141 new word:",
+      "67 nouns",
+      "21 verbs",
+      "33 adjectives",
+      "9 adverbs",
+      "7 idioms",
+      "4 terms",
+      "2 new topics: Nutrition and Consumer Protection",
+      "2 new rules:",
+      "trotzdem vs deshalb / deswegen — Concession and Consequence",
+      "Genitiv Plural — one article for all genders"
     ]
   },
   {
@@ -28,7 +42,8 @@ window.CHANGELOG = [
       "Исправлена опечатка в переводе vier и 15 случайных заглавных букв",
       "Тренажёр: русские глаголы совершенного вида теперь спрягаются (скажу, брошу, поставлю) — раньше подставлялся инфинитив «Я сказать». Глаголы, у которых личных форм нет вообще, из заданий исключены",
       "Альтернативные переводы на английский перестали пересчитываться при каждой сборке — раньше один и тот же перевод менялся от прогона к прогону"
-    ]
+    ],
+    "titleEn": "Cleaning up the database and refining the translation"
   },
   {
     "date": "2026-08-27",

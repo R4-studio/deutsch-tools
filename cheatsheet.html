@@ -6,10 +6,10 @@
 <meta property="og:title" content="Справочник — Deutsch Tools">
 <meta property="og:description" content="Интерактивный справочник по немецкому: слова, правила, произношение">
 <meta property="og:type" content="website">
-<link rel="stylesheet" href="theme.css?v=20260831">
-<script src="i18n/ru.js?v=20260831"></script>
-<script src="i18n/en.js?v=20260831"></script>
-<script src="i18n/i18n.js?v=20260831"></script>
+<link rel="stylesheet" href="theme.css?v=20260901">
+<script src="i18n/ru.js?v=20260901"></script>
+<script src="i18n/en.js?v=20260901"></script>
+<script src="i18n/i18n.js?v=20260901"></script>
 <style>
 *{box-sizing:border-box;margin:0;padding:0}
 body{font-family:sans-serif;font-size:13px;color:var(--text-main);line-height:1.4;background:var(--bg-body);overflow-x:hidden}
@@ -482,14 +482,19 @@ tr[data-vid], [data-vid].conj-card { cursor: pointer; }
 
 .rule-card p { margin: 8px 0; font-size: 13px; line-height: 1.5; }
 .rule-card p:first-child { margin-top: 0; }
-.rule-card p.rule-callout { font-size: 12px; color: var(--text-muted); display: flex; gap: 6px; align-items: baseline; }
+.rule-card p.rule-callout { font-size: 12px; color: var(--text-muted); display: flex; gap: 7px; align-items: baseline; }
 .rule-callout svg { flex-shrink: 0; width: 13px; height: 13px; }
+/* цветной левый бордер + иконка по типу: лампочка — жёлтый, знаки — красный */
+.rule-callout--bulb { border-left: 2px solid var(--orange-400); padding-left: 10px; }
+.rule-callout--warn { border-left: 2px solid var(--red-500);    padding-left: 10px; }
+.rule-callout--bulb svg { color: var(--orange-400); }
+.rule-callout--warn svg { color: var(--red-500); }
 
 .rule-sec { margin: 14px 0 0; }
 .rule-sec__head { font-size: 13px; font-weight: 700; color: var(--text-title); margin: 0 0 6px; }
 
-/* чек-лист шагов */
-.rule-steps { list-style: none; margin: 12px 0 0; padding: 14px 14px 6px; background: var(--bg-body); border-radius: 12px; }
+/* чек-лист шагов — без «обёртки», только нумерованные кружки */
+.rule-steps { list-style: none; margin: 12px 0 0; padding: 0; }
 .rule-steps li { display: flex; gap: 10px; align-items: flex-start; margin-bottom: 10px; font-size: 13px; line-height: 1.45; }
 .rule-steps__n {
   flex: 0 0 22px; width: 22px; height: 22px; border-radius: 50%;
@@ -499,13 +504,12 @@ tr[data-vid], [data-vid].conj-card { cursor: pointer; }
   margin-top: 1px;
 }
 
-/* парные карточки-исходы */
-.rule-outcomes { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin: 14px 0 0; }
+/* парные карточки-исходы — цветной бордер слева, без заливки и скругления */
+.rule-outcomes { display: grid; grid-template-columns: 1fr 1fr; gap: 10px 16px; margin: 14px 0 0; }
 @media (max-width: 560px) { .rule-outcomes { grid-template-columns: 1fr; } }
 .rule-outcome {
-  background: var(--bg-body); border-radius: 12px;
-  border-left: 4px solid var(--text-muted);
-  padding: 10px 12px; font-size: 13px; line-height: 1.4;
+  border-left: 3px solid var(--text-muted);
+  padding: 2px 0 2px 12px; font-size: 13px; line-height: 1.4;
 }
 .rule-outcome b { color: var(--text-title); }
 .rule-outcome__cap { display: block; margin-top: 3px; color: var(--text-muted); font-size: 12px; }
@@ -513,32 +517,48 @@ tr[data-vid], [data-vid].conj-card { cursor: pointer; }
 .rule-outcome--red   { border-left-color: var(--red-500); }
 .rule-outcome--amber { border-left-color: var(--orange-400); }
 
-/* раскрывашка */
-.rule-collapse { margin: 12px 0 0; border-radius: 12px; background: var(--bg-body); }
+/* раскрывашка — тонкая линия-разделитель, без «пузыря» */
+.rule-collapse { margin-top: 8px; border-top: 1px solid var(--border-soft); }
+.rule-collapse:not(:has(+ .rule-collapse)) { border-bottom: 1px solid var(--border-soft); }
+.rule-collapse + .rule-collapse { margin-top: 0; }
 .rule-collapse > summary {
-  list-style: none; cursor: pointer; padding: 11px 14px;
+  list-style: none; cursor: pointer; padding: 10px 2px;
   font-size: 13px; font-weight: 600; color: var(--text-title);
   display: flex; align-items: center; justify-content: space-between; gap: 10px;
 }
 .rule-collapse > summary::-webkit-details-marker { display: none; }
 .rule-collapse__chev { flex-shrink: 0; width: 15px; height: 15px; transition: transform .2s var(--ease-dt); color: var(--text-muted); }
 .rule-collapse[open] .rule-collapse__chev { transform: rotate(180deg); }
-.rule-collapse__body { padding: 0 14px 12px; }
+.rule-collapse__body { padding: 0 2px 12px; }
 .rule-collapse__body > p:first-child,
 .rule-collapse__body > .rule-sec:first-child { margin-top: 2px; }
 
-/* плашка-примечание — акцент только на бордере, текст нейтральный */
+/* плашка-примечание — цветной бордер слева, текст нейтральный, без заливки */
 .rule-plate {
-  margin: 14px 0 0; padding: 10px 14px;
-  background: var(--bg-body); border-radius: 10px;
-  border-left: 4px solid var(--red-500);
+  margin: 14px 0 0; padding: 2px 0 2px 12px;
+  border-left: 3px solid var(--orange-400);
   font-size: 12.5px; color: var(--text-main); line-height: 1.5;
 }
-.rule-plate--amber { border-left-color: var(--orange-400); }
-.rule-plate--cyan  { border-left-color: var(--cyan-500); }
+.rule-plate--cyan { border-left-color: var(--cyan-500); }
+.rule-plate--red  { border-left-color: var(--red-500); }
 .rule-plate b { color: var(--text-title); }
 
-/* футер: ссылка на связанное правило + кнопка «Пройти тест» */
+/* таблицы правил: колонки по содержимому + горизонтальный скролл (.table-wrap) */
+.rule-card table { table-layout: auto; }
+.rule-card th { white-space: nowrap; }
+
+/* вертикальная окраска колонок: падежи держат свой цвет, остальные — по порядку */
+.rule-card th.rc-nom,   .rule-card td.rc-nom   { box-shadow: inset 2px 0 0 var(--border-soft); }
+.rule-card th.rc-cyan,  .rule-card td.rc-cyan  { box-shadow: inset 2px 0 0 var(--cyan-500); }
+.rule-card th.rc-red,   .rule-card td.rc-red   { box-shadow: inset 2px 0 0 var(--red-500); }
+.rule-card th.rc-amber, .rule-card td.rc-amber { box-shadow: inset 2px 0 0 var(--orange-400); }
+.rule-card th.rc-green, .rule-card td.rc-green { box-shadow: inset 2px 0 0 var(--green-500); }
+.rule-card th.rc-cyan  { color: var(--cyan-600); }
+.rule-card th.rc-red   { color: var(--red-500); }
+.rule-card th.rc-amber { color: var(--orange-400); }
+.rule-card th.rc-green { color: var(--green-600); }
+
+/* футер: ссылка на связанное правило + кнопка теста */
 .rule-card__footer {
   display: flex; align-items: center; justify-content: space-between; gap: 12px;
   flex-wrap: wrap; margin-top: 16px;
@@ -553,11 +573,23 @@ tr[data-vid], [data-vid].conj-card { cursor: pointer; }
 .rule-seealso svg { width: 13px; height: 13px; }
 .rule-seealso:hover { text-decoration: underline; }
 
-/* кнопка теста в состоянии «скоро» (переиспользует .dt-cta из theme.css) */
-.dt-cta.dt-cta--soon { opacity: .5; cursor: default; }
-.dt-cta__soon {
-  font-size: 9px; font-weight: 700; letter-spacing: .05em;
-  text-transform: uppercase; opacity: .85; margin-left: 2px;
+/* кнопка к тесту — надпись «скоро» проступает при наведении и по тапу */
+.rule-testbtn {
+  display: inline-flex; align-items: center; gap: 6px;
+  font-family: inherit; font-size: 12.5px; font-weight: 600;
+  color: var(--text-muted); background: none; border: none;
+  padding: 6px 2px; cursor: default;
+}
+.rule-testbtn__roll { overflow: hidden; height: 1.25em; }
+.rule-testbtn__roll-inner { display: flex; flex-direction: column; transition: transform .32s var(--ease-dt); }
+.rule-testbtn__roll-inner > span { height: 1.25em; line-height: 1.25em; white-space: nowrap; }
+.rule-testbtn:hover .rule-testbtn__roll-inner,
+.rule-testbtn.is-peek .rule-testbtn__roll-inner { transform: translateY(-50%); }
+.rule-testbtn__arrow { flex-shrink: 0; width: 13px; height: 13px; transition: transform .32s var(--ease-dt); }
+.rule-testbtn:hover .rule-testbtn__arrow,
+.rule-testbtn.is-peek .rule-testbtn__arrow { transform: translateX(2px); }
+@media (prefers-reduced-motion: reduce) {
+  .rule-testbtn__roll-inner, .rule-testbtn__arrow { transition: none; }
 }
 </style>
 <script>
@@ -567,7 +599,7 @@ tr[data-vid], [data-vid].conj-card { cursor: pointer; }
   document.documentElement.classList.add('theme-' + saved);
 })();
 </script>
-<script src="data.js?v=20260831"></script>
+<script src="data.js?v=20260901"></script>
 <script>
 // ─── Глобальный хелпер экранирования HTML ────────────────────────────────
 function escHtml(s) {
@@ -634,7 +666,7 @@ function topicTitleHtml(topic) {
   return (t.icon ? ic(t.icon) + ' ' : '') + escHtml(t.label);
 }
 // Маркеры-иконки в начале строк content_md (правила): 💡 совет, ⚠ предупреждение и т.п.
-var NOTE_ICON_MAP = { '💡': 'bulb', '⚠': 'warning', '📍': 'pin', '🔑': 'key', '✓': 'check', '✗': 'cross', '❗': 'warning' };
+var NOTE_ICON_MAP = { '💡': 'bulb', '⚠': 'warning', '📍': 'pin', '🔑': 'key', '✓': 'check', '✗': 'cross', '❗': 'warning', '👉': 'arrow-right' };
 var TABS_CONFIG = [
   { id: 'new',     icon: 'sparkle',   label: 'Neu' },
   { id: 'nums',    icon: 'hash',      label: 'Zahlen' },
@@ -2825,6 +2857,15 @@ function gotoRule(id) {
   });
 }
 
+// Кнопка «к тесту»: тап (мобилка / без hover) на 1.6 с проявляет «скоро»
+document.addEventListener('click', function(e) {
+  var btn = e.target.closest && e.target.closest('.rule-testbtn');
+  if (!btn) return;
+  btn.classList.add('is-peek');
+  clearTimeout(btn._peekT);
+  btn._peekT = setTimeout(function() { btn.classList.remove('is-peek'); }, 1600);
+});
+
 // ═══════════════════════════════════════════════════════════════
 // ТРИГРАММНЫЙ ПОИСК
 // ═══════════════════════════════════════════════════════════════
@@ -3633,12 +3674,32 @@ function gotoRule(id) {
     return null;
   }
 
+  // Вертикальная окраска колонок таблицы. Падежи держат закреплённый цвет
+  // (Akkusativ — красный, Dativ — циан, Genitiv — янтарь, Nominativ — серый),
+  // остальные колонки — по порядку. Первая колонка обычно строковая «шапка
+  // строки» — оставляем нейтральной (серой).
+  const RULE_CASE_COL = [
+    [/\bakkusativ\b|\bwen\?/i,  'rc-red'],
+    [/\bdativ\b|\bwem\?/i,      'rc-cyan'],
+    [/\bgenitiv\b|\bwessen\?/i, 'rc-amber'],
+    [/\bnominativ\b|\bwer\?/i,  'rc-nom'],
+  ];
+  const RULE_POS_COL = ['rc-cyan', 'rc-red', 'rc-amber', 'rc-green'];
   function ruleTable(rows) {
+    const colCls = (rows[0] || []).map((hCell, ci) => {
+      const plain = String(hCell).replace(/\*\*/g, '');
+      for (const [re, cls] of RULE_CASE_COL) if (re.test(plain)) return cls;
+      if (ci === 0) return 'rc-nom';
+      return RULE_POS_COL[(ci - 1) % RULE_POS_COL.length];
+    });
     let h = '<table>';
     rows.forEach((cells, idx) => {
       const tag = idx === 0 ? 'th' : 'td';
       h += '<tr>';
-      for (const c of cells) h += '<' + tag + '>' + renderInline(c) + '</' + tag + '>';
+      cells.forEach((c, ci) => {
+        const cls = colCls[ci] ? ' class="' + colCls[ci] + '"' : '';
+        h += '<' + tag + cls + '>' + renderInline(c) + '</' + tag + '>';
+      });
       h += '</tr>';
     });
     return h + '</table>';
@@ -3691,9 +3752,15 @@ function gotoRule(id) {
       const steps = tryChecklist(buf);
       if (steps) { out += ruleChecklist(steps); buf = []; return; }
       for (const line of buf) {
-        const m = line.match(/^([💡⚠📍🔑✓✗❗])\s*/);
-        if (m) out += '<p class="rule-callout">' + ic(NOTE_ICON_MAP[m[1]]) + '<span>' + renderInline(line.slice(m[0].length)) + '</span></p>';
-        else out += '<p>' + renderInline(line) + '</p>';
+        // флаг u — иначе emoji-класс матчит только суррогатную половину 💡/📍/🔑
+        const m = line.match(/^([💡⚠📍🔑✓✗❗👉])\s*/u);
+        if (m) {
+          const ch = m[1];
+          const icon = NOTE_ICON_MAP[ch];
+          const mod = ch === '💡' ? ' rule-callout--bulb'
+                    : (ch === '⚠' || ch === '❗' || ch === '✗') ? ' rule-callout--warn' : '';
+          out += '<p class="rule-callout' + mod + '">' + (icon ? ic(icon) : '') + '<span>' + renderInline(line.slice(m[0].length)) + '</span></p>';
+        } else out += '<p>' + renderInline(line) + '</p>';
       }
       buf = [];
     };
@@ -3756,7 +3823,7 @@ function gotoRule(id) {
   }
 
   function renderRulePlate(text) {
-    return text ? '<div class="rule-plate rule-plate--amber">' + renderInline(text) + '</div>' : '';
+    return text ? '<div class="rule-plate">' + renderInline(text) + '</div>' : '';
   }
 
   function renderRuleSeeAlso(rule) {
@@ -3771,14 +3838,15 @@ function gotoRule(id) {
     return '';
   }
 
+  // Кнопка «к тесту»: надпись прокручивается на «скоро» при наведении и по
+  // тапу (для мобилки). Тест по правилу пока не реализован — переход не делаем.
   function renderRuleTestBtn() {
-    const label = t('cheatsheet.rule_take_test');
-    return '<span class="dt-cta dt-cta--soon" aria-disabled="true">'
-         + '<span class="dt-cta__roll"><span class="dt-cta__roll-inner">'
-         + '<span>' + escHtml(label) + '</span><span>' + escHtml(label) + '</span></span></span>'
-         + '<span class="dt-cta__soon">' + escHtml(t('cheatsheet.rule_soon')) + '</span>'
-         + '<span class="dt-cta__arrow"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span>'
-         + '</span>';
+    return '<button type="button" class="rule-testbtn" aria-disabled="true">'
+         + '<span class="rule-testbtn__roll"><span class="rule-testbtn__roll-inner">'
+         + '<span>' + escHtml(t('cheatsheet.rule_take_test')) + '</span>'
+         + '<span>' + escHtml(t('cheatsheet.rule_soon')) + '</span></span></span>'
+         + '<svg class="rule-testbtn__arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>'
+         + '</button>';
   }
 
   // Полная карточка правила. opts.compact — компактный отступ сверху (вкладка «Местоимения»).
