@@ -541,6 +541,9 @@ tr[data-vid], [data-vid].conj-card { cursor: pointer; }
 }
 .rule-plate--cyan { border-left-color: var(--cyan-500); }
 .rule-plate--red  { border-left-color: var(--red-500); }
+.rule-plate > svg { width: 13px; height: 13px; vertical-align: -2px; margin-right: 6px; color: var(--orange-400); }
+.rule-plate--red > svg { color: var(--red-500); }
+.rule-plate--cyan > svg { color: var(--cyan-500); }
 .rule-plate b { color: var(--text-title); }
 
 /* таблицы правил: колонки по содержимому + горизонтальный скролл (.table-wrap) */
@@ -3823,7 +3826,17 @@ document.addEventListener('click', function(e) {
   }
 
   function renderRulePlate(text) {
-    return text ? '<div class="rule-plate">' + renderInline(text) + '</div>' : '';
+    if (!text) return '';
+    let cls = 'rule-plate', icon = '';
+    // note может начинаться с маркера 💡/⚠ — вырезаем его, ставим иконку и цвет
+    const m = text.match(/^([💡⚠📍🔑✓✗❗👉])\s*/u);
+    if (m) {
+      text = text.slice(m[0].length);
+      const key = NOTE_ICON_MAP[m[1]];
+      if (key) icon = ic(key);
+      if (m[1] === '⚠' || m[1] === '❗' || m[1] === '✗') cls += ' rule-plate--red';
+    }
+    return '<div class="' + cls + '">' + icon + renderInline(text) + '</div>';
   }
 
   function renderRuleSeeAlso(rule) {
