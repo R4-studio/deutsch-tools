@@ -2607,12 +2607,12 @@
       "titleEn": "Nebensatz – verb order"
     },
     "r0030": {
-      "_src_content_md": "### Сокращения артиклей: am / im\n\nВ разговорной и письменной речи предлог + артикль **dem** сливаются:\n\n| Предлог | + dem | = |\n|---------|-------|---|\n| an | an + dem | **am** |\n| in | in + dem | **im** |\n\n💡 **am** и **im** – это всегда Dativ (Wo?)\n💡 Ich bin **im** Büro. = Ich bin in dem Büro.\n💡 Ich bin **am** Bahnhof. = Ich bin an dem Bahnhof.\n\n⚠ Только с **dem** (m/n, Dativ) – с **der** (f) сокращения нет: in der Küche (не im)\n\n### Сокращения в Akkusativ: ins / ans / ums\nТа же логика, что am/im, но с артиклем das (средний род, Akkusativ):\nin + das → ins: Ich gehe ins Kino. (= in das Kino)\nan + das → ans: Ich gehe ans Fenster. (= an das Fenster)\num + das → ums: Wir gehen rund ums Haus. (= um das Haus)\n💡 ins/ans/ums – это Akkusativ (Wohin?/Was?), в отличие от im/am, которые всегда Dativ (Wo?)",
-      "_src_note": "am = an + dem | im = in + dem | только Dativ (Wo?) | женский род – без сокращения: in der Küche, an der Wand",
+      "_src_content_md": "### Сокращения артиклей: am / im\n\nВ разговорной и письменной речи предлог + артикль **dem** сливаются:\n\n| Предлог | + dem | = |\n|---------|-------|---|\n| an | an + dem | **am** |\n| in | in + dem | **im** |\n\n### Сокращения в Akkusativ: ins / ans / ums\nТа же логика, что am/im, но с артиклем das (средний род, Akkusativ):\nin + das → ins: Ich gehe ins Kino. (= in das Kino)\nan + das → ans: Ich gehe ans Fenster. (= an das Fenster)\num + das → ums: Wir gehen rund ums Haus. (= um das Haus)",
+      "_src_note": "am = an + dem | im = in + dem | только Dativ (Wo?) | женский род – без сокращения: in der Küche, an der Wand\n\n💡 **am** и **im** – это всегда Dativ (Wo?)\n ins/ans/ums – это Akkusativ (Wohin?/Was?), в отличие от im/am, которые всегда Dativ (Wo?)\n⚠ Только с **dem** (m/n, Dativ) – с **der** (f) сокращения нет: in der Küche (не im)",
       "_src_title": "Сокращения артиклей: am / im",
-      "content_md_en": "### Abbreviations for articles: am / im\n\nIn spoken and written language, the preposition + article **dem** merge:\n\n| Preposition | + dem | = |\n|---------|-------|---|\n| an | an + dem | **am** |\n| in | in + dem | **im** |\n\n💡 **am** and **im** are always Dativ (Wo?)\n💡 Ich bin **im** Büro. = Ich bin in dem Büro.\n💡 Ich bin **am** Bahnhof. = Ich bin an dem Bahnhof.\n\n⚠ Only with **dem** (m / n, Dativ) – there is no abbreviation with **der** (f): in der Küche (not im)\n\n### Abbreviations on Akkusativ: ins / ans / ums\nThe same logic applies as in am / im, but with the article das (neuter gender, Akkusativ):\nin + das → ins: Ich gehe ins Kino. (= in das Kino)\nan + das → ans: Ich gehe ans Fenster. (= an das Fenster)\num + das → ums: Wir gehen rund ums Haus. (= um das Haus)\n💡 ins / ans / ums – these are Akkusativ (Wohin?/ Was?), unlike im / am, which are always Dativ (Wo?)",
-      "date": "2026-08-27",
-      "noteEn": "am = an + dem | im = in + dem | only Dativ (Wo?) | feminine gender – no abbreviation: in der Küche, an der Wand",
+      "content_md_en": "### Abbreviations for articles: am / im\n\nIn spoken and written language, the preposition + article **dem** are combined as follows:\n\n| Preposition | + dem | = |\n|---------|-------|---|\n| an | an + dem | **am** |\n| in | in + dem | **im** |\n\n### Abbreviations on Akkusativ: ins / ans / ums\nThe same logic applies as in am / im, but with the article das (neuter gender, Akkusativ):\nin + das → ins: Ich gehe ins Kino. (= in das Kino)\nan + das → ans: Ich gehe ans Fenster. (= an das Fenster)\num + das → ums: Wir gehen rund ums Haus. (= um das Haus)",
+      "date": "2026-09-01",
+      "noteEn": "am = an + dem | im = in + dem | only Dativ (Wo?) | feminine gender – no abbreviation: in der Küche, an der Wand\n\n💡 **am** and **im** always lead to Dativ (Wo?)\n ins / ans / ums – these are Akkusativ (Wohin?/ Was?), unlike im / am, which are always Dativ (Wo?)\n⚠ Only with **dem** (m / n, Dativ) – there is no abbreviation for **der** (f): in der Küche (not im)",
       "source": "deepl",
       "titleEn": "Abbreviations: am / im"
     },
@@ -2653,22 +2653,22 @@
       "titleEn": "Building age adjectives (Zahl+jährig = X-year-old)"
     },
     "r0037": {
-      "_src_content_md": "Образование: число + **-te** (2–19) / **-ste** (от 20)\n1. erste · 2. zweite · 3. dritte · 4. vierte · 7. siebte · 8. achte\n20. zwanzigste · 21. einundzwanzigste · 100. hundertste\n💡 Исключения: erste (не einte), dritte (не dreite), siebte, achte (один t). Склоняются как прилагательные: der erste Stock → im ersten Stock, am dritten Mai.",
-      "_src_note": "склоняются как прилагательные после артикля",
+      "_src_content_md": "Образование: число + **-te** (2–19) / **-ste** (от 20)\n1. erste · 2. zweite · 3. dritte · 4. vierte · 7. siebte · 8. achte\n20. zwanzigste · 21. einundzwanzigste · 100. hundertste",
+      "_src_note": "склоняются как прилагательные после артикля\n\n💡 Исключения: erste (не einte), dritte (не dreite), siebte, achte (один t). Склоняются как прилагательные: der erste Stock → im ersten Stock, am dritten Mai.",
       "_src_title": "Ordinalzahlen (порядковые числительные)",
-      "content_md_en": "Formula: number + **- te** (2–19) / **- ste** (20 or higher)\n1. erste · 2. zweite · 3. dritte · 4. vierte · 7. siebte · 8. achte\n20. zwanzigste · 21. einundzwanzigste · 100. hundertste\n💡 Exceptions: erste (not einte), dritte (not dreite), siebte, achte (only t). These are declined like adjectives: der erste Stock → im ersten Stock, am dritten Mai.",
-      "date": "2026-08-27",
-      "noteEn": "are inflected like adjectives after an article",
+      "content_md_en": "Education: number + **- te** (2–19) / **- ste** (20 and up)\n1. erste · 2. zweite · 3. dritte · 4. vierte · 7. siebte · 8. achte\n20. zwanzigste · 21. einundzwanzigste · 100. hundertste",
+      "date": "2026-09-01",
+      "noteEn": "are inflected as adjectives after an article\n\n💡 Exceptions: erste (not einte), dritte (not dreite), siebte, achte (only t). These are inflected like adjectives: der erste Stock → im ersten Stock, am dritten Mai.",
       "source": "deepl",
       "titleEn": "Ordinalzahlen (ordinal numbers)"
     },
     "r0038": {
-      "_src_content_md": "Оттенок = **hell-** (светлый) или **dunkel-** (тёмный) + цвет, пишется **слитно**, одним словом.\n**основа + цвет** | **пример** |\nhell + braun | hellbraun (светло-коричневый) |\ndunkel + blau | dunkelblau (тёмно-синий) |\nhell + grün | hellgrün (светло-зелёный) |\ndunkel + rot | dunkelrot (тёмно-красный) |\n💡 Склоняются как обычные прилагательные: ein hellblaues Hemd, die dunkelgrüne Jacke.\n💡 Похоже образуется -farben / -farbig: cremefarben, silberfarbig.",
-      "_src_note": "hell-/dunkel- + цвет пишется одним словом: hellblau, dunkelgrün, hellbraun. Склоняются как обычные прилагательные.",
+      "_src_content_md": "Оттенок = **hell-** (светлый) или **dunkel-** (тёмный) + цвет, пишется **слитно**, одним словом.\n**основа + цвет** | **пример** |\nhell + braun | hellbraun (светло-коричневый) |\ndunkel + blau | dunkelblau (тёмно-синий) |\nhell + grün | hellgrün (светло-зелёный) |\ndunkel + rot | dunkelrot (тёмно-красный) |",
+      "_src_note": "hell-/dunkel- + цвет пишется одним словом: hellblau, dunkelgrün, hellbraun. Склоняются как обычные прилагательные.\n\n💡 Склоняются как обычные прилагательные: ein hellblaues Hemd, die dunkelgrüne Jacke.\n💡 Похоже образуется -farben / -farbig: cremefarben, silberfarbig.",
       "_src_title": "Оттенки: hell- / dunkel- + цвет (слитно)",
-      "content_md_en": "Shade = **hell-** (light) or **dunkel-** (dark) + color; written **as one word**.\n**base + color** | **example** |\nhell+ braun | hellbraun (light brown) |\ndunkel + blau | dunkelblau (dark blue) |\nhell + grün | hellgrün (light green) |\ndunkel + rot | dunkelrot (dark red) |\n💡 They are inflected like regular adjectives: ein hellblaues Hemd, die dunkelgrüne Jacke.\n💡 It seems that the suffixes -farben and -farbig are formed as follows: cremefarben, silberfarbig.",
-      "date": "2026-08-27",
-      "noteEn": "hell- / dunkel- + \"color\" is written as one word: hellblau, dunkelgrün, hellbraun. They are declined like regular adjectives.",
+      "content_md_en": "Shade = **hell-** (light) or **dunkel-** (dark) + color; written **as one word**.\n**Base + Color** | **Example** |\nhell + braun | hellbraun (light brown) |\ndunkel + blau | dunkelblau (dark blue) |\nhell + grün | hellgrün (light green) |\ndunkel + rot | dunkelrot (dark red) |",
+      "date": "2026-09-01",
+      "noteEn": "hell- / dunkel- + \"color\" is written as one word: hellblau, dunkelgrün, hellbraun. They are declined like regular adjectives.\n\n💡 They are inflected like regular adjectives: ein hellblaues Hemd, die dunkelgrüne Jacke.\n💡 It looks like the following are being created: farben / - farbig: cremefarben, silberfarbig.",
       "source": "deepl",
       "titleEn": "Shades: hell- / dunkel- + color (as one word)"
     },
@@ -2679,12 +2679,12 @@
       "titleEn": "Clothing: anhaben / tragen / angezogen sein (not “sein in”)"
     },
     "r0040": {
-      "_src_content_md": "Без артикля прилагательное само несёт сигнал рода и падежа – берёт окончание артикля. Пример: **nett**.\n**Падеж** | **m** | **n** | **f** | **Pl** |\nNom | netter Mann | nettes Kind | nette Frau | nette Leute |\nAkk | netten Mann | nettes Kind | nette Frau | nette Leute |\nDat | nettem Mann | nettem Kind | netter Frau | netten Leuten |\n💡 Окончания почти как у der/das/die: m Nom -er, n -es, в Dativ m/n -em. Бывает после чисел, viele / wenige и с вещественными словами: kaltes Wasser, guter Wein, frische Luft.",
-      "_src_note": "Сильное склонение: нет артикля → прилагательное берёт окончание артикля.",
+      "_src_content_md": "Без артикля прилагательное само несёт сигнал рода и падежа – берёт окончание артикля. Пример: **nett**.\n**Падеж** | **m** | **n** | **f** | **Pl** |\nNom | netter Mann | nettes Kind | nette Frau | nette Leute |\nAkk | netten Mann | nettes Kind | nette Frau | nette Leute |\nDat | nettem Mann | nettem Kind | netter Frau | netten Leuten |",
+      "_src_note": "Сильное склонение: нет артикля → прилагательное берёт окончание артикля.\n\n💡 Окончания почти как у der/das/die: m Nom -er, n -es, в Dativ m/n -em. Бывает после чисел, viele / wenige и с вещественными словами: kaltes Wasser, guter Wein, frische Luft.",
       "_src_title": "Adjektivdeklination ohne Artikel (starke Endungen)",
-      "content_md_en": "When used without an article, an adjective itself conveys the gender and case—it takes the ending of the article. Example: **nett**.\n**Case** | **m** | **n** | **f** | **Pl** |\nNom| netter Mann | nettes Kind | nette Frau | nette Leute |\nAkk | netten Mann | nettes Kind | nette Frau | nette Leute |\nDat | nettem Mann | nettem Kind | netter Frau | netten Leuten |\n💡 The endings are almost the same as those for der / das / die: m Nom - er, n - es, and in Dativ m / n - em. It occurs after numbers, viele / wenige, and with nouns: kaltes Wasser, guter Wein, frische Luft.",
-      "date": "2026-08-27",
-      "noteEn": "Strong declension: no article → the adjective takes the article's ending.",
+      "content_md_en": "When used without an article, an adjective itself conveys the gender and case—it takes the ending of the article. Example: **nett**.\n**Case** | **m** | **n** | **f** | **Pl** |\nNom | netter Mann | nettes Kind | nette Frau | nette Leute |\nAkk | netten Mann | nettes Kind | nette Frau | nette Leute |\nDat | nettem Mann | nettem Kind | netter Frau | netten Leuten |",
+      "date": "2026-09-01",
+      "noteEn": "Strong declension: no article → the adjective takes the article's ending.\n\n💡 The endings are almost the same as in der / das / die: m Nom → er, n → es, and in Dativ m / n → em. It sometimes appears after numbers, such as viele / wenige, and with nouns: kaltes Wasser, guter Wein, frische Luft.",
       "source": "deepl",
       "titleEn": "Adjektivdeklination ohne Artikel (starke Endungen)"
     },
@@ -2779,12 +2779,12 @@
       "titleEn": "Sentence Structure: Conjunctions and Word Order (Weil vs Denn vs Deshalb)"
     },
     "r0054": {
-      "_src_content_md": "### um...zu vs damit\n\n**um...zu + Infinitiv** – используется, когда подлежащее в главном и придаточном одно и то же (одно и то же лицо делает оба действия).\nIch lerne Deutsch, um in Deutschland zu arbeiten. (я учу – я работаю, одно и то же лицо)\nГлагол в конце, в инфинитиве, без спряжения.\n\n**damit + спрягаемый глагол в конец** – используется, когда подлежащее разное (разные лица/предметы в главном и придаточном).\nIch lerne Deutsch, damit meine Kinder in Deutschland zur Schule gehen können. (я учу – дети идут в школу, разные лица)\nЗдесь нужен полноценный Nebensatz с глаголом в конце (как после weil/dass/wenn) – инфинитив с zu тут невозможен.\n\n💡 Проверка: одно и то же лицо делает оба действия → um...zu. Разные лица/субъекты → damit.\n⚠ Частая ошибка: пытаться сказать \"damit ich...\" там, где подлежащее совпадает – грамматически не ошибка, но избыточно, носители в этом случае почти всегда выберут um...zu.",
-      "_src_note": "damit это отдельное слово в подчинительных союзах (см. r0053), здесь дан прямой контраст с um...zu для выбора конструкции",
+      "_src_content_md": "### um...zu vs damit\n\n**um...zu + Infinitiv** – используется, когда подлежащее в главном и придаточном одно и то же (одно и то же лицо делает оба действия).\nIch lerne Deutsch, um in Deutschland zu arbeiten. (я учу – я работаю, одно и то же лицо)\nГлагол в конце, в инфинитиве, без спряжения.\n\n**damit + спрягаемый глагол в конец** – используется, когда подлежащее разное (разные лица/предметы в главном и придаточном).\nIch lerne Deutsch, damit meine Kinder in Deutschland zur Schule gehen können. (я учу – дети идут в школу, разные лица)\nЗдесь нужен полноценный Nebensatz с глаголом в конце (как после weil/dass/wenn) – инфинитив с zu тут невозможен.",
+      "_src_note": "💡 Проверка: одно и то же лицо делает оба действия → um...zu. Разные лица/субъекты → damit.\n⚠ Частая ошибка: пытаться сказать \"damit ich...\" там, где подлежащее совпадает – грамматически не ошибка, но избыточно, носители в этом случае почти всегда выберут um...zu.\n\ndamit это отдельное слово в подчинительных союзах (см. r0053), здесь дан прямой контраст с um...zu для выбора конструкции",
       "_src_title": "um...zu vs damit – обе значат «чтобы»",
-      "content_md_en": "### um...zu vs damit\n\n**um... zu + Infinitiv** – used when the subject in the main clause and the subordinate clause is the same (the same person performs both actions).\nIch lerne Deutsch, um in Deutschland zu arbeiten. (I teach—I work; it’s the same person)\nThe verb comes at the end, in the infinitive form, without conjugation.\n\n**\"damit\" + the conjugated verb at the end** – used when the subjects are different (different people or objects in the main clause and the subordinate clause).\nIch lerne Deutsch, damit meine Kinder in Deutschland zur Schule gehen können. (I’m teaching—the children are going to school, different faces)\nHere, you need a full-fledged Nebensatz with the verb at the end (as in weil / dass / wenn)—an infinitive with zu is not possible here.\n\n💡 Verification: Is the same person performing both actions? → um... zu. Different people/subjects → damit.\n⚠ Common mistake: trying to say “damit ich...” when the subject is the same—it’s not grammatically incorrect, but it’s redundant; native speakers will almost always choose um... zu in this case.",
-      "date": "2026-08-27",
-      "noteEn": "damit This is a separate word in subordinate conjunctions (see r0053); here, a direct contrast is presented with um... zu to help choose the correct construction.",
+      "content_md_en": "### um...zu vs damit\n\n**um... zu + Infinitiv** – used when the subject in the main clause and the subordinate clause is the same (the same person performs both actions).\nIch lerne Deutsch, um in Deutschland zu arbeiten. (I teach—I work; it’s the same person)\nThe verb comes at the end, in the infinitive form, without conjugation.\n\n**\"damit + conjugated verb at the end\"** – used when the subjects are different (different people/things in the main clause and the subordinate clause).\nIch lerne Deutsch, damit meine Kinder in Deutschland zur Schule gehen können. (I’m teaching—children are going to school, various faces)\nHere, you need a full-fledged \"Nebensatz\" with the verb at the end (as in \"weil,\" \"dass,\" or \"wenn\")—an infinitive with \"zu\" is not possible here.",
+      "date": "2026-09-01",
+      "noteEn": "💡 Verification: Is the same person performing both actions? → um... zu. Different people/subjects? → damit.\n⚠ Common mistake: trying to say “damit ich...” when the subject is the same—it’s not grammatically incorrect, but it’s redundant; native speakers will almost always choose um... zu in this case.\n\ndamit This is a separate word in subordinate conjunctions (see r 0053); here, a direct contrast is presented with um... zu to help choose the appropriate construction.",
       "source": "deepl",
       "titleEn": "um... zu vs damit – both mean “so that”"
     },
