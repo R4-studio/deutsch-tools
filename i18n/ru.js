@@ -108,7 +108,7 @@ window.I18N_RU = {
   "cheatsheet.to_top": "Наверх",
   "cheatsheet.rule_take_test": "к тесту",
   "cheatsheet.rule_soon": "скоро",
-
+  "cheatsheet.rule_examples": "Примеры",
   "trainer.title_home": "Тренажёр немецкого",
   "trainer.pick_mode": "Выбери режим",
   "trainer.mode_learn_title": "Изучение",

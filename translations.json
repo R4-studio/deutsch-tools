@@ -234,6 +234,12 @@
       "source": "deepl",
       "verb": "geben"
     },
+    "2e7c094710d894b9": {
+      "date": "2026-09-03",
+      "en": "to avoid",
+      "source": "deepl",
+      "verb": "vermeiden"
+    },
     "2f7ee2215a6ba402": {
       "date": "2026-08-27",
       "en": "to view",
@@ -720,6 +726,12 @@
       "source": "deepl",
       "verb": "treten"
     },
+    "cc99c5a49d8918bd": {
+      "date": "2026-09-03",
+      "en": "to prescribe",
+      "source": "deepl",
+      "verb": "verschreiben"
+    },
     "d269f1c4e0aa1a7a": {
       "date": "2026-08-27",
       "en": "to participate",
@@ -857,6 +869,12 @@
       "en": "to throw",
       "source": "deepl",
       "verb": "werfen"
+    },
+    "f0068f381d87334e": {
+      "date": "2026-09-03",
+      "en": "to depend on",
+      "source": "deepl",
+      "verb": "abhängen"
     },
     "f18577dfce8f9162": {
       "date": "2026-08-27",
@@ -1040,11 +1058,23 @@
       "source": "deepl",
       "verb": "joggen"
     },
+    "084ede6616fbd7f4": {
+      "date": "2026-09-03",
+      "en": "to honk",
+      "source": "deepl",
+      "verb": "hupen"
+    },
     "09131a83cc13c0e7": {
       "date": "2026-08-27",
       "en": "to belong",
       "source": "deepl",
       "verb": "gehören"
+    },
+    "09908e41bf438d76": {
+      "date": "2026-09-03",
+      "en": "to criticize",
+      "source": "deepl",
+      "verb": "kritisieren"
     },
     "09b6f5035f2e56a1": {
       "date": "2026-08-27",
@@ -1100,6 +1130,12 @@
       "source": "deepl",
       "verb": "kaputtmachen"
     },
+    "124a650b41742d8c": {
+      "date": "2026-09-03",
+      "en": "to X-ray",
+      "source": "deepl",
+      "verb": "röntgen"
+    },
     "1389a3c16b618223": {
       "date": "2026-08-27",
       "en": "to establish",
@@ -1123,6 +1159,12 @@
       "en": "to celebrate",
       "source": "deepl",
       "verb": "feiern"
+    },
+    "15c3d5a70f598d2e": {
+      "date": "2026-09-03",
+      "en": "to bleed",
+      "source": "deepl",
+      "verb": "bluten"
     },
     "1638c18bb4574295": {
       "date": "2026-08-27",
@@ -1195,6 +1237,12 @@
       "en": "to open",
       "source": "deepl",
       "verb": "aufmachen"
+    },
+    "1eff7ce965488936": {
+      "date": "2026-09-03",
+      "en": "to take care of",
+      "source": "deepl",
+      "verb": "kümmern"
     },
     "2013c0b3cd3e9e21": {
       "date": "2026-08-27",
@@ -1370,6 +1418,12 @@
       "source": "deepl",
       "verb": "verlängern"
     },
+    "41de4b2f6811d328": {
+      "date": "2026-09-03",
+      "en": "to vaccinate",
+      "source": "deepl",
+      "verb": "impfen"
+    },
     "4410424b0a377473": {
       "date": "2026-08-27",
       "en": "to send",
@@ -1418,11 +1472,23 @@
       "source": "deepl",
       "verb": "reinigen"
     },
+    "493d82247df5239d": {
+      "date": "2026-09-03",
+      "en": "to turn over",
+      "source": "deepl",
+      "verb": "umdrehen"
+    },
     "4ba75303e1c1ac93": {
       "date": "2026-08-27",
       "en": "to wish",
       "source": "deepl",
       "verb": "wünschen"
+    },
+    "4e6ad96a72032d16": {
+      "date": "2026-09-03",
+      "en": "to thank",
+      "source": "deepl",
+      "verb": "bedanken"
     },
     "5085547c8b92342b": {
       "date": "2026-08-27",
@@ -1718,6 +1784,12 @@
       "source": "deepl",
       "verb": "spielen"
     },
+    "841b673b9df7c868": {
+      "date": "2026-09-03",
+      "en": "to stick",
+      "source": "deepl",
+      "verb": "kleben"
+    },
     "8603c3cec619f70c": {
       "date": "2026-08-27",
       "en": "to watch",
@@ -1729,6 +1801,12 @@
       "en": "to open",
       "source": "deepl",
       "verb": "öffnen"
+    },
+    "888059dbedfb972f": {
+      "date": "2026-09-03",
+      "en": "to create",
+      "source": "deepl",
+      "verb": "anlegen"
     },
     "89c128f33398562a": {
       "date": "2026-08-27",
@@ -1921,6 +1999,12 @@
       "en": "to organize",
       "source": "deepl",
       "verb": "organisieren"
+    },
+    "aac3568c94815264": {
+      "date": "2026-09-03",
+      "en": "to take care of",
+      "source": "deepl",
+      "verb": "erledigen"
     },
     "ab8526793d64717a": {
       "date": "2026-08-27",
@@ -2156,6 +2240,12 @@
       "source": "deepl",
       "verb": "vorbereiten"
     },
+    "cdd1b445e1a473b1": {
+      "date": "2026-09-03",
+      "en": "to talk",
+      "source": "deepl",
+      "verb": "reden"
+    },
     "ce1c1050c4f074ca": {
       "date": "2026-08-27",
       "en": "to get",
@@ -2179,6 +2269,12 @@
       "en": "to happen",
       "source": "deepl",
       "verb": "passieren"
+    },
+    "d4b628854813890e": {
+      "date": "2026-09-03",
+      "en": "to switch",
+      "source": "deepl",
+      "verb": "wechseln"
     },
     "d605da1dba996708": {
       "date": "2026-08-27",
@@ -2209,6 +2305,12 @@
       "en": "to vacuuming",
       "source": "deepl",
       "verb": "staubsaugen"
+    },
+    "d9d70d99068acf98": {
+      "date": "2026-09-03",
+      "en": "to get",
+      "source": "deepl",
+      "verb": "besorgen"
     },
     "da5b5b81e01d07ef": {
       "date": "2026-08-27",
@@ -2270,11 +2372,23 @@
       "source": "deepl",
       "verb": "ummelden"
     },
+    "e5f7897769be7848": {
+      "date": "2026-09-03",
+      "en": "to bore",
+      "source": "deepl",
+      "verb": "langweilen"
+    },
     "e7486649f502ef24": {
       "date": "2026-08-27",
       "en": "to practice",
       "source": "deepl",
       "verb": "üben"
+    },
+    "e756b50bbdb37a5b": {
+      "date": "2026-09-03",
+      "en": "to get upset",
+      "source": "deepl",
+      "verb": "aufregen"
     },
     "e9e69db894a7e8ae": {
       "date": "2026-08-27",
@@ -2318,6 +2432,12 @@
       "source": "deepl",
       "verb": "berechnen"
     },
+    "ed22bdddf1af92ac": {
+      "date": "2026-09-03",
+      "en": "to brake",
+      "source": "deepl",
+      "verb": "bremsen"
+    },
     "ee8699cc870b1d3c": {
       "date": "2026-08-27",
       "en": "to cover",
@@ -2329,6 +2449,12 @@
       "en": "to allow",
       "source": "deepl",
       "verb": "erlauben"
+    },
+    "ef5a1572f328ea5f": {
+      "date": "2026-09-03",
+      "en": "to complain",
+      "source": "deepl",
+      "verb": "beschweren"
     },
     "f05de7f74c2e2ec3": {
       "date": "2026-08-27",
@@ -2354,11 +2480,23 @@
       "source": "deepl",
       "verb": "beenden"
     },
+    "f603783e94ede8ed": {
+      "date": "2026-09-03",
+      "en": "to race",
+      "source": "deepl",
+      "verb": "rasen"
+    },
     "f81e494abb62af78": {
       "date": "2026-08-27",
       "en": "to look forward to",
       "source": "deepl",
       "verb": "freuen"
+    },
+    "f9f021516b02aa9d": {
+      "date": "2026-09-03",
+      "en": "to get used to",
+      "source": "deepl",
+      "verb": "gewöhnen"
     },
     "fa1ea1b65faa8c50": {
       "date": "2026-08-27",
@@ -2398,19 +2536,22 @@
       "titleEn": "Personalpronomen – the three cases"
     },
     "r0002": {
-      "content_md_en": "### Reflexivpronomen – reflexive pronouns (Akkusativ vs Dativ)\n**Person** | **Akkusativ** | **Dativ** |\nich | mich | mir |\ndu | dich | dir |\ner/sie/es | sich | sich |\nwir | uns | uns |\nihr | euch | euch |\nsie/Sie | sich | sich |\n💡 ich/du/wir/ihr – identical to the Personalpronomen | **er/sie/es** and **sie/Sie** → always **sich**\nAkk vs Dat: **Ich wasche mich** (I wash myself – the reflexive pronoun is the direct object, Akk) | **Ich wasche mir die Hände** (I wash my hands – die Hände is the direct object, mir = to/for myself, Dat)",
+      "content_md_en": "### Reflexivpronomen - reflexive pronouns (myself / to myself)\n**Person** | **Akkusativ** | **Dativ** |\nich | mich | mir |\ndu | dich | dir |\ner/sie/es | sich | sich |\nwir | uns | uns |\nihr | euch | euch |\nsie/Sie | sich | sich |",
+      "noteEn": "💡 ich/du/wir/ihr – identical to the Personalpronomen | **er/sie/es** and **sie/Sie** → always **sich**\nAkk vs Dat: **Ich wasche mich** (I wash myself – Akk) | **Ich wasche mir die Hände** (I wash my hands – to whom? to me, Dat)",
       "source": "manual",
-      "titleEn": "Reflexivpronomen – reflexive pronouns (Akkusativ vs Dativ)"
+      "titleEn": "Reflexivpronomen - reflexive pronouns (myself / to myself)"
     },
     "r0003": {
-      "content_md_en": "Expressing a prohibition with **man** (= “you may not” / “it is not allowed”):\n**Structure** | **Example** | **Translation** |\nMan darf nicht + Verb | Man darf nicht grillen. | Barbecuing is not allowed here. |\nMan darf kein + Nomen | Man darf keine Haustiere haben. | Keeping pets is not allowed. |\n💡 **nicht** – negates the action | **kein/keine** – negates the noun💡 **man** – impersonal pronoun (= “not allowed” – with no specific person named)",
+      "content_md_en": "A prohibition built with **man** (= \"you may not\" / \"it is not allowed\"):\n**Structure** | **Example** | **Translation** |\nMan darf nicht + Verb | Man darf nicht grillen. | Grilling is not allowed here. |\nMan darf kein + Nomen | Man darf keine Haustiere haben. | Keeping pets is not allowed. |",
+      "noteEn": "💡 **nicht** – negates the action | **kein/keine** – negates the noun💡 **man** – an impersonal pronoun (= \"one may not / it is not allowed\" – no specific person)",
       "source": "manual",
-      "titleEn": "Prohibition with man – not allowed"
+      "titleEn": "Prohibition with man - not allowed"
     },
     "r0004": {
-      "content_md_en": "**Verb** | **Used with** | **Example** |\n**sein** | adjectives, professions, nationalities | Ich **bin** Arzt. / Er **ist** müde. |\n**haben** | nouns (something you have) | Ich **habe** Hunger. / Er **hat** Zeit. |\n💡 Test: followed by an **adjective** → sein  |  followed by a **noun** → haben. ⚠ English says “I am hungry”, but German says Ich **habe** Hunger – the noun decides, not the English wording.",
+      "content_md_en": "**Verb** | **Used with** | **Example** |\n**sein** | adjectives, professions, nationalities | Ich **bin** Arzt. / Er **ist** müde. |\n**haben** | nouns (something you have) | Ich **habe** Hunger. / Er **hat** Zeit. |",
+      "noteEn": "💡 Test: \"I **am** …?\" → sein  |  \"I **have** …?\" → haben",
       "source": "manual",
-      "titleEn": "sein or haben?"
+      "titleEn": "Perfekt: sein or haben?"
     },
     "r0005": {
       "_src_content_md": "sein – быть\nich | war |\ndu | warst |\ner/sie/es | war |\nwir | waren |\nihr | wart |\nsie/Sie | waren |\nhaben – иметь\nich | hatte |\ndu | hattest |\ner/sie/es | hatte |\nwir | hatten |\nihr | hattet |\nsie/Sie | hatten |",
@@ -2525,16 +2666,19 @@
       "titleEn": "wohin vs wo"
     },
     "r0018": {
-      "content_md_en": "**** | **sollen** | **müssen** |\nSource | external – someone said so / it is the rule | internal / objective – you decided yourself, or there is no other way |\nExample | Du **sollst** nicht rauchen(you are being told not to) | Ich **muss** schlafen(you are tired yourself) |\nMore | Ich **soll** Milch kaufen(mum asked me to) | Ich **muss** Milch kaufen(we ran out at home) |\n💡 Roughly: **sollen** – “you are supposed to” | **müssen** – “you have to”",
+      "content_md_en": "**** | **sollen** | **müssen** |\nSource | external – someone said so / that is the rule | internal / objective – you decided yourself, or there is no other way |\nExample | Du **sollst** nicht rauchen(you are being told not to) | Ich **muss** schlafen(you are tired yourself) |\nMore | Ich **soll** Milch kaufen(mum asked me to) | Ich **muss** Milch kaufen(we ran out at home) |",
+      "noteEn": "💡 Roughly: **sollen** – \"you are supposed to\" | **müssen** – \"you have to\"",
       "source": "manual",
       "titleEn": "sollen vs müssen"
     },
     "r0019": {
       "_src_content_md": "Прилагательное в словаре стоит **без окончания** (groß, schön, nächst, gut). Но **перед существительным** оно ВСЕГДА получает окончание – зависит от рода, числа и падежа.\n Две позиции прилагательного:\n**Позиция** | **Окончание** | **Пример** |\nПосле sein / werden / bleiben | ❌ нет окончания | Das Haus ist **groß** | Er bleibt **gesund** |\nПеред существительным | ✅ есть окончание | ein **großes** Haus | der **gesunde** Mann |\n Окончания после **определённого артикля** (der/die/das):\n**Падеж** | **m (der)** | **f (die)** | **n (das)** | **Pl (die)** |\nNom | -e | -e | -e | -en |\nAkk | **-en** | -e | -e | -en |\nDat | -en | -en | -en | -en |",
+      "_src_examples": "Примеры с **nächst** (следующий):\n**Падеж / Род** | **Форма** | **Перевод** |\nf, Nom/Akk | nächst**e** Woche | следующая неделя / на следующей неделе |\nm, Akk | nächst**en** Montag | в следующий понедельник |\nn, Nom/Akk | nächst**es** Jahr | следующий год |\nDat (любой род) | im nächst**en** Jahr | в следующем году |",
       "_src_note": "💡 Простое правило: **в Dativ всегда -en** | в Akk у m-рода тоже **-en** | остальное обычно **-e**\n⚠ Без артикля (неопределённый/нулевой) – окончания немного другие. Это уровень A2+, пока запомни базовый случай.",
       "_src_title": "Прилагательное в словарной форме",
       "content_md_en": "In the dictionary, the adjective appears **without an ending** (groß, schön, nächst, gut). But **when used before a noun**, it ALWAYS takes an ending—depending on gender, number, and case.\n The two uses of an adjective:\n**Position** | **Ending** | **Example** |\nAfter sein / werden / bleiben | ❌ no ending | Das Haus ist **groß** | Er bleibt **gesund** |\nBefore a noun | ✅ has an ending | ein **großes** Haus | der **gesunde** Mann |\n Endings following the **definite article** (der / die / das):\n**Case** | **m (der)** | **f (die)** | **n (das)** | **Pl (die)** |\nNom | -e | -e | -e | -en |\nAkk | **-en** | -e | -e | -en |\nDat | -en | -en | -en | -en |",
-      "date": "2026-09-01",
+      "date": "2026-09-03",
+      "examplesEn": "Examples from **nächst** (next):\n**Case / Gender** | **Form** | **Translation** |\nf, Nom/Akk | nächst**e** Woche | next week / next week |\nm, Akk | nächst**en** Montag | next Monday |\nn, Nom/Akk | nächst**es** Jahr | next year |\nDat (any gender) | im nächst**en** Jahr | next year |",
       "noteEn": "💡 A simple rule: **in Dativ, it's always en** | in Akk, for m-, it's also **en** | for everything else, it's usually **e**\n⚠ Without an article (indefinite/zero) – the endings are slightly different. This is Level A 2+; for now, just memorize the basic form.",
       "source": "deepl",
       "titleEn": "Adjective in its dictionary form"
@@ -2548,7 +2692,8 @@
       "titleEn": "Detachable prefixes"
     },
     "r0021": {
-      "content_md_en": "### The suffix **-lich** – forming adjectives\nThe suffix **-lich** turns a noun into an adjective meaning “relating to / like”. It lines up neatly with English **-ly**: friend → friendly, day → daily, month → monthly.\n**Noun** | **+ -lich** | **Meaning** |\ndas Herz (heart) | herz**lich** | cordial, warm |\nder Tag (day) | täg**lich** | daily |\nder Freund (friend) | freund**lich** | friendly |\nder Mensch (human being) | mensch**lich** | human |\nder Monat (month) | monat**lich** | monthly |\nder Beruf (profession) | beruf**lich** | professional |\n💡 The stem vowel often takes an Umlaut: Tag → t**ä**glich, Nacht → n**ä**chtlich",
+      "content_md_en": "### The suffix **-lich** – forming adjectives\nThe suffix **-lich** turns a noun into an adjective meaning \"relating to / like\". It works much like English **-ly** in friendly or monthly.\n**Noun** | **+ -lich** | **Translation** |\ndas Herz (heart) | herz**lich** | cordial |\nder Tag (day) | täg**lich** | daily |\nder Freund (friend) | freund**lich** | friendly |\nder Mensch (human being) | mensch**lich** | human |\nder Monat (month) | monat**lich** | monthly |\nder Beruf (profession) | beruf**lich** | professional |",
+      "noteEn": "💡 The stem vowel often takes an Umlaut: Tag → t**ä**glich, Nacht → n**ä**chtlich",
       "source": "manual",
       "titleEn": "The suffix -lich – forming adjectives"
     },
@@ -2561,82 +2706,93 @@
       "titleEn": "Perfekt – past conversational tense (haben / sein + Partizip II)"
     },
     "r0023": {
-      "content_md_en": "### Nebensatz mit weil – the causal clause\n\n**weil** (because) is a subordinating conjunction.\nThe verb moves to the **end** of the subordinate clause.\n\n### Structure\n**Hauptsatz** | **Nebensatz** |\nIch bleibe zu Hause, | weil ich krank **bin**. |\nIch lerne Deutsch, | weil es interessant **ist**. |\nEr kommt nicht, | weil er arbeiten **muss**. |\n\n### Examples with a modal verb\n**Hauptsatz** | **Nebensatz** |\nIch gehe nicht aus, | weil ich lernen **muss**. |\nSie bleibt zu Hause, | weil sie schlafen **will**. |\n\n⚠ A **comma** always goes before weil\n⚠ The verb is always **last** in the Nebensatz\n💡 The Nebensatz answers: **Warum? / Weshalb?** (why?)",
+      "content_md_en": "### Nebensatz mit weil – the causal clause\n\n**weil** (because) is a subordinating conjunction.\nThe verb moves to the **end** of the subordinate clause.\n\n### Structure\n**Hauptsatz** | **Nebensatz** |\nIch bleibe zu Hause, | weil ich krank **bin**. |\nIch lerne Deutsch, | weil es interessant **ist**. |\nEr kommt nicht, | weil er arbeiten **muss**. |\n\n### Examples with a Modalverb\n**Hauptsatz** | **Nebensatz** |\nIch gehe nicht aus, | weil ich lernen **muss**. |\nSie bleibt zu Hause, | weil sie schlafen **will**. |\n\n⚠ A comma always comes before weil\n⚠ The verb is always **last** in the Nebensatz",
+      "examplesEn": "Ich lerne Deutsch, weil es interessant ist.",
+      "noteEn": "💡 The question the Nebensatz answers: **Warum? / Weshalb?** (why?)",
       "source": "manual",
       "titleEn": "Nebensatz mit weil"
     },
     "r0024": {
-      "content_md_en": "### Cases: their role in the sentence\n\n**Case** | **Role** | **Question** | **Example**\nNominativ | the subject – who performs the action | Wer? | **Ich** lerne Deutsch.\nAkkusativ | the direct object – who or what the action affects | Wen? Was? | Ich kaufe **einen Kaffee**.\nDativ | the indirect object – to whom, for whom, where | Wem? | Ich gebe **dir** das Buch.\n\n💡 **Nominativ** – there is always exactly one per sentence, the “doer”. English keeps this distinction only in pronouns: **I** / he / we\n💡 **Akkusativ** – the direct object, answers “what / whom?”. English pronouns: **me** / him / us\n💡 **Dativ** – the indirect object, answers “to whom?”, and is also used after the prepositions mit, bei, in (Wo?)",
-      "noteEn": "Nominativ – always the subject, never changes after the article. Akkusativ – only the masculine changes: der→den, ein→einen. Dativ – everything changes: dem/der/dem, einem/einer/einem. The prepositions mit, bei, nach, von, zu, aus – always Dativ. The prepositions durch, für, gegen, ohne, um – always Akkusativ.",
+      "content_md_en": "### Cases: their role in the sentence\n\n**Case** | **Role** | **Question** | **Example**\nNominativ | the subject only – who performs the action | Wer? | **Ich** lerne Deutsch.\nAkkusativ | subject + direct object – who or what the action affects | Wen? Was? | Ich kaufe **einen Kaffee**.\nDativ | subject + indirect object – to whom, for whom, where | Wem? | Ich gebe **dir** das Buch.",
+      "examplesEn": "Ich bin müde. (Nom) | Ich kaufe einen Apfel. (Akk) | Ich gebe dir das Buch. (Dat)",
+      "noteEn": "Nominativ – always the subject, never changes after the article. Akkusativ – only the masculine changes: der→den, ein→einen. Dativ – everything changes: dem/der/dem, einem/einer/einem. The prepositions mit, bei, nach, von, zu, aus – always Dativ. The prepositions durch, für, gegen, ohne, um – always Akkusativ.\n\n💡 **Nominativ** – there is exactly one per sentence, the \"doer\". English keeps this distinction only in pronouns: I / he / we\n\n **Akkusativ** – the direct object, answers \"what / whom?\". English pronouns: me / him / us\n\n**Dativ** – the indirect object, answers \"to whom?\", and is also used after the prepositions mit, bei, in (Wo?)",
       "source": "manual",
       "titleEn": "Cases: their role in the sentence"
     },
     "r0025": {
       "content_md_en": "### Verben mit Dativ – verbs that are always followed by the Dativ\n\nAfter certain verbs the object is **always in the Dativ** (never the Akkusativ!).\n\n**Verb** | **Example** | **Translation**\nantworten | Ich antworte **dir**. | I answer you.\ndanken | Ich danke **dem Team**. | I thank the team.\ngefallen | Das gefällt **mir**. | I like that.\ngehören | Das gehört **mir**. | That belongs to me.\ngratulieren | Ich gratuliere **dir**. | I congratulate you.\nhelfen | Er hilft **der Kundin**. | He helps the customer.\nschmecken | Das schmeckt **mir**. | That tastes good to me.",
-      "noteEn": "Learn the list by heart: antworten, danken, gefallen, gehören, gratulieren, helfen, schmecken – the Dativ always follows. Test: ask the question “to whom?” (Wem?). Note that several of these take a direct object in English (I thank you, I help her, I congratulate you) – German still uses the Dativ.",
+      "examplesEn": "Ich danke dir / Ihnen / euch. | Ich danke dem Team / den Kollegen. | Meine Tochter hilft mir immer. | Der Verkäufer hilft der Kundin.",
+      "noteEn": "💡 Learn the list by heart: antworten, danken, gefallen, gehören, gratulieren, helfen, schmecken – the Dativ always follows. Test: ask the question \"to whom?\" (Wem?). Several of these take a direct object in English (I thank you, I help her) – German still uses the Dativ.",
       "source": "manual",
       "titleEn": "Verben mit Dativ"
     },
     "r0026": {
-      "content_md_en": "### Order of Dativ and Akkusativ in a sentence\n\n**Rule 1: two nouns** → Dativ before Akkusativ\n**Subject** | **Verb** | **Dativ** | **Akkusativ**\nIch | gebe | dem Mann | das Buch.\nEr | zeigt | der Kundin | den Weg.\n\n**Rule 2: pronoun + noun** → the pronoun comes first\n**Subject** | **Verb** | **Pronomen** | **Nomen**\nIch | gebe | ihm | das Buch.\nEr | zeigt | ihr | den Weg.\n\n**Rule 3: two pronouns** → Akkusativ before Dativ\n**Subject** | **Verb** | **Akkusativ** | **Dativ**\nIch | gebe | es | ihm.\nEr | zeigt | es | ihr.\n\n💡 Remember: **two nouns → Dat→Akk** | **two pronouns → Akk→Dat**",
-      "noteEn": "Quick check: if both words are nouns, the Dativ always comes first. If both are pronouns, the Akkusativ comes first. A pronoun is always pulled forward.",
+      "content_md_en": "### The order of Dativ and Akkusativ in the sentence\n\n**Rule 1: two nouns** → Dativ before Akkusativ\n**Subject** | **Verb** | **Dativ** | **Akkusativ**\nIch | gebe | dem Mann | das Buch.\nEr | zeigt | der Kundin | den Weg.\n\n**Rule 2: pronoun + noun** → the pronoun comes first\n**Subject** | **Verb** | **Pronomen** | **Nomen**\nIch | gebe | ihm | das Buch.\nEr | zeigt | ihr | den Weg.\n\n**Rule 3: two pronouns** → Akkusativ before Dativ\n**Subject** | **Verb** | **Akkusativ** | **Dativ**\nIch | gebe | es | ihm.\nEr | zeigt | es | ihr.",
+      "examplesEn": "Ich gebe dem Mann das Buch. | Ich gebe ihm das Buch. | Ich gebe es ihm.",
+      "noteEn": "Test: if both words are nouns, the Dativ always comes first. If both are pronouns, the Akkusativ comes first. A pronoun is always pulled forward.\n\n💡 Remember: **two nouns → Dat→Akk** | **two pronouns → Akk→Dat**",
       "source": "manual",
-      "titleEn": "Order of Dativ and Akkusativ in a sentence"
+      "titleEn": "The order of Dativ and Akkusativ in the sentence"
     },
     "r0027": {
-      "content_md_en": "### Verben mit Dativ und Akkusativ – verbs with two objects\n\nSome verbs are followed by TWO objects at once: to whom (Dativ) + what (Akkusativ).\n\n**Role** | **Case** | **Question** | **Articles (m / f / n / Pl)**\nPerson 1 | Nominativ | Wer? | der · die · das · die / ein · eine · ein · –\nPerson 2 | Dativ | Wem? | dem · der · dem · den / einem · einer · einem · –\nObjekt | Akkusativ | Was? | den · die · das · die / einen · eine · ein · –\n\n💡 Order: Subject → Verb → **Dativ** → **Akkusativ** (to whom → what)\n💡 The indefinite article has no plural form (the noun simply goes without one)",
+      "content_md_en": "### Verben mit Dativ und Akkusativ – verbs with two objects\n\nAfter certain verbs there are TWO objects at once: to whom (Dativ) + what (Akkusativ).\n\n**Role** | **Case** | **Question** | **Articles (m / f / n / Pl)**\nPerson 1 | Nominativ | Wer? | der · die · das · die / ein · eine · ein · –\nPerson 2 | Dativ | Wem? | dem · der · dem · den / einem · einer · einem · –\nObjekt | Akkusativ | Was? | den · die · das · die / einen · eine · ein · –",
       "examplesEn": "**Example** | **Translation**||\nIch gebe dem Mann das Buch. | I give the man the book.||\nEr schenkt der Frau einen Ring. | He gives the woman a ring.||\nWir zeigen den Kindern die Stadt. | We show the children the city.||",
-      "noteEn": "Typical verbs: geben, schenken, zeigen, bringen, schicken, kaufen, erklären, empfehlen, leihen, schreiben, wünschen, anbieten. Check: ask two questions – “to whom?” (Wem? → Dativ) and “what?” (Was? → Akkusativ). Order with two nouns: Dativ before Akkusativ.",
+      "noteEn": "Typical verbs: geben, schenken, zeigen, bringen, schicken, kaufen, erklären, empfehlen, leihen, schreiben, wünschen, anbieten. Test: ask two questions – \"to whom?\" (Wem? → Dativ) and \"what?\" (Was? → Akkusativ). With two nouns the order is Dativ before Akkusativ.\n\n💡 Order: Subject → Verb → **Dativ** → **Akkusativ** (to whom → what)\n💡 The indefinite article has no plural form (the noun simply stands without an article)",
       "source": "manual",
       "titleEn": "Verben mit Dativ und Akkusativ"
     },
     "r0028": {
       "_src_content_md": "### Artikelformen: Nominativ / Dativ / Akkusativ\n\n**bestimmter Artikel (der/die/das)**\n\n| | Nom | Dativ | Akkusativ |\n\n| m | der | dem | den |\n| f | die | der | die |\n| n | das | dem | das |\n| Pl | die | den | die |\n\n**unbestimmter Artikel (ein/eine)**\n\n| | Nom | Dativ | Akkusativ |\n\n| m | ein | einem | einen |\n| f | eine | einer | eine |\n| n | ein | einem | ein |\n| Pl | – | – | – |",
+      "_src_examples": "Ich sehe den Mann. (m, Akk) | Ich helfe der Frau. (f, Dat) | Das gehört dem Kind. (n, Dat) | Ich gebe den Kindern das Buch. (Pl, Dat)",
       "_src_note": "Nominativ – субъект (Wer?). Akkusativ – прямой объект (Wen? Was?). Dativ – косвенный объект (Wem?). Изменения: m Akk: der→den, ein→einen. Dativ Pl: +n к существительному.\n\n💡 Меняется только **m** в Akkusativ: der→den, ein→einen\n💡 Dativ **Pl** всегда: den + существительное + **-n** (den Kindern, den Männern)\n💡 unbestimmter Artikel во Pl – отсутствует",
       "_src_title": "Artikelformen: Nom / Dativ / Akkusativ",
       "content_md_en": "### Artikelformen: Nominativ / Dativ / Akkusativ\n\n**bestimmter Artikel (der/die/das)**\n\n| | Nom | Dativ | Akkusativ |\n\n| m | der | dem | den |\n| f | die | der | die |\n| n | das | dem | das |\n| Pl | die | den | die |\n\n**unbestimmter Artikel (ein/eine)**\n\n| | Nom | Dativ | Akkusativ |\n\n| m | ein | einem | einen |\n| f | eine | einer | eine |\n| n | ein | einem | ein |\n| Pl | – | – | – |",
-      "date": "2026-09-01",
+      "date": "2026-09-03",
+      "examplesEn": "Ich sehe den Mann. (m, Akk) | Ich helfe der Frau. (f, Dat) | Das gehört dem Kind. (n, Dat) | Ich gebe den Kindern das Buch. (Pl, Dat)",
       "noteEn": "Nominativ – subject (Wer?). Akkusativ – direct object (Wen? Was?). Dativ – indirect object (Wem?). Changes: m Akk: der→den, ein→einen. Dativ Pl: +n to the noun.\n\n💡 Only **m** changes in Akkusativ: der→den, ein→einen\n💡 Dativ **Pl** always follows this pattern: den + noun + **- n** (den Kindern, den Männern)\n💡 unbestimmter Artikel on Pl – not available",
       "source": "deepl",
       "titleEn": "Artikelformen: Nom / Dativ / Akkusativ"
     },
     "r0029": {
-      "content_md_en": "### Nebensatz – verb order\n\nThe **conjugated verb** always moves to the **end** of the Nebensatz.  \nIf there are two verbs, the second one (Infinitiv or Partizip II) stands in front of it.\n\n\n\n### Structure\n\n| Hauptsatz | Nebensatz |\n| Sie geht zum Vermieter, | weil sie den Schlüssel abgeben **muss**. |\n| Sie ist müde, | weil sie viel gearbeitet **hat**. |\n| Er kommt nicht, | weil er krank **ist**. |\n| Ich glaube, | dass er krank **ist**. |\n\n\n### Modal verb + main verb\n\n| Hauptsatz | Nebensatz |\n| Ich gehe nicht aus, | weil ich lernen **muss**. |\n| Sie bleibt zu Hause, | weil sie schlafen **will**. |\n| Wir bleiben hier, | weil wir früh aufstehen **müssen**. |\n\n\n\n### Perfekt\n\n| Hauptsatz | Nebensatz |\n| Er ist müde, | weil er viel gearbeitet **hat**. |\n| Sie weiß es, | weil er nach Berlin gefahren **ist**. |\n\n\n\n### Compare\n\n|_| Hauptsatz | Nebensatz |\n| Without a modal | *Sie gibt den Schlüssel ab.* | *weil sie den Schlüssel abgibt.* |\n| With a modal | *Sie muss den Schlüssel abgeben.* | *weil sie den Schlüssel abgeben **muss**.* |\n\n\n\n⚠ A **comma** always goes before a subordinate clause  \n⚠ The conjugated verb is always **last** in the Nebensatz  \n💡 **Memory hook:** the conjugated verb is the “king” of the Nebensatz. Everything else lines up in front of it.",
-      "noteEn": "How to spot the conjugated verb: it is the one that changes with the person (ich/du/er). In the dictionary it appears as an Infinitiv (müssen, haben); in a sentence it takes a form (muss, hat).\nThis rule is universal — it works for every Nebensatz (weil, dass, wenn, obwohl, damit, ob, als, während, bevor, nachdem)\n💡 If the sentence has two verbs (a modal, the Perfekt...) — see the rule on verb order in the Nebensatz.\n💡 dass introduces a Nebensatz too, and the verb goes to the end in the same way: Ich weiß, dass er kommt.",
+      "content_md_en": "### Nebensatz – the order of verbs\n\nThe **conjugated verb** always moves to the **end** of the Nebensatz.  \nIf there are two verbs, the second one (Infinitiv or Partizip II) stands in front of it.\n\n\n\n### Structure\n\n| Hauptsatz | Nebensatz |\n| Sie geht zum Vermieter, | weil sie den Schlüssel abgeben **muss**. |\n| Sie ist müde, | weil sie viel gearbeitet **hat**. |\n| Er kommt nicht, | weil er krank **ist**. |\n| Ich glaube, | dass er krank **ist**. |\n\n\n### Modalverb + main verb\n\n| Hauptsatz | Nebensatz |\n| Ich gehe nicht aus, | weil ich lernen **muss**. |\n| Sie bleibt zu Hause, | weil sie schlafen **will**. |\n| Wir bleiben hier, | weil wir früh aufstehen **müssen**. |\n\n\n\n### Perfekt\n\n| Hauptsatz | Nebensatz |\n| Er ist müde, | weil er viel gearbeitet **hat**. |\n| Sie weiß es, | weil er nach Berlin gefahren **ist**. |\n\n\n\n### Compare\n\n|_| Hauptsatz | Nebensatz |\n| Without a Modalverb | *Sie gibt den Schlüssel ab.* | *weil sie den Schlüssel abgibt.* |\n| With a Modalverb | *Sie muss den Schlüssel abgeben.* | *weil sie den Schlüssel abgeben **muss**.* |\n\n\n\n⚠ A comma always comes before the subordinate clause  \n⚠ The conjugated verb is always **last** in the Nebensatz  ",
+      "examplesEn": "weil ich lernen muss | weil sie gearbeitet hat | weil er krank ist | weil ich lernen muss | weil sie gearbeitet hat | weil er krank ist | dass er kommt",
+      "noteEn": "How to spot the conjugated verb: it is the one that changes with the person (ich/du/er). In the dictionary it stands as an infinitiv (müssen, haben), in the sentence it takes a form (muss, hat).\nThis rule is universal – it works for every Nebensatz (weil, dass, wenn, obwohl, damit, ob, als, während, bevor, nachdem)\n💡 If the sentence has two verbs (Modalverb, Perfekt...) – see the rule on verb order in the Nebensatz.\n💡 dass introduces a Nebensatz too, and the verb goes to the end in exactly the same way: Ich weiß, dass er kommt.\n\n💡 **Mnemonic:** the conjugated verb is the \"king\" of the Nebensatz. Everything else stands before it.",
       "source": "manual",
-      "titleEn": "Nebensatz – verb order"
+      "titleEn": "Nebensatz – the order of verbs"
     },
     "r0030": {
       "_src_content_md": "### Сокращения артиклей: am / im\n\nВ разговорной и письменной речи предлог + артикль **dem** сливаются:\n\n| Предлог | + dem | = |\n|---------|-------|---|\n| an | an + dem | **am** |\n| in | in + dem | **im** |\n\n### Сокращения в Akkusativ: ins / ans / ums\nТа же логика, что am/im, но с артиклем das (средний род, Akkusativ):\nin + das → ins: Ich gehe ins Kino. (= in das Kino)\nan + das → ans: Ich gehe ans Fenster. (= an das Fenster)\num + das → ums: Wir gehen rund ums Haus. (= um das Haus)",
+      "_src_examples": "Ich bin im Büro. | Er steht am Fenster. | Das Buch liegt im Regal.\n\nIch bin **im** Büro. = Ich bin in dem Büro.\nIch bin **am** Bahnhof. = Ich bin an dem Bahnhof.",
       "_src_note": "am = an + dem | im = in + dem | только Dativ (Wo?) | женский род – без сокращения: in der Küche, an der Wand\n\n💡 **am** и **im** – это всегда Dativ (Wo?)\n ins/ans/ums – это Akkusativ (Wohin?/Was?), в отличие от im/am, которые всегда Dativ (Wo?)\n⚠ Только с **dem** (m/n, Dativ) – с **der** (f) сокращения нет: in der Küche (не im)",
       "_src_title": "Сокращения артиклей: am / im",
       "content_md_en": "### Abbreviations for articles: am / im\n\nIn spoken and written language, the preposition + article **dem** are combined as follows:\n\n| Preposition | + dem | = |\n|---------|-------|---|\n| an | an + dem | **am** |\n| in | in + dem | **im** |\n\n### Abbreviations on Akkusativ: ins / ans / ums\nThe same logic applies as in am / im, but with the article das (neuter gender, Akkusativ):\nin + das → ins: Ich gehe ins Kino. (= in das Kino)\nan + das → ans: Ich gehe ans Fenster. (= an das Fenster)\num + das → ums: Wir gehen rund ums Haus. (= um das Haus)",
-      "date": "2026-09-01",
+      "date": "2026-09-03",
+      "examplesEn": "Ich bin im Büro. | Er steht am Fenster. | Das Buch liegt im Regal.\n\nIch bin **im** Büro. = Ich bin in dem Büro.\nIch bin **am** Bahnhof. = Ich bin an dem Bahnhof.",
       "noteEn": "am = an + dem | im = in + dem | only Dativ (Wo?) | feminine gender – no abbreviation: in der Küche, an der Wand\n\n💡 **am** and **im** always lead to Dativ (Wo?)\n ins / ans / ums – these are Akkusativ (Wohin?/ Was?), unlike im / am, which are always Dativ (Wo?)\n⚠ Only with **dem** (m / n, Dativ) – there is no abbreviation for **der** (f): in der Küche (not im)",
       "source": "deepl",
       "titleEn": "Abbreviations: am / im"
     },
     "r0031": {
-      "content_md_en": "### Wo? Präposition + Dativ\n\nAfter the question **Wo?** (where?) prepositions of place take the **Dativ**.\n\n| Preposition | Meaning | Example |\n|---------|----------|--------|\n| auf | on (horizontal) | Das Buch liegt **auf dem Tisch**. |\n| unter | under | Die Katze sitzt **unter dem Stuhl**. |\n| in | in | Das Heft ist **in der Tasche**. |\n| an | at / on (vertical) | Das Bild hängt **an der Wand**. |\n| über | above | Die Lampe hängt **über dem Tisch**. |\n| vor | in front of | Das Fahrrad steht **vor der Tür**. |\n| hinter | behind | Der Schrank steht **hinter der Tür**. |\n| neben | next to | Die Pflanze steht **neben dem Fenster**. |\n| zwischen | between | Der Tisch steht **zwischen den Pflanzen**. |\n\n💡 Wo? → always **Dativ**\n💡 Wohin? → always **Akkusativ** (where we put / place something)",
-      "noteEn": "Wo? = where something stands / lies / hangs → Dativ | Wohin? = where we put or place it → Akkusativ | an/in + dem = am/im",
+      "content_md_en": "### Wo? Präposition + Dativ\n\nIn answer to **Wo?** (where?) prepositions of place take the **Dativ**.\n\n| Preposition | Meaning | Example |\n|---------|----------|--------|\n| auf | on (horizontal) | Das Buch liegt **auf dem Tisch**. |\n| unter | under | Die Katze sitzt **unter dem Stuhl**. |\n| in | in | Das Heft ist **in der Tasche**. |\n| an | at / on (vertical) | Das Bild hängt **an der Wand**. |\n| über | above | Die Lampe hängt **über dem Tisch**. |\n| vor | in front of | Das Fahrrad steht **vor der Tür**. |\n| hinter | behind | Der Schrank steht **hinter der Tür**. |\n| neben | next to | Die Pflanze steht **neben dem Fenster**. |\n| zwischen | between | Der Tisch steht **zwischen den Pflanzen**. |",
+      "examplesEn": "Auf dem Tisch. | Unter dem Buch. | In der Tasche. | Zwischen den Pflanzen. | An der Wand.",
+      "noteEn": "Wo? = where something stands/lies/hangs → Dativ | Wohin? = where we put it → Akkusativ | an/in + dem = am/im\n\n💡 Wo? → always **Dativ**\n💡 Wohin? → always **Akkusativ** (where we put or place something)",
       "source": "manual",
       "titleEn": "Wo? Präposition + Dativ"
     },
     "r0032": {
-      "content_md_en": "**Person** | **Endung** | **müssen** | **können** | **wollen** | **dürfen** |\nich | – | musste | konnte | wollte | durfte |\ndu | -st | musstest | konntest | wolltest | durftest |\ner/sie/es | – | musste | konnte | wollte | durfte |\nwir | -en | mussten | konnten | wollten | durften |\nihr | -t | musstet | konntet | wolltet | durftet |\nsie/Sie | -en | mussten | konnten | wollten | durften |\n💡 Stem + -te + ending (ich and er take no ending). The Umlaut is dropped: müssen→musste, können→konnte, dürfen→durfte. Genauso: sollen→sollte, mögen→mochte.",
-      "noteEn": "In everyday speech the past of modal verbs is normally the Präteritum, not the Perfekt.",
+      "content_md_en": "**Person** | **Endung** | **müssen** | **können** | **wollen** | **dürfen** |\nich | – | musste | konnte | wollte | durfte |\ndu | -st | musstest | konntest | wolltest | durftest |\ner/sie/es | – | musste | konnte | wollte | durfte |\nwir | -en | mussten | konnten | wollten | durften |\nihr | -t | musstet | konntet | wolltet | durftet |\nsie/Sie | -en | mussten | konnten | wollten | durften |",
+      "noteEn": "in speech the past of Modalverben is usually the Präteritum, not the Perfekt\n\n💡 Stem + -te + endings (ich/er take none). The Umlaut disappears: müssen→musste, können→konnte, dürfen→durfte. Genauso: sollen→sollte, mögen→mochte.",
       "source": "manual",
       "titleEn": "Modalverben im Präteritum"
     },
     "r0033": {
-      "content_md_en": "**Nominativ** (Hier ist/sind …) | article + ending | example\nm – der Anzug | ein / mein neuer | ein neuer Anzug\nn – das Hemd | ein / mein neues | ein neues Hemd\nf – die Hose | eine / meine neue | eine neue Hose\nPl – die Stiefel | meine neuen | meine neuen Stiefel\n**Akkusativ** (Ich brauche/suche …) | article + ending | example\nm – der Anzug | einen / meinen neuen | einen neuen Anzug\nn – das Hemd | ein / mein neues | ein neues Hemd\nf – die Hose | eine / meine neue | eine neue Hose\nPl – die Stiefel | meine neuen | meine neuen Stiefel\n**Dativ** (Das passt zu …) | article + ending | example\nm – der Anzug | einem / meinem neuen | einem neuen Anzug\nn – das Hemd | einem / meinem neuen | einem neuen Hemd\nf – die Hose | einer / meiner neuen | einer neuen Hose\nPl – die Stiefel | meinen neuen | meinen neuen Stiefeln\n💡 Nom→Akk changes only in the masculine: neuer → neuen. In the Dativ the adjective ending is ALWAYS -en (all genders). After kein it works exactly as after mein. In the Dativ Plural the noun takes an extra -n as well: meinen neuen Stiefeln. lila / rosa take no endings.",
-      "noteEn": "Plural is always -en (with an ein-word, a possessive or kein). Dativ is always -en; in the Dativ Plural the noun also takes +n. Plural is always -en.",
+      "content_md_en": "**Nominativ** (Hier ist/sind …) | article + ending | example\nm – der Anzug | ein / mein neuer | ein neuer Anzug\nn – das Hemd | ein / mein neues | ein neues Hemd\nf – die Hose | eine / meine neue | eine neue Hose\nPl – die Stiefel | meine neuen | meine neuen Stiefel\n**Akkusativ** (Ich brauche/suche …) | article + ending | example\nm – der Anzug | einen / meinen neuen | einen neuen Anzug\nn – das Hemd | ein / mein neues | ein neues Hemd\nf – die Hose | eine / meine neue | eine neue Hose\nPl – die Stiefel | meine neuen | meine neuen Stiefel\n**Dativ** (Das passt zu …) | article + ending | example\nm – der Anzug | einem / meinem neuen | einem neuen Anzug\nn – das Hemd | einem / meinem neuen | einem neuen Hemd\nf – die Hose | einer / meiner neuen | einer neuen Hose\nPl – die Stiefel | meinen neuen | meinen neuen Stiefeln",
+      "noteEn": "the Plural is always -en (after an ein-word/Possessiv/kein)\nthe Dativ is always -en; in the Dativ Plural the noun also takes +n. The Plural is always -en.\n\n💡 Nom→Akk changes in the masculine only: neuer → neuen. In the Dativ the adjective ending is ALWAYS -en (every gender). After kein – the same as after mein. In the Dativ Plural the noun takes -n as well: meinen neuen Stiefeln. lila / rosa – no endings.",
       "source": "manual",
       "titleEn": "Adjektivdeklination (ein-/Possessiv, Nom + Akk + Dativ)"
     },
     "r0034": {
-      "content_md_en": "**am** (+ Dativ) | days, parts of the day, dates | am Montag, am Wochenende, am Morgen, am 3. Mai\n**im** (+ Dativ) | months, seasons | im Januar, im Sommer, im Frühling / Herbst / Winter\n**um** (+ Akkusativ) | clock time | um 8 Uhr, um Mitternacht, um halb neun\n💡 Exception: in der Nacht (not am). Matching questions: Um wie viel Uhr? / An welchem Tag? / In welchem Monat?",
-      "noteEn": "Exception: in der Nacht",
+      "content_md_en": "**am** (+ Dativ) | days, parts of the day, dates | am Montag, am Wochenende, am Morgen, am 3. Mai\n**im** (+ Dativ) | months, seasons | im Januar, im Sommer, im Frühling / Herbst / Winter\n**um** (+ Akkusativ) | clock times | um 8 Uhr, um Mitternacht, um halb neun",
+      "noteEn": "Exception: in der Nacht💡 Exception: in der Nacht (not \"am\"). Questions: Um wie viel Uhr? / An welchem Tag? / In welchem Monat?",
       "source": "manual",
       "titleEn": "Zeitpräpositionen: am / im / um"
     },
@@ -2647,8 +2803,8 @@
       "titleEn": "Modalverben: Bedeutung (will / muss / darf / kann / möchte)"
     },
     "r0036": {
-      "content_md_en": "Zahl + **-jährig** = “X-year-old” (an adjective)\nacht + jährig → achtjährig – eight-year-old\nBeispiele: ein dreijähriges Kind, eine 18-jährige Frau\n💡 Written as one word; the number spelled out, or as a digit with a hyphen (8-jährig). The same goes for: -tägig (days), -stündig (hours), -monatig (months).",
-      "noteEn": "≠ jährlich (annually)",
+      "content_md_en": "Zahl + **-jährig** = \"X-year-old\" (an adjective)\nacht + jährig → achtjährig – eight-year-old\nBeispiele: ein dreijähriges Kind, eine 18-jährige Frau",
+      "noteEn": "≠ jährlich (annually)\n\n💡 Written as one word; the number spelled out, or as a digit with a hyphen (8-jährig). The same goes for: -tägig (days), -stündig (hours), -monatig (months).",
       "source": "manual",
       "titleEn": "Building age adjectives (Zahl+jährig = X-year-old)"
     },
@@ -2689,30 +2845,32 @@
       "titleEn": "Adjektivdeklination ohne Artikel (starke Endungen)"
     },
     "r0041": {
-      "content_md_en": "**Komparativ** = “more / -er”. Formed with adjective + **-er**, exactly like English fast → faster. Comparison uses **als** (than).\n**Positiv** | **Komparativ** | **Example** |\nschnell | schneller | Er läuft schneller als ich. |\nklein | kleiner | Mein Zimmer ist kleiner als deins. |\nschön | schöner | Heute ist es schöner als gestern. |\n💡 Short adjectives with a / o / u often take an **Umlaut**: alt → älter, groß → größer, jung → jünger, kurz → kürzer, lang → länger, warm → wärmer.\n⚠ Irregular (learn by heart): gut → besser | viel → mehr | gern → lieber | hoch → höher | teuer → teurer | nah → näher",
-      "noteEn": "Comparison uses als. Umlaut on short a/o/u adjectives. Special forms: besser, mehr, lieber, höher, teurer. Unlike English, German has no “more + adjective” alternative – long adjectives take -er too: interessanter, not mehr interessant.",
+      "content_md_en": "**Komparativ** = \"more / -er\". Formed with adjective + **-er**, exactly like English fast → faster. Comparison uses **als** (than).\n**Positiv** | **Komparativ** | **Example** |\nschnell | schneller | Er läuft schneller als ich. |\nklein | kleiner | Mein Zimmer ist kleiner als deins. |\nschön | schöner | Heute ist es schöner als gestern. |",
+      "noteEn": "Comparison uses als. Umlaut on short a/o/u adjectives. Special forms: besser, mehr, lieber, höher, teurer.\n\n\n💡 Short adjectives with a / o / u often take an **Umlaut**: alt → älter, groß → größer, jung → jünger, kurz → kürzer, lang → länger, warm → wärmer.\n⚠ Irregular (learn by heart): gut → besser | viel → mehr | gern → lieber | hoch → höher | teuer → teurer | nah → näher",
       "source": "manual",
-      "titleEn": "Komparativ (comparative)"
+      "titleEn": "Komparativ (the comparative)"
     },
     "r0042": {
-      "content_md_en": "**Superlativ** = “the most / -est”. The form depends on the position:\n**Position** | **Form** | **Example** |\nWith a verb / predicative | am …**sten** | Er läuft am schnellsten. |\nBefore a noun (with an article) | der/die/das …**ste(n)** | Das ist der schnellste Mann. |\n💡 With an article – NO am: die schnellsten Sportler (not “die am schnellsten”). With **am** the ending is always **-sten**.\n💡 Umlaut – whenever the Komparativ has one: kurz → kürzer → am kürzesten.\n💡 After **-t, -d, -s, -sch, -x, -z** an e is inserted → the ending becomes **-este(n)**: am härtesten, der kürzeste Weg, am heißesten.\n⚠ Irregular (same stems as in the Komparativ): gut → am besten | viel → am meisten | gern → am liebsten | hoch → am höchsten | teuer → am teuersten | groß → am größten (no -e-!)",
-      "noteEn": "With an article: der/die/das …ste – no am. Predicative: am …sten. After t/d/s/sch/x/z → -este(n). Special forms: am besten, am meisten, am liebsten, am größten (no -e-).",
+      "content_md_en": "**Superlativ** = \"the most\". The form depends on the position:\n**Position** | **Form** | **Example** |\nWith a verb / predicative | am …**sten** | Er läuft am schnellsten. |\nBefore a noun (with an article) | der/die/das …**ste(n)** | Das ist der schnellste Mann. |",
+      "noteEn": "With an article: der/die/das …ste – no am. Predicative: am …sten. After t/d/s/sch/x/z → -este(n). Special: am besten, am meisten, am liebsten, am größten (no -e-).\n\n💡 With an article – NO am: die schnellsten Sportler (not \"die am schnellsten\"). With **am** the ending is always **-sten**.\n Umlaut – whenever the Komparativ has one: kurz → kürzer → am kürzesten.\nAfter **-t, -d, -s, -sch, -x, -z** an e is inserted → the ending becomes **-este(n)**: am härtesten, der kürzeste Weg, am heißesten.\n⚠ Irregular (same stems as in the Komparativ): gut → am besten | viel → am meisten | gern → am liebsten | hoch → am höchsten | teuer → am teuersten | groß → am größten (no -e-!)",
       "source": "manual",
-      "titleEn": "Superlativ (superlative)"
+      "titleEn": "Superlativ (the superlative)"
     },
     "r0043": {
-      "content_md_en": "Three common subordinating conjunctions – the question tells you which one to pick:\n**Question** | **Conjunction** | **Meaning** | **Example** |\nWarum? | **weil** | because (reason) | Ich gehe zum Bahnhof, weil ich meinen Freund abholen will. |\nWas? | **dass** | that (content) | Ich glaube, dass mein Freund heute kommt. |\nWann? | **wenn** | when / if | Mein Freund ruft an, wenn er am Bahnhof ankommt. |\n💡 With all three the verb goes to the **end** of the subordinate clause (see the rule on verb order in the Nebensatz).\n⚠ A comma goes before the conjunction.\n💡 **wenn** often pairs up with **dann** in the main clause: Wenn das Wetter gut ist, dann gehen wir spazieren. (If/when …, then …)\n⚠ Do not mix up **wenn** (conjunction: if / when) and **wann** (question word: when?): Ich weiß nicht, wann er kommt.\n💡 wenn – “when” (repeated action) and “if” (condition). A one-off “when” in the past is als.",
-      "noteEn": "weil – reason (Warum?), dass – content (Was?), wenn – time/condition (Wann?). Verb to the end. wenn ↔ dann in the main clause. Do not confuse wenn (conjunction) with wann (question word). Als is the one-off “when” in the past.",
+      "content_md_en": "Three common subordinating conjunctions – the question tells you which one to pick:\n**Question** | **Conjunction** | **Meaning** | **Example** |\nWarum? | **weil** | because (reason) | Ich gehe zum Bahnhof, weil ich meinen Freund abholen will. |\nWas? | **dass** | that (content) | Ich glaube, dass mein Freund heute kommt. |\nWann? | **wenn** | when / if | Mein Freund ruft an, wenn er am Bahnhof ankommt. |",
+      "noteEn": "weil – reason (Warum?), dass – content (Was?), wenn – time/condition (Wann?). The verb goes to the end. wenn ↔ dann in the main clause. Do not confuse wenn (conjunction) with wann (question word). Als – a single \"when\" in the past.\n\n💡 In all three the verb moves to the **end** of the subordinate clause (see the rule on verb order in the Nebensatz).\n**wenn** often pairs with **dann** in the main clause: Wenn das Wetter gut ist, dann gehen wir spazieren. (If/when …, then …)\nwenn – \"when\" (repeated) and \"if\" (condition). A single \"when\" in the past is als.\n\n⚠ Do not confuse **wenn** (conjunction: if / when) with **wann** (question word: when?): Ich weiß nicht, wann er kommt.",
       "source": "manual",
-      "titleEn": "Konjunktionen weil/dass/wenn"
+      "titleEn": "Konjunktionen weil/dass/wenn – grammar/wordorder"
     },
     "r0044": {
-      "content_md_en": "### seit vs vor\n**seit** – the action started in the past and is **still going on** (Perfekt/Präsens). Example: Ich lerne **seit** zwei Jahren Deutsch.\n**vor** – simply states **how long ago** something happened; the action is over. Example: Ich habe **vor** zwei Jahren angefangen.\n💡 Test: if you can add “…and still am” → seit; if it is just “that was N ago” → vor. ⚠ English uses the present perfect here (“I have been learning for two years”), German uses the plain Präsens: Ich lerne seit zwei Jahren.",
+      "content_md_en": "### seit vs vor\n**seit** – the action started in the past and is **still going on** (Perfekt/Präsens). Example: Ich lerne **seit** zwei Jahren Deutsch.\n**vor** – simply states **how long ago** something happened; the action is over. Example: Ich habe **vor** zwei Jahren angefangen.",
+      "noteEn": "💡 Test: if you can add \"…and still am\" → seit; if it is just \"that was N ago\" → vor.",
       "source": "manual",
       "titleEn": "seit vs. vor – beide mit Dativ, unterschiedliche Bedeutung"
     },
     "r0045": {
-      "content_md_en": "### Modalverb in the Präteritum\nThe modal verb (können, müssen, dürfen...) is conjugated in the Präteritum, and the main verb goes to the end of the sentence as an Infinitiv.\nExample: ..., damit sie besser Deutsch **sprechen konnten** = “...so that they could speak German better”.\n💡 wir/sie → **konnten**, ich/er/sie/es → **konnte**, du → **konntest**",
+      "content_md_en": "### Modalverb in the Präteritum\nThe Modalverb (können, müssen, dürfen...) is conjugated in the Präteritum, and the main verb goes to the end of the sentence as an Infinitiv.\nExample: ..., damit sie besser Deutsch **sprechen konnten** = \"...so that they could speak German better\".",
+      "noteEn": "💡 wir/sie → **konnten**, ich/er/sie/es → **konnte**, du → **konntest**",
       "source": "manual",
       "titleEn": "Modalverb im Präteritum: konnten..."
     },
@@ -2770,10 +2928,12 @@
     },
     "r0053": {
       "_src_content_md": "[sub] weil · denn · deshalb и порядок слов\n### Позиции в немецком предложении\nПозиция 0 – место перед первым смысловым элементом (для сочинительных союзов).\nПозиция 1 – первый смысловой элемент предложения (подлежащее или что-то другое).\nПозиция 2 – глагол (в обычном порядке) или подлежащее (при инверсии).\nПозиция 3 – конец предложения (куда уходит глагол в придаточных).\n### Подчинительные союзы – глагол в конец (Position 3) [collapse]\nweil, da (потому что) – weil ich krank bin\ndass (что) – ich weiß, dass er kommt\nobwohl (хотя)\nwenn (если/когда)\nals (когда, однократно в прошлом)\nwährend (пока, в то время как)\nbevor (прежде чем)\nnachdem (после того как)\ndamit (чтобы)\nob (ли)\n### Наречия-коннекторы – инверсия (Position 2, подлежащее после глагола) [collapse]\ndeshalb, deswegen, daher, darum (поэтому)\ntrotzdem (несмотря на это)\ndann (потом, тогда)\ndanach (после этого)\nsonst (иначе)\naußerdem (кроме того)\nПример: Es regnet. Deshalb bleibe ich zu Hause. – глагол bleibe идёт сразу после deshalb, подлежащее ich смещается после глагола.\n### Сочинительные союзы – ничего не меняют (Position 0) [collapse]\naber (но)\nund (и)\noder (или)\ndenn (так как/потому что – но это НЕ weil!)\nsondern (а, но)\nПосле них порядок слов остаётся обычным, союз просто стоит перед предложением на позиции 0, не занимая позицию 1.",
+      "_src_examples": "weil/da: Ich bleibe zu Hause, weil ich krank bin.\ndass: Sie sagt, dass sie morgen kommt.\nobwohl: Obwohl es regnet, gehen wir spazieren.\nwenn: Wenn ich Zeit habe, rufe ich dich an.\nals: Als ich klein war, wohnte ich in Berlin.\nwährend: Während ich koche, hört er Musik.\nbevor: Bevor du gehst, mach das Licht aus.\nnachdem: Nachdem wir gegessen hatten, gingen wir ins Kino.\ndamit: Ich lerne Deutsch, damit ich in Deutschland arbeiten kann.\nob: Ich weiß nicht, ob er heute kommt.\n\ndeshalb/deswegen/daher/darum: Es regnet. Deshalb bleibe ich zu Hause.\ntrotzdem: Er hat viel gearbeitet. Trotzdem ist er nicht müde.\ndann: Wir aßen zu Abend. Dann sahen wir fern.\ndanach: Er kam nach Hause. Danach duschte er.\nsonst: Beeil dich, sonst verpassen wir den Bus.\naußerdem: Sie spricht Deutsch. Außerdem spricht sie Englisch.\n\nund: Ich koche, und du deckst den Tisch.\noder: Wir können ins Kino gehen, oder wir bleiben zu Hause.\naber: Er ist müde, aber er arbeitet weiter.\nsondern: Ich mag keinen Kaffee, sondern Tee.\ndenn: Ich bleibe zu Hause, denn ich bin krank.\n\nweil vs denn: Ich bleibe zu Hause, weil ich krank bin. ↔ Ich bleibe zu Hause, denn ich bin krank.",
       "_src_note": "см. также r0054 (um...zu vs damit) - это разбор, когда выбирать какую конструкцию с damit",
       "_src_title": "Позиции в предложении: союзы и порядок слов (Weil vs Denn vs Deshalb)",
       "content_md_en": "[sub] weil · denn · deshalb and word order\n### Word Order in German Sentences\nPosition 0—the spot before the first semantic element (for coordinating conjunctions).\nPosition 1 – the first semantic element of the sentence (the subject or something else).\nPosition 2 – verb (in the usual order) or subject (in inversion).\nPosition 3 – the end of the sentence (where the verb goes in subordinate clauses).\n### Subordinating Conjunctions – Verb at the End (Position 3) [collapse]\nweil, da (because) – weil ich krank bin\ndass (that) – ich weiß, dass er kommt\nobwohl (although)\nwenn (if/when)\nals (when, once in the past)\nwährend (for now, while)\nbevor (before)\nnachdem (after)\ndamit (so that)\nob (li)\n### Connective adverbs – inversion (Position 2, subject after the verb) [collapse]\ndeshalb, deswegen, daher, darum (therefore)\ntrotzdem (despite this)\ndann (later, then)\ndanach (after that)\nsonst (otherwise)\naußerdem (in addition)\nExample: Es regnet. Deshalb bleibe ich zu Hause. – The verb bleibe comes immediately after deshalb, and the subject ich is placed after the verb.\n### Coordinating Conjunctions—They Don’t Change a Thing (Position 0) [collapse]\naber (but)\nund (i)\noder (or)\ndenn (since/because—but this is NOT weil!)\nsondern (ah, but)\nAfter these, word order remains normal; the conjunction simply appears at position 0 at the beginning of the sentence, without occupying position 1.",
-      "date": "2026-09-01",
+      "date": "2026-09-03",
+      "examplesEn": "weil/da: Ich bleibe zu Hause, weil ich krank bin.\ndass: Sie sagt, dass sie morgen kommt.\nobwohl: Obwohl es regnet, gehen wir spazieren.\nwenn: Wenn ich Zeit habe, rufe ich dich an.\nals: Als ich klein war, wohnte ich in Berlin.\nwährend: Während ich koche, hört er Musik.\nbevor: Bevor du gehst, mach das Licht aus.\nnachdem: Nachdem wir gegessen hatten, gingen wir ins Kino.\ndamit: Ich lerne Deutsch, damit ich in Deutschland arbeiten kann.\nob: Ich weiß nicht, ob er heute kommt.\n\ndeshalb/deswegen/daher/darum: Es regnet. Deshalb bleibe ich zu Hause.\ntrotzdem: Er hat viel gearbeitet. Trotzdem ist er nicht müde.\ndann: Wir aßen zu Abend. Dann sahen wir fern.\ndanach: Er kam nach Hause. Danach duschte er.\nsonst: Beeil dich, sonst verpassen wir den Bus.\naußerdem: Sie spricht Deutsch. Außerdem spricht sie Englisch.\n\nund: Ich koche, und du deckst den Tisch.\noder: Wir können ins Kino gehen, oder wir bleiben zu Hause.\naber: Er ist müde, aber er arbeitet weiter.\nsondern: Ich mag keinen Kaffee, sondern Tee.\ndenn: Ich bleibe zu Hause, denn ich bin krank.\n\nweil vs denn: Ich bleibe zu Hause, weil ich krank bin. ↔ Ich bleibe zu Hause, denn ich bin krank.",
       "noteEn": "See also r 0054 (um... zu vs damit) — this is a discussion on how to choose the right design from damit",
       "source": "deepl",
       "titleEn": "Sentence Structure: Conjunctions and Word Order (Weil vs Denn vs Deshalb)"
@@ -2789,15 +2949,16 @@
       "titleEn": "um... zu vs damit – both mean “so that”"
     },
     "r0055": {
-      "content_md_en": "### 's = es (colloquial contraction)\nIn casual speech the pronoun es often merges with the preceding word through an apostrophe:\nWie geht's? = Wie geht es? (How are you?)\nWenn's regnet, bleibe ich zu Hause. = Wenn es regnet... (If it rains...)\nGibt's noch Kaffee? = Gibt es noch Kaffee?\n💡 It works after verbs (geht's, gibt's) and after conjunctions (wenn's, dass') – 's is always = es",
-      "examplesEn": "Wie geht's? – How are you?\nWenn's regnet, bleibe ich zu Hause. – If it rains, I'll stay at home.\nGibt's noch Kaffee? – Is there any coffee left?",
+      "content_md_en": "### 's = es (the colloquial contraction)\nIn spoken German the pronoun es often merges with the preceding word through an apostrophe:\nWie geht's? = Wie geht es? (How are you?)\nWenn's regnet, bleibe ich zu Hause. = Wenn es regnet... (If it rains...)\nGibt's noch Kaffee? = Gibt es noch Kaffee?",
+      "examplesEn": "Wie geht's? – How are you?\nWenn's regnet, bleibe ich zu Hause. – If it rains, I stay at home.\nGibt's noch Kaffee? – Is there any coffee left?",
+      "noteEn": "💡 It works after verbs (geht's, gibt's) and conjunctions (wenn's, dass') – 's is always = es",
       "source": "manual",
-      "titleEn": "'s = es – colloquial contraction"
+      "titleEn": "'s = es – the colloquial contraction"
     },
     "r0056": {
-      "content_md_en": "### How to check whether the Reflexivpronomen takes the Akkusativ or the Dativ\n\n1. Find the verb.\n2. Find what the action is aimed at.\n3. Cross out everything that stands after a preposition (für, über, auf, zum, mit, in – any of them).\n4. Is anything left that the verb's action is aimed at directly?\n   Yes → the reflexive pronoun goes in the Dativ.\n   No → the reflexive pronoun goes in the Akkusativ.\n\n### Why do we cross out the noun after a preposition?\nA noun after a preposition belongs to that preposition, not to what the verb's action is aimed at directly. That is why it has no bearing on the case of the reflexive pronoun.\nzum Geburtstag → when?\nmit den Verkäufern → with whom?\nin kleine Läden → where to?\nfür ein Gericht → what for?\n\n### How to handle a subordinate clause (Nebensatz)\nIf the subordinate clause fills the slot of what the action is aimed at, it counts when you choose the case.\nwas / wer / ob / dass → the clause itself is what the action is aimed at → the reflexive pronoun goes in the Dativ\nweil / wenn / obwohl → this is an adverbial → cross it out\n\nExceptions: wo, wie – these depend on the context.\n\n### How to work through the exceptions: wo and wie\nwo and wie can operate in two modes – the question you put to the subordinate clause decides which one.\n\nOBJECT mode (question “What?”) → Dativ\nIf the clause answers the question “What?”, it works like dass – that is, it stands in for the direct object.\nIch schaue mir an, wie du kochst. – I watch [what?] how you cook.\nIch merke mir, wo du wohnst. – I note [what?] where you live.\nLogic: it is an object → the reflexive pronoun is strictly in the Dativ (mir).\n\nADVERBIAL mode (questions “Where?”, “How?”) → Akkusativ\nIf the clause is mere decoration – an adverbial of place or manner rather than an object of the verb – it is crossed out under the general rule (see above).\nIch wasche mich, wo es Wasser gibt. – I wash [where?] where there is water.\nIch verhalte mich, wie du gesagt hast. – I behave [how?] the way you said.\nLogic: there is no noun serving as the direct object, the clause answers “where/how” → cross it out → the reflexive pronoun goes in the Akkusativ (mich).",
-      "examplesEn": "Ich kaufe mir ein Auto. – mir is in the Dativ, because the Akkusativ slot is already taken by “ein Auto” (something is left that the action is aimed at).\nIch wasche mich. – mich is in the Akkusativ, there is no other object of the action, the verb is purely reflexive.\nIch wünsche mir, dass du kommst. – the dass-clause stands in the object slot → mir in the Dativ.\nIch freue mich, weil du kommst. – the weil-clause is crossed out as an adverbial → a plain Akkusativ is left (mich).",
-      "noteEn": "Some verbs do not take part in this decision at all – they demand the Dativ outright, with no alternatives and no direct object of the action (helfen, gefallen, danken and the like). The rule simply does not apply to them.",
+      "content_md_en": "[sub] for the reflexive pronoun (myself / to myself)\n### The order of checks\n1. Find the verb.\n2. Find who or what the action is directed at.\n3. Cross out everything that stands after a preposition (für, über, auf, zum, mit, in – any of them).\n4. Is there still something the action of the verb is directly aimed at?\n:::outcomes\nYes → Dativ | an object is left — the reflexive pronoun stands in the Dativ\nNo → Akkusativ | no object is left — the reflexive pronoun stands in the Akkusativ\n:::\n### Why do we cross out the noun after a preposition? [collapse]\nA noun after a preposition belongs to the preposition, not directly to what the verb is aimed at. That is why it does not affect the case of the reflexive pronoun.\nzum Geburtstag → when?\nmit den Verkäufern → with whom?\nin kleine Läden → where to?\nfür ein Gericht → what for?\n### How to handle a subordinate clause (Nebensatz) [collapse]\nIf the subordinate clause takes the place of what the action is aimed at, it counts when choosing the case.\nwas / wer / ob / dass → the clause itself is what the action is aimed at → the reflexive pronoun goes into the Dativ\nweil / wenn / obwohl → this is an adverbial → cross it out\n\nExceptions: wo, wie – they depend on the context.\n### How to handle the exceptions: wo and wie [collapse]\nwo and wie can work in two modes – the question you ask the clause decides which.\n\nOBJECT mode (question \"What?\") → Dativ\nIf the clause answers \"What?\", it behaves like dass – it stands in place of the direct object of the action.\nIch schaue mir an, wie du kochst. – I watch [what?] how you cook.\nIch merke mir, wo du wohnst. – I memorise [what?] where you live.\nThe logic: it is an object → the reflexive pronoun is strictly in the Dativ (mir).\n\nADVERBIAL mode (questions \"Where?\", \"How?\") → Akkusativ\nIf the clause is mere decoration, an adverbial of place or manner rather than an object of the verb, it is crossed out by the general rule (see above).\nIch wasche mich, wo es Wasser gibt. – I wash [where?] where there is water.\nIch verhalte mich, wie du gesagt hast. – I behave [how?] the way you said.\nThe logic: there is no direct object noun, the clause answers \"where/how\" → cross it out → the reflexive pronoun is in the Akkusativ (mich).",
+      "examplesEn": "Ich kaufe mir ein Auto. – mir is in the Dativ, because the Akkusativ is taken by \"ein Auto\" (something the action is aimed at is left).\nIch wasche mich. – mich is in the Akkusativ, there is no other object of the action, the verb is purely reflexive.\nIch wünsche mir, dass du kommst. – the dass-clause stands in place of the object → mir in the Dativ.\nIch freue mich, weil du kommst. – the weil-clause is crossed out as an adverbial → a bare Akkusativ is left (mich).",
+      "noteEn": "Some verbs do not take part in this decision at all – they rigidly require the Dativ, with no alternative and no direct object of the action (helfen, gefallen, danken and so on). The rule simply does not apply to them.",
       "source": "manual",
       "titleEn": "Akkusativ or Dativ for the Reflexivpronomen"
     },
@@ -2835,6 +2996,27 @@
       "noteEn": "Genitiv Plural: the article der for every gender, and the noun takes no ending (unlike the Genitiv Singular, and unlike the Dativ Plural with -n). Complements the rule \"Genitiv Singular\".",
       "source": "manual",
       "titleEn": "Genitiv Plural - one article for every gender"
+    },
+    "r0062": {
+      "content_md_en": "[sub] time clauses: from which moment and until which\n### seit / seitdem — from which moment\nThe action started in the past and is still going on. The verb moves to the end of the subordinate clause, and the main clause stands in the Präsens.\n### bis — until which moment\nBoth actions run at the same time and end at the same point. The verb moves to the end as well.\n### seit — conjunction or preposition? [collapse]\nOne word works in two ways, and the word order depends on which.\nform | what it looks like | example |\nconjunction | seit + subordinate clause, verb at the end | Seit ich hier wohne, spreche ich besser. |\npreposition | seit + Dativ, no subordinate clause | Seit einem Jahr wohne ich hier. |",
+      "examplesEn": "Seitdem ich in Deutschland wohne, lerne ich Deutsch. – Since I have been living in Germany, I have been learning German.\nIch arbeite hier, seit ich das Studium beendet habe. – I have worked here since I finished my studies.\nSeitdem ich hier wohne, spreche ich besser. – Since I have been living here, I speak better.\nIch bleibe hier, bis ich mit der Arbeit fertig bin. – I will stay here until I finish the work.\nIch warte auf dich, bis du zurückkommst. – I will wait for you until you come back.\nWarte, bis ich komme. – Wait until I come.",
+      "noteEn": "⚠ German bis carries no negation, and English \"until\" carries none either — but many languages put one there, so do not add nicht. As conjunctions seit and seitdem are interchangeable, yet only seit can also be a preposition. \nGeneral word order in the subordinate clause — r0043.",
+      "source": "manual",
+      "titleEn": "Nebensatz mit seit / seitdem und bis"
+    },
+    "r0063": {
+      "content_md_en": "[sub] asking about a person: preposition first, case from the preposition\n### How it works\nMany verbs have a fixed preposition that is not chosen by meaning: warten auf, sich freuen über, sprechen mit. The preposition sets the case and stands in front of the question word.\nVerb + Präposition | Wen? (Akkusativ) | Wem? (Dativ) |\nwarten auf | Auf wen? | — |\nsprechen über | Über wen? | — |\nsprechen mit | — | Mit wem? |\nhören von | — | Von wem? |\n### The order of steps\n1. Find the fixed preposition of the verb.\n2. Check which case that preposition requires.\n3. Put the preposition in front of wen (Akkusativ) or wem (Dativ).\n### The preposition stays in the answer\nThe preposition never breaks away from the verb: it is part of the government and travels into both the question and the answer.",
+      "examplesEn": "Auf wen wartest du? – Ich warte auf meinen Kollegen. – Who are you waiting for? – I am waiting for my colleague.\nÜber wen sprecht ihr? – Wir sprechen über den Chef. – Who are you talking about? – We are talking about the boss.\nMit wem sprechen Sie? – Ich spreche mit der Lehrerin. – Who are you speaking with? – I am speaking with the teacher.\nVon wem hast du das gehört? – Von meiner Schwester. – Who did you hear that from? – From my sister.",
+      "noteEn": "⚠ The case here is set by the preposition, not by the role in the sentence: auf always takes the Akkusativ, mit always takes the Dativ. The preposition is learnt together with the verb — there is no logic to its choice. Asking about a thing works differently, see r0064.",
+      "source": "manual",
+      "titleEn": "Verben mit Präpositionen: asking about a person (wen / wem)"
+    },
+    "r0064": {
+      "content_md_en": "[sub] asking about a thing, and answering in a single word\n### A person and a thing are asked about differently\nFor a person the preposition stands separately, in front of wen or wem. For a thing it merges with wo- into one word.\nabout whom / about what | question | answer |\nabout a person | Auf wen wartest du? | auf ihn |\nabout a thing | Worauf wartest du? | darauf |\n### How the word is built\nQuestion — wo + preposition. Answer — da + preposition.\nwarten auf → worauf? → darauf\nsprechen über → worüber? → darüber\ndenken an → woran? → daran\n### When -r- is inserted\nLook at the first letter of the preposition.\n:::outcomes\nVowel → -r- | an, auf, über, in, um: woran, worauf, worüber — daran, darauf, darüber\nConsonant → no -r- | mit, von, für, nach, zu: womit, wovon, wofür — damit, davon, dafür\n:::\n### Why you cannot say \"auf es\" [collapse]\nFor things German does not combine a preposition with a personal pronoun: auf es, über es, mit es are not used. The da(r)- forms do that job instead.\nFor people it is the other way round, everything is fine: auf ihn, mit ihr, über sie.",
+      "examplesEn": "Worauf wartest du? – Ich warte darauf. – What are you waiting for? – I am waiting for it.\nWorüber sprecht ihr? – Wir sprechen darüber. – What are you talking about? – We are talking about it.\nWoran denkst du? – Ich denke daran. – What are you thinking about? – I am thinking about it.\nWomit schreibst du? – Ich schreibe damit. – What are you writing with? – I am writing with it.\nWofür interessierst du dich? – Ich interessiere mich dafür. – What are you interested in? – I am interested in it.",
+      "noteEn": "⚠ The da(r)- forms replace things and situations, but never people: for a person use a preposition with a personal pronoun, auf ihn, mit ihr. A quick check by ear: say it without the -r- — \"Woan\", \"daauf\" are unpronounceable, so the -r- is needed. \nAsking about a person is covered in r0063.",
+      "source": "manual",
+      "titleEn": "Präpositionaladverbien: wo(r)- and da(r)-"
     }
   },
   "SOUNDS": {
@@ -3443,6 +3625,15 @@
       "source": "haiku",
       "verdict": "ok"
     },
+    "0370e8ddb29c78cd": {
+      "_src_note": "вся нога; ступня — der Fuß",
+      "backtranslation": "das Bein",
+      "date": "2026-09-03",
+      "de": "Bein",
+      "en": "leg",
+      "noteEn": "the entire leg; foot — der Fuß",
+      "source": "deepl"
+    },
     "038c6da4b5244ad3": {
       "backtranslation": "Lesen",
       "date": "2026-08-27",
@@ -3475,7 +3666,7 @@
     "0405905f097a9896": {
       "altEn": "after all",
       "altEnSource": "manual",
-      "date": "2026-09-01",
+      "date": "2026-09-03",
       "de": "schließlich",
       "en": "finally",
       "source": "manual"
@@ -3629,6 +3820,13 @@
       "source": "haiku",
       "verdict": "ok"
     },
+    "0821308b1458460d": {
+      "backtranslation": "das Seminar",
+      "date": "2026-09-03",
+      "de": "Seminar",
+      "en": "seminar",
+      "source": "deepl"
+    },
     "0865337bba6acd19": {
       "_src_note": "sollen – обязательство ИЗВНЕ (так сказали, так положено)",
       "date": "2026-08-27",
@@ -3647,7 +3845,7 @@
       "source": "deepl"
     },
     "088a86074271d947": {
-      "date": "2026-09-01",
+      "date": "2026-09-03",
       "de": "Schadenssumme",
       "en": "amount of damages",
       "source": "manual"
@@ -3700,11 +3898,11 @@
     "08fca95b2cb8f4a7": {
       "_src_note": "mit Absicht – намеренно",
       "backtranslation": "die Absicht",
-      "date": "2026-08-30",
+      "date": "2026-09-03",
       "de": "Absicht",
-      "en": "intention",
-      "noteEn": "mit Absicht – intentionally",
-      "source": "deepl"
+      "en": "personal liability",
+      "noteEn": "short for Haftpflichtversicherung",
+      "source": "manual"
     },
     "091086a28c4cd943": {
       "_src_altEn": "скидка",
@@ -3738,9 +3936,9 @@
     },
     "097ba3d3d2026d08": {
       "_src_note": "субстантивированное прилагательное, в перечнях без артикля",
-      "date": "2026-09-01",
+      "date": "2026-09-03",
       "de": "Digitales",
-      "en": "digital matters",
+      "en": "insurance agent",
       "noteEn": "a nominalised adjective, used without an article in lists",
       "source": "manual"
     },
@@ -3810,7 +4008,7 @@
       "source": "deepl"
     },
     "0ab8f937023e255d": {
-      "date": "2026-09-01",
+      "date": "2026-09-03",
       "de": "seither",
       "en": "since then",
       "source": "manual"
@@ -3822,6 +4020,20 @@
       "date": "2026-08-27",
       "de": "fehlerhaft",
       "en": "defective",
+      "source": "haiku",
+      "verdict": "fix"
+    },
+    "0ad4e7dee8b541a3": {
+      "backtranslation": "kritisieren",
+      "date": "2026-09-03",
+      "de": "kritisieren",
+      "en": "to criticize",
+      "source": "deepl"
+    },
+    "0ada5070b1d2b1bc": {
+      "date": "2026-09-03",
+      "de": "Tablette",
+      "en": "tablet",
       "source": "haiku",
       "verdict": "fix"
     },
@@ -3879,6 +4091,13 @@
       "source": "haiku",
       "verdict": "ok"
     },
+    "0bccc84786212c34": {
+      "backtranslation": "angenehm",
+      "date": "2026-09-03",
+      "de": "angenehm",
+      "en": "pleasant",
+      "source": "deepl"
+    },
     "0be62201c589cc8a": {
       "backtranslation": "das Familienmitglied",
       "date": "2026-08-30",
@@ -3922,9 +4141,11 @@
       "source": "deepl"
     },
     "0c297383748cf8db": {
-      "date": "2026-09-01",
+      "altEn": "adviser",
+      "altEnSource": "manual",
+      "date": "2026-09-03",
       "de": "Verbraucherthema",
-      "en": "consumer issue",
+      "en": "guide",
       "source": "manual"
     },
     "0c65ca4e3cb7716f": {
@@ -3963,7 +4184,7 @@
       "_src_note": "eine Versicherung / einen Vertrag abschließen – заключить страховку / договор",
       "altEn": "to take out (insurance), to sign (a contract)",
       "altEnSource": "manual",
-      "date": "2026-09-01",
+      "date": "2026-09-03",
       "de": "abschließen",
       "en": "to lock",
       "noteEn": "eine Versicherung / einen Vertrag abschließen – to take out insurance / to sign a contract",
@@ -4151,6 +4372,15 @@
       "source": "haiku",
       "verdict": "ok"
     },
+    "0ee74cc3b00f6bed": {
+      "_src_warning": "der Schreck, не die!",
+      "backtranslation": "der Schreck",
+      "date": "2026-09-03",
+      "de": "Schreck",
+      "en": "fright",
+      "source": "deepl",
+      "warningEn": "der Schreck, not die!"
+    },
     "0f058508e66312f6": {
       "_src_note": "искл.: не dreite",
       "backtranslation": "drittens",
@@ -4170,7 +4400,7 @@
     },
     "0f1e18b90dd4f10f": {
       "_src_note": "разговорное сокращение от Haftpflichtversicherung",
-      "date": "2026-09-01",
+      "date": "2026-09-03",
       "de": "Haftpflicht",
       "en": "personal liability",
       "noteEn": "short for Haftpflichtversicherung",
@@ -4209,6 +4439,13 @@
       "en": "constantly",
       "source": "deepl"
     },
+    "100359326ebc392b": {
+      "backtranslation": "die Lunge",
+      "date": "2026-09-03",
+      "de": "Lunge",
+      "en": "lung",
+      "source": "deepl"
+    },
     "10089312e8aee804": {
       "backtranslation": "Preisvergleich",
       "date": "2026-08-27",
@@ -4243,7 +4480,7 @@
       "_src_altEn": "нечаянно",
       "altEn": "unintentionally",
       "altEnSource": "deepl-ru",
-      "date": "2026-09-01",
+      "date": "2026-09-03",
       "de": "aus Versehen",
       "en": "by mistake",
       "source": "manual"
@@ -4293,6 +4530,14 @@
       "date": "2026-08-27",
       "de": "Brieftasche",
       "en": "wallet",
+      "source": "haiku",
+      "verdict": "ok"
+    },
+    "125b7e7842353d8d": {
+      "backtranslation": "Kleber",
+      "date": "2026-09-03",
+      "de": "kleben",
+      "en": "to glue",
       "source": "haiku",
       "verdict": "ok"
     },
@@ -4357,7 +4602,7 @@
       "source": "deepl"
     },
     "1395e6f3bfe79cb8": {
-      "date": "2026-09-01",
+      "date": "2026-09-03",
       "de": "den Versicherungsbeitrag per Überweisung zahlen",
       "en": "to pay the insurance premium by bank transfer",
       "source": "manual"
@@ -4463,7 +4708,7 @@
     },
     "15306aabaf6e238c": {
       "_src_note": "die Versicherung gilt ab / für – страховка действует с / для",
-      "date": "2026-09-01",
+      "date": "2026-09-03",
       "de": "gelten",
       "en": "to be valid",
       "noteEn": "die Versicherung gilt ab / für – the policy is valid from / for",
@@ -4513,11 +4758,11 @@
     },
     "1582a1d517838c22": {
       "_src_altEn": "требование",
-      "altEn": "claim",
-      "altEnSource": "deepl-ru",
-      "date": "2026-09-01",
+      "altEn": "credit",
+      "altEnSource": "manual",
+      "date": "2026-09-03",
       "de": "Anspruch",
-      "en": "claim",
+      "en": "loan",
       "source": "manual"
     },
     "15ec0e42b43168c6": {
@@ -4552,6 +4797,14 @@
       "exampleEn": "The pants are too tight.",
       "source": "deepl"
     },
+    "16307c6b154595c1": {
+      "backtranslation": "seltsam",
+      "date": "2026-09-03",
+      "de": "merkwürdig",
+      "en": "strange",
+      "source": "haiku",
+      "verdict": "ok"
+    },
     "166a6fdc98a0ce49": {
       "backtranslation": "die Einkaufsliste",
       "date": "2026-08-27",
@@ -4579,6 +4832,16 @@
       "noteEn": "Termin + Kalender",
       "source": "haiku",
       "verdict": "fix"
+    },
+    "16b2397b74bcd979": {
+      "_src_note": "о речи: flüssiger sprechen – говорить плавнее",
+      "backtranslation": "Flüssigkeit",
+      "date": "2026-09-03",
+      "de": "flüssig",
+      "en": "fluid",
+      "noteEn": "About speech: flüssiger sprechen – speak more fluently",
+      "source": "haiku",
+      "verdict": "ok"
     },
     "16b7138981509a36": {
       "backtranslation": "Sonntag",
@@ -4620,6 +4883,15 @@
       "en": "thunderstorm",
       "source": "deepl"
     },
+    "1756bfe9e1cfb77e": {
+      "_src_note": "in Eile sein – спешить | торопиться = sich beeilen",
+      "backtranslation": "die Eile",
+      "date": "2026-09-03",
+      "de": "Eile",
+      "en": "eating behaviour",
+      "noteEn": "in Eile sein – to hurry | to rush = sich beeilen",
+      "source": "manual"
+    },
     "175c00d212f9f93f": {
       "_src_note": "erzählen + Dativ + Akkusativ",
       "backtranslation": "sagen",
@@ -4660,6 +4932,15 @@
       "noteEn": "eine Reise/einen Termin buchen",
       "source": "deepl"
     },
+    "17d8e27643a715ee": {
+      "_src_note": "Genitiv des Herzens — особое склонение",
+      "backtranslation": "das Herz",
+      "date": "2026-09-03",
+      "de": "Herz",
+      "en": "heart",
+      "noteEn": "Genitiv des Herzens — special declension",
+      "source": "deepl"
+    },
     "17de7fc8bec17435": {
       "backtranslation": "Lüge",
       "date": "2026-08-27",
@@ -4695,6 +4976,13 @@
       "source": "haiku",
       "verdict": "fix"
     },
+    "1835be6899647d1d": {
+      "backtranslation": "die Brust",
+      "date": "2026-09-03",
+      "de": "Brust",
+      "en": "breast",
+      "source": "deepl"
+    },
     "18418092b37a0e64": {
       "backtranslation": "jedes Mal",
       "date": "2026-08-27",
@@ -4729,6 +5017,20 @@
       "noteEn": "union",
       "source": "deepl"
     },
+    "18a602ffb87b48f6": {
+      "backtranslation": "aufmerksam",
+      "date": "2026-09-03",
+      "de": "aufmerksam",
+      "en": "attentive",
+      "source": "deepl"
+    },
+    "18c630b0169c1cc2": {
+      "backtranslation": "die Amtssprache",
+      "date": "2026-09-03",
+      "de": "Amtssprache",
+      "en": "official language",
+      "source": "deepl"
+    },
     "18db1a87144a67c3": {
       "date": "2026-08-27",
       "de": "Homeoffice",
@@ -4760,9 +5062,11 @@
       "verdict": "ok"
     },
     "18f00310fe7ec3d1": {
-      "date": "2026-09-01",
+      "altEn": "field",
+      "altEnSource": "manual",
+      "date": "2026-09-03",
       "de": "Verbraucherzentrale",
-      "en": "consumer advice centre",
+      "en": "area",
       "source": "manual"
     },
     "18f5fa1bf78fd547": {
@@ -4830,6 +5134,14 @@
       "de": "Geschenk",
       "en": "gift",
       "source": "deepl"
+    },
+    "19e554a60cec099d": {
+      "backtranslation": "der Ellenbogen",
+      "date": "2026-09-03",
+      "de": "Ellbogen",
+      "en": "elbow",
+      "source": "haiku",
+      "verdict": "ok"
     },
     "1a0453620aa28219": {
       "backtranslation": "die Zahl",
@@ -4962,6 +5274,13 @@
       "en": "stock market",
       "source": "deepl"
     },
+    "1be6e63824bd5927": {
+      "backtranslation": "ausweichend",
+      "date": "2026-09-03",
+      "de": "ausweichend",
+      "en": "evasive",
+      "source": "deepl"
+    },
     "1bf22782bd7010e7": {
       "backtranslation": "Bezahlung",
       "date": "2026-08-27",
@@ -5017,9 +5336,10 @@
     "1c785a31bc5e53b0": {
       "altEn": "plan",
       "altEnSource": "manual",
-      "date": "2026-09-01",
+      "date": "2026-09-03",
       "de": "Tarif",
-      "en": "rate",
+      "en": "job interview",
+      "noteEn": "same as Vorstellungsgespräch",
       "source": "manual"
     },
     "1c8d7c53f65b34cc": {
@@ -5055,10 +5375,17 @@
     "1ce1b1446b533cbf": {
       "altEn": "viewing",
       "altEnSource": "manual",
-      "date": "2026-09-01",
+      "date": "2026-09-03",
       "de": "Besichtigung",
-      "en": "tour",
+      "en": "thing",
       "source": "manual"
+    },
+    "1cef9e28d25458fe": {
+      "date": "2026-09-03",
+      "de": "Halb so schlimm",
+      "en": "not so bad",
+      "source": "haiku",
+      "verdict": "fix"
     },
     "1cf0613955e5269c": {
       "_src_altEn": "тесный",
@@ -5146,10 +5473,17 @@
       "_src_altEn": "застраховать",
       "altEn": "to insure",
       "altEnSource": "deepl-ru",
-      "date": "2026-09-01",
+      "date": "2026-09-03",
       "de": "absichern",
       "en": "to safeguard",
       "source": "manual"
+    },
+    "1eb4cd09f52bf44c": {
+      "backtranslation": "die Salbe",
+      "date": "2026-09-03",
+      "de": "Salbe",
+      "en": "ointment",
+      "source": "deepl"
     },
     "1edf0141fbc15806": {
       "backtranslation": "international",
@@ -5206,6 +5540,17 @@
       "en": "to film",
       "source": "haiku",
       "verdict": "fix"
+    },
+    "1fdd9a40830de961": {
+      "_src_altEn": "однако",
+      "altEn": "however",
+      "altEnSource": "deepl-ru",
+      "backtranslation": "jedoch",
+      "date": "2026-09-03",
+      "de": "allerdings",
+      "en": "however",
+      "source": "haiku",
+      "verdict": "ok"
     },
     "1fe9e67553b26233": {
       "_src_note": "Foto + Ausstellung (n0399) | составное слово",
@@ -5313,6 +5658,15 @@
       "en": "to invent",
       "source": "deepl"
     },
+    "2167e9811b2790d5": {
+      "_src_note": "не путать с die Hut (осторожность) – auf der Hut sein",
+      "backtranslation": "der Mut",
+      "date": "2026-09-03",
+      "de": "Mut",
+      "en": "courage",
+      "noteEn": "Not to be confused with die Hut (caution) – auf der Hut sein",
+      "source": "deepl"
+    },
     "217ede4dbaa8cb16": {
       "_src_altEn": "получать профессию",
       "_src_note": "studieren = получение профессии/диплома | ↔ lernen (обучение навыкам, без диплома)",
@@ -5361,6 +5715,13 @@
       "de": "Brot",
       "en": "bread",
       "source": "deepl"
+    },
+    "2277e7ba45019b64": {
+      "date": "2026-09-03",
+      "de": "Auf Wiederhören",
+      "en": "goodbye",
+      "source": "haiku",
+      "verdict": "fix"
     },
     "227c2c76611eb8ca": {
       "backtranslation": "Stundenzeiger",
@@ -5536,7 +5897,7 @@
       "_src_note": "наречие «точно»: Das ist bestimmt richtig | прилагательное «определённый»: bestimmte Produkte",
       "altEn": "certain",
       "altEnSource": "manual",
-      "date": "2026-09-01",
+      "date": "2026-09-03",
       "de": "bestimmt",
       "en": "definitely",
       "noteEn": "adverb: Das ist bestimmt richtig | adjective: bestimmte Produkte",
@@ -5571,10 +5932,10 @@
     },
     "25ab9f020f7e2f5e": {
       "backtranslation": "die Krankheit",
-      "date": "2026-08-30",
+      "date": "2026-09-03",
       "de": "Krankheit",
-      "en": "disease",
-      "source": "deepl"
+      "en": "consumer issue",
+      "source": "manual"
     },
     "25e9001f91f130a1": {
       "backtranslation": "Schwester",
@@ -5695,6 +6056,18 @@
       "en": "above",
       "source": "deepl"
     },
+    "287bcfdd484698b1": {
+      "_src_altEn": "зебра",
+      "_src_note": "разговорно Zebrastreifen",
+      "altEn": "zebra crossing",
+      "altEnSource": "deepl-ru",
+      "backtranslation": "der Fußgängerüberweg",
+      "date": "2026-09-03",
+      "de": "Fußgängerüberweg",
+      "en": "crosswalk",
+      "noteEn": "informal Zebrastreifen",
+      "source": "deepl"
+    },
     "2898505f1ffb884f": {
       "backtranslation": "Kino",
       "date": "2026-08-27",
@@ -5702,6 +6075,19 @@
       "en": "movie theater",
       "exampleEn": "go to the movies",
       "source": "deepl"
+    },
+    "289b5adc2893373c": {
+      "_src_altEn": "выполнять",
+      "_src_note": "etwas erledigen – сделать/уладить дело | Das ist erledigt. – с этим покончено",
+      "altEn": "to carry out",
+      "altEnSource": "deepl-ru",
+      "backtranslation": "sich um … kümmern",
+      "date": "2026-09-03",
+      "de": "erledigen",
+      "en": "to take care of",
+      "noteEn": "etwas erledigen – to take care of something | Das ist erledigt. – that's settled",
+      "source": "haiku",
+      "verdict": "ok"
     },
     "289f1bb83c514a35": {
       "_src_altEn": "штамп",
@@ -5725,6 +6111,13 @@
       "date": "2026-08-27",
       "de": "passen",
       "en": "to fit",
+      "source": "deepl"
+    },
+    "28c0cce4e56b3739": {
+      "backtranslation": "die Lippe",
+      "date": "2026-09-03",
+      "de": "Lippe",
+      "en": "lippe",
       "source": "deepl"
     },
     "28d10b36c0e4c8ab": {
@@ -5765,6 +6158,13 @@
       "de": "vorstellen",
       "en": "to introduce",
       "noteEn": "sich vorstellen – introduce oneself",
+      "source": "deepl"
+    },
+    "2947138a72488f63": {
+      "backtranslation": "die Haut",
+      "date": "2026-09-03",
+      "de": "Haut",
+      "en": "skin",
       "source": "deepl"
     },
     "2971c0becc15ecf0": {
@@ -5808,6 +6208,13 @@
       "de": "Mülleimer",
       "en": "trash can",
       "noteEn": "Müll + Eimer | ↔ Eimer (regular bucket)",
+      "source": "deepl"
+    },
+    "2a3be4c612901ca3": {
+      "backtranslation": "der Knöchel",
+      "date": "2026-09-03",
+      "de": "Knöchel",
+      "en": "ankle",
       "source": "deepl"
     },
     "2a3dd7b2304a0561": {
@@ -5966,7 +6373,7 @@
       "_src_note": "о столике",
       "altEn": "occupied",
       "altEnSource": "manual",
-      "date": "2026-09-01",
+      "date": "2026-09-03",
       "de": "Frei",
       "en": "free",
       "noteEn": "About the table",
@@ -6059,8 +6466,15 @@
       "en": "old Town",
       "source": "deepl"
     },
+    "2d4526b20056db68": {
+      "backtranslation": "Bluten",
+      "date": "2026-09-03",
+      "de": "bluten",
+      "en": "to bleed",
+      "source": "deepl"
+    },
     "2d7b0a96c86d5809": {
-      "date": "2026-09-01",
+      "date": "2026-09-03",
       "de": "wegen Krankheit vorzeitig beenden",
       "en": "to end early due to illness",
       "source": "manual"
@@ -6071,6 +6485,25 @@
       "de": "Quark",
       "en": "quark",
       "source": "deepl"
+    },
+    "2db3dc138aeddb6f": {
+      "_src_note": "fließend Deutsch sprechen – свободно говорить по-немецки",
+      "backtranslation": "fließend",
+      "date": "2026-09-03",
+      "de": "fließend",
+      "en": "fluent",
+      "noteEn": "fließend Deutsch sprechen – speak German fluently",
+      "source": "deepl"
+    },
+    "2dba43f7d97c7eb8": {
+      "_src_note": "sich bedanken für + Akkusativ",
+      "backtranslation": "Danke",
+      "date": "2026-09-03",
+      "de": "bedanken",
+      "en": "to thank",
+      "noteEn": "sich bedanken für + Akkusativ",
+      "source": "haiku",
+      "verdict": "ok"
     },
     "2dcd7986a4deff0f": {
       "_src_altEn": "объединение",
@@ -6114,6 +6547,13 @@
       "source": "haiku",
       "verdict": "ok"
     },
+    "2e96ebb9a25cdf23": {
+      "backtranslation": "die Niere",
+      "date": "2026-09-03",
+      "de": "Niere",
+      "en": "kidney",
+      "source": "deepl"
+    },
     "2ea9c562ac4548c1": {
       "backtranslation": "einladen",
       "date": "2026-08-27",
@@ -6155,7 +6595,7 @@
     },
     "2f6ce7e4a73ad113": {
       "_src_note": "синоним Vorstellungsgespräch",
-      "date": "2026-09-01",
+      "date": "2026-09-03",
       "de": "Bewerbungsgespräch",
       "en": "job interview",
       "noteEn": "same as Vorstellungsgespräch",
@@ -6279,10 +6719,10 @@
     },
     "31ec94d06eddf5dd": {
       "backtranslation": "das Fertiggericht",
-      "date": "2026-08-30",
+      "date": "2026-09-03",
       "de": "Fertiggericht",
-      "en": "ready-made meal",
-      "source": "deepl"
+      "en": "individual trip",
+      "source": "manual"
     },
     "320b8cad59fe6ecc": {
       "_src_altEn": "быть знакомым",
@@ -6385,6 +6825,15 @@
       "en": "date of birth",
       "source": "deepl"
     },
+    "33ab24f53c2b0038": {
+      "_src_note": "сокращение от die Operation",
+      "backtranslation": "das oP",
+      "date": "2026-09-03",
+      "de": "OP",
+      "en": "oP",
+      "noteEn": "abbreviation for die Operation",
+      "source": "deepl"
+    },
     "33b0815b1df7031e": {
       "backtranslation": "Kopierraum",
       "date": "2026-08-27",
@@ -6457,6 +6906,13 @@
       "en": "let's",
       "source": "haiku",
       "verdict": "ok"
+    },
+    "346f8f368cf12cbb": {
+      "backtranslation": "der Witz",
+      "date": "2026-09-03",
+      "de": "Witz",
+      "en": "joke",
+      "source": "deepl"
     },
     "349194f27a44bc36": {
       "backtranslation": "zwölf",
@@ -6628,10 +7084,10 @@
     },
     "370610a548d21c8a": {
       "backtranslation": "die Hälfte",
-      "date": "2026-08-30",
+      "date": "2026-09-03",
       "de": "Hälfte",
-      "en": "half",
-      "source": "deepl"
+      "en": "fast food",
+      "source": "manual"
     },
     "370f9bde531fe0a6": {
       "_src_note": "говорит официант",
@@ -6789,7 +7245,7 @@
       "_src_altEn": "увольняться",
       "altEn": "to resign",
       "altEnSource": "manual",
-      "date": "2026-09-01",
+      "date": "2026-09-03",
       "de": "kündigen",
       "en": "to terminate",
       "source": "manual"
@@ -6939,7 +7395,7 @@
       "altEn": "amount",
       "altEnSource": "manual",
       "backtranslation": "Höhe",
-      "date": "2026-09-01",
+      "date": "2026-09-03",
       "de": "Höhe",
       "en": "height",
       "noteEn": "↔ Breite, Tiefe | die Höhe des Beitrags – the amount of the contribution",
@@ -7159,6 +7615,18 @@
       "en": "tram",
       "source": "deepl"
     },
+    "3e98c2735b2b61b7": {
+      "_src_altEn": "быть настороже",
+      "_src_note": "идиома (Redewendung), дословно «быть на страже» | auf der Hut sein vor + Dativ: sei auf der Hut vor ihm | die Hut здесь — осторожность, не der Hut (шляпа); вне этого оборота почти не встречается",
+      "altEn": "to be on guard",
+      "altEnSource": "deepl-ru",
+      "backtranslation": "auf der Hut sein",
+      "date": "2026-09-03",
+      "de": "auf der Hut sein",
+      "en": "be on guard",
+      "noteEn": "idiom (Redewendung), literally “to be on guard” | auf der Hut sein vor + Dativ: sei auf der Hut vor ihm | die Hut here — caution, not der Hut (hat); outside of this idiom, it is almost never used",
+      "source": "deepl"
+    },
     "3eae999416acceef": {
       "_src_altEn": "довольно",
       "altEn": "enough",
@@ -7178,7 +7646,7 @@
     },
     "3ed2b27b903b0be7": {
       "_src_note": "sich ernähren von + Dativ",
-      "date": "2026-09-01",
+      "date": "2026-09-03",
       "de": "ernähren",
       "en": "to eat",
       "noteEn": "sich ernähren von + Dativ – to live on",
@@ -7190,6 +7658,14 @@
       "de": "Hauptrolle",
       "en": "leading role",
       "source": "deepl"
+    },
+    "3f15a5ac790a2ce5": {
+      "backtranslation": "der Small Talk",
+      "date": "2026-09-03",
+      "de": "Smalltalk",
+      "en": "small talk",
+      "source": "haiku",
+      "verdict": "ok"
     },
     "3f19a6b8e6cb5e23": {
       "backtranslation": "Stift",
@@ -7226,6 +7702,13 @@
       "en": "jewelry",
       "noteEn": "nur Sg",
       "source": "deepl"
+    },
+    "3faaa8e7d2829c57": {
+      "date": "2026-09-03",
+      "de": "Sprachbiografie",
+      "en": "language biography",
+      "source": "haiku",
+      "verdict": "fix"
     },
     "3fb441fa34bf2518": {
       "backtranslation": "schlecht",
@@ -7266,7 +7749,7 @@
       "source": "deepl"
     },
     "401b40500162e443": {
-      "date": "2026-09-01",
+      "date": "2026-09-03",
       "de": "einfahren",
       "en": "to drive in",
       "source": "manual"
@@ -7320,6 +7803,15 @@
       "de": "Betrag",
       "en": "amount",
       "source": "deepl"
+    },
+    "40c97c3204ad3725": {
+      "_src_note": "о пострадавшем: контактен, отвечает",
+      "date": "2026-09-03",
+      "de": "ansprechbar",
+      "en": "conscious",
+      "noteEn": "About the victim: responsive, answering questions",
+      "source": "haiku",
+      "verdict": "fix"
     },
     "40cbf0b9b7dc26ee": {
       "backtranslation": "Luxus",
@@ -7432,10 +7924,17 @@
       "source": "deepl"
     },
     "42249483903cefeb": {
-      "date": "2026-09-01",
+      "date": "2026-09-03",
       "de": "folgend",
       "en": "following",
       "source": "manual"
+    },
+    "4241a15345e5f304": {
+      "backtranslation": "der Gott",
+      "date": "2026-09-03",
+      "de": "Gott",
+      "en": "god",
+      "source": "deepl"
     },
     "4260a6ed0891740d": {
       "backtranslation": "Cousin",
@@ -7565,7 +8064,7 @@
       "_src_note": "на сленге может означать употребление наркотиков - трактовка зависит от контекста",
       "altEn": "to use in doses",
       "altEnSource": "manual",
-      "date": "2026-09-01",
+      "date": "2026-09-03",
       "de": "Teile konsumieren",
       "en": "to use (drugs)",
       "noteEn": "slang; may refer to drug use – depends on context",
@@ -7711,6 +8210,13 @@
       "en": "traditional",
       "source": "deepl"
     },
+    "465f7b033fd707b3": {
+      "backtranslation": "der Wortschatz",
+      "date": "2026-09-03",
+      "de": "Wortschatz",
+      "en": "vocabulary",
+      "source": "deepl"
+    },
     "46633499bbf454e6": {
       "_src_note": "Akkusativ",
       "backtranslation": "jeden Tag",
@@ -7751,7 +8257,7 @@
       "source": "deepl"
     },
     "471d0acfadd2f111": {
-      "date": "2026-09-01",
+      "date": "2026-09-03",
       "de": "Essverhalten",
       "en": "eating behaviour",
       "source": "manual"
@@ -7825,7 +8331,7 @@
       "_src_altEn": "увеличиваться",
       "altEn": "to increase",
       "altEnSource": "manual",
-      "date": "2026-09-01",
+      "date": "2026-09-03",
       "de": "zunehmen",
       "en": "to gain weight",
       "source": "manual"
@@ -7862,10 +8368,10 @@
     },
     "48f7696cfd9a3512": {
       "backtranslation": "der Plan",
-      "date": "2026-08-30",
+      "date": "2026-09-03",
       "de": "Plan",
-      "en": "plan",
-      "source": "deepl"
+      "en": "meal",
+      "source": "manual"
     },
     "49116576f1fa45c5": {
       "backtranslation": "das Geschäft",
@@ -7932,6 +8438,13 @@
       "exampleEn": "The bike is parked outside the door",
       "source": "deepl"
     },
+    "49d4a4a9049b6509": {
+      "backtranslation": "das Auge",
+      "date": "2026-09-03",
+      "de": "Auge",
+      "en": "eye",
+      "source": "deepl"
+    },
     "49d8d88168b1029d": {
       "_src_altEn": "папка приветствия",
       "altEn": "welcome folder",
@@ -7949,6 +8462,13 @@
       "en": "to love",
       "source": "haiku",
       "verdict": "ok"
+    },
+    "49f4eba42088d652": {
+      "backtranslation": "der Bauch",
+      "date": "2026-09-03",
+      "de": "Bauch",
+      "en": "belly",
+      "source": "deepl"
     },
     "4a07af32640416d4": {
       "backtranslation": "Onkel",
@@ -7983,7 +8503,7 @@
     "4aec861937e3c809": {
       "altEn": "over it",
       "altEnSource": "manual",
-      "date": "2026-09-01",
+      "date": "2026-09-03",
       "de": "darüber",
       "en": "about it",
       "source": "manual"
@@ -8126,6 +8646,15 @@
       "en": "tea",
       "source": "deepl"
     },
+    "4c141aeb5bf7d80d": {
+      "_src_note": "einen Verband anlegen",
+      "date": "2026-09-03",
+      "de": "anlegen",
+      "en": "to apply",
+      "noteEn": "einen Verband anlegen",
+      "source": "haiku",
+      "verdict": "fix"
+    },
     "4c3a9f6baf19849b": {
       "backtranslation": "bekannt",
       "date": "2026-08-27",
@@ -8154,7 +8683,7 @@
       "_src_note": "befreit von + Dativ – освобождён от",
       "altEn": "to exempt",
       "altEnSource": "manual",
-      "date": "2026-09-01",
+      "date": "2026-09-03",
       "de": "befreien",
       "en": "to free",
       "noteEn": "befreit von + Dativ – exempt from",
@@ -8203,6 +8732,13 @@
       "date": "2026-08-27",
       "de": "Gebäude",
       "en": "building",
+      "source": "deepl"
+    },
+    "4d2521118deaee81": {
+      "backtranslation": "das Blut",
+      "date": "2026-09-03",
+      "de": "Blut",
+      "en": "blood",
       "source": "deepl"
     },
     "4d4b318ce4dfebfa": {
@@ -8286,6 +8822,13 @@
       "en": "to bake",
       "source": "deepl"
     },
+    "4e7261013cae7e85": {
+      "backtranslation": "der Kurier",
+      "date": "2026-09-03",
+      "de": "Kurier",
+      "en": "courier",
+      "source": "deepl"
+    },
     "4e73ceba53d504ca": {
       "_src_note": "также: пожилой (о людях)",
       "backtranslation": "alt",
@@ -8319,6 +8862,13 @@
       "date": "2026-08-27",
       "de": "Stundenlohn",
       "en": "hourly wage",
+      "source": "deepl"
+    },
+    "4ec776637b3f795a": {
+      "backtranslation": "die Aussprache",
+      "date": "2026-09-03",
+      "de": "Aussprache",
+      "en": "pronunciation",
       "source": "deepl"
     },
     "4eea0a5a576a92a0": {
@@ -8368,6 +8918,16 @@
       "source": "haiku",
       "verdict": "fix"
     },
+    "4fd0ed69393a69e3": {
+      "_src_note": "sich kümmern um + Akkusativ",
+      "backtranslation": "sich um … kümmern",
+      "date": "2026-09-03",
+      "de": "kümmern",
+      "en": "to take care of",
+      "noteEn": "sich kümmern um + Akkusativ",
+      "source": "haiku",
+      "verdict": "ok"
+    },
     "4ff8869125b80ab8": {
       "backtranslation": "Pilz",
       "date": "2026-08-27",
@@ -8376,9 +8936,9 @@
       "source": "deepl"
     },
     "4ff9d83e745586b9": {
-      "date": "2026-09-01",
+      "date": "2026-09-03",
       "de": "Lastschrift",
-      "en": "direct debit",
+      "en": "amount of damages",
       "source": "manual"
     },
     "506b7d6ff8d348d4": {
@@ -8417,6 +8977,13 @@
       "en": "chain",
       "source": "deepl"
     },
+    "50c847bbcd91ee74": {
+      "backtranslation": "das Knie",
+      "date": "2026-09-03",
+      "de": "Knie",
+      "en": "knee",
+      "source": "deepl"
+    },
     "50c9e0b9198c8696": {
       "backtranslation": "schließen",
       "date": "2026-08-27",
@@ -8425,11 +8992,13 @@
       "source": "deepl"
     },
     "50ccc65db474627f": {
+      "altEn": "law",
+      "altEnSource": "manual",
       "backtranslation": "die Erwachsenenbildung",
-      "date": "2026-08-30",
+      "date": "2026-09-03",
       "de": "Erwachsenenbildung",
-      "en": "adult education",
-      "source": "deepl"
+      "en": "right",
+      "source": "manual"
     },
     "511f0b14d519e5ca": {
       "_src_altEn": "Keller",
@@ -8588,7 +9157,7 @@
       "verdict": "ok"
     },
     "53978fb479ead86a": {
-      "date": "2026-09-01",
+      "date": "2026-09-03",
       "de": "einschließen",
       "en": "to include",
       "source": "manual"
@@ -8643,7 +9212,7 @@
       "_src_note": "sich um + Akkusativ: Es handelt sich um einen Fehler | von + Dativ (о книге, фильме): Das Buch handelt von der Liebe",
       "altEn": "it concerns",
       "altEnSource": "manual",
-      "date": "2026-09-01",
+      "date": "2026-09-03",
       "de": "es handelt sich um",
       "en": "it is about",
       "noteEn": "sich um + Akkusativ: Es handelt sich um einen Fehler | von + Dativ (a book, a film): Das Buch handelt von der Liebe",
@@ -8732,7 +9301,7 @@
       "_src_note": "sich engagieren für + Akkusativ",
       "altEn": "to invest",
       "altEnSource": "deepl-ru",
-      "date": "2026-09-01",
+      "date": "2026-09-03",
       "de": "engagieren",
       "en": "to get involved",
       "noteEn": "sich engagieren für + Akkusativ",
@@ -8841,13 +9410,13 @@
       "_src_altEn": "причинять",
       "altEn": "to cause",
       "altEnSource": "deepl-ru",
-      "date": "2026-09-01",
+      "date": "2026-09-03",
       "de": "verursachen",
       "en": "to cause",
       "source": "manual"
     },
     "57e4a40b9e2a30d9": {
-      "date": "2026-09-01",
+      "date": "2026-09-03",
       "de": "mitversichert",
       "en": "covered by the same policy",
       "source": "manual"
@@ -8913,11 +9482,11 @@
     "58d152cac0a2484f": {
       "_src_note": "без множественного числа",
       "backtranslation": "die Umwelt",
-      "date": "2026-08-30",
+      "date": "2026-09-03",
       "de": "Umwelt",
-      "en": "environment",
+      "en": "direct debit",
       "noteEn": "without the plural form",
-      "source": "deepl"
+      "source": "manual"
     },
     "58f8319469c6a8e3": {
       "_src_altEn": "напрасно",
@@ -8937,12 +9506,21 @@
       "source": "haiku",
       "verdict": "ok"
     },
+    "59213e8c41ab6181": {
+      "_src_note": "склоняется как прилагательное: ein Kranker, eine Kranke",
+      "date": "2026-09-03",
+      "de": "Kranke",
+      "en": "sick person",
+      "noteEn": "It is declined as an adjective: ein Kranker, eine Kranke",
+      "source": "haiku",
+      "verdict": "fix"
+    },
     "593ed9c1aaa5fa59": {
       "_src_altEn": "врачебный кабинет",
       "altEn": "doctor's office",
       "altEnSource": "manual",
       "backtranslation": "die Praxis",
-      "date": "2026-09-01",
+      "date": "2026-09-03",
       "de": "Praxis",
       "en": "practice",
       "source": "manual"
@@ -8978,7 +9556,7 @@
     "5a44da9432843fe8": {
       "altEn": "now and then",
       "altEnSource": "manual",
-      "date": "2026-09-01",
+      "date": "2026-09-03",
       "de": "zwischendurch",
       "en": "in between",
       "source": "manual"
@@ -9048,6 +9626,13 @@
       "noteEn": "product listing | from anbieten (list)",
       "source": "deepl"
     },
+    "5b129382765d86a9": {
+      "backtranslation": "erschöpft",
+      "date": "2026-09-03",
+      "de": "erschöpft",
+      "en": "exhausted",
+      "source": "deepl"
+    },
     "5b516d57b5174d88": {
       "_src_note": "обобщенно",
       "backtranslation": "Obst",
@@ -9056,6 +9641,16 @@
       "en": "fruit",
       "noteEn": "in general",
       "source": "deepl"
+    },
+    "5b8e853cd2d83e8e": {
+      "_src_note": "существительное – die Bremse (n0830)",
+      "backtranslation": "Bremse",
+      "date": "2026-09-03",
+      "de": "bremsen",
+      "en": "to brake",
+      "noteEn": "noun – die Bremse (n0830)",
+      "source": "haiku",
+      "verdict": "ok"
     },
     "5c014dfd940b25db": {
       "backtranslation": "erweitern",
@@ -9095,7 +9690,7 @@
       "source": "deepl"
     },
     "5d2ab54d9a5a413d": {
-      "date": "2026-09-01",
+      "date": "2026-09-03",
       "de": "Wolke",
       "en": "cloud",
       "source": "manual"
@@ -9165,6 +9760,13 @@
       "en": "greeting",
       "exampleEn": "Best regards (LG)",
       "noteEn": "Viele Grüße – Lots of greetings",
+      "source": "deepl"
+    },
+    "5e6a33679d173d38": {
+      "backtranslation": "die Wange",
+      "date": "2026-09-03",
+      "de": "Wange",
+      "en": "cheek",
       "source": "deepl"
     },
     "5e750300ca64bd2c": {
@@ -9398,6 +10000,26 @@
       "source": "haiku",
       "verdict": "ok"
     },
+    "626c72608aed0104": {
+      "backtranslation": "die Verletzung",
+      "date": "2026-09-03",
+      "de": "Verletzung",
+      "en": "injury",
+      "source": "deepl"
+    },
+    "6275b393554a6fb9": {
+      "_src_altEn": "Zehe",
+      "_src_note": "палец руки — der Finger",
+      "altEn": "toe",
+      "altEnSource": "deepl",
+      "backtranslation": "die Zehe",
+      "date": "2026-09-03",
+      "de": "Zeh",
+      "en": "toe",
+      "noteEn": "finger — der Finger",
+      "source": "haiku",
+      "verdict": "ok"
+    },
     "62a06e07e42c4c57": {
       "backtranslation": "nicht da",
       "date": "2026-08-27",
@@ -9506,12 +10128,14 @@
     },
     "63fec3a6a7127ea9": {
       "_src_altEn": "в этом",
+      "_src_note": "местоим. наречие: in+это; Was ist darin?",
       "altEn": "in this",
       "altEnSource": "deepl-ru",
       "backtranslation": "darin",
-      "date": "2026-08-27",
+      "date": "2026-09-03",
       "de": "darin",
       "en": "in it",
+      "noteEn": "pronoun adverb: in+this; Was ist darin?",
       "source": "deepl"
     },
     "6406c635ab95130c": {
@@ -9593,6 +10217,13 @@
       "noteEn": "informally",
       "source": "deepl"
     },
+    "6525f7bb819ba9e8": {
+      "backtranslation": "das Röntgenbild",
+      "date": "2026-09-03",
+      "de": "Röntgenbild",
+      "en": "x-ray image",
+      "source": "deepl"
+    },
     "65294e26e6a00422": {
       "_src_note": "от nutzen (= benutzen без приставки) | -ung всегда die | Offline-Nutzung",
       "backtranslation": "die Verwendung",
@@ -9641,11 +10272,11 @@
     "657e471adedee62d": {
       "_src_note": "только множественное число",
       "backtranslation": "die Süßigkeiten",
-      "date": "2026-08-30",
+      "date": "2026-09-03",
       "de": "Süßigkeiten",
-      "en": "candy",
+      "en": "chocolate bar",
       "noteEn": "only the plural form",
-      "source": "deepl"
+      "source": "manual"
     },
     "6585b16759057b1e": {
       "backtranslation": "öffnen",
@@ -9814,6 +10445,15 @@
       "source": "haiku",
       "verdict": "ok"
     },
+    "67ed143f2c44b7f6": {
+      "_src_note": "angeschnallt sein – быть пристёгнутым",
+      "backtranslation": "angeschnallt",
+      "date": "2026-09-03",
+      "de": "angeschnallt",
+      "en": "strapped in",
+      "noteEn": "angeschnallt sein – to be buckled in",
+      "source": "deepl"
+    },
     "682289aff1fba39b": {
       "_src_note": "только Pl.",
       "backtranslation": "Semesterferien",
@@ -9831,6 +10471,13 @@
       "source": "haiku",
       "verdict": "ok"
     },
+    "68602a3834edaa6b": {
+      "date": "2026-09-03",
+      "de": "Untersuchung",
+      "en": "examination",
+      "source": "haiku",
+      "verdict": "fix"
+    },
     "6861823a98d68d0c": {
       "backtranslation": "Kandidat",
       "date": "2026-08-27",
@@ -9839,9 +10486,11 @@
       "source": "deepl"
     },
     "68664d6058c3b0e2": {
-      "date": "2026-09-01",
+      "altEn": "event",
+      "altEnSource": "manual",
+      "date": "2026-09-03",
       "de": "Einzelreise",
-      "en": "individual trip",
+      "en": "campaign",
       "source": "manual"
     },
     "6897bc5e7f3804d7": {
@@ -10000,12 +10649,25 @@
       "source": "haiku",
       "verdict": "fix"
     },
+    "6ab170989961a4bd": {
+      "_src_altEn": "скверный",
+      "_src_note": "Halb so schlimm – не так страшно",
+      "altEn": "bad",
+      "altEnSource": "deepl-ru",
+      "backtranslation": "schlecht",
+      "date": "2026-09-03",
+      "de": "schlimm",
+      "en": "bad",
+      "noteEn": "Halb so schlimm – It's not that bad",
+      "source": "haiku",
+      "verdict": "ok"
+    },
     "6ad53d43a7ab6d1e": {
       "_src_altEn": "торговать",
       "_src_note": "es handelt sich um – речь идёт о (см. фразы)",
       "altEn": "to trade",
       "altEnSource": "manual",
-      "date": "2026-09-01",
+      "date": "2026-09-03",
       "de": "handeln",
       "en": "to act",
       "noteEn": "es handelt sich um – this refers to (see phrases)",
@@ -10345,6 +11007,33 @@
       "source": "haiku",
       "verdict": "ok"
     },
+    "7026b86032cd8a67": {
+      "_src_altEn": "шприц",
+      "altEn": "syringe",
+      "altEnSource": "deepl-ru",
+      "backtranslation": "die Spritze",
+      "date": "2026-09-03",
+      "de": "Spritze",
+      "en": "syringe",
+      "source": "deepl"
+    },
+    "7044b6518172d993": {
+      "_src_altEn": "принятый",
+      "altEn": "customary",
+      "altEnSource": "deepl-ru",
+      "date": "2026-09-03",
+      "de": "üblich",
+      "en": "usual",
+      "source": "haiku",
+      "verdict": "fix"
+    },
+    "7053472f9177f40b": {
+      "backtranslation": "kaum",
+      "date": "2026-09-03",
+      "de": "kaum",
+      "en": "barely",
+      "source": "deepl"
+    },
     "70822f2a447ea4e0": {
       "backtranslation": "Rauch",
       "date": "2026-08-27",
@@ -10411,6 +11100,16 @@
       "de": "Osten",
       "en": "east",
       "source": "deepl"
+    },
+    "716645850e98cf85": {
+      "_src_note": "sich gewöhnen an + Akkusativ",
+      "backtranslation": "sich daran gewöhnen",
+      "date": "2026-09-03",
+      "de": "gewöhnen",
+      "en": "to get used to",
+      "noteEn": "sich gewöhnen an + Akkusativ",
+      "source": "haiku",
+      "verdict": "ok"
     },
     "716f45a590a5d939": {
       "backtranslation": "Fahrlehrer",
@@ -10601,7 +11300,7 @@
       "_src_note": "зависит от падежа",
       "altEn": "both",
       "altEnSource": "deepl",
-      "date": "2026-09-01",
+      "date": "2026-09-03",
       "de": "beide",
       "en": "both",
       "noteEn": "depends on the case",
@@ -10610,7 +11309,7 @@
     "742cacb5e638662e": {
       "altEn": "adviser",
       "altEnSource": "manual",
-      "date": "2026-09-01",
+      "date": "2026-09-03",
       "de": "Ratgeber",
       "en": "guide",
       "source": "manual"
@@ -10620,6 +11319,13 @@
       "date": "2026-08-27",
       "de": "Land",
       "en": "country",
+      "source": "deepl"
+    },
+    "7449d0878b77bbae": {
+      "backtranslation": "hupen",
+      "date": "2026-09-03",
+      "de": "hupen",
+      "en": "to honk",
       "source": "deepl"
     },
     "7467d742b3b7fc80": {
@@ -10725,6 +11431,13 @@
       "en": "to come up with",
       "source": "haiku",
       "verdict": "ok"
+    },
+    "75d57619667a0b3c": {
+      "backtranslation": "ab und zu",
+      "date": "2026-09-03",
+      "de": "ab und zu",
+      "en": "now and then",
+      "source": "deepl"
     },
     "75e46366e83d8cbc": {
       "backtranslation": "vorbereiten",
@@ -11043,9 +11756,9 @@
     "7ae3aa725c656bb3": {
       "altEn": "law",
       "altEnSource": "manual",
-      "date": "2026-09-01",
+      "date": "2026-09-03",
       "de": "Recht",
-      "en": "right",
+      "en": "consumer advice centre",
       "source": "manual"
     },
     "7ae5fd2d7dd157f4": {
@@ -11279,6 +11992,20 @@
       "en": "motto",
       "source": "deepl"
     },
+    "7e9736e9a1693793": {
+      "backtranslation": "ungewöhnlich",
+      "date": "2026-09-03",
+      "de": "ungewöhnlich",
+      "en": "unusual",
+      "source": "deepl"
+    },
+    "7eb122cc279651ee": {
+      "date": "2026-09-03",
+      "de": "langweilen",
+      "en": "to bore",
+      "source": "haiku",
+      "verdict": "fix"
+    },
     "7ec2cb344b62126a": {
       "_src_altEn": "падать",
       "altEn": "to fall",
@@ -11333,7 +12060,7 @@
       "source": "deepl"
     },
     "7f4c862a5d2cdd22": {
-      "date": "2026-09-01",
+      "date": "2026-09-03",
       "de": "Es lohnt sich nicht",
       "en": "It's not worth it",
       "source": "manual"
@@ -11399,6 +12126,15 @@
       "en": "small",
       "source": "deepl"
     },
+    "80ac2dc6bb112057": {
+      "_src_note": "abhängen von + Dativ | Das hängt von der Situation ab",
+      "backtranslation": "abhängen",
+      "date": "2026-09-03",
+      "de": "abhängen",
+      "en": "to depend",
+      "noteEn": "abhängen von + Dativ | Das hängt von der Situation ab",
+      "source": "deepl"
+    },
     "80b0fd3810cd721e": {
       "backtranslation": "dort",
       "date": "2026-08-27",
@@ -11434,6 +12170,13 @@
       "en": "eraser",
       "source": "deepl"
     },
+    "814abcb5b4334d42": {
+      "backtranslation": "der Mund",
+      "date": "2026-09-03",
+      "de": "Mund",
+      "en": "mouth",
+      "source": "deepl"
+    },
     "8151f5e9c5ec89b7": {
       "backtranslation": "Prüfer",
       "date": "2026-08-27",
@@ -11462,6 +12205,13 @@
       "en": "foggy",
       "source": "deepl"
     },
+    "81cf90eea1815b9c": {
+      "backtranslation": "das Medikament",
+      "date": "2026-09-03",
+      "de": "Medikament",
+      "en": "medication",
+      "source": "deepl"
+    },
     "81fb83a8f4367b04": {
       "_src_altEn": "кричать",
       "altEn": "to shout",
@@ -11475,12 +12225,14 @@
     },
     "825db0f7db9e4357": {
       "_src_note": "только множественное число",
+      "altEn": "agent",
+      "altEnSource": "manual",
       "backtranslation": "die Finanzen",
-      "date": "2026-08-30",
+      "date": "2026-09-03",
       "de": "Finanzen",
-      "en": "finance",
+      "en": "broker",
       "noteEn": "only the plural form",
-      "source": "deepl"
+      "source": "manual"
     },
     "8290212962c02b25": {
       "backtranslation": "Tasse",
@@ -11614,10 +12366,10 @@
     },
     "84e8dd2f9465c0d3": {
       "backtranslation": "Floh",
-      "date": "2026-08-27",
+      "date": "2026-09-03",
       "de": "Floh",
-      "en": "flea",
-      "source": "deepl"
+      "en": "hair",
+      "source": "manual"
     },
     "8533a75a2ca0ab62": {
       "_src_note": "12:00 – 14:00",
@@ -11631,7 +12383,7 @@
     "853ded54c14695e6": {
       "altEn": "credit",
       "altEnSource": "manual",
-      "date": "2026-09-01",
+      "date": "2026-09-03",
       "de": "Kredit",
       "en": "loan",
       "source": "manual"
@@ -11736,6 +12488,15 @@
       "date": "2026-08-30",
       "de": "vegan",
       "en": "vegan",
+      "source": "deepl"
+    },
+    "872ccf3228f7738b": {
+      "_src_note": "чаще во мн. числе: Ich habe Schmerzen",
+      "backtranslation": "der Schmerz",
+      "date": "2026-09-03",
+      "de": "Schmerz",
+      "en": "pain",
+      "noteEn": "More commonly in the plural: Ich habe Schmerzen",
       "source": "deepl"
     },
     "87593b68bbfbc41a": {
@@ -11971,6 +12732,13 @@
       "noteEn": "↔ Mieter",
       "source": "deepl"
     },
+    "8a86f25893cc9998": {
+      "backtranslation": "das Bargeld",
+      "date": "2026-09-03",
+      "de": "Bargeld",
+      "en": "cash",
+      "source": "deepl"
+    },
     "8a97aac22a8cab0e": {
       "backtranslation": "Veranstaltung",
       "date": "2026-08-27",
@@ -12040,6 +12808,15 @@
       "date": "2026-08-27",
       "noteEn": "Ich habe keinen Hund",
       "source": "deepl"
+    },
+    "8ba873b5ae895e7f": {
+      "_src_warning": "язык как речь — die Sprache",
+      "backtranslation": "die Zunge",
+      "date": "2026-09-03",
+      "de": "Zunge",
+      "en": "tongue",
+      "source": "deepl",
+      "warningEn": "Language as Speech — die Sprache"
     },
     "8ba99d25bf420684": {
       "backtranslation": "Trauzeugin",
@@ -12293,6 +13070,13 @@
       "exampleEn": "eat in the cafeteria",
       "source": "deepl"
     },
+    "90772deb0f5c3baa": {
+      "backtranslation": "der Krankenwagen",
+      "date": "2026-09-03",
+      "de": "Krankenwagen",
+      "en": "ambulance",
+      "source": "deepl"
+    },
     "90d2a03d05a99239": {
       "backtranslation": "Kunde",
       "date": "2026-08-27",
@@ -12389,7 +13173,7 @@
       "_src_altEn": "изменять",
       "altEn": "to change",
       "altEnSource": "deepl-ru",
-      "date": "2026-09-01",
+      "date": "2026-09-03",
       "de": "ändern",
       "en": "to change",
       "source": "manual"
@@ -12524,6 +13308,17 @@
       "exampleEn": "in the summer",
       "source": "deepl"
     },
+    "940a83942cc56f5a": {
+      "_src_note": "A2-Niveau – уровень A2",
+      "altEn": "viewing",
+      "altEnSource": "manual",
+      "backtranslation": "das Niveau",
+      "date": "2026-09-03",
+      "de": "Niveau",
+      "en": "tour",
+      "noteEn": "A2-Niveau – Level A2",
+      "source": "manual"
+    },
     "9437624f18bff1f9": {
       "backtranslation": "Fleischabteilung",
       "date": "2026-08-27",
@@ -12644,7 +13439,7 @@
       "source": "deepl"
     },
     "9575033844413be0": {
-      "date": "2026-09-01",
+      "date": "2026-09-03",
       "de": "verärgert",
       "en": "annoyed",
       "source": "manual"
@@ -12796,6 +13591,13 @@
       "noteEn": "from ausstellen (display) | aus (outward) + stellen (place) | - ung always die",
       "source": "deepl"
     },
+    "97656c8775dedd63": {
+      "backtranslation": "höchstens",
+      "date": "2026-09-03",
+      "de": "höchstens",
+      "en": "at most",
+      "source": "deepl"
+    },
     "976791842e7b441e": {
       "backtranslation": "groß",
       "date": "2026-08-27",
@@ -12859,7 +13661,7 @@
       "source": "deepl"
     },
     "997b1379518ccc83": {
-      "date": "2026-09-01",
+      "date": "2026-09-03",
       "de": "Versicherungsbeitrag",
       "en": "insurance premium",
       "source": "manual"
@@ -12896,6 +13698,16 @@
       "source": "haiku",
       "verdict": "fix"
     },
+    "999c7fdf12216260": {
+      "_src_note": "sich beschweren über + Akkusativ",
+      "backtranslation": "sich beschweren",
+      "date": "2026-09-03",
+      "de": "beschweren",
+      "en": "to complain",
+      "noteEn": "sich beschweren über + Akkusativ",
+      "source": "haiku",
+      "verdict": "ok"
+    },
     "99a0125ef373a581": {
       "backtranslation": "Schal",
       "date": "2026-08-27",
@@ -12930,6 +13742,13 @@
       "de": "werden",
       "en": "to become",
       "noteEn": "For more information, visit Futur and Passiv",
+      "source": "deepl"
+    },
+    "9a08631675139ce9": {
+      "backtranslation": "die Impfung",
+      "date": "2026-09-03",
+      "de": "Impfung",
+      "en": "vaccination",
       "source": "deepl"
     },
     "9a096621210ac7d8": {
@@ -12970,6 +13789,13 @@
       "en": "series",
       "source": "deepl"
     },
+    "9aa2503bc0a773f3": {
+      "date": "2026-09-03",
+      "de": "Verband",
+      "en": "bandage",
+      "source": "haiku",
+      "verdict": "fix"
+    },
     "9af5d319a41933ba": {
       "_src_altEn": "грузить",
       "altEn": "to load",
@@ -12987,6 +13813,15 @@
       "date": "2026-08-27",
       "de": "Klimastreik",
       "en": "climate strike",
+      "source": "deepl"
+    },
+    "9ba2bae9d70e195a": {
+      "_src_note": "глагол sich aufregen – волноваться / расстраиваться",
+      "backtranslation": "aufgeregt",
+      "date": "2026-09-03",
+      "de": "aufgeregt",
+      "en": "excited",
+      "noteEn": "verb sich aufregen – to worry / to get upset",
       "source": "deepl"
     },
     "9bba3bfd664e8b3f": {
@@ -13166,6 +14001,13 @@
       "noteEn": "a homonym for \"bench\"",
       "source": "deepl"
     },
+    "9ea2281b3c35fb37": {
+      "backtranslation": "die Wunde",
+      "date": "2026-09-03",
+      "de": "Wunde",
+      "en": "wound",
+      "source": "deepl"
+    },
     "9eb7cd58cba0e74c": {
       "backtranslation": "spazieren gehen",
       "date": "2026-08-27",
@@ -13201,6 +14043,16 @@
       "de": "Mittwoch",
       "en": "Wednesday",
       "exampleEn": "on Wednesday",
+      "source": "deepl"
+    },
+    "9f85c6e60cc6e484": {
+      "_src_altEn": "переворачивать",
+      "altEn": "to turn over",
+      "altEnSource": "deepl-ru",
+      "backtranslation": "umdrehen",
+      "date": "2026-09-03",
+      "de": "umdrehen",
+      "en": "to turn over",
       "source": "deepl"
     },
     "9fc449a6e0b88512": {
@@ -13338,10 +14190,17 @@
     "a28f200e4625a9af": {
       "altEn": "barely enough",
       "altEnSource": "manual",
-      "date": "2026-09-01",
+      "date": "2026-09-03",
       "de": "knapp",
       "en": "tight",
       "source": "manual"
+    },
+    "a29e761675c7e047": {
+      "backtranslation": "verschreiben",
+      "date": "2026-09-03",
+      "de": "verschreiben",
+      "en": "to prescribe",
+      "source": "deepl"
     },
     "a310388f3d27d26d": {
       "backtranslation": "bewölkt",
@@ -13570,6 +14429,13 @@
       "source": "haiku",
       "verdict": "ok"
     },
+    "a63291484ef50929": {
+      "backtranslation": "der Biergarten",
+      "date": "2026-09-03",
+      "de": "Biergarten",
+      "en": "beer garden",
+      "source": "deepl"
+    },
     "a63bd7799f24007f": {
       "date": "2026-08-27",
       "de": "regionale Spezialitäten probieren",
@@ -13622,7 +14488,7 @@
       "verdict": "ok"
     },
     "a722ce7050e4e9e1": {
-      "date": "2026-09-01",
+      "date": "2026-09-03",
       "de": "Haar",
       "en": "hair",
       "source": "manual"
@@ -13832,6 +14698,14 @@
       "en": "vacation home",
       "source": "deepl"
     },
+    "a9a9f20748ac9458": {
+      "backtranslation": "ständig",
+      "date": "2026-09-03",
+      "de": "dauernd",
+      "en": "constantly",
+      "source": "haiku",
+      "verdict": "ok"
+    },
     "a9fe492ef1d35845": {
       "_src_altEn": "экзаменовать",
       "altEn": "to examine",
@@ -13892,6 +14766,15 @@
       "source": "haiku",
       "verdict": "fix"
     },
+    "aa7bdfe90e96940e": {
+      "_src_note": "Magenschmerzen – боль в желудке",
+      "backtranslation": "der Magen",
+      "date": "2026-09-03",
+      "de": "Magen",
+      "en": "stomach",
+      "noteEn": "Magenschmerzen – stomach pain",
+      "source": "deepl"
+    },
     "aa80ad49207324cf": {
       "backtranslation": "Bildschirm",
       "date": "2026-08-27",
@@ -13925,15 +14808,28 @@
       "source": "haiku",
       "verdict": "fix"
     },
+    "aaea7c6f63d9f395": {
+      "_src_altEn": "Rezeptionistin",
+      "_src_note": "слабое склонение: den/dem/des Rezeptionisten",
+      "altEn": "receptionist (female)",
+      "altEnSource": "deepl",
+      "backtranslation": "die Rezeptionistin",
+      "date": "2026-09-03",
+      "de": "Rezeptionist",
+      "en": "receptionist",
+      "noteEn": "Weak declension: den/dem/des Rezeptionisten",
+      "source": "haiku",
+      "verdict": "ok"
+    },
     "aaf494f7a01e5bea": {
       "_src_altEn": "повседневность",
       "altEn": "everyday life",
       "altEnSource": "deepl-ru",
       "backtranslation": "der Alltag",
-      "date": "2026-08-30",
+      "date": "2026-09-03",
       "de": "Alltag",
-      "en": "daily life",
-      "source": "deepl"
+      "en": "third",
+      "source": "manual"
     },
     "ab34604e1f11687f": {
       "_src_altEn": "товар",
@@ -13991,6 +14887,13 @@
       "en": "city center",
       "source": "deepl"
     },
+    "ac802ddf2fc277c6": {
+      "backtranslation": "die Stirn",
+      "date": "2026-09-03",
+      "de": "Stirn",
+      "en": "forehead",
+      "source": "deepl"
+    },
     "ac893c840995758d": {
       "_src_note": "↔ schlechte Laune",
       "backtranslation": "gute Laune",
@@ -14027,6 +14930,13 @@
       "source": "haiku",
       "verdict": "ok"
     },
+    "acf87d3505c8cb99": {
+      "backtranslation": "der Knochen",
+      "date": "2026-09-03",
+      "de": "Knochen",
+      "en": "bone",
+      "source": "deepl"
+    },
     "ad15ed12707ec898": {
       "_src_altEn": "регион",
       "altEn": "region",
@@ -14054,7 +14964,7 @@
     "adb4adb1dcaf0759": {
       "altEn": "one-time",
       "altEnSource": "manual",
-      "date": "2026-09-01",
+      "date": "2026-09-03",
       "de": "einmalig",
       "en": "one-off",
       "source": "manual"
@@ -14080,6 +14990,14 @@
       "source": "haiku",
       "verdict": "ok"
     },
+    "adf338a37502470d": {
+      "backtranslation": "die Rückseite",
+      "date": "2026-09-03",
+      "de": "Rücken",
+      "en": "back",
+      "source": "haiku",
+      "verdict": "ok"
+    },
     "ae0b0f76b558323f": {
       "backtranslation": "streicheln",
       "date": "2026-08-27",
@@ -14088,7 +15006,7 @@
       "source": "deepl"
     },
     "ae24c3f848e45b2e": {
-      "date": "2026-09-01",
+      "date": "2026-09-03",
       "de": "Paketbotin",
       "en": "parcel courier",
       "noteEn": "female form of Paketbote",
@@ -14201,9 +15119,9 @@
       "verdict": "ok"
     },
     "b05046ae2b7970db": {
-      "date": "2026-09-01",
+      "date": "2026-09-03",
       "de": "Essgewohnheit",
-      "en": "eating habit",
+      "en": "food storage container",
       "source": "manual"
     },
     "b14dd5c742e2862a": {
@@ -14249,7 +15167,7 @@
       "source": "deepl"
     },
     "b1a2aa37d13954cf": {
-      "date": "2026-09-01",
+      "date": "2026-09-03",
       "de": "Frischhaltedose",
       "en": "food storage container",
       "source": "manual"
@@ -14394,6 +15312,16 @@
       "source": "haiku",
       "verdict": "ok"
     },
+    "b3e5f2ea1016bf8d": {
+      "_src_altEn": "Fußgängerin",
+      "altEn": "female pedestrian",
+      "altEnSource": "deepl",
+      "backtranslation": "der Fußgänger",
+      "date": "2026-09-03",
+      "de": "Fußgänger",
+      "en": "pedestrian",
+      "source": "deepl"
+    },
     "b41e3c6c3a84a199": {
       "backtranslation": "elf",
       "date": "2026-08-27",
@@ -14416,9 +15344,9 @@
       "_src_altEn": "трапеза",
       "altEn": "meal",
       "altEnSource": "deepl-ru",
-      "date": "2026-09-01",
+      "date": "2026-09-03",
       "de": "Mahlzeit",
-      "en": "meal",
+      "en": "eating habit",
       "source": "manual"
     },
     "b4916696b5a74495": {
@@ -14522,6 +15450,15 @@
       "de": "möglich",
       "en": "possible",
       "exampleEn": "Is that possible?",
+      "source": "deepl"
+    },
+    "b5fa495081a367ab": {
+      "_src_note": "zu Fuß gehen – идти пешком",
+      "backtranslation": "der Fuß",
+      "date": "2026-09-03",
+      "de": "Fuß",
+      "en": "foot",
+      "noteEn": "zu Fuß gehen – to walk",
       "source": "deepl"
     },
     "b610525041dfc748": {
@@ -14647,6 +15584,13 @@
       "source": "haiku",
       "verdict": "fix"
     },
+    "b7c5facd6d905881": {
+      "backtranslation": "Röntgen",
+      "date": "2026-09-03",
+      "de": "röntgen",
+      "en": "to X-ray",
+      "source": "deepl"
+    },
     "b7d6e60d60495124": {
       "backtranslation": "Elektronikgeschäft",
       "date": "2026-08-27",
@@ -14676,6 +15620,13 @@
       "en": "hygiene Training",
       "source": "deepl"
     },
+    "b8103532efbad783": {
+      "backtranslation": "das Nasenspray",
+      "date": "2026-09-03",
+      "de": "Nasenspray",
+      "en": "nasal spray",
+      "source": "deepl"
+    },
     "b81d7212a1501038": {
       "backtranslation": "Alter",
       "date": "2026-08-27",
@@ -14684,7 +15635,7 @@
       "source": "deepl"
     },
     "b81f0d5b85a95021": {
-      "date": "2026-09-01",
+      "date": "2026-09-03",
       "de": "Einzelperson",
       "en": "individual",
       "source": "manual"
@@ -14793,7 +15744,7 @@
     },
     "ba0c9df29d5840a3": {
       "_src_note": "круглые десятки от 20: zwanzig, vierzig…",
-      "date": "2026-09-01",
+      "date": "2026-09-03",
       "de": "…zig",
       "en": "-ty",
       "noteEn": "the suffix in zwanzig, dreißig — like English -ty in twenty, thirty",
@@ -14916,6 +15867,13 @@
       "date": "2026-08-27",
       "de": "Unfall",
       "en": "accident",
+      "source": "deepl"
+    },
+    "bb925a2817645b53": {
+      "backtranslation": "das Gehirn",
+      "date": "2026-09-03",
+      "de": "Gehirn",
+      "en": "brain",
       "source": "deepl"
     },
     "bbb9475e60658a98": {
@@ -15224,7 +16182,7 @@
     "bf991869fcc35145": {
       "altEn": "event",
       "altEnSource": "manual",
-      "date": "2026-09-01",
+      "date": "2026-09-03",
       "de": "Aktion",
       "en": "campaign",
       "source": "manual"
@@ -15278,6 +16236,13 @@
       "en": "home",
       "source": "deepl"
     },
+    "c08db3dc777e8259": {
+      "backtranslation": "das Kinn",
+      "date": "2026-09-03",
+      "de": "Kinn",
+      "en": "chin",
+      "source": "deepl"
+    },
     "c0b60d89579a2083": {
       "_src_altEn": "графин",
       "_src_note": "общее слово: Teekanne, Kaffeekanne",
@@ -15329,6 +16294,13 @@
       "source": "haiku",
       "verdict": "fix"
     },
+    "c0f663397ecaf4de": {
+      "backtranslation": "der Kopf",
+      "date": "2026-09-03",
+      "de": "Kopf",
+      "en": "head",
+      "source": "deepl"
+    },
     "c101bea8381209b4": {
       "backtranslation": "Rauchverbot",
       "date": "2026-08-27",
@@ -15337,7 +16309,7 @@
       "source": "deepl"
     },
     "c1212f541b6753b1": {
-      "date": "2026-09-01",
+      "date": "2026-09-03",
       "de": "hingehen",
       "en": "to go there",
       "source": "manual"
@@ -15472,7 +16444,7 @@
       "source": "deepl"
     },
     "c3851cf9e18681ff": {
-      "date": "2026-09-01",
+      "date": "2026-09-03",
       "de": "hierlassen",
       "en": "to leave here",
       "source": "manual"
@@ -15493,10 +16465,10 @@
     },
     "c39886f57d1d451e": {
       "backtranslation": "Affe",
-      "date": "2026-08-27",
+      "date": "2026-09-03",
       "de": "Affe",
-      "en": "monkey",
-      "source": "deepl"
+      "en": "cloud",
+      "source": "manual"
     },
     "c3a31e2b503a24b9": {
       "backtranslation": "Kabel",
@@ -15617,6 +16589,18 @@
       "en": "mother-in-law",
       "source": "deepl"
     },
+    "c51c4ac668f84102": {
+      "_src_altEn": "нестись",
+      "_src_note": "о буре и о гневе: der Sturm rast, er rast vor Wut | «громить» = randalieren, не rasen",
+      "altEn": "to race",
+      "altEnSource": "deepl-ru",
+      "date": "2026-09-03",
+      "de": "rasen",
+      "en": "to rage",
+      "noteEn": "On storms and anger: der Sturm rast, er rast vor Wut | “to destroy” = randalieren, not rasen",
+      "source": "haiku",
+      "verdict": "fix"
+    },
     "c52a9acc4f7bba0a": {
       "backtranslation": "Brücke",
       "date": "2026-08-27",
@@ -15717,9 +16701,16 @@
     },
     "c80de8ab42a98675": {
       "backtranslation": "die Politik",
-      "date": "2026-08-30",
+      "date": "2026-09-03",
       "de": "Politik",
-      "en": "politics",
+      "en": "advice centre",
+      "source": "manual"
+    },
+    "c818b02051722200": {
+      "backtranslation": "isoliert",
+      "date": "2026-09-03",
+      "de": "isoliert",
+      "en": "isolated",
       "source": "deepl"
     },
     "c82c22d216d489b6": {
@@ -15787,6 +16778,13 @@
       "source": "haiku",
       "verdict": "ok"
     },
+    "ca492eaa7765d1ec": {
+      "backtranslation": "das Auslandssemester",
+      "date": "2026-09-03",
+      "de": "Auslandssemester",
+      "en": "semester abroad",
+      "source": "deepl"
+    },
     "ca4e640c2a69b2a4": {
       "backtranslation": "an den Wochenenden",
       "date": "2026-08-27",
@@ -15816,19 +16814,26 @@
     "ca6c400710714caa": {
       "altEn": "field",
       "altEnSource": "manual",
-      "date": "2026-09-01",
+      "date": "2026-09-03",
       "de": "Bereich",
-      "en": "area",
+      "en": "bank transfer",
       "source": "manual"
     },
     "ca6e82dd90943abb": {
       "_src_altEn": "обжечь",
       "altEn": "to scorch",
       "altEnSource": "deepl-ru",
-      "date": "2026-09-01",
+      "date": "2026-09-03",
       "de": "verbrennen",
       "en": "to burn",
       "source": "manual"
+    },
+    "ca6f3da21da5d4d9": {
+      "backtranslation": "die Nase",
+      "date": "2026-09-03",
+      "de": "Nase",
+      "en": "nose",
+      "source": "deepl"
     },
     "cab3566b809b2212": {
       "_src_note": "meine",
@@ -15888,6 +16893,13 @@
       "en": "department",
       "source": "deepl"
     },
+    "cb85c38cb125293c": {
+      "backtranslation": "impfen",
+      "date": "2026-09-03",
+      "de": "impfen",
+      "en": "to vaccinate",
+      "source": "deepl"
+    },
     "cb9d6b8fde88c622": {
       "_src_altEn": "сторона",
       "_src_note": "auf Seite 3 – на странице 3",
@@ -15944,6 +16956,15 @@
       "source": "haiku",
       "verdict": "ok"
     },
+    "cc436692004ea3f4": {
+      "_src_note": "erkältet sein – быть простуженным",
+      "date": "2026-09-03",
+      "de": "erkältet",
+      "en": "having a cold",
+      "noteEn": "erkältet sein – to have a cold",
+      "source": "haiku",
+      "verdict": "fix"
+    },
     "cc713c37080b0d48": {
       "_src_altEn": "выключать",
       "altEn": "to turn off",
@@ -15961,6 +16982,13 @@
       "date": "2026-08-27",
       "de": "reisen",
       "en": "to travel",
+      "source": "deepl"
+    },
+    "cc98f4e60a3ddd3a": {
+      "backtranslation": "sich schwach fühlen",
+      "date": "2026-09-03",
+      "de": "sich schwach fühlen",
+      "en": "to feel weak",
       "source": "deepl"
     },
     "cd12396eb9d44ebe": {
@@ -16134,6 +17162,13 @@
       "en": "vacation Rental",
       "source": "deepl"
     },
+    "cfc18dabd3a4475a": {
+      "backtranslation": "der Kinderwunsch",
+      "date": "2026-09-03",
+      "de": "Kinderwunsch",
+      "en": "desire to have children",
+      "source": "deepl"
+    },
     "cfc62d31615cc67a": {
       "_src_altEn": "навоз",
       "_src_note": "разговорное ругательство, безобидное",
@@ -16237,6 +17272,13 @@
       "en": "tie",
       "source": "deepl"
     },
+    "d18e666077160154": {
+      "backtranslation": "vermeiden",
+      "date": "2026-09-03",
+      "de": "vermeiden",
+      "en": "to avoid",
+      "source": "deepl"
+    },
     "d1a85a76ca687b52": {
       "backtranslation": "Cappuccino",
       "date": "2026-08-27",
@@ -16286,6 +17328,14 @@
       "source": "haiku",
       "verdict": "ok"
     },
+    "d22f27aa1a970b80": {
+      "backtranslation": "der Vortrag",
+      "date": "2026-09-03",
+      "de": "Vorlesung",
+      "en": "lecture",
+      "source": "haiku",
+      "verdict": "ok"
+    },
     "d25d3c6fae78574c": {
       "_src_altEn": "причинять боль",
       "_src_note": "Das tut weh!",
@@ -16317,11 +17367,11 @@
     },
     "d29b255d014580cd": {
       "_src_altEn": "Maklerin",
-      "altEn": "agent",
+      "altEn": "plan",
       "altEnSource": "manual",
-      "date": "2026-09-01",
+      "date": "2026-09-03",
       "de": "Makler",
-      "en": "broker",
+      "en": "rate",
       "source": "manual"
     },
     "d2a90e51145cb72c": {
@@ -16367,6 +17417,13 @@
       "source": "haiku",
       "verdict": "ok"
     },
+    "d3741895c8f4d631": {
+      "backtranslation": "das Handgelenk",
+      "date": "2026-09-03",
+      "de": "Handgelenk",
+      "en": "wrist",
+      "source": "deepl"
+    },
     "d3765b1eafff797e": {
       "_src_warning": "≠ schön! Ich bin schon da – Я уже здесь",
       "backtranslation": "bereits",
@@ -16405,6 +17462,14 @@
       "source": "haiku",
       "verdict": "fix"
     },
+    "d3b51353c0bd4f21": {
+      "backtranslation": "schrecklich",
+      "date": "2026-09-03",
+      "de": "furchtbar",
+      "en": "terrible",
+      "source": "haiku",
+      "verdict": "ok"
+    },
     "d3ef1c825fe53425": {
       "backtranslation": "Untertitel",
       "date": "2026-08-27",
@@ -16423,7 +17488,7 @@
       "_src_altEn": "пораниться",
       "altEn": "to hurt oneself",
       "altEnSource": "manual",
-      "date": "2026-09-01",
+      "date": "2026-09-03",
       "de": "verletzen",
       "en": "to injure",
       "source": "manual"
@@ -16437,7 +17502,7 @@
       "source": "deepl"
     },
     "d443b25cbad9c0ac": {
-      "date": "2026-09-01",
+      "date": "2026-09-03",
       "de": "voraussichtlich",
       "en": "presumably",
       "source": "manual"
@@ -16552,6 +17617,15 @@
       "source": "haiku",
       "verdict": "ok"
     },
+    "d6f30d4cfb7e7daf": {
+      "_src_note": "понимание на слух; ↔ Leseverstehen (чтение)",
+      "date": "2026-09-03",
+      "de": "Hörverstehen",
+      "en": "listening comprehension",
+      "noteEn": "listening comprehension; ↔ Leseverstehen (reading)",
+      "source": "haiku",
+      "verdict": "fix"
+    },
     "d714a2e0b59436ad": {
       "backtranslation": "Schwiegersohn",
       "date": "2026-08-27",
@@ -16582,7 +17656,7 @@
     },
     "d7797d12380b1757": {
       "_src_note": "разговорное",
-      "date": "2026-09-01",
+      "date": "2026-09-03",
       "de": "dann kein",
       "en": "then no",
       "noteEn": "colloquial",
@@ -16699,12 +17773,14 @@
     },
     "d8dbca2596acc25c": {
       "_src_note": "обычно достаточно IBAN",
+      "altEn": "doctor's office",
+      "altEnSource": "manual",
       "backtranslation": "Bankverbindung",
-      "date": "2026-08-27",
+      "date": "2026-09-03",
       "de": "Bankverbindung",
-      "en": "bank details",
+      "en": "practice",
       "noteEn": "Usually, this is enough: IBAN",
-      "source": "deepl"
+      "source": "manual"
     },
     "d8ee14755e9a769d": {
       "backtranslation": "zehn",
@@ -16718,6 +17794,13 @@
       "date": "2026-08-27",
       "de": "Rat",
       "en": "council",
+      "source": "deepl"
+    },
+    "d912947ece96902a": {
+      "backtranslation": "die Kritik",
+      "date": "2026-09-03",
+      "de": "Kritik",
+      "en": "criticism",
       "source": "deepl"
     },
     "d9416b799b3688a9": {
@@ -16760,10 +17843,10 @@
     },
     "da3ec58d8f1d3e29": {
       "backtranslation": "die Hautcreme",
-      "date": "2026-08-30",
+      "date": "2026-09-03",
       "de": "Hautcreme",
-      "en": "skin cream",
-      "source": "deepl"
+      "en": "insurance premium",
+      "source": "manual"
     },
     "da53bf04508b8e38": {
       "_src_altEn": "в полдень",
@@ -16777,6 +17860,13 @@
       "source": "deepl",
       "warningEn": "mittags"
     },
+    "da5f2eb4d0915a9d": {
+      "backtranslation": "die Hüfte",
+      "date": "2026-09-03",
+      "de": "Hüfte",
+      "en": "hip",
+      "source": "deepl"
+    },
     "da65320e805f3499": {
       "_src_note": "ответ на знакомство | = Rад(а) познакомиться",
       "backtranslation": "Das freut mich!",
@@ -16785,6 +17875,17 @@
       "en": "I'm glad!",
       "noteEn": "Reply to a \"Let's Get to Know Each Other\" Message | = R (a) Get to Know Each Other",
       "source": "deepl"
+    },
+    "da8aea3bb1bb440a": {
+      "_src_altEn": "обменивать",
+      "altEn": "to exchange",
+      "altEnSource": "deepl-ru",
+      "backtranslation": "Änderung",
+      "date": "2026-09-03",
+      "de": "wechseln",
+      "en": "to change",
+      "source": "haiku",
+      "verdict": "ok"
     },
     "da9ab6a3024b8a6f": {
       "_src_note": "до полудня",
@@ -16840,6 +17941,15 @@
       "de": "falsch",
       "en": "incorrect",
       "source": "deepl"
+    },
+    "db3a28b61a90c303": {
+      "_src_note": "склоняется как прилагательное: ein Bekannter, eine Bekannte",
+      "date": "2026-09-03",
+      "de": "Bekannte",
+      "en": "acquaintance",
+      "noteEn": "It is declined as an adjective: ein Bekannter, eine Bekannte",
+      "source": "haiku",
+      "verdict": "fix"
     },
     "db3fde408307edca": {
       "backtranslation": "Standesamt",
@@ -17108,6 +18218,16 @@
       "en": "inexpensive",
       "source": "deepl"
     },
+    "df4070b67ebd9fbf": {
+      "_src_altEn": "шведский стол",
+      "altEn": "buffet",
+      "altEnSource": "deepl-ru",
+      "backtranslation": "das Buffet",
+      "date": "2026-09-03",
+      "de": "Buffet",
+      "en": "buffet",
+      "source": "deepl"
+    },
     "df85d4a296199729": {
       "backtranslation": "gesund",
       "date": "2026-08-27",
@@ -17132,7 +18252,7 @@
     "dfa082c2db5822d9": {
       "altEn": "after that",
       "altEnSource": "manual",
-      "date": "2026-09-01",
+      "date": "2026-09-03",
       "de": "darauf",
       "en": "on it",
       "source": "manual"
@@ -17163,7 +18283,7 @@
     },
     "dfcf7fe18eb69239": {
       "_src_note": "употребляется безлично: es lohnt sich / es lohnt sich nicht",
-      "date": "2026-09-01",
+      "date": "2026-09-03",
       "de": "lohnen",
       "en": "to be worth it",
       "noteEn": "used impersonally: es lohnt sich / es lohnt sich nicht",
@@ -17376,6 +18496,15 @@
       "source": "haiku",
       "verdict": "fix"
     },
+    "e30d9af7d591db19": {
+      "_src_note": "Guten Appetit! – приятного аппетита",
+      "backtranslation": "der Appetit",
+      "date": "2026-09-03",
+      "de": "Appetit",
+      "en": "appetite",
+      "noteEn": "Guten Appetit! – Enjoy your meal",
+      "source": "deepl"
+    },
     "e3741e14e32a576f": {
       "backtranslation": "Entspann dich",
       "date": "2026-08-27",
@@ -17412,6 +18541,13 @@
       "source": "haiku",
       "verdict": "ok"
     },
+    "e3f1503e5d0f2c38": {
+      "backtranslation": "seitdem",
+      "date": "2026-09-03",
+      "de": "seitdem",
+      "en": "since then",
+      "source": "deepl"
+    },
     "e41640eaa55fb1a2": {
       "backtranslation": "fliegen",
       "date": "2026-08-27",
@@ -17434,9 +18570,9 @@
       "source": "deepl"
     },
     "e4245547de468b6b": {
-      "date": "2026-09-01",
+      "date": "2026-09-03",
       "de": "Schokoriegel",
-      "en": "chocolate bar",
+      "en": "institution",
       "source": "manual"
     },
     "e4443c270361c460": {
@@ -17473,6 +18609,13 @@
       "de": "Teekanne",
       "en": "teapot",
       "exampleEn": "The teapot is on the table",
+      "source": "deepl"
+    },
+    "e48844f125f13adb": {
+      "backtranslation": "der Forumsbeitrag",
+      "date": "2026-09-03",
+      "de": "Forumsbeitrag",
+      "en": "forum post",
       "source": "deepl"
     },
     "e4cc61069d562149": {
@@ -17520,10 +18663,17 @@
       "en": "coffee maker",
       "source": "deepl"
     },
+    "e513dcb425611a35": {
+      "backtranslation": "das Gesicht",
+      "date": "2026-09-03",
+      "de": "Gesicht",
+      "en": "face",
+      "source": "deepl"
+    },
     "e51ebcb1ccaa24ab": {
-      "date": "2026-09-01",
+      "date": "2026-09-03",
       "de": "Überweisung",
-      "en": "bank transfer",
+      "en": "individual",
       "source": "manual"
     },
     "e52081dbcb33ee43": {
@@ -17544,6 +18694,13 @@
       "en": "father",
       "source": "deepl"
     },
+    "e53d7a0e484bd487": {
+      "date": "2026-09-03",
+      "de": "Pflaster",
+      "en": "plaster",
+      "source": "haiku",
+      "verdict": "fix"
+    },
     "e5e358805a82d0dc": {
       "backtranslation": "Wurst",
       "date": "2026-08-27",
@@ -17560,6 +18717,24 @@
       "de": "dann",
       "en": "then",
       "source": "deepl"
+    },
+    "e600de3600e0e8ac": {
+      "backtranslation": "unbewusst",
+      "date": "2026-09-03",
+      "de": "bewusstlos",
+      "en": "unconscious",
+      "source": "haiku",
+      "verdict": "ok"
+    },
+    "e60c435ed0403248": {
+      "_src_altEn": "приобретать",
+      "altEn": "to purchase",
+      "altEnSource": "deepl-ru",
+      "date": "2026-09-03",
+      "de": "besorgen",
+      "en": "to procure",
+      "source": "haiku",
+      "verdict": "fix"
     },
     "e63e4f0b426ecbdd": {
       "_src_note": "безличный: es donnert; переносно – грохотать/нестись с грохотом",
@@ -17864,8 +19039,15 @@
       "source": "haiku",
       "verdict": "ok"
     },
+    "ea9888ddf7065d18": {
+      "backtranslation": "das Ohr",
+      "date": "2026-09-03",
+      "de": "Ohr",
+      "en": "ear",
+      "source": "deepl"
+    },
     "eaacb7ad1e8ec784": {
-      "date": "2026-09-01",
+      "date": "2026-09-03",
       "de": "mit anderen zusammen",
       "en": "together with others",
       "source": "manual"
@@ -17913,7 +19095,7 @@
       "source": "deepl"
     },
     "eb58b681b03a2e0a": {
-      "date": "2026-09-01",
+      "date": "2026-09-03",
       "de": "Drittel",
       "en": "third",
       "source": "manual"
@@ -17979,7 +19161,7 @@
       "source": "deepl"
     },
     "ec251f1ff2bb9e78": {
-      "date": "2026-09-01",
+      "date": "2026-09-03",
       "de": "gestresst",
       "en": "stressed",
       "source": "manual"
@@ -18067,7 +19249,7 @@
       "source": "deepl"
     },
     "ed6bb59614208670": {
-      "date": "2026-09-01",
+      "date": "2026-09-03",
       "de": "Nussecke",
       "en": "nut triangle",
       "noteEn": "a German pastry",
@@ -18091,12 +19273,14 @@
     },
     "ed8bec07651962bc": {
       "_src_note": "↔ Höhe, Tiefe",
+      "altEn": "amount",
+      "altEnSource": "manual",
       "backtranslation": "Breite",
-      "date": "2026-08-27",
+      "date": "2026-09-03",
       "de": "Breite",
-      "en": "width",
-      "noteEn": "↔ Höhe, Tiefe",
-      "source": "deepl"
+      "en": "height",
+      "noteEn": "↔ Breite, Tiefe | die Höhe des Beitrags – the amount of the contribution",
+      "source": "manual"
     },
     "ed9c1606652f80ca": {
       "_src_altEn": "в то время",
@@ -18119,6 +19303,13 @@
       "exampleEn": "That's terrible",
       "source": "deepl"
     },
+    "ee11101d22cb3b66": {
+      "backtranslation": "die Leber",
+      "date": "2026-09-03",
+      "de": "Leber",
+      "en": "liver",
+      "source": "deepl"
+    },
     "ee2f67dbcd1bd0f4": {
       "_src_altEn": "обнаруживать",
       "altEn": "to discover",
@@ -18131,7 +19322,7 @@
       "verdict": "ok"
     },
     "ee36c0013270cc0b": {
-      "date": "2026-09-01",
+      "date": "2026-09-03",
       "de": "Ding",
       "en": "thing",
       "source": "manual"
@@ -18157,6 +19348,13 @@
       "noteEn": "The verb form \"stimmen\" is used to mean \"exactly!\"",
       "source": "haiku",
       "verdict": "fix"
+    },
+    "ee644672bd03d5fc": {
+      "backtranslation": "der Muskel",
+      "date": "2026-09-03",
+      "de": "Muskel",
+      "en": "muscle",
+      "source": "deepl"
     },
     "ee7253240a83eeea": {
       "_src_altEn": "радостный",
@@ -18376,6 +19574,19 @@
       "en": "supermarket",
       "source": "deepl"
     },
+    "f187a8a5ca697acd": {
+      "_src_altEn": "расстраиваться",
+      "_src_note": "sich aufregen über + Akkusativ",
+      "altEn": "to get upset",
+      "altEnSource": "deepl-ru",
+      "backtranslation": "sich aufregen",
+      "date": "2026-09-03",
+      "de": "aufregen",
+      "en": "to get upset",
+      "noteEn": "sich aufregen über + Akkusativ",
+      "source": "haiku",
+      "verdict": "ok"
+    },
     "f19e497eda0d0c62": {
       "_src_altEn": "парень (партнёр)",
       "_src_warning": "Das ist mein Freund = это мой парень; Das ist ein Freund von mir = просто друг",
@@ -18459,6 +19670,19 @@
       "en": "soccer club",
       "source": "deepl"
     },
+    "f241692ebb2bddb6": {
+      "_src_altEn": "разговаривать",
+      "_src_note": "reden über + Akkusativ / von + Dativ",
+      "altEn": "to talk",
+      "altEnSource": "deepl-ru",
+      "backtranslation": "Gespräch",
+      "date": "2026-09-03",
+      "de": "reden",
+      "en": "to talk",
+      "noteEn": "reden über + Akkusativ / von + Dativ",
+      "source": "haiku",
+      "verdict": "ok"
+    },
     "f241951cfc5e4775": {
       "_src_altEn": "срочный",
       "altEn": "urgent",
@@ -18492,13 +19716,13 @@
       "source": "deepl"
     },
     "f2628188fee626ed": {
-      "date": "2026-09-01",
+      "date": "2026-09-03",
       "de": "berufstätig",
       "en": "employed",
       "source": "manual"
     },
     "f299feec2fcacd26": {
-      "date": "2026-09-01",
+      "date": "2026-09-03",
       "de": "zufügen",
       "en": "to inflict",
       "source": "manual"
@@ -18516,7 +19740,7 @@
       "_src_altEn": "рухнуть",
       "altEn": "to collapse",
       "altEnSource": "deepl-ru",
-      "date": "2026-09-01",
+      "date": "2026-09-03",
       "de": "stürzen",
       "en": "to fall",
       "source": "manual"
@@ -18624,7 +19848,7 @@
       "_src_altEn": "nächst-",
       "altEn": "next-",
       "altEnSource": "deepl",
-      "date": "2026-09-01",
+      "date": "2026-09-03",
       "de": "nächste",
       "en": "next",
       "noteEn": "superlative of nah (near) | declines: nächste Woche (f) | nächsten Montag (m, Akk) | im nächsten Jahr (Dat) | see the rule on Adjektivdeklination",
@@ -18649,10 +19873,10 @@
     },
     "f4c686ddedf34a69": {
       "backtranslation": "der Telefonanbieter",
-      "date": "2026-08-30",
+      "date": "2026-09-03",
       "de": "Telefonanbieter",
-      "en": "telephone provider",
-      "source": "deepl"
+      "en": "claim",
+      "source": "manual"
     },
     "f4c7d75773d6db39": {
       "_src_note": "↔ Import",
@@ -18757,7 +19981,7 @@
       "verdict": "ok"
     },
     "f64209bd3ed62f2a": {
-      "date": "2026-09-01",
+      "date": "2026-09-03",
       "de": "Fastfood",
       "en": "fast food",
       "source": "manual"
@@ -18951,10 +20175,11 @@
     },
     "f8cf44b3e18c1c54": {
       "backtranslation": "Zahn",
-      "date": "2026-08-27",
+      "date": "2026-09-03",
       "de": "Zahn",
-      "en": "tooth",
-      "source": "deepl"
+      "en": "parcel courier",
+      "noteEn": "female form of Paketbote",
+      "source": "manual"
     },
     "f8d0603aa6a894fc": {
       "backtranslation": "langsam",
@@ -19044,6 +20269,13 @@
       "en": "roller shutter",
       "source": "deepl"
     },
+    "fa3de5b970928b7f": {
+      "backtranslation": "die Fremdsprache",
+      "date": "2026-09-03",
+      "de": "Fremdsprache",
+      "en": "foreign language",
+      "source": "deepl"
+    },
     "fa65034378222c09": {
       "backtranslation": "Tierpfleger",
       "date": "2026-08-27",
@@ -19077,10 +20309,11 @@
     },
     "fac47bbc6a8dc213": {
       "backtranslation": "die Umfrage",
-      "date": "2026-08-30",
+      "date": "2026-09-03",
       "de": "Umfrage",
-      "en": "survey",
-      "source": "deepl"
+      "en": "nut triangle",
+      "noteEn": "a German pastry",
+      "source": "manual"
     },
     "fadee6a3978f605f": {
       "backtranslation": "Sonnenschirm",
@@ -19090,9 +20323,10 @@
       "source": "deepl"
     },
     "fb10387e26a644e8": {
-      "date": "2026-09-01",
+      "date": "2026-09-03",
       "de": "Beratungsstelle",
-      "en": "advice centre",
+      "en": "digital matters",
+      "noteEn": "a nominalised adjective, used without an article in lists",
       "source": "manual"
     },
     "fb119fc06130a920": {
@@ -19135,14 +20369,14 @@
       "_src_altEn": "Versicherungsvertreterin",
       "altEn": "female insurance agent",
       "altEnSource": "deepl",
-      "date": "2026-09-01",
+      "date": "2026-09-03",
       "de": "Versicherungsvertreter",
       "en": "insurance agent",
       "source": "manual"
     },
     "fb64d728fb6d4193": {
       "_src_note": "auswärts essen – есть не дома",
-      "date": "2026-09-01",
+      "date": "2026-09-03",
       "de": "auswärts",
       "en": "away from home",
       "noteEn": "auswärts essen – to eat out",
@@ -19158,7 +20392,7 @@
       "verdict": "ok"
     },
     "fb9778d6365d31b1": {
-      "date": "2026-09-01",
+      "date": "2026-09-03",
       "de": "Institution",
       "en": "institution",
       "source": "manual"
@@ -19258,7 +20492,7 @@
       "_src_note": "jeder (m) / jede (f) / jedes (n) — склоняется как der/die/das",
       "altEn": "every",
       "altEnSource": "deepl",
-      "date": "2026-09-01",
+      "date": "2026-09-03",
       "de": "jeder",
       "en": "every",
       "noteEn": "jeder (m) / jede (f) / jedes (n) — inflected as der / die / das",

@@ -1,0 +1,178 @@
+{
+  "_meta": {
+    "source": "manual",
+    "batch": "rules 6 — переработанные под карточный рендер + новые r0062-r0064",
+    "date": "2026-09-03",
+    "note": "Собрано после переноса подсказок из content_md в note и вывода examples на карточку. Записи ПОЛНЫЕ: загрузчик делает cache[rid] = dict(entry), частичная запись затёрла бы существующий английский. Русские мостики заменены английскими: -lich через -ly, падежи через I/me/him, sollen/müssen через supposed to / have to, seit/bis через since / until."
+  },
+  "RULES": {
+    "r0002": {
+      "source": "manual",
+      "titleEn": "Reflexivpronomen - reflexive pronouns (myself / to myself)",
+      "content_md_en": "### Reflexivpronomen - reflexive pronouns (myself / to myself)\n**Person** | **Akkusativ** | **Dativ** |\nich | mich | mir |\ndu | dich | dir |\ner/sie/es | sich | sich |\nwir | uns | uns |\nihr | euch | euch |\nsie/Sie | sich | sich |",
+      "noteEn": "💡 ich/du/wir/ihr – identical to the Personalpronomen | **er/sie/es** and **sie/Sie** → always **sich**\nAkk vs Dat: **Ich wasche mich** (I wash myself – Akk) | **Ich wasche mir die Hände** (I wash my hands – to whom? to me, Dat)"
+    },
+    "r0003": {
+      "source": "manual",
+      "titleEn": "Prohibition with man - not allowed",
+      "content_md_en": "A prohibition built with **man** (= \"you may not\" / \"it is not allowed\"):\n**Structure** | **Example** | **Translation** |\nMan darf nicht + Verb | Man darf nicht grillen. | Grilling is not allowed here. |\nMan darf kein + Nomen | Man darf keine Haustiere haben. | Keeping pets is not allowed. |",
+      "noteEn": "💡 **nicht** – negates the action | **kein/keine** – negates the noun💡 **man** – an impersonal pronoun (= \"one may not / it is not allowed\" – no specific person)"
+    },
+    "r0004": {
+      "source": "manual",
+      "titleEn": "Perfekt: sein or haben?",
+      "content_md_en": "**Verb** | **Used with** | **Example** |\n**sein** | adjectives, professions, nationalities | Ich **bin** Arzt. / Er **ist** müde. |\n**haben** | nouns (something you have) | Ich **habe** Hunger. / Er **hat** Zeit. |",
+      "noteEn": "💡 Test: \"I **am** …?\" → sein  |  \"I **have** …?\" → haben"
+    },
+    "r0018": {
+      "source": "manual",
+      "titleEn": "sollen vs müssen",
+      "content_md_en": "**** | **sollen** | **müssen** |\nSource | external – someone said so / that is the rule | internal / objective – you decided yourself, or there is no other way |\nExample | Du **sollst** nicht rauchen(you are being told not to) | Ich **muss** schlafen(you are tired yourself) |\nMore | Ich **soll** Milch kaufen(mum asked me to) | Ich **muss** Milch kaufen(we ran out at home) |",
+      "noteEn": "💡 Roughly: **sollen** – \"you are supposed to\" | **müssen** – \"you have to\""
+    },
+    "r0021": {
+      "source": "manual",
+      "titleEn": "The suffix -lich – forming adjectives",
+      "content_md_en": "### The suffix **-lich** – forming adjectives\nThe suffix **-lich** turns a noun into an adjective meaning \"relating to / like\". It works much like English **-ly** in friendly or monthly.\n**Noun** | **+ -lich** | **Translation** |\ndas Herz (heart) | herz**lich** | cordial |\nder Tag (day) | täg**lich** | daily |\nder Freund (friend) | freund**lich** | friendly |\nder Mensch (human being) | mensch**lich** | human |\nder Monat (month) | monat**lich** | monthly |\nder Beruf (profession) | beruf**lich** | professional |",
+      "noteEn": "💡 The stem vowel often takes an Umlaut: Tag → t**ä**glich, Nacht → n**ä**chtlich"
+    },
+    "r0023": {
+      "source": "manual",
+      "titleEn": "Nebensatz mit weil",
+      "content_md_en": "### Nebensatz mit weil – the causal clause\n\n**weil** (because) is a subordinating conjunction.\nThe verb moves to the **end** of the subordinate clause.\n\n### Structure\n**Hauptsatz** | **Nebensatz** |\nIch bleibe zu Hause, | weil ich krank **bin**. |\nIch lerne Deutsch, | weil es interessant **ist**. |\nEr kommt nicht, | weil er arbeiten **muss**. |\n\n### Examples with a Modalverb\n**Hauptsatz** | **Nebensatz** |\nIch gehe nicht aus, | weil ich lernen **muss**. |\nSie bleibt zu Hause, | weil sie schlafen **will**. |\n\n⚠ A comma always comes before weil\n⚠ The verb is always **last** in the Nebensatz",
+      "examplesEn": "Ich lerne Deutsch, weil es interessant ist.",
+      "noteEn": "💡 The question the Nebensatz answers: **Warum? / Weshalb?** (why?)"
+    },
+    "r0024": {
+      "source": "manual",
+      "titleEn": "Cases: their role in the sentence",
+      "content_md_en": "### Cases: their role in the sentence\n\n**Case** | **Role** | **Question** | **Example**\nNominativ | the subject only – who performs the action | Wer? | **Ich** lerne Deutsch.\nAkkusativ | subject + direct object – who or what the action affects | Wen? Was? | Ich kaufe **einen Kaffee**.\nDativ | subject + indirect object – to whom, for whom, where | Wem? | Ich gebe **dir** das Buch.",
+      "examplesEn": "Ich bin müde. (Nom) | Ich kaufe einen Apfel. (Akk) | Ich gebe dir das Buch. (Dat)",
+      "noteEn": "Nominativ – always the subject, never changes after the article. Akkusativ – only the masculine changes: der→den, ein→einen. Dativ – everything changes: dem/der/dem, einem/einer/einem. The prepositions mit, bei, nach, von, zu, aus – always Dativ. The prepositions durch, für, gegen, ohne, um – always Akkusativ.\n\n💡 **Nominativ** – there is exactly one per sentence, the \"doer\". English keeps this distinction only in pronouns: I / he / we\n\n **Akkusativ** – the direct object, answers \"what / whom?\". English pronouns: me / him / us\n\n**Dativ** – the indirect object, answers \"to whom?\", and is also used after the prepositions mit, bei, in (Wo?)"
+    },
+    "r0025": {
+      "source": "manual",
+      "titleEn": "Verben mit Dativ",
+      "content_md_en": "### Verben mit Dativ – verbs that are always followed by the Dativ\n\nAfter certain verbs the object is **always in the Dativ** (never the Akkusativ!).\n\n**Verb** | **Example** | **Translation**\nantworten | Ich antworte **dir**. | I answer you.\ndanken | Ich danke **dem Team**. | I thank the team.\ngefallen | Das gefällt **mir**. | I like that.\ngehören | Das gehört **mir**. | That belongs to me.\ngratulieren | Ich gratuliere **dir**. | I congratulate you.\nhelfen | Er hilft **der Kundin**. | He helps the customer.\nschmecken | Das schmeckt **mir**. | That tastes good to me.",
+      "examplesEn": "Ich danke dir / Ihnen / euch. | Ich danke dem Team / den Kollegen. | Meine Tochter hilft mir immer. | Der Verkäufer hilft der Kundin.",
+      "noteEn": "💡 Learn the list by heart: antworten, danken, gefallen, gehören, gratulieren, helfen, schmecken – the Dativ always follows. Test: ask the question \"to whom?\" (Wem?). Several of these take a direct object in English (I thank you, I help her) – German still uses the Dativ."
+    },
+    "r0026": {
+      "source": "manual",
+      "titleEn": "The order of Dativ and Akkusativ in the sentence",
+      "content_md_en": "### The order of Dativ and Akkusativ in the sentence\n\n**Rule 1: two nouns** → Dativ before Akkusativ\n**Subject** | **Verb** | **Dativ** | **Akkusativ**\nIch | gebe | dem Mann | das Buch.\nEr | zeigt | der Kundin | den Weg.\n\n**Rule 2: pronoun + noun** → the pronoun comes first\n**Subject** | **Verb** | **Pronomen** | **Nomen**\nIch | gebe | ihm | das Buch.\nEr | zeigt | ihr | den Weg.\n\n**Rule 3: two pronouns** → Akkusativ before Dativ\n**Subject** | **Verb** | **Akkusativ** | **Dativ**\nIch | gebe | es | ihm.\nEr | zeigt | es | ihr.",
+      "examplesEn": "Ich gebe dem Mann das Buch. | Ich gebe ihm das Buch. | Ich gebe es ihm.",
+      "noteEn": "Test: if both words are nouns, the Dativ always comes first. If both are pronouns, the Akkusativ comes first. A pronoun is always pulled forward.\n\n💡 Remember: **two nouns → Dat→Akk** | **two pronouns → Akk→Dat**"
+    },
+    "r0027": {
+      "source": "manual",
+      "titleEn": "Verben mit Dativ und Akkusativ",
+      "content_md_en": "### Verben mit Dativ und Akkusativ – verbs with two objects\n\nAfter certain verbs there are TWO objects at once: to whom (Dativ) + what (Akkusativ).\n\n**Role** | **Case** | **Question** | **Articles (m / f / n / Pl)**\nPerson 1 | Nominativ | Wer? | der · die · das · die / ein · eine · ein · –\nPerson 2 | Dativ | Wem? | dem · der · dem · den / einem · einer · einem · –\nObjekt | Akkusativ | Was? | den · die · das · die / einen · eine · ein · –",
+      "examplesEn": "**Example** | **Translation**||\nIch gebe dem Mann das Buch. | I give the man the book.||\nEr schenkt der Frau einen Ring. | He gives the woman a ring.||\nWir zeigen den Kindern die Stadt. | We show the children the city.||",
+      "noteEn": "Typical verbs: geben, schenken, zeigen, bringen, schicken, kaufen, erklären, empfehlen, leihen, schreiben, wünschen, anbieten. Test: ask two questions – \"to whom?\" (Wem? → Dativ) and \"what?\" (Was? → Akkusativ). With two nouns the order is Dativ before Akkusativ.\n\n💡 Order: Subject → Verb → **Dativ** → **Akkusativ** (to whom → what)\n💡 The indefinite article has no plural form (the noun simply stands without an article)"
+    },
+    "r0029": {
+      "source": "manual",
+      "titleEn": "Nebensatz – the order of verbs",
+      "content_md_en": "### Nebensatz – the order of verbs\n\nThe **conjugated verb** always moves to the **end** of the Nebensatz.  \nIf there are two verbs, the second one (Infinitiv or Partizip II) stands in front of it.\n\n\n\n### Structure\n\n| Hauptsatz | Nebensatz |\n| Sie geht zum Vermieter, | weil sie den Schlüssel abgeben **muss**. |\n| Sie ist müde, | weil sie viel gearbeitet **hat**. |\n| Er kommt nicht, | weil er krank **ist**. |\n| Ich glaube, | dass er krank **ist**. |\n\n\n### Modalverb + main verb\n\n| Hauptsatz | Nebensatz |\n| Ich gehe nicht aus, | weil ich lernen **muss**. |\n| Sie bleibt zu Hause, | weil sie schlafen **will**. |\n| Wir bleiben hier, | weil wir früh aufstehen **müssen**. |\n\n\n\n### Perfekt\n\n| Hauptsatz | Nebensatz |\n| Er ist müde, | weil er viel gearbeitet **hat**. |\n| Sie weiß es, | weil er nach Berlin gefahren **ist**. |\n\n\n\n### Compare\n\n|_| Hauptsatz | Nebensatz |\n| Without a Modalverb | *Sie gibt den Schlüssel ab.* | *weil sie den Schlüssel abgibt.* |\n| With a Modalverb | *Sie muss den Schlüssel abgeben.* | *weil sie den Schlüssel abgeben **muss**.* |\n\n\n\n⚠ A comma always comes before the subordinate clause  \n⚠ The conjugated verb is always **last** in the Nebensatz  ",
+      "examplesEn": "weil ich lernen muss | weil sie gearbeitet hat | weil er krank ist | weil ich lernen muss | weil sie gearbeitet hat | weil er krank ist | dass er kommt",
+      "noteEn": "How to spot the conjugated verb: it is the one that changes with the person (ich/du/er). In the dictionary it stands as an infinitiv (müssen, haben), in the sentence it takes a form (muss, hat).\nThis rule is universal – it works for every Nebensatz (weil, dass, wenn, obwohl, damit, ob, als, während, bevor, nachdem)\n💡 If the sentence has two verbs (Modalverb, Perfekt...) – see the rule on verb order in the Nebensatz.\n💡 dass introduces a Nebensatz too, and the verb goes to the end in exactly the same way: Ich weiß, dass er kommt.\n\n💡 **Mnemonic:** the conjugated verb is the \"king\" of the Nebensatz. Everything else stands before it."
+    },
+    "r0031": {
+      "source": "manual",
+      "titleEn": "Wo? Präposition + Dativ",
+      "content_md_en": "### Wo? Präposition + Dativ\n\nIn answer to **Wo?** (where?) prepositions of place take the **Dativ**.\n\n| Preposition | Meaning | Example |\n|---------|----------|--------|\n| auf | on (horizontal) | Das Buch liegt **auf dem Tisch**. |\n| unter | under | Die Katze sitzt **unter dem Stuhl**. |\n| in | in | Das Heft ist **in der Tasche**. |\n| an | at / on (vertical) | Das Bild hängt **an der Wand**. |\n| über | above | Die Lampe hängt **über dem Tisch**. |\n| vor | in front of | Das Fahrrad steht **vor der Tür**. |\n| hinter | behind | Der Schrank steht **hinter der Tür**. |\n| neben | next to | Die Pflanze steht **neben dem Fenster**. |\n| zwischen | between | Der Tisch steht **zwischen den Pflanzen**. |",
+      "examplesEn": "Auf dem Tisch. | Unter dem Buch. | In der Tasche. | Zwischen den Pflanzen. | An der Wand.",
+      "noteEn": "Wo? = where something stands/lies/hangs → Dativ | Wohin? = where we put it → Akkusativ | an/in + dem = am/im\n\n💡 Wo? → always **Dativ**\n💡 Wohin? → always **Akkusativ** (where we put or place something)"
+    },
+    "r0032": {
+      "source": "manual",
+      "titleEn": "Modalverben im Präteritum",
+      "content_md_en": "**Person** | **Endung** | **müssen** | **können** | **wollen** | **dürfen** |\nich | – | musste | konnte | wollte | durfte |\ndu | -st | musstest | konntest | wolltest | durftest |\ner/sie/es | – | musste | konnte | wollte | durfte |\nwir | -en | mussten | konnten | wollten | durften |\nihr | -t | musstet | konntet | wolltet | durftet |\nsie/Sie | -en | mussten | konnten | wollten | durften |",
+      "noteEn": "in speech the past of Modalverben is usually the Präteritum, not the Perfekt\n\n💡 Stem + -te + endings (ich/er take none). The Umlaut disappears: müssen→musste, können→konnte, dürfen→durfte. Genauso: sollen→sollte, mögen→mochte."
+    },
+    "r0033": {
+      "source": "manual",
+      "titleEn": "Adjektivdeklination (ein-/Possessiv, Nom + Akk + Dativ)",
+      "content_md_en": "**Nominativ** (Hier ist/sind …) | article + ending | example\nm – der Anzug | ein / mein neuer | ein neuer Anzug\nn – das Hemd | ein / mein neues | ein neues Hemd\nf – die Hose | eine / meine neue | eine neue Hose\nPl – die Stiefel | meine neuen | meine neuen Stiefel\n**Akkusativ** (Ich brauche/suche …) | article + ending | example\nm – der Anzug | einen / meinen neuen | einen neuen Anzug\nn – das Hemd | ein / mein neues | ein neues Hemd\nf – die Hose | eine / meine neue | eine neue Hose\nPl – die Stiefel | meine neuen | meine neuen Stiefel\n**Dativ** (Das passt zu …) | article + ending | example\nm – der Anzug | einem / meinem neuen | einem neuen Anzug\nn – das Hemd | einem / meinem neuen | einem neuen Hemd\nf – die Hose | einer / meiner neuen | einer neuen Hose\nPl – die Stiefel | meinen neuen | meinen neuen Stiefeln",
+      "noteEn": "the Plural is always -en (after an ein-word/Possessiv/kein)\nthe Dativ is always -en; in the Dativ Plural the noun also takes +n. The Plural is always -en.\n\n💡 Nom→Akk changes in the masculine only: neuer → neuen. In the Dativ the adjective ending is ALWAYS -en (every gender). After kein – the same as after mein. In the Dativ Plural the noun takes -n as well: meinen neuen Stiefeln. lila / rosa – no endings."
+    },
+    "r0034": {
+      "source": "manual",
+      "titleEn": "Zeitpräpositionen: am / im / um",
+      "content_md_en": "**am** (+ Dativ) | days, parts of the day, dates | am Montag, am Wochenende, am Morgen, am 3. Mai\n**im** (+ Dativ) | months, seasons | im Januar, im Sommer, im Frühling / Herbst / Winter\n**um** (+ Akkusativ) | clock times | um 8 Uhr, um Mitternacht, um halb neun",
+      "noteEn": "Exception: in der Nacht💡 Exception: in der Nacht (not \"am\"). Questions: Um wie viel Uhr? / An welchem Tag? / In welchem Monat?"
+    },
+    "r0036": {
+      "source": "manual",
+      "titleEn": "Building age adjectives (Zahl+jährig = X-year-old)",
+      "content_md_en": "Zahl + **-jährig** = \"X-year-old\" (an adjective)\nacht + jährig → achtjährig – eight-year-old\nBeispiele: ein dreijähriges Kind, eine 18-jährige Frau",
+      "noteEn": "≠ jährlich (annually)\n\n💡 Written as one word; the number spelled out, or as a digit with a hyphen (8-jährig). The same goes for: -tägig (days), -stündig (hours), -monatig (months)."
+    },
+    "r0041": {
+      "source": "manual",
+      "titleEn": "Komparativ (the comparative)",
+      "content_md_en": "**Komparativ** = \"more / -er\". Formed with adjective + **-er**, exactly like English fast → faster. Comparison uses **als** (than).\n**Positiv** | **Komparativ** | **Example** |\nschnell | schneller | Er läuft schneller als ich. |\nklein | kleiner | Mein Zimmer ist kleiner als deins. |\nschön | schöner | Heute ist es schöner als gestern. |",
+      "noteEn": "Comparison uses als. Umlaut on short a/o/u adjectives. Special forms: besser, mehr, lieber, höher, teurer.\n\n\n💡 Short adjectives with a / o / u often take an **Umlaut**: alt → älter, groß → größer, jung → jünger, kurz → kürzer, lang → länger, warm → wärmer.\n⚠ Irregular (learn by heart): gut → besser | viel → mehr | gern → lieber | hoch → höher | teuer → teurer | nah → näher"
+    },
+    "r0042": {
+      "source": "manual",
+      "titleEn": "Superlativ (the superlative)",
+      "content_md_en": "**Superlativ** = \"the most\". The form depends on the position:\n**Position** | **Form** | **Example** |\nWith a verb / predicative | am …**sten** | Er läuft am schnellsten. |\nBefore a noun (with an article) | der/die/das …**ste(n)** | Das ist der schnellste Mann. |",
+      "noteEn": "With an article: der/die/das …ste – no am. Predicative: am …sten. After t/d/s/sch/x/z → -este(n). Special: am besten, am meisten, am liebsten, am größten (no -e-).\n\n💡 With an article – NO am: die schnellsten Sportler (not \"die am schnellsten\"). With **am** the ending is always **-sten**.\n Umlaut – whenever the Komparativ has one: kurz → kürzer → am kürzesten.\nAfter **-t, -d, -s, -sch, -x, -z** an e is inserted → the ending becomes **-este(n)**: am härtesten, der kürzeste Weg, am heißesten.\n⚠ Irregular (same stems as in the Komparativ): gut → am besten | viel → am meisten | gern → am liebsten | hoch → am höchsten | teuer → am teuersten | groß → am größten (no -e-!)"
+    },
+    "r0043": {
+      "source": "manual",
+      "titleEn": "Konjunktionen weil/dass/wenn – grammar/wordorder",
+      "content_md_en": "Three common subordinating conjunctions – the question tells you which one to pick:\n**Question** | **Conjunction** | **Meaning** | **Example** |\nWarum? | **weil** | because (reason) | Ich gehe zum Bahnhof, weil ich meinen Freund abholen will. |\nWas? | **dass** | that (content) | Ich glaube, dass mein Freund heute kommt. |\nWann? | **wenn** | when / if | Mein Freund ruft an, wenn er am Bahnhof ankommt. |",
+      "noteEn": "weil – reason (Warum?), dass – content (Was?), wenn – time/condition (Wann?). The verb goes to the end. wenn ↔ dann in the main clause. Do not confuse wenn (conjunction) with wann (question word). Als – a single \"when\" in the past.\n\n💡 In all three the verb moves to the **end** of the subordinate clause (see the rule on verb order in the Nebensatz).\n**wenn** often pairs with **dann** in the main clause: Wenn das Wetter gut ist, dann gehen wir spazieren. (If/when …, then …)\nwenn – \"when\" (repeated) and \"if\" (condition). A single \"when\" in the past is als.\n\n⚠ Do not confuse **wenn** (conjunction: if / when) with **wann** (question word: when?): Ich weiß nicht, wann er kommt."
+    },
+    "r0044": {
+      "source": "manual",
+      "titleEn": "seit vs. vor – beide mit Dativ, unterschiedliche Bedeutung",
+      "content_md_en": "### seit vs vor\n**seit** – the action started in the past and is **still going on** (Perfekt/Präsens). Example: Ich lerne **seit** zwei Jahren Deutsch.\n**vor** – simply states **how long ago** something happened; the action is over. Example: Ich habe **vor** zwei Jahren angefangen.",
+      "noteEn": "💡 Test: if you can add \"…and still am\" → seit; if it is just \"that was N ago\" → vor."
+    },
+    "r0045": {
+      "source": "manual",
+      "titleEn": "Modalverb im Präteritum: konnten...",
+      "content_md_en": "### Modalverb in the Präteritum\nThe Modalverb (können, müssen, dürfen...) is conjugated in the Präteritum, and the main verb goes to the end of the sentence as an Infinitiv.\nExample: ..., damit sie besser Deutsch **sprechen konnten** = \"...so that they could speak German better\".",
+      "noteEn": "💡 wir/sie → **konnten**, ich/er/sie/es → **konnte**, du → **konntest**"
+    },
+    "r0055": {
+      "source": "manual",
+      "titleEn": "'s = es – the colloquial contraction",
+      "content_md_en": "### 's = es (the colloquial contraction)\nIn spoken German the pronoun es often merges with the preceding word through an apostrophe:\nWie geht's? = Wie geht es? (How are you?)\nWenn's regnet, bleibe ich zu Hause. = Wenn es regnet... (If it rains...)\nGibt's noch Kaffee? = Gibt es noch Kaffee?",
+      "examplesEn": "Wie geht's? – How are you?\nWenn's regnet, bleibe ich zu Hause. – If it rains, I stay at home.\nGibt's noch Kaffee? – Is there any coffee left?",
+      "noteEn": "💡 It works after verbs (geht's, gibt's) and conjunctions (wenn's, dass') – 's is always = es"
+    },
+    "r0056": {
+      "source": "manual",
+      "titleEn": "Akkusativ or Dativ for the Reflexivpronomen",
+      "content_md_en": "[sub] for the reflexive pronoun (myself / to myself)\n### The order of checks\n1. Find the verb.\n2. Find who or what the action is directed at.\n3. Cross out everything that stands after a preposition (für, über, auf, zum, mit, in – any of them).\n4. Is there still something the action of the verb is directly aimed at?\n:::outcomes\nYes → Dativ | an object is left — the reflexive pronoun stands in the Dativ\nNo → Akkusativ | no object is left — the reflexive pronoun stands in the Akkusativ\n:::\n### Why do we cross out the noun after a preposition? [collapse]\nA noun after a preposition belongs to the preposition, not directly to what the verb is aimed at. That is why it does not affect the case of the reflexive pronoun.\nzum Geburtstag → when?\nmit den Verkäufern → with whom?\nin kleine Läden → where to?\nfür ein Gericht → what for?\n### How to handle a subordinate clause (Nebensatz) [collapse]\nIf the subordinate clause takes the place of what the action is aimed at, it counts when choosing the case.\nwas / wer / ob / dass → the clause itself is what the action is aimed at → the reflexive pronoun goes into the Dativ\nweil / wenn / obwohl → this is an adverbial → cross it out\n\nExceptions: wo, wie – they depend on the context.\n### How to handle the exceptions: wo and wie [collapse]\nwo and wie can work in two modes – the question you ask the clause decides which.\n\nOBJECT mode (question \"What?\") → Dativ\nIf the clause answers \"What?\", it behaves like dass – it stands in place of the direct object of the action.\nIch schaue mir an, wie du kochst. – I watch [what?] how you cook.\nIch merke mir, wo du wohnst. – I memorise [what?] where you live.\nThe logic: it is an object → the reflexive pronoun is strictly in the Dativ (mir).\n\nADVERBIAL mode (questions \"Where?\", \"How?\") → Akkusativ\nIf the clause is mere decoration, an adverbial of place or manner rather than an object of the verb, it is crossed out by the general rule (see above).\nIch wasche mich, wo es Wasser gibt. – I wash [where?] where there is water.\nIch verhalte mich, wie du gesagt hast. – I behave [how?] the way you said.\nThe logic: there is no direct object noun, the clause answers \"where/how\" → cross it out → the reflexive pronoun is in the Akkusativ (mich).",
+      "examplesEn": "Ich kaufe mir ein Auto. – mir is in the Dativ, because the Akkusativ is taken by \"ein Auto\" (something the action is aimed at is left).\nIch wasche mich. – mich is in the Akkusativ, there is no other object of the action, the verb is purely reflexive.\nIch wünsche mir, dass du kommst. – the dass-clause stands in place of the object → mir in the Dativ.\nIch freue mich, weil du kommst. – the weil-clause is crossed out as an adverbial → a bare Akkusativ is left (mich).",
+      "noteEn": "Some verbs do not take part in this decision at all – they rigidly require the Dativ, with no alternative and no direct object of the action (helfen, gefallen, danken and so on). The rule simply does not apply to them."
+    },
+    "r0062": {
+      "source": "manual",
+      "titleEn": "Nebensatz mit seit / seitdem und bis",
+      "content_md_en": "[sub] time clauses: from which moment and until which\n### seit / seitdem — from which moment\nThe action started in the past and is still going on. The verb moves to the end of the subordinate clause, and the main clause stands in the Präsens.\n### bis — until which moment\nBoth actions run at the same time and end at the same point. The verb moves to the end as well.\n### seit — conjunction or preposition? [collapse]\nOne word works in two ways, and the word order depends on which.\nform | what it looks like | example |\nconjunction | seit + subordinate clause, verb at the end | Seit ich hier wohne, spreche ich besser. |\npreposition | seit + Dativ, no subordinate clause | Seit einem Jahr wohne ich hier. |",
+      "examplesEn": "Seitdem ich in Deutschland wohne, lerne ich Deutsch. – Since I have been living in Germany, I have been learning German.\nIch arbeite hier, seit ich das Studium beendet habe. – I have worked here since I finished my studies.\nSeitdem ich hier wohne, spreche ich besser. – Since I have been living here, I speak better.\nIch bleibe hier, bis ich mit der Arbeit fertig bin. – I will stay here until I finish the work.\nIch warte auf dich, bis du zurückkommst. – I will wait for you until you come back.\nWarte, bis ich komme. – Wait until I come.",
+      "noteEn": "⚠ German bis carries no negation, and English \"until\" carries none either — but many languages put one there, so do not add nicht. As conjunctions seit and seitdem are interchangeable, yet only seit can also be a preposition. \nGeneral word order in the subordinate clause — r0043."
+    },
+    "r0063": {
+      "source": "manual",
+      "titleEn": "Verben mit Präpositionen: asking about a person (wen / wem)",
+      "content_md_en": "[sub] asking about a person: preposition first, case from the preposition\n### How it works\nMany verbs have a fixed preposition that is not chosen by meaning: warten auf, sich freuen über, sprechen mit. The preposition sets the case and stands in front of the question word.\nVerb + Präposition | Wen? (Akkusativ) | Wem? (Dativ) |\nwarten auf | Auf wen? | — |\nsprechen über | Über wen? | — |\nsprechen mit | — | Mit wem? |\nhören von | — | Von wem? |\n### The order of steps\n1. Find the fixed preposition of the verb.\n2. Check which case that preposition requires.\n3. Put the preposition in front of wen (Akkusativ) or wem (Dativ).\n### The preposition stays in the answer\nThe preposition never breaks away from the verb: it is part of the government and travels into both the question and the answer.",
+      "examplesEn": "Auf wen wartest du? – Ich warte auf meinen Kollegen. – Who are you waiting for? – I am waiting for my colleague.\nÜber wen sprecht ihr? – Wir sprechen über den Chef. – Who are you talking about? – We are talking about the boss.\nMit wem sprechen Sie? – Ich spreche mit der Lehrerin. – Who are you speaking with? – I am speaking with the teacher.\nVon wem hast du das gehört? – Von meiner Schwester. – Who did you hear that from? – From my sister.",
+      "noteEn": "⚠ The case here is set by the preposition, not by the role in the sentence: auf always takes the Akkusativ, mit always takes the Dativ. The preposition is learnt together with the verb — there is no logic to its choice. Asking about a thing works differently, see r0064."
+    },
+    "r0064": {
+      "source": "manual",
+      "titleEn": "Präpositionaladverbien: wo(r)- and da(r)-",
+      "content_md_en": "[sub] asking about a thing, and answering in a single word\n### A person and a thing are asked about differently\nFor a person the preposition stands separately, in front of wen or wem. For a thing it merges with wo- into one word.\nabout whom / about what | question | answer |\nabout a person | Auf wen wartest du? | auf ihn |\nabout a thing | Worauf wartest du? | darauf |\n### How the word is built\nQuestion — wo + preposition. Answer — da + preposition.\nwarten auf → worauf? → darauf\nsprechen über → worüber? → darüber\ndenken an → woran? → daran\n### When -r- is inserted\nLook at the first letter of the preposition.\n:::outcomes\nVowel → -r- | an, auf, über, in, um: woran, worauf, worüber — daran, darauf, darüber\nConsonant → no -r- | mit, von, für, nach, zu: womit, wovon, wofür — damit, davon, dafür\n:::\n### Why you cannot say \"auf es\" [collapse]\nFor things German does not combine a preposition with a personal pronoun: auf es, über es, mit es are not used. The da(r)- forms do that job instead.\nFor people it is the other way round, everything is fine: auf ihn, mit ihr, über sie.",
+      "examplesEn": "Worauf wartest du? – Ich warte darauf. – What are you waiting for? – I am waiting for it.\nWorüber sprecht ihr? – Wir sprechen darüber. – What are you talking about? – We are talking about it.\nWoran denkst du? – Ich denke daran. – What are you thinking about? – I am thinking about it.\nWomit schreibst du? – Ich schreibe damit. – What are you writing with? – I am writing with it.\nWofür interessierst du dich? – Ich interessiere mich dafür. – What are you interested in? – I am interested in it.",
+      "noteEn": "⚠ The da(r)- forms replace things and situations, but never people: for a person use a preposition with a personal pronoun, auf ihn, mit ihr. A quick check by ear: say it without the -r- — \"Woan\", \"daauf\" are unpronounceable, so the -r- is needed. \nAsking about a person is covered in r0063."
+    }
+  }
+}

@@ -6,10 +6,10 @@
 <meta property="og:title" content="Справочник — Deutsch Tools">
 <meta property="og:description" content="Интерактивный справочник по немецкому: слова, правила, произношение">
 <meta property="og:type" content="website">
-<link rel="stylesheet" href="theme.css?v=20260901">
-<script src="i18n/ru.js?v=20260901"></script>
-<script src="i18n/en.js?v=20260901"></script>
-<script src="i18n/i18n.js?v=20260901"></script>
+<link rel="stylesheet" href="theme.css?v=20260904">
+<script src="i18n/ru.js?v=20260904"></script>
+<script src="i18n/en.js?v=20260904"></script>
+<script src="i18n/i18n.js?v=20260904"></script>
 <style>
 *{box-sizing:border-box;margin:0;padding:0}
 body{font-family:sans-serif;font-size:13px;color:var(--text-main);line-height:1.4;background:var(--bg-body);overflow-x:hidden}
@@ -462,10 +462,48 @@ tr[data-vid], [data-vid].conj-card { cursor: pointer; }
   box-shadow: var(--shadow-card);
   margin-bottom: 18px;
 }
+/* блок примеров — отдельная колонка examples, между телом и плашкой */
+.rule-examples {
+  margin: 16px 0 0; padding: 12px 0;
+  border-top: 1px solid var(--border-soft);
+  border-bottom: 1px solid var(--border-soft);
+}
+/* после раскрывашки нижняя граница уже нарисована ею — второй линии не надо */
+.rule-collapse + .rule-examples { border-top: none; padding-top: 6px; }
+.rule-examples__head {
+  display: flex; align-items: center; gap: 6px;
+  font-size: 11px; font-weight: 700; letter-spacing: .04em; text-transform: uppercase;
+  color: var(--green-300); margin: 0 0 8px;
+}
+.rule-examples__head > svg { flex-shrink: 0; width: 13px; height: 13px; }
+.rule-examples > .rule-sec:first-of-type,
+.rule-examples > p:first-of-type { margin-top: 0; }
 /* .section с карточками правил не должна сама становиться «карточкой»
    из-за .section:has(table) — иначе карточка в карточке */
 .section:has(.rule-card) { background: none; border: none; box-shadow: none; padding: 0; }
 
+/* шапка карточки: иконка домена слева, плашка тянется на все три строки
+   (eyebrow / title / subtitle) — высота считается из содержимого, длинный
+   заголовок в две строки растянет её сам */
+.rule-card__head {
+  display: grid; grid-template-columns: auto 1fr;
+  column-gap: 13px; align-items: stretch;
+  margin-bottom: 14px;
+}
+.rule-card__head > .rule-card__eyebrow  { margin-bottom: 3px; }
+.rule-card__head > .rule-card__subtitle { margin-bottom: 0; }
+.rule-icon {
+  grid-row: 1 / 4; align-self: stretch;
+  width: 44px; border-radius: 12px;
+  display: inline-flex; align-items: center; justify-content: center;
+  background: color-mix(in srgb, var(--accent) 14%, transparent);
+  color: var(--accent);
+}
+.rule-icon svg { width: 21px; height: 21px; }
+/* фолбэк для браузеров без color-mix */
+@supports not (background: color-mix(in srgb, red 14%, transparent)) {
+  .rule-icon { background: var(--bg-th); }
+}
 .rule-card__eyebrow {
   font-size: 11px; font-weight: 600; letter-spacing: .02em;
   color: var(--text-muted);
@@ -602,7 +640,7 @@ tr[data-vid], [data-vid].conj-card { cursor: pointer; }
   document.documentElement.classList.add('theme-' + saved);
 })();
 </script>
-<script src="data.js?v=20260901"></script>
+<script src="data.js?v=20260904"></script>
 <script>
 // ─── Глобальный хелпер экранирования HTML ────────────────────────────────
 function escHtml(s) {
@@ -3302,8 +3340,14 @@ document.addEventListener('click', function(e) {
 
   // ─── Рендер таблицы существительных ──────────────────────────────────────
   function renderNounsRow(item) {
+    // Род может быть составным ("m/f" у субстантивированных прилагательных —
+    // der Bekannte / die Bekannte). Рисуем по бейджу на каждую часть, иначе
+    // класс "m/f" не находится в CSS и выходит бесцветный прямоугольник.
     const badge = item.gender
-      ? '<span class="badge ' + item.gender + '">' + (item.gender === 'pl' ? 'Pl' : item.gender) + '</span>'
+      ? String(item.gender).split('/').map(function (g) {
+          const k = g.trim();
+          return k ? '<span class="badge ' + escHtml(k) + '">' + escHtml(k === 'pl' ? 'Pl' : k) + '</span>' : '';
+        }).join('')
       : '';
     const noteParts = [];
     if (item.plural) noteParts.push('Pl: ' + item.plural);
@@ -3839,6 +3883,17 @@ document.addEventListener('click', function(e) {
     return '<div class="' + cls + '">' + icon + renderInline(text) + '</div>';
   }
 
+  // Примеры — отдельная колонка examples/examplesEn. Прогоняются через тот же
+  // renderRuleBlocks, что и тело: там встречаются таблицы (r0019) и подсказки.
+  function renderRuleExamples(rule) {
+    const md = wordField(rule, 'examples', 'examplesEn');
+    if (!md || !md.trim()) return '';
+    return '<div class="rule-examples">'
+         + '<div class="rule-examples__head">' + ic('notes') + '<span>' + escHtml(t('cheatsheet.rule_examples')) + '</span></div>'
+         + renderRuleBlocks(md)
+         + '</div>';
+  }
+
   function renderRuleSeeAlso(rule) {
     const ids = ((rule.note || '').match(/\br\d{4}\b/g) || []);   // id языконезависимы — из RU-note
     for (const id of ids) {
@@ -3884,11 +3939,22 @@ document.addEventListener('click', function(e) {
 
     let h = '<div class="rule-box rule-card" data-rule-id="' + escHtml(rule.id || '') + '"'
           + (opts.compact ? ' style="margin-top:12px"' : '') + '>';
-    if (eyebrow) h += '<div class="rule-card__eyebrow">' + escHtml(eyebrow) + '</div>';
-    h += '<div class="rule-card__title' + (subtitle ? '' : ' is-last') + '">' + escHtml(title) + '</div>';
-    if (subtitle) h += '<div class="rule-card__subtitle">' + renderInline(subtitle) + '</div>';
+    // Иконка домена: пара domen:group уже описана в TOPIC_TITLES ({icon,label}),
+    // отдельной привязки заводить не надо. Темы нет в справочнике — иконки нет,
+    // шапка тогда собирается по-старому, без сетки.
+    const topicKey = rule.topic || ((rule.domen && rule.group) ? rule.domen + ':' + rule.group : '');
+    const topicMeta = (typeof TOPIC_TITLES !== 'undefined' && topicKey) ? TOPIC_TITLES[topicKey] : null;
+    const iconSvg = (topicMeta && topicMeta.icon) ? ic(topicMeta.icon) : '';
+
+    const headInner = (eyebrow ? '<div class="rule-card__eyebrow">' + escHtml(eyebrow) + '</div>' : '')
+      + '<div class="rule-card__title' + ((subtitle || iconSvg) ? '' : ' is-last') + '">' + escHtml(title) + '</div>'
+      + (subtitle ? '<div class="rule-card__subtitle">' + renderInline(subtitle) + '</div>' : '');
+    h += iconSvg
+      ? '<div class="rule-card__head"><span class="rule-icon">' + iconSvg + '</span>' + headInner + '</div>'
+      : headInner;
 
     h += renderRuleBlocks(lines.join('\n'));
+    h += renderRuleExamples(rule);
     h += renderRulePlate(wordField(rule, 'note', 'noteEn'));
 
     const seeAlso = renderRuleSeeAlso(rule);
@@ -4055,10 +4121,12 @@ document.addEventListener('click', function(e) {
   function showWordModal(id) {
     const v = VOCAB_BY_ID[id];
     if (!v) return;
-    const article = v.gender === 'm' ? 'der ' :
-                    v.gender === 'f' ? 'die ' :
-                    v.gender === 'n' ? 'das ' :
-                    v.gender === 'pl' ? 'die ' : '';
+    const ART = { m: 'der', f: 'die', n: 'das', pl: 'die' };
+    // составной род ("m/f") → "der/die"; неизвестный — без артикля
+    const article = v.gender
+      ? (String(v.gender).split('/').map(function (g) { return ART[g.trim()] || ''; })
+          .filter(Boolean).join('/') + ' ').trim() + ' '
+      : '';
     document.getElementById('word-modal-title').textContent = article + (v.de || '');
     document.getElementById('word-modal-subtitle').textContent = wordText(v);
 

@@ -107,7 +107,7 @@ window.I18N_EN = {
   "cheatsheet.to_top": "Top",
   "cheatsheet.rule_take_test": "to test",
   "cheatsheet.rule_soon": "soon",
-
+  "cheatsheet.rule_examples": "Examples",
   "trainer.title_home": "German Trainer",
   "trainer.pick_mode": "Choose a mode",
   "trainer.mode_learn_title": "Learn",

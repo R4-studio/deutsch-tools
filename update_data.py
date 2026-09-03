@@ -982,8 +982,8 @@ def write_rules_review_report(rules, translations, field_report_rows):
         "",
         f"Прогон: {date.today().isoformat()}. Всего правил: {len(rules)}.",
         "",
-        "| id | title | source | titleEn | content_md_en | noteEn | не прошло инварианты |",
-        "|---|---|---|---|---|---|---|",
+        "| id | title | source | titleEn | content_md_en | noteEn | examplesEn | не прошло инварианты |",
+        "|---|---|---|---|---|---|---|---|",
     ]
     for r in sorted(rules, key=lambda x: x["id"]):
         rid = r["id"]
@@ -992,9 +992,10 @@ def write_rules_review_report(rules, translations, field_report_rows):
         has_title = "ok" if r.get("titleEn") else "—"
         has_content = "ok" if r.get("content_md_en") else "—"
         has_note = "ok" if (not r.get("note")) or r.get("noteEn") else "—"
+        has_examples = "ok" if (not r.get("examples")) or r.get("examplesEn") else "—"
         fails = "; ".join(fails_by_id.get(rid, [])) or ""
         title_short = (r.get("title") or "")[:45]
-        lines.append(f"| {rid} | {title_short} | {source} | {has_title} | {has_content} | {has_note} | {fails} |")
+        lines.append(f"| {rid} | {title_short} | {source} | {has_title} | {has_content} | {has_note} | {has_examples} | {fails} |")
     path.write_text("\n".join(lines) + "\n", encoding="utf-8")
     return path
 
@@ -2278,6 +2279,10 @@ GERMAN_LABELS = {
     # ★ таксономия: питание и защита прав потребителей (август 2026)
     "products:nutrition":       ("dining",      "Ernährung"),
     "society:consumer":         ("scale",       "Verbraucherschutz"),
+
+    # ★ таксономия: медицина и язык (сентябрь 2026)
+    "products:medical":         ("health",      "Medizin & Apotheke"),
+    "study:language":           ("book-open",   "Sprache"),
 }
 
 # РУССКИЕ ПЕРЕВОДЫ (для тултипов на фронте)
@@ -2449,6 +2454,10 @@ RUSSIAN_LABELS = {
     # ★ таксономия: питание и защита прав потребителей (август 2026)
     "products:nutrition":       "Питание",
     "society:consumer":         "Защита прав потребителей",
+
+    # ★ таксономия: медицина и язык (сентябрь 2026)
+    "products:medical":         "Медицина и аптека",
+    "study:language":           "Язык",
 }
 
 BLOCK_META_RU = {
@@ -3348,7 +3357,12 @@ if __name__ == '__main__':
         rules_manual_ids = apply_manual_rules(rules, translations, WARN)
         print(f"  ✓ RULES manual применено: {len(rules_manual_ids)}/{len(rules)}")
         rules_report_rows = []
-        for field, en_field in (("title", "titleEn"), ("content_md", "content_md_en"), ("note", "noteEn")):
+        # examples — колонка выведена на карточку (renderRuleExamples в cheatsheet.html),
+        # поэтому переводится наравне с остальными. Поля без кириллицы (голые немецкие
+        # примеры) уйдут в ветку verbatim внутри translate_ignoretag_field: копия без
+        # обращения к API и без трат символов.
+        for field, en_field in (("title", "titleEn"), ("content_md", "content_md_en"),
+                                 ("note", "noteEn"), ("examples", "examplesEn")):
             candidates = compute_ignoretag_candidates(rules, field, en_field, translations["RULES"],
                                                        lambda r: r["id"], rules_manual_ids)
             rules_report_rows += translate_ignoretag_field(candidates, field, en_field, translations["RULES"],
