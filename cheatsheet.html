@@ -3350,7 +3350,7 @@ document.addEventListener('click', function(e) {
         }).join('')
       : '';
     const noteParts = [];
-    if (item.plural) noteParts.push('Pl: ' + item.plural);
+    
     if (item.note) noteParts.push(wordField(item, 'note', 'noteEn'));
     const noteCol = noteParts.join(' | ');
     return '<tr data-vid="' + escHtml(item.id) + '"><td>' + escHtml(item.de) + '</td>'
@@ -3405,12 +3405,23 @@ document.addEventListener('click', function(e) {
   function renderSections(tabId, posFilter, rowFn, headers) {
     // Фильтр по pos; topics теперь domen:group, без префикса pos
     const items = VOCAB.filter(v => posFilter.includes(v.pos));
-    const groups = groupByTopic(items);
-    // Вкладка "Новые" показывает только new:* topics; остальные — без new:*
     const isNeu = tabId === "neu" || tabId === "new";
-    const topicsInTab = Object.keys(groups).filter(t =>
-      isNeu ? t.startsWith("new:") : !t.startsWith("new:")
-    );
+    let groups;
+    if (isNeu) {
+      // Вкладка «Новые»: берём слова со служебным топиком new:*,
+      // но раскладываем их по настоящим топикам (domen:group)
+      const neuItems = items.filter(v => (v.topics || []).some(t => t.startsWith("new:")));
+      groups = {};
+      for (const item of neuItems) {
+        for (const t of (item.topics || [])) {
+          if (t.startsWith("new:")) continue;
+          (groups[t] = groups[t] || []).push(item);
+        }
+      }
+    } else {
+      groups = groupByTopic(items);
+    }
+    const topicsInTab = Object.keys(groups).filter(t => !t.startsWith("new:"));
     if (topicsInTab.length === 0) return '';
 
     return topicsInTab.map(topic => {
@@ -4109,7 +4120,7 @@ document.addEventListener('click', function(e) {
   };
   const HIDDEN_FIELDS = new Set([
     "id", "de", "ru", "en", "pos", "topics", "domen", "group",
-    "new", "quizUse", "strictOrder",
+    "new", "quizUse", "strictOrder", "ruForms", "ruNoForms", "noRuForms", "meanings",
     // *En-поля показываются не отдельной строкой, а подменяют значение
     // своей ru-пары в EN_FIELD_PAIRS ниже — сюда, чтобы цикл их не дублировал
     "altEn", "noteEn", "warningEn", "exampleEn"
