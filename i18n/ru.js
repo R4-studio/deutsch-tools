@@ -87,6 +87,12 @@ window.I18N_RU = {
   "cheatsheet.search_more_prefix": "и ещё ",
   "cheatsheet.search_more_suffix": " — уточни запрос",
 
+  "cheatsheet.sort_title": "Сортировка",
+  "cheatsheet.sort_topic_az": "Темы A→Z",
+  "cheatsheet.sort_topic_za": "Темы Z→А",
+  "cheatsheet.sort_level_asc": "Уровень ↓",
+  "cheatsheet.sort_level_desc": "Уровень ↑",
+
   "cheatsheet.th_translation": "Перевод",
   "cheatsheet.th_note": "Примечание",
   "cheatsheet.th_translation_note": "Перевод / Примечание",

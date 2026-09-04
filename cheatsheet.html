@@ -6,10 +6,10 @@
 <meta property="og:title" content="Справочник — Deutsch Tools">
 <meta property="og:description" content="Интерактивный справочник по немецкому: слова, правила, произношение">
 <meta property="og:type" content="website">
-<link rel="stylesheet" href="theme.css?v=20260904">
-<script src="i18n/ru.js?v=20260904"></script>
-<script src="i18n/en.js?v=20260904"></script>
-<script src="i18n/i18n.js?v=20260904"></script>
+<link rel="stylesheet" href="theme.css?v=20260905">
+<script src="i18n/ru.js?v=20260905"></script>
+<script src="i18n/en.js?v=20260905"></script>
+<script src="i18n/i18n.js?v=20260905"></script>
 <style>
 *{box-sizing:border-box;margin:0;padding:0}
 body{font-family:sans-serif;font-size:13px;color:var(--text-main);line-height:1.4;background:var(--bg-body);overflow-x:hidden}
@@ -205,6 +205,50 @@ tr:hover td{background:var(--bg-row-hover)}
   flex: 1;
   min-width: 0;
 }
+
+.sort-btn {
+  width: 38px; height: 38px; flex-shrink: 0; padding: 0;
+  border-radius: 50%;
+  border: 1px solid var(--border-soft);
+  background: var(--bg-panel); color: var(--text-main);
+  cursor: pointer;
+  display: inline-flex; align-items: center; justify-content: center;
+  transition: background 0.2s var(--ease-dt), transform 0.15s var(--ease-dt);
+}
+.sort-btn-icon { display: inline-flex; }
+.sort-btn-icon svg { width: 17px; height: 17px; display: block; }
+.sort-btn:hover { background: var(--bg-row-hover); }
+.sort-btn:active { transform: scale(0.92); }
+
+/* ─── Выпадающий список режимов сортировки ──────────── */
+.sort-dropdown {
+  position: fixed;
+  background: var(--bg-panel);
+  border: 1px solid var(--border-soft);
+  border-radius: 10px;
+  box-shadow: var(--shadow-bar);
+  z-index: 1001;
+  min-width: 190px;
+  padding: 4px;
+  display: none;
+}
+.sort-dropdown.open { display: block; }
+.sort-option {
+  display: flex; align-items: center; gap: 10px;
+  padding: 9px 10px;
+  border-radius: 6px;
+  font-size: 13px;
+  color: var(--text-main);
+  cursor: pointer;
+  white-space: nowrap;
+}
+.sort-option-icon { display: inline-flex; width: 16px; height: 16px; flex-shrink: 0; }
+.sort-option-icon svg { width: 16px; height: 16px; display: block; }
+.sort-option-label { flex: 1; }
+.sort-option:hover { background: var(--bg-row-hover); }
+.sort-option.active { color: var(--accent); font-weight: 600; }
+.sort-option .sort-check { width: 14px; height: 14px; flex-shrink: 0; visibility: hidden; }
+.sort-option.active .sort-check { visibility: visible; }
 
 /* ─── Дропдаун результатов поиска ──────────── */
 .search-dropdown {
@@ -640,7 +684,7 @@ tr[data-vid], [data-vid].conj-card { cursor: pointer; }
   document.documentElement.classList.add('theme-' + saved);
 })();
 </script>
-<script src="data.js?v=20260904"></script>
+<script src="data.js?v=20260905"></script>
 <script>
 // ─── Глобальный хелпер экранирования HTML ────────────────────────────────
 function escHtml(s) {
@@ -676,6 +720,11 @@ function wordField(item, field, enField) {
   <button class="burger-btn" onclick="openMenu()" data-i18n-title="cheatsheet.menu_title" title="Меню"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 6h16M4 12h16M4 18h16"/></svg></button>
   <input type="text" id="searchInput" data-i18n-placeholder="cheatsheet.search_placeholder" placeholder="Поиск...">
   <button id="searchBtn" data-i18n="cheatsheet.search_button" style="padding:9px 16px;font-size:13px;border-radius:999px;background:var(--accent);color:var(--on-color);border:none;cursor:pointer;font-weight:600;white-space:nowrap;">Найти</button>
+  <button id="sortBtn" class="sort-btn" title="Сортировка">
+    <span id="sortBtnIcon" class="sort-btn-icon">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 6h5M4 12h8M4 18h11"/><path d="M20 4v14M20 18l-3-3M20 18l3-3"/></svg>
+    </span>
+  </button>
   <span id="searchCount" class="search-count-label" style="font-size:12px;color:var(--text-muted);white-space:nowrap;"></span>
   <button class="theme-toggle" id="lang-btn" onclick="cycleLang()" style="font-size:10px;font-weight:700;" title="Сменить язык">RU</button>
   <button class="theme-toggle" id="themeToggle" onclick="cycleTheme()" title="Переключить тему"></button>
@@ -684,6 +733,9 @@ function wordField(item, field, enField) {
 
 <!-- Дропдаун результатов поиска -->
 <div class="search-dropdown" style="margin-top:30px" id="searchDropdown" role="listbox" data-i18n-aria="cheatsheet.search_results_aria" aria-label="Результаты поиска"></div>
+
+<!-- Выпадающий список режимов сортировки -->
+<div class="sort-dropdown" id="sortDropdown" role="listbox" data-i18n-aria="cheatsheet.sort_title" aria-label="Сортировка"></div>
 
 <!-- Backdrop (затемнение фона) -->
 <div class="menu-backdrop" id="menuBackdrop" onclick="closeMenu()"></div>
@@ -3401,11 +3453,62 @@ document.addEventListener('click', function(e) {
     return groups;
   }
 
+  // ─── Сортировка справочника по темам/уровню (кнопка sortBtn) ───────────
+  const LEVEL_ORDER = ['A1', 'A2', 'B1', 'B2', 'C1'];
+  const SORT_MODES = ['topic-az', 'topic-za', 'level-asc', 'level-desc'];
+
+  // Возвращает НОВЫЙ отсортированный массив по правилам текущего SORT_MODE
+  function sortRows(items) {
+    const mode = window.SORT_MODE || 'topic-az';
+    const arr = items.slice();
+    const reversed = mode === 'topic-za' || mode === 'level-desc';
+    arr.sort((a, b) => {
+      const r = String(a.de).localeCompare(String(b.de), 'de');
+      return reversed ? -r : r;
+    });
+    return arr;
+  }
+
+  // ─── Сгруппировать по уровню; слово из нескольких тем — один раз ───────
+  function groupByLevel(items) {
+    const groups = {};
+    const seen = {};
+    for (const item of items) {
+      if (seen[item.id]) continue;
+      seen[item.id] = true;
+      const lvl = LEVEL_ORDER.includes(item.level) ? item.level : '—';
+      (groups[lvl] = groups[lvl] || []).push(item);
+    }
+    return groups;
+  }
+
   // ─── Сгенерировать секции для таба ───────────────────────────────────────
   function renderSections(tabId, posFilter, rowFn, headers) {
     // Фильтр по pos; topics теперь domen:group, без префикса pos
     const items = VOCAB.filter(v => posFilter.includes(v.pos));
     const isNeu = tabId === "neu" || tabId === "new";
+    const mode = window.SORT_MODE || 'topic-az';
+
+    if (mode === 'level-asc' || mode === 'level-desc') {
+      // Neu тоже группируется по уровню — набор слов для неё остаётся прежним
+      // (только со служебным топиком new:*), меняется лишь способ группировки
+      const srcItems = isNeu
+        ? items.filter(v => (v.topics || []).some(t => t.startsWith("new:")))
+        : items;
+      const groups = groupByLevel(srcItems);
+      let core = LEVEL_ORDER.filter(l => groups[l]);
+      if (mode === 'level-desc') core = core.slice().reverse();
+      const order = core.concat(groups['—'] ? ['—'] : []);
+      if (order.length === 0) return '';
+
+      return order.map(lvl => {
+        return '<div class="section">'
+             + '<div class="section-title">' + escHtml(lvl) + '</div>'
+             + tableHTML(sortRows(groups[lvl]), rowFn, headers)
+             + '</div>';
+      }).join('');
+    }
+
     let groups;
     if (isNeu) {
       // Вкладка «Новые»: берём слова со служебным топиком new:*,
@@ -3427,9 +3530,118 @@ document.addEventListener('click', function(e) {
     return topicsInTab.map(topic => {
       return '<div class="section">'
            + '<div class="section-title">' + topicTitleHtml(topic) + '</div>'
-           + tableHTML(groups[topic], rowFn, headers)
+           + tableHTML(sortRows(groups[topic]), rowFn, headers)
            + '</div>';
     }).join('');
+  }
+
+  // ─── Кнопка сортировки в шапке ───────────────────────────────────────────
+  const SORT_STORAGE_KEY = 'cs-sort';
+  const SORT_LABEL_KEYS = {
+    'topic-az': 'cheatsheet.sort_topic_az',
+    'topic-za': 'cheatsheet.sort_topic_za',
+    'level-asc': 'cheatsheet.sort_level_asc',
+    'level-desc': 'cheatsheet.sort_level_desc'
+  };
+  // Иконки режимов: горизонтальные линии — алфавитная сортировка тем (длина
+  // линий растёт/убывает + стрелка направления), вертикальные столбики —
+  // сортировка по уровню (высота растёт/убывает слева направо: A1…C1).
+  const SORT_ICONS = {
+    'topic-az': '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 6h5M4 12h8M4 18h11"/><path d="M20 4v14M20 18l-3-3M20 18l3-3"/></svg>',
+    'topic-za': '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 6h11M4 12h8M4 18h5"/><path d="M20 18V4M20 4l-3 3M20 4l3 3"/></svg>',
+    'level-asc': '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 15v5M12 9v11M19 4v16"/></svg>',
+    'level-desc': '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 4v16M12 9v11M19 15v5"/></svg>'
+  };
+
+  function updateSortBtnUI() {
+    const icon = document.getElementById('sortBtnIcon');
+    const btn = document.getElementById('sortBtn');
+    const mode = window.SORT_MODE || 'topic-az';
+    if (icon) icon.innerHTML = SORT_ICONS[mode] || SORT_ICONS['topic-az'];
+    if (btn) btn.title = t('cheatsheet.sort_title') + ': ' + t(SORT_LABEL_KEYS[mode]);
+  }
+  window.updateSortBtnUI = updateSortBtnUI;
+
+  // ─── Открытие/закрытие/выбор в выпадающем списке сортировки ─────────────
+  function renderSortDropdown() {
+    const dd = document.getElementById('sortDropdown');
+    if (!dd) return;
+    dd.innerHTML = SORT_MODES.map(mode => {
+      const active = mode === window.SORT_MODE;
+      return '<div class="sort-option' + (active ? ' active' : '') + '" data-mode="' + mode + '" role="option" aria-selected="' + active + '">'
+           + '<span class="sort-option-icon">' + SORT_ICONS[mode] + '</span>'
+           + '<span class="sort-option-label">' + escHtml(t(SORT_LABEL_KEYS[mode])) + '</span>'
+           + '<svg class="sort-check" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>'
+           + '</div>';
+    }).join('');
+    dd.querySelectorAll('.sort-option').forEach(el => {
+      el.addEventListener('click', () => selectSortMode(el.getAttribute('data-mode')));
+    });
+  }
+  window.renderSortDropdown = renderSortDropdown;
+
+  function positionSortDropdown() {
+    const btn = document.getElementById('sortBtn');
+    const dd = document.getElementById('sortDropdown');
+    if (!btn || !dd) return;
+    const r = btn.getBoundingClientRect();
+    dd.style.top = (r.bottom + 8) + 'px';
+    dd.style.right = (window.innerWidth - r.right) + 'px';
+  }
+
+  function openSortDropdown() {
+    renderSortDropdown();
+    positionSortDropdown();
+    const dd = document.getElementById('sortDropdown');
+    if (dd) dd.classList.add('open');
+  }
+
+  function closeSortDropdown() {
+    const dd = document.getElementById('sortDropdown');
+    if (dd) dd.classList.remove('open');
+  }
+
+  function toggleSortDropdown() {
+    const dd = document.getElementById('sortDropdown');
+    if (!dd) return;
+    if (dd.classList.contains('open')) closeSortDropdown();
+    else openSortDropdown();
+  }
+
+  function selectSortMode(mode) {
+    if (!SORT_MODES.includes(mode) || mode === window.SORT_MODE) { closeSortDropdown(); return; }
+    window.SORT_MODE = mode;
+    try { localStorage.setItem(SORT_STORAGE_KEY, mode); } catch (e) {}
+    updateSortBtnUI();
+    closeSortDropdown();
+    if (typeof window.renderAllVocabTables === 'function') window.renderAllVocabTables();
+  }
+
+  function initSortBtn() {
+    let saved = 'topic-az';
+    try {
+      const stored = localStorage.getItem(SORT_STORAGE_KEY);
+      if (SORT_MODES.includes(stored)) saved = stored;
+    } catch (e) {}
+    window.SORT_MODE = saved;
+    updateSortBtnUI();
+
+    const btn = document.getElementById('sortBtn');
+    const dd = document.getElementById('sortDropdown');
+    if (btn) {
+      btn.addEventListener('click', toggleSortDropdown);
+    }
+    document.addEventListener('keydown', ev => {
+      if (ev.key === 'Escape') closeSortDropdown();
+    });
+    document.addEventListener('click', ev => {
+      if (!dd || !dd.classList.contains('open')) return;
+      if (dd.contains(ev.target) || ev.target === btn || (btn && btn.contains(ev.target))) return;
+      closeSortDropdown();
+    });
+    window.addEventListener('resize', () => {
+      if (dd && dd.classList.contains('open')) positionSortDropdown();
+    });
   }
 
   // ─── Рендер: nums ────────────────────────────────────────────────────────
@@ -4085,6 +4297,7 @@ document.addEventListener('click', function(e) {
     });
   }
   window.renderAllVocabTables = renderAllVocabTables;
+  initSortBtn();
   renderAllVocabTables();
 })();
 
@@ -4231,6 +4444,9 @@ document.addEventListener('click', function(e) {
   // перерисовываем их и обновляем title кнопки темы под текущий язык.
   window.onI18nApplied = function() {
     if (typeof applyTheme === 'function') applyTheme(localStorage.getItem('theme') || 'auto');
+    if (typeof window.updateSortBtnUI === 'function') window.updateSortBtnUI();
+    const sortDd = document.getElementById('sortDropdown');
+    if (sortDd && sortDd.classList.contains('open') && typeof window.renderSortDropdown === 'function') window.renderSortDropdown();
     if (typeof window.renderAllVocabTables === 'function') window.renderAllVocabTables();
   };
   applyI18n();

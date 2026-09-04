@@ -86,6 +86,12 @@ window.I18N_EN = {
   "cheatsheet.search_more_prefix": "and ",
   "cheatsheet.search_more_suffix": " more — refine your search",
 
+  "cheatsheet.sort_title": "Sort",
+  "cheatsheet.sort_topic_az": "Topics A→Z",
+  "cheatsheet.sort_topic_za": "Topics Z→A",
+  "cheatsheet.sort_level_asc": "Level ↓",
+  "cheatsheet.sort_level_desc": "Level ↑",
+
   "cheatsheet.th_translation": "Translation",
   "cheatsheet.th_note": "Note",
   "cheatsheet.th_translation_note": "Translation / Note",
