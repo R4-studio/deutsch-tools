@@ -312,41 +312,80 @@ def build_vocab_context(item):
         parts.append(item["altDe"])
     return " | ".join(parts) if parts else None
 
+# Модальные и модальные обороты: инфинитивного «to» у них по-английски нет
+# («to must» невозможно). Закрытый список — не эвристика.
+MODAL_EN = {"must", "should", "would like", "can", "may", "might", "shall"}
+# Значение, начинающееся с местоимения — это предложение («es hagelt» →
+# «it is hailing»), а не инфинитив: «to» не приклеивать.
+PRONOUN_START_EN = {"it", "he", "she", "they", "there"}
+
 def normalize_verb_en(text):
     """«to <verb>» — одна форма на весь словарь, независимо от того, что
-    вернул DeepL (с to / без / Capitalized)."""
+    вернул DeepL (с to / без / Capitalized). Исключения — модальные обороты
+    и значения-предложения (местоимение в начале): им «to» не нужно."""
     text = (text or "").strip()
     if not text:
         return text
     m = re.match(r"^to\s+(.*)$", text, re.IGNORECASE)
-    core = m.group(1) if m else text
+    core = (m.group(1) if m else text).strip()
+    low = core.lower()
+    if low in MODAL_EN:
+        return core
+    if low.endswith(" to") and low[:-3].rstrip() in MODAL_EN:
+        return core[:-3].rstrip()  # «to would like to» → «would like»
+    first_word = low.split()[0] if low else ""
+    if first_word in PRONOUN_START_EN:
+        return core
     return "to " + core
 
-# Закрытый список — единственная категория собственных имён, реально
-# встречающаяся в VOCAB (проверено: ни одной отдельной записи для стран/
-# языков/личных имён в словаре нет, только дни недели и месяцы).
+# Собственные имена — единственная категория, реально встречающаяся в VOCAB.
+# Явный канон (не просто «не понижать регистр»): прогон идёт из кэша, где
+# регистр уже мог быть испорчен прошлой нормализацией. Дни недели и месяцы —
+# их DeepL и так отдаёт с заглавной; S-Bahn / Bundesliga добавлены вручную,
+# механически отличить их от «taxi/hotel» по одному написанию нельзя.
 PROPER_NOUN_EN = {
-    "monday", "tuesday", "wednesday", "thursday", "friday", "saturday", "sunday",
-    "january", "february", "march", "april", "may", "june", "july",
-    "august", "september", "october", "november", "december",
+    "monday": "Monday", "tuesday": "Tuesday", "wednesday": "Wednesday",
+    "thursday": "Thursday", "friday": "Friday", "saturday": "Saturday", "sunday": "Sunday",
+    "january": "January", "february": "February", "march": "March", "april": "April",
+    "may": "May", "june": "June", "july": "July", "august": "August",
+    "september": "September", "october": "October", "november": "November", "december": "December",
+    "s-bahn": "S-Bahn", "bundesliga": "Bundesliga",
 }
 
 def is_proper_noun_en(text):
     return (text or "").strip().lower() in PROPER_NOUN_EN
 
+# Первый токен-аббревиатура: 2+ символа, первая буква латинская, все
+# остальные — заглавные латинские или цифры. Совпадает и с «OP», и с
+# испорченным «oP» — второй чинится, не пропускается.
+_ABBREV_FIRST_TOKEN_RE = re.compile(r"[A-Za-z][A-Z0-9]+$")
+
 def normalize_vocab_en(text, pos):
     """pos==verb → normalize_verb_en(); verb/adj/adv/noun → строчная первая
     буква — по-английски заглавная у DeepL для существительных унаследована
-    из немецкого написания, а не грамматика. Исключение — закрытый список
-    настоящих собственных (дни недели, месяцы)."""
+    из немецкого написания, а не грамматика.
+
+    Две проверки ДО понижения регистра, обе — сравнение строк без семантики:
+    аббревиатура первым токеном (восстанавливаем регистр, слова после первого
+    не трогаем) и явный список собственных имён. Всё спорное (Title Case в
+    многословном переводе и т.п.) нормализация не трогает — оно уходит в
+    reports/en_case_review.md."""
     text = (text or "").strip()
     if not text:
         return text
     if pos == "verb":
         text = normalize_verb_en(text)
-    if pos in ("verb", "adj", "adv") and text:
+    if not text:
+        return text
+    first = text.split(maxsplit=1)[0]
+    if len(first) >= 2 and _ABBREV_FIRST_TOKEN_RE.match(first):
+        return first.upper() + text[len(first):]
+    canon = PROPER_NOUN_EN.get(text.lower())
+    if canon:
+        return canon
+    if pos in ("verb", "adj", "adv"):
         text = text[0].lower() + text[1:]
-    elif pos == "noun" and text and not is_proper_noun_en(text):
+    elif pos == "noun":
         text = text[0].lower() + text[1:]
     return text
 
@@ -394,9 +433,9 @@ def compute_vocab_plan(all_vocab, translations, warn):
             en_val = cached["en"]
             # Самоисправление: если нормализация поменялась (напр. строчная
             # буква у существительных), применяем её и к уже закэшированным
-            # deepl-переводам — без обращения к API, просто локальная строка.
-            # source: "manual" не трогаем никогда (§26 GUARDRAILS).
-            if cached.get("source") == "deepl":
+            # deepl/haiku-переводам — без обращения к API, просто локальная
+            # строка. source: "manual" не трогаем никогда (§26 GUARDRAILS).
+            if cached.get("source") in ("deepl", "haiku"):
                 renorm = normalize_vocab_en(en_val, item.get("pos"))
                 if renorm != en_val:
                     cached["en"] = renorm
@@ -513,6 +552,96 @@ def write_vocab_review_report(report_rows):
         lines.append(f"| {it.get('id','')} | {it.get('de','')} | {it.get('ru','') or ''} | "
                       f"{r.get('en_deepl','')} | {r.get('back_de','')} | {it.get('pos','')} | "
                       f"{it.get('level','') or ''} |")
+    path.write_text("\n".join(lines) + "\n", encoding="utf-8")
+    return path
+
+# ─── en_case_review — записи, которые нормализация трогать НЕ должна, потому
+# что механически не отличить правку от порчи имени собственного
+# (`central Station` понизить, `brandenburg Gate` — нет). Скрипт их только
+# собирает в отчёт, в data.js ничего не меняет. Разбор — вручную, решение в
+# docs/en-fix/translations-vocab-skip.json (source: manual), после чего запись
+# из отчёта уходит.
+_PARTICIPLE_TAIL_RE = re.compile(r"(ing|ed|en)$")
+
+def collect_en_case_review(all_vocab, terms, translations=None):
+    """Три правила, все — сравнение строк:
+    1. Title Case в многословном переводе: первое слово строчное, дальше есть
+       заглавная (`city Hall`, `map of Germany`).
+    2. Ядро после «to» — односложное на -ing/-ed/-en (причастие/герундий:
+       `to forgotten`, `to vacuuming`). Без стоп-листа: правильные инфинитивы
+       на -en (`to open`, `to listen`) тоже попадут, человек их проглядит.
+    3. Ядро после «to» дословно совпадает с немецким глаголом (после снятия
+       `sich `) — слово осталось непереведённым (`bellen` → `to bellen`).
+
+    Записи с source: manual пропускаются: значение уже разобрано человеком и
+    закреплено в docs/en-fix/, повторно показывать его в отчёте незачем."""
+    rows = []
+    vcache = (translations or {}).get("VOCAB", {})
+    tcache = (translations or {}).get("TERMS", {})
+    for it in list(all_vocab) + list(terms):
+        if it.get("term"):
+            if (tcache.get(it.get("id")) or {}).get("source") == "manual":
+                continue
+        else:
+            if (vcache.get(vocab_hash(it)) or {}).get("source") == "manual":
+                continue
+        en = (it.get("en") or "").strip()
+        if not en:
+            continue
+        de = (it.get("de") or it.get("term") or "").strip()
+        ru = it.get("ru") or ""
+        rid = it.get("id", "")
+        toks = en.split()
+        if len(toks) >= 2 and toks[0][:1].islower() and any(t[:1].isupper() for t in toks[1:]):
+            rows.append((rid, de, ru, en, "Title Case в многословном переводе"))
+            continue
+        m = re.match(r"^to\s+(.+)$", en)
+        if not m:
+            continue
+        core = m.group(1).strip()
+        de_verb = re.sub(r"^sich\s+", "", de.lower()).strip()
+        if de_verb and core.lower() == de_verb:
+            rows.append((rid, de, ru, en, "немецкое слово осталось непереведённым"))
+        elif " " not in core and _PARTICIPLE_TAIL_RE.search(core.lower()):
+            rows.append((rid, de, ru, en, "ядро после «to» не похоже на инфинитив (-ed/-en/-ing)"))
+    return rows
+
+def write_en_case_review_report(rows):
+    REPORTS_DIR.mkdir(exist_ok=True)
+    path = REPORTS_DIR / "en_case_review.md"
+    if not rows:
+        path.write_text(
+            "# en_case_review — записей нет\n\n"
+            "Нормализация не оставила ни одного спорного случая регистра или формы.\n",
+            encoding="utf-8")
+        return path
+    rows = sorted(rows, key=lambda r: (r[4], r[0]))
+    lines = [
+        "# en_case_review — регистр и формы на ручной разбор",
+        "",
+        f"Прогон: {date.today().isoformat()}. Всего записей: {len(rows)}.",
+        "",
+        "Нормализация эти значения **не трогала** — механически не отличить "
+        "правку от порчи имени собственного. В data.js они попали как есть.",
+        "",
+        "| id | de | ru | en сейчас | что не так |",
+        "|---|---|---|---|---|",
+    ]
+    for rid, de, ru, en, why in rows:
+        lines.append(f"| {rid} | {de} | {ru} | {en} | {why} |")
+    lines += [
+        "",
+        "## Как разобрать",
+        "",
+        "Решение по каждой строке вносится в "
+        "`docs/en-fix/translations-vocab-skip.json` — запись с нужным `en` "
+        "(и при необходимости `de` для сверки ключа) и `source: \"manual\"`. "
+        "После этого нормализация её больше не трогает, и из отчёта она уходит.",
+        "",
+        "Известные ложные срабатывания — их просто пропустить: "
+        "`map of Germany` (n0725), `to watch TV` (v0151), `to X-ray` (v0419), "
+        "`towards / against (+ Dativ)` (t0053).",
+    ]
     path.write_text("\n".join(lines) + "\n", encoding="utf-8")
     return path
 
@@ -812,17 +941,23 @@ def _deepl_translate_batch_xml(texts, api_key, source_lang="RU", target_lang="EN
     result = _deepl_request(params, api_key)
     return [tr["text"] for tr in result["translations"]]
 
-def load_manual_rules_batches(translations, warn):
+def load_manual_rules_batches(translations, rules, warn):
     """Подтягивает docs/en-fix/translations-rules-batch*.json в
     translations.json['RULES'] с source: manual. Источник — ручная работа,
     авторитетный: перезаписывает существующую запись того же id (в отличие
-    от DeepL-переводов, которые никогда не трогают manual)."""
+    от DeepL-переводов, которые никогда не трогают manual).
+
+    Ключи — id (r0065), они тоже могут переехать при вставке правил. Сверка
+    по полю title включается только если оно есть в записи; сейчас его нет —
+    ключи применяются на доверии, об этом одна строка в WARN."""
     if translations is None:
         return []
     cache = translations["RULES"]
+    by_id = {r["id"]: r for r in (rules or []) if r.get("id")}
     batch_dir = SCRIPT_DIR / "docs" / "en-fix"
     files = sorted(batch_dir.glob("translations-rules-batch*.json")) if batch_dir.exists() else []
     loaded_ids = []
+    title_field_seen = False
     for f in files:
         try:
             data = json.loads(f.read_text(encoding="utf-8"))
@@ -833,8 +968,20 @@ def load_manual_rules_batches(translations, warn):
             if entry.get("source") != "manual":
                 warn.append(f"RULES manual batch {f.name}: запись {rid} без source=manual — пропущена")
                 continue
+            expected_title = entry.get("title")
+            if expected_title:
+                title_field_seen = True
+                item = by_id.get(rid)
+                if item is not None and expected_title != item.get("title"):
+                    warn.append(
+                        f"RULES manual batch {f.name}: {rid} записан для «{expected_title}», "
+                        f"а сейчас под этим id «{item.get('title')}» — пропущена, перевыстави ключ")
+                    continue
             cache[rid] = dict(entry)
             loaded_ids.append(rid)
+    if files and not title_field_seen:
+        warn.append("RULES manual batch: в записях нет поля title — сверка переезда "
+                    "id↔правило недоступна, ключи применяются на доверии")
     if loaded_ids:
         print(f"  ✓ RULES manual: {len(loaded_ids)} записей из {len(files)} batch-файлов")
     return loaded_ids
@@ -1028,7 +1175,10 @@ def write_notes_review_report(report_rows):
 # translations.json["TERMS"]/["SOUNDS"] по id (та же логика загрузки,
 # что и load_manual_rules_batches для RULES, но один файл на обе секции).
 # ═══════════════════════════════════════════════════════════════
-def load_manual_terms_sounds(translations, warn):
+def load_manual_terms_sounds(translations, terms, sounds, warn):
+    """Ключи — id (t0001/s0001), могут переехать при вставке строк. Сверка
+    по полю de включается только если оно есть в записи; сейчас его нет —
+    ключи применяются на доверии, одна строка об этом в WARN."""
     if translations is None:
         return
     f = SCRIPT_DIR / "docs" / "en-fix" / "translations-terms-sounds.json"
@@ -1040,6 +1190,11 @@ def load_manual_terms_sounds(translations, warn):
     except (OSError, json.JSONDecodeError) as e:
         warn.append(f"{f.name}: не читается ({e}) — TERMS/SOUNDS.en не обновлены")
         return
+    lookup = {
+        "TERMS": {t["id"]: t for t in (terms or []) if t.get("id")},
+        "SOUNDS": {s["id"]: s for s in (sounds or []) if s.get("id")},
+    }
+    de_field_seen = False
     for section in ("TERMS", "SOUNDS"):
         cache = translations[section]
         n = 0
@@ -1047,11 +1202,24 @@ def load_manual_terms_sounds(translations, warn):
             if entry.get("source") and entry.get("source") != "manual":
                 warn.append(f"{f.name}: {section}.{tid} без source=manual — пропущена")
                 continue
-            merged = dict(entry)
+            expected_de = entry.get("de")
+            if expected_de:
+                de_field_seen = True
+                item = lookup[section].get(tid)
+                current = (item or {}).get("term") or (item or {}).get("combo")
+                if item is not None and current and expected_de != current:
+                    warn.append(
+                        f"{f.name}: {section}.{tid} записан для «{expected_de}», а сейчас "
+                        f"под этим id «{current}» — пропущена, перевыстави ключ")
+                    continue
+            merged = {k: v for k, v in entry.items() if k != "de"}
             merged["source"] = "manual"
             cache[tid] = merged
             n += 1
         print(f"  ✓ {section} manual: {n} записей из {f.name}")
+    if not de_field_seen:
+        warn.append(f"{f.name}: в записях нет поля de — сверка переезда id↔слово "
+                    "недоступна, ключи применяются на доверии")
 
 def apply_manual_terms(terms, translations, warn):
     if translations is None:
@@ -1115,9 +1283,20 @@ def load_manual_vocab_skip(all_vocab, translations, warn):
         if item is None:
             warn.append(f"{f.name}: id {vid} нет в словаре (переехал/удалён?) — пропущен")
             continue
+        # id перевыставляются при вставке строк в xlsx: запись могла уехать на
+        # чужое слово. Поле de — якорь сверки; не совпало → пропускаем, ключ
+        # перевыставит человек (в data.js ничего не портим).
+        expected_de = entry.get("de")
+        if expected_de and expected_de != item.get("de"):
+            warn.append(
+                f"{f.name}: {vid} записан для «{expected_de}», а сейчас под этим id "
+                f"«{item.get('de')}» — запись пропущена, перевыстави ключ")
+            continue
         h = vocab_hash(item)
         merged = dict(cache.get(h) or {})
-        merged.update(entry)
+        # de — служебное поле файла, в кэш как перевод не пишем (правильное
+        # значение проставит setdefault ниже из самого слова).
+        merged.update({k: v for k, v in entry.items() if k != "de"})
         merged["source"] = "manual"
         merged.setdefault("de", item.get("de"))
         if entry.get("altEn") and not entry.get("altEnSource"):
@@ -1193,7 +1372,16 @@ def compute_verb_field_plan(items, field, cache, warn):
         cached = cache.get(h)
         if cached and cached.get("en"):
             cache_hits += 1
-            item["en"] = cached["en"]
+            en_val = cached["en"]
+            # То же самоисправление, что в compute_vocab_plan: закэшированные
+            # deepl/haiku-переводы подхватывают исправленную нормализацию
+            # (напр. «to must» → «must») без обращения к API. manual — не трогаем.
+            if cached.get("source") in ("deepl", "haiku"):
+                renorm = normalize_verb_en(en_val)
+                if renorm != en_val:
+                    cached["en"] = renorm
+                    en_val = renorm
+            item["en"] = en_val
         else:
             candidates.append(item)
     char_count = sum(len(it[field]) for it in candidates)
@@ -3353,7 +3541,7 @@ if __name__ == '__main__':
     print("\n=== EN-перевод RULES (этап C — исключения + ignore-теги) ===")
     notes_report_rows = []
     if translations is not None:
-        load_manual_rules_batches(translations, WARN)
+        load_manual_rules_batches(translations, rules, WARN)
         rules_manual_ids = apply_manual_rules(rules, translations, WARN)
         print(f"  ✓ RULES manual применено: {len(rules_manual_ids)}/{len(rules)}")
         rules_report_rows = []
@@ -3392,7 +3580,7 @@ if __name__ == '__main__':
     # если файл полон — механизм всё равно оставлен как страховка на будущее.
     print("\n=== EN-перевод TERMS/SOUNDS (этап E — только manual) ===")
     if translations is not None:
-        load_manual_terms_sounds(translations, WARN)
+        load_manual_terms_sounds(translations, terms, sounds, WARN)
         apply_manual_terms(terms, translations, WARN)
         apply_manual_sounds(sounds, translations, WARN)
         tcandidates = compute_ignoretag_candidates(terms, "note", "noteEn", translations["TERMS"],
@@ -3405,6 +3593,11 @@ if __name__ == '__main__':
 
     notes_report_path = write_notes_review_report(notes_report_rows)
     print(f"  ✓ отчёт: {notes_report_path}")
+
+    # en_case_review — регистр/формы, которые нормализация не тронула (спорное).
+    en_case_rows = collect_en_case_review(all_vocab, terms, translations)
+    en_case_report_path = write_en_case_review_report(en_case_rows)
+    print(f"  ✓ отчёт: {en_case_report_path}")
 
     print("\n=== EN-перевод changelog.js ===")
     translate_changelog(SCRIPT_DIR / "changelog.js", WARN, args.force_changelog)
@@ -3575,6 +3768,10 @@ if __name__ == '__main__':
     if usage_after is not None:
         delta = f" (Δ {usage_after - usage_before:+,})" if usage_before is not None else ""
         print(f"\nDeepL /usage после прогона: {usage_after:,}/{_lim:,} символов{delta}")
+
+    if en_case_rows:
+        print(f"\n⚠ регистр и формы: {len(en_case_rows)} записей на ручной разбор "
+              f"— reports/en_case_review.md")
 
     if WARN:
         print(f"\n⚠ Предупреждения ({len(WARN)}):")

@@ -1,0 +1,392 @@
+{
+  "_meta": {
+    "source": "manual",
+    "date": "2026-08-30",
+    "note": "Ручные английские переводы для TERMS и SOUNDS. Эти два списка автопереводу не подлежат — вызовы translate_field_to_english для них удаляются. Значения ниже перезаписи не подлежат. | 05.09.2026: в каждую запись добавлено поле de (TERMS — term, SOUNDS — combo) для сверки переезда id.",
+    "conventions": [
+      "Немецкие грамматические термины (Nominativ, Akkusativ, Dativ, Modalverben, W-Fragen) в английском тексте сохраняются по-немецки — так же, как они сохранены в русском.",
+      "Немецкие примеры внутри note не переводятся ни при каких условиях.",
+      "pronunciationEn — это IPA, а не перевод кириллической транскрипции."
+    ]
+  },
+  "TERMS": {
+    "t0001": {
+      "de": "der Aussagesatz",
+      "en": "declarative sentence",
+      "noteEn": "Subj. + Verb + ... | Ich lerne Deutsch."
+    },
+    "t0002": {
+      "de": "der Fragesatz",
+      "en": "interrogative sentence",
+      "noteEn": "W-Frage: W-Wort + Verb | Ja/Nein: Verb + Subj."
+    },
+    "t0003": {
+      "de": "das Präteritum",
+      "en": "simple past tense",
+      "noteEn": "war, hatte — mostly written language, and sein/haben/Modalverben"
+    },
+    "t0004": {
+      "de": "das Präsens",
+      "en": "present tense",
+      "noteEn": "the main spoken form"
+    },
+    "t0005": {
+      "de": "das Subjekt",
+      "en": "subject",
+      "noteEn": "answers Wer? / Was? (Nominativ)"
+    },
+    "t0006": {
+      "de": "das Objekt",
+      "en": "object",
+      "noteEn": "Akkusativ or Dativ"
+    },
+    "t0007": {
+      "de": "der Nominativ",
+      "en": "nominative case",
+      "noteEn": "Wer? Was?"
+    },
+    "t0008": {
+      "de": "der Akkusativ",
+      "en": "accusative case",
+      "noteEn": "Wen? Was?"
+    },
+    "t0009": {
+      "de": "der Dativ",
+      "en": "dative case",
+      "noteEn": "Wem?"
+    },
+    "t0010": {
+      "de": "der Singular",
+      "en": "singular",
+      "noteEn": "abbr. Sg"
+    },
+    "t0011": {
+      "de": "der Plural",
+      "en": "plural",
+      "noteEn": "abbr. Pl"
+    },
+    "t0012": {
+      "de": "das Verb",
+      "en": "verb"
+    },
+    "t0013": {
+      "de": "regelmäßig",
+      "en": "regular verb",
+      "noteEn": "machen, kaufen..."
+    },
+    "t0014": {
+      "de": "unregelmäßig",
+      "en": "irregular verb",
+      "noteEn": "sein, haben, fahren..."
+    },
+    "t0015": {
+      "de": "unbestimmt",
+      "en": "indefinite",
+      "noteEn": "indefinite article (ein/eine)"
+    },
+    "t0016": {
+      "de": "das Partizip II",
+      "en": "past participle",
+      "noteEn": "gemacht, geöffnet..."
+    },
+    "t0017": {
+      "de": "die W-Fragen",
+      "en": "question words",
+      "noteEn": "Wer? Was? Wo? Wann?..."
+    },
+    "t0018": {
+      "de": "die trennbaren Verben",
+      "en": "separable verbs",
+      "noteEn": "aufstehen, einladen..."
+    },
+    "t0019": {
+      "de": "mit",
+      "en": "Dativ",
+      "noteEn": "with (together)"
+    },
+    "t0020": {
+      "de": "bei",
+      "en": "Dativ",
+      "noteEn": "at / near (inanimate)"
+    },
+    "t0021": {
+      "de": "beim",
+      "en": "Dativ",
+      "noteEn": "bei + dem; at, by, during"
+    },
+    "t0022": {
+      "de": "am",
+      "en": "Dativ",
+      "noteEn": "for days"
+    },
+    "t0023": {
+      "de": "um",
+      "en": "at",
+      "noteEn": "for clock times"
+    },
+    "t0024": {
+      "de": "vor",
+      "en": "before / in front of",
+      "noteEn": "Dativ/Akk"
+    },
+    "t0025": {
+      "de": "von … bis (zum)",
+      "en": "from … to"
+    },
+    "t0026": {
+      "de": "Wer?",
+      "en": "Who?",
+      "noteEn": "Wer ist das? — Who is that?"
+    },
+    "t0027": {
+      "de": "Was?",
+      "en": "What?",
+      "noteEn": "Was machst du? — What are you doing?"
+    },
+    "t0028": {
+      "de": "Wo?",
+      "en": "Where?",
+      "noteEn": "static (location)"
+    },
+    "t0029": {
+      "de": "Woher?",
+      "en": "Where from?",
+      "noteEn": "Woher kommst du?"
+    },
+    "t0030": {
+      "de": "Wohin?",
+      "en": "Where to?",
+      "noteEn": "movement (direction)"
+    },
+    "t0031": {
+      "de": "Wann?",
+      "en": "When?",
+      "noteEn": "Wann beginnt der Kurs?"
+    },
+    "t0032": {
+      "de": "Warum?",
+      "en": "Why?"
+    },
+    "t0033": {
+      "de": "Wie?",
+      "en": "How?",
+      "noteEn": "Wie heißen Sie?"
+    },
+    "t0034": {
+      "de": "Wie viel?",
+      "en": "How much?",
+      "noteEn": "Wie viel kostet das?"
+    },
+    "t0035": {
+      "de": "der Hauptsatz",
+      "en": "main clause",
+      "noteEn": "Subj. + Verb + ... | Ich lerne Deutsch."
+    },
+    "t0036": {
+      "de": "der Nebensatz",
+      "en": "subordinate clause",
+      "noteEn": "the verb goes to the end | weil, dass, wenn..."
+    },
+    "t0037": {
+      "de": "weil",
+      "en": "because",
+      "noteEn": "subordinating conjunction → verb at the end of the Nebensatz"
+    },
+    "t0038": {
+      "de": "als",
+      "en": "as / when",
+      "noteEn": "als in a Nebensatz — a single event in the past (Als ich Kind war...) | als in comparison — than (größer als)"
+    },
+    "t0039": {
+      "de": "ab",
+      "en": "from / starting from",
+      "noteEn": "ab + Dativ: ab Montag, ab 8 Uhr; also a prefix (abfahren)"
+    },
+    "t0040": {
+      "de": "Wie lange?",
+      "en": "How long?"
+    },
+    "t0041": {
+      "de": "Mit wem?",
+      "en": "With whom?"
+    },
+    "t0042": {
+      "de": "Wie oft?",
+      "en": "How often?"
+    },
+    "t0043": {
+      "de": "Wie viele?",
+      "en": "How many? (countable)",
+      "noteEn": "for countable nouns, unlike Wie viel? (t0034)"
+    },
+    "t0044": {
+      "de": "Welche?",
+      "en": "Which?"
+    },
+    "t0045": {
+      "de": "länger als",
+      "en": "longer than"
+    },
+    "t0046": {
+      "de": "Komparativ",
+      "en": "comparative (grammatical term)"
+    },
+    "t0047": {
+      "de": "durch",
+      "en": "through"
+    },
+    "t0048": {
+      "de": "gegenüber",
+      "en": "opposite"
+    },
+    "t0049": {
+      "de": "gegen",
+      "en": "against"
+    },
+    "t0050": {
+      "de": "neben",
+      "en": "next to"
+    },
+    "t0051": {
+      "de": "Haupt-",
+      "en": "main- (prefix, not a standalone word)",
+      "noteEn": "a prefix; used only inside compound words"
+    },
+    "t0052": {
+      "de": "Wovon?",
+      "en": "About what?"
+    },
+    "t0053": {
+      "de": "entgegen",
+      "en": "towards / against (+ Dativ)"
+    },
+    "t0054": {
+      "de": "obwohl",
+      "en": "although"
+    },
+    "t0055": {
+      "de": "per",
+      "en": "per / by means of",
+      "noteEn": "per + Akkusativ, no article: per Überweisung, per Mail"
+    },
+    "t0056": {
+      "de": "wegen",
+      "en": "because of",
+      "noteEn": "+ Genitiv: wegen des Wetters | colloquially often + Dativ"
+    },
+    "t0057": {
+      "de": "trotzdem",
+      "en": "nevertheless",
+      "noteEn": "a connecting adverb - triggers inversion: Trotzdem gehe ich."
+    },
+    "t0058": {
+      "de": "deswegen",
+      "en": "therefore",
+      "noteEn": "a connecting adverb - triggers inversion: Deswegen bleibe ich."
+    }
+  },
+  "SOUNDS": {
+    "s0001": {
+      "de": "ei, ai",
+      "comboEn": "ei, ai",
+      "pronunciationEn": "[aɪ̯]",
+      "exampleEn": "ein, der Mai"
+    },
+    "s0002": {
+      "de": "au",
+      "comboEn": "au",
+      "pronunciationEn": "[aʊ̯]",
+      "exampleEn": "das Auto"
+    },
+    "s0003": {
+      "de": "ie",
+      "comboEn": "ie",
+      "pronunciationEn": "[iː]",
+      "exampleEn": "sieben"
+    },
+    "s0004": {
+      "de": "eu, äu",
+      "comboEn": "eu, äu",
+      "pronunciationEn": "[ɔɪ̯]",
+      "exampleEn": "neun, heute, die Bäume (Plural)"
+    },
+    "s0005": {
+      "de": "ö",
+      "comboEn": "ö",
+      "pronunciationEn": "[øː] long / [œ] short",
+      "exampleEn": "zwölf, hören"
+    },
+    "s0006": {
+      "de": "ü",
+      "comboEn": "ü",
+      "pronunciationEn": "[yː] long / [ʏ] short",
+      "exampleEn": "fünf, die Küche"
+    },
+    "s0007": {
+      "de": "ä",
+      "comboEn": "ä",
+      "pronunciationEn": "[ɛː] long / [ɛ] short",
+      "exampleEn": "der Käse"
+    },
+    "s0008": {
+      "de": "Sp- (начало слова)",
+      "comboEn": "Sp- (word-initial)",
+      "pronunciationEn": "[ʃp]",
+      "exampleEn": "sprechen → [ˈʃprɛçən]"
+    },
+    "s0009": {
+      "de": "St- (начало слова)",
+      "comboEn": "St- (word-initial)",
+      "pronunciationEn": "[ʃt]",
+      "exampleEn": "Stuhl → [ʃtuːl]"
+    },
+    "s0010": {
+      "de": "Sch",
+      "comboEn": "Sch",
+      "pronunciationEn": "[ʃ]",
+      "exampleEn": "die Schule"
+    },
+    "s0011": {
+      "de": "Tsch",
+      "comboEn": "Tsch",
+      "pronunciationEn": "[t͡ʃ]",
+      "exampleEn": "Tschüss!, deutsch"
+    },
+    "s0012": {
+      "de": "Ch после a, o, u, au",
+      "comboEn": "Ch after a, o, u, au",
+      "pronunciationEn": "[x] — ach-Laut",
+      "exampleEn": "machen, doch, Buch, auch"
+    },
+    "s0013": {
+      "de": "Ch после e, i, ei, ä, ö, ü",
+      "comboEn": "Ch after e, i, ei, ä, ö, ü",
+      "pronunciationEn": "[ç] — ich-Laut",
+      "exampleEn": "ich, nicht, sprechen, Küche"
+    },
+    "s0014": {
+      "de": "Ch в начале слова (греч./лат.)",
+      "comboEn": "Ch word-initial (Greek/Latin origin)",
+      "pronunciationEn": "[k]",
+      "exampleEn": "Charakter, Chor, Chaos ⚠ Chemie → [ç]!"
+    },
+    "s0015": {
+      "de": "v, f, ph",
+      "comboEn": "v, f, ph",
+      "pronunciationEn": "[f]",
+      "exampleEn": "der Vater, die Firma, das Alphabet"
+    },
+    "s0016": {
+      "de": "v",
+      "comboEn": "v",
+      "pronunciationEn": "[v]",
+      "exampleEn": "in loanwords (e.g. Vase, Video)"
+    },
+    "s0017": {
+      "de": "s",
+      "comboEn": "s",
+      "pronunciationEn": "[z]",
+      "exampleEn": "word-initially before a vowel it is [z] (Sonne); word-finally or before a consonant it is [s]"
+    }
+  }
+}

@@ -1,0 +1,49 @@
+{
+  "_meta": {
+    "source": "manual",
+    "batch": "rules 3/7 — r0056 + правила с кириллицей в examples",
+    "date": "2026-08-25",
+    "note": "«то, на что направлено действие» передано английским the direct object — в английском для этого есть точный термин, описательная формулировка была бы слабее."
+  },
+  "RULES": {
+    "r0056": {
+      "title": "Винительный (Akkusativ) или Дательный (Dativ) падеж для возвратного местоимения (Reflexivpronomen)",
+      "source": "manual",
+      "titleEn": "Akkusativ or Dativ for the Reflexivpronomen",
+      "content_md_en": "### How to check whether the Reflexivpronomen takes the Akkusativ or the Dativ\n\n1. Find the verb.\n2. Find what the action is aimed at.\n3. Cross out everything that stands after a preposition (für, über, auf, zum, mit, in – any of them).\n4. Is anything left that the verb's action is aimed at directly?\n   Yes → the reflexive pronoun goes in the Dativ.\n   No → the reflexive pronoun goes in the Akkusativ.\n\n### Why do we cross out the noun after a preposition?\nA noun after a preposition belongs to that preposition, not to what the verb's action is aimed at directly. That is why it has no bearing on the case of the reflexive pronoun.\nzum Geburtstag → when?\nmit den Verkäufern → with whom?\nin kleine Läden → where to?\nfür ein Gericht → what for?\n\n### How to handle a subordinate clause (Nebensatz)\nIf the subordinate clause fills the slot of what the action is aimed at, it counts when you choose the case.\nwas / wer / ob / dass → the clause itself is what the action is aimed at → the reflexive pronoun goes in the Dativ\nweil / wenn / obwohl → this is an adverbial → cross it out\n\nExceptions: wo, wie – these depend on the context.\n\n### How to work through the exceptions: wo and wie\nwo and wie can operate in two modes – the question you put to the subordinate clause decides which one.\n\nOBJECT mode (question “What?”) → Dativ\nIf the clause answers the question “What?”, it works like dass – that is, it stands in for the direct object.\nIch schaue mir an, wie du kochst. – I watch [what?] how you cook.\nIch merke mir, wo du wohnst. – I note [what?] where you live.\nLogic: it is an object → the reflexive pronoun is strictly in the Dativ (mir).\n\nADVERBIAL mode (questions “Where?”, “How?”) → Akkusativ\nIf the clause is mere decoration – an adverbial of place or manner rather than an object of the verb – it is crossed out under the general rule (see above).\nIch wasche mich, wo es Wasser gibt. – I wash [where?] where there is water.\nIch verhalte mich, wie du gesagt hast. – I behave [how?] the way you said.\nLogic: there is no noun serving as the direct object, the clause answers “where/how” → cross it out → the reflexive pronoun goes in the Akkusativ (mich).",
+      "examplesEn": "Ich kaufe mir ein Auto. – mir is in the Dativ, because the Akkusativ slot is already taken by “ein Auto” (something is left that the action is aimed at).\nIch wasche mich. – mich is in the Akkusativ, there is no other object of the action, the verb is purely reflexive.\nIch wünsche mir, dass du kommst. – the dass-clause stands in the object slot → mir in the Dativ.\nIch freue mich, weil du kommst. – the weil-clause is crossed out as an adverbial → a plain Akkusativ is left (mich).",
+      "noteEn": "Some verbs do not take part in this decision at all – they demand the Dativ outright, with no alternatives and no direct object of the action (helfen, gefallen, danken and the like). The rule simply does not apply to them."
+    },
+    "r0027": {
+      "title": "Verben mit Dativ und Akkusativ",
+      "source": "manual",
+      "titleEn": "Verben mit Dativ und Akkusativ",
+      "content_md_en": "### Verben mit Dativ und Akkusativ – verbs with two objects\n\nSome verbs are followed by TWO objects at once: to whom (Dativ) + what (Akkusativ).\n\n**Role** | **Case** | **Question** | **Articles (m / f / n / Pl)**\nPerson 1 | Nominativ | Wer? | der · die · das · die / ein · eine · ein · –\nPerson 2 | Dativ | Wem? | dem · der · dem · den / einem · einer · einem · –\nObjekt | Akkusativ | Was? | den · die · das · die / einen · eine · ein · –\n\n💡 Order: Subject → Verb → **Dativ** → **Akkusativ** (to whom → what)\n💡 The indefinite article has no plural form (the noun simply goes without one)",
+      "examplesEn": "**Example** | **Translation**||\nIch gebe dem Mann das Buch. | I give the man the book.||\nEr schenkt der Frau einen Ring. | He gives the woman a ring.||\nWir zeigen den Kindern die Stadt. | We show the children the city.||",
+      "noteEn": "Typical verbs: geben, schenken, zeigen, bringen, schicken, kaufen, erklären, empfehlen, leihen, schreiben, wünschen, anbieten. Check: ask two questions – “to whom?” (Wem? → Dativ) and “what?” (Was? → Akkusativ). Order with two nouns: Dativ before Akkusativ."
+    },
+    "r0055": {
+      "title": "s = es – разговорное стяжение",
+      "source": "manual",
+      "titleEn": "'s = es – colloquial contraction",
+      "content_md_en": "### 's = es (colloquial contraction)\nIn casual speech the pronoun es often merges with the preceding word through an apostrophe:\nWie geht's? = Wie geht es? (How are you?)\nWenn's regnet, bleibe ich zu Hause. = Wenn es regnet... (If it rains...)\nGibt's noch Kaffee? = Gibt es noch Kaffee?\n💡 It works after verbs (geht's, gibt's) and after conjunctions (wenn's, dass') – 's is always = es",
+      "examplesEn": "Wie geht's? – How are you?\nWenn's regnet, bleibe ich zu Hause. – If it rains, I'll stay at home.\nGibt's noch Kaffee? – Is there any coffee left?"
+    },
+    "r0058": {
+      "title": "Infinitiv mit zu",
+      "source": "manual",
+      "titleEn": "Infinitiv mit zu",
+      "content_md_en": "### Infinitiv mit zu\n\nThe pattern \"..., zu + Infinitiv\" is a compressed replacement for a dass-clause, used when the subject is the same in both parts. The second subject is not repeated, and the main verb moves to the end with zu in front of it.\n\nIch finde es wichtig, dass ich den Garten sauber halte. → Ich finde es wichtig, den Garten sauber zu halten.\n\nTypical verbs and expressions that take a zu-Infinitiv:\nes ist wichtig / es ist möglich / es ist nötig (impersonal constructions)\nvergessen (to forget), versuchen (to try), hoffen (to hope), anfangen (to begin), aufhören (to stop), vorhaben (to plan), sich freuen (to be glad) and so on\n\n### With separable verbs zu goes BETWEEN the prefix and the stem\nNot \"zu abschließen\", but abzuschließen – prefix + zu + stem, written as one word.\nab + zu + schließen → abzuschließen\nan + zu + rufen → anzurufen\n\n### The difference from constructions WITHOUT zu\nzu is not used:\nafter modal verbs (können, müssen, wollen...): Ich kann kommen. (not zu kommen)\nin the Futur with werden: Ich werde kommen.\nafter lassen/sehen/hören + Infinitiv: Ich lasse ihn kommen. / Ich sehe ihn kommen.",
+      "examplesEn": "Ich finde es wichtig, den Garten sauber zu halten. – I think it is important to keep the garden clean.\nVergessen Sie nicht, die Haustür abzuschließen. – Do not forget to lock the front door.\nSie hat vor, nächstes Jahr umzuziehen. – She is planning to move next year.\nEr hört auf, Süßigkeiten zu essen. – He is giving up sweets.",
+      "noteEn": "Check: if the phrase can be unpacked into a full dass-clause and the subject there would be THE SAME as in the main clause – compress it into a zu-Infinitiv and do not repeat the second subject. If the subjects differ, a zu-Infinitiv is impossible and you need a full dass-Satz (or damit, if it expresses a purpose).\n\nzu + Infinitiv is a sentence compressed from a dass-clause, used when the subject (Subjekt) is one and the same. With different subjects zu + Infinitiv is impossible, you need a full clause with dass or damit."
+    },
+    "r0059": {
+      "title": "sondern – \"не X, а Y\"",
+      "source": "manual",
+      "titleEn": "sondern – \"not X, but Y\"",
+      "content_md_en": "### sondern – \"not X, but Y\"\n\nsondern is used only after a negation (kein/nicht), when one statement is rejected and the correct one is given instead.\n\nIch kaufe kein Brot, sondern Kuchen. – I am not buying bread, but cake.\n\n### What can be negated with sondern\nAny part of the sentence can be negated and replaced, not just a noun:\nNoun: kein Brot, sondern Kuchen\nAdjective: nicht schön, sondern hässlich\nAdverb: nicht heute, sondern morgen\nVerb/action: Er singt nicht, sondern tanzt. – He is not singing, he is dancing.\n\n### Word order\nsondern is a coordinating conjunction (like aber/und/oder), position 0, and the word order after it does not change.\n\n⚠ Do not confuse it with aber: aber is a plain \"but\" (a contrast with no negation in the first part), while sondern must follow nicht/kein and replaces what was rejected with what is correct.",
+      "examplesEn": "Ich kaufe kein Brot, sondern Kuchen. – I am not buying bread, but cake.\nDas ist nicht mein Buch, sondern deins. – That is not my book, but yours.\nEr singt nicht, sondern tanzt. – He is not singing, he is dancing.\nSie kommt nicht heute, sondern morgen. – She is coming not today, but tomorrow.",
+      "noteEn": "sondern – only after a negation (kein/nicht); it replaces what is negated with the correct version. It can negate and replace any part of speech – noun, adjective, adverb, verb – not only nouns."
+    }
+  }
+}

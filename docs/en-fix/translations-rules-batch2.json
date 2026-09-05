@@ -1,0 +1,63 @@
+{
+  "_meta": {
+    "source": "manual",
+    "batch": "rules 2/7 — смешанные, заголовки, кириллица",
+    "date": "2026-08-25",
+    "note": "В r0021 и r0039 русскоязычный мостик заменён английским, а не переведён — см. сопроводительное сообщение."
+  },
+  "RULES": {
+    "r0001": {
+      "title": "Personalpronomen - три падежа",
+      "source": "manual",
+      "titleEn": "Personalpronomen – the three cases",
+      "content_md_en": "### Personalpronomen – the three cases\n**Nominativ (Wer?)** | **Akkusativ (Wen?)** | **Dativ (Wem?)** |\nich | mich | mir |\ndu | dich | dir |\ner | ihn | ihm |\nes | es | ihm |\nsie (she) | sie | ihr |\nwir | uns | uns |\nihr (you, group) | euch | euch |\nsie (they) | sie | ihnen |\nSie (formal) | Sie | Ihnen |\n⚠ es in the Dativ is **ihm**, not ihr | **ihr** = “to her” (Dativ of sie – she) and “you” (group, Nominativ) – two completely different things!"
+    },
+    "r0002": {
+      "title": "Reflexivpronomen - возвратные местоимения (себя / себе)",
+      "source": "manual",
+      "titleEn": "Reflexivpronomen – reflexive pronouns (Akkusativ vs Dativ)",
+      "content_md_en": "### Reflexivpronomen – reflexive pronouns (Akkusativ vs Dativ)\n**Person** | **Akkusativ** | **Dativ** |\nich | mich | mir |\ndu | dich | dir |\ner/sie/es | sich | sich |\nwir | uns | uns |\nihr | euch | euch |\nsie/Sie | sich | sich |\n💡 ich/du/wir/ihr – identical to the Personalpronomen | **er/sie/es** and **sie/Sie** → always **sich**\nAkk vs Dat: **Ich wasche mich** (I wash myself – the reflexive pronoun is the direct object, Akk) | **Ich wasche mir die Hände** (I wash my hands – die Hände is the direct object, mir = to/for myself, Dat)"
+    },
+    "r0003": {
+      "title": "Запрет через man - нельзя",
+      "source": "manual",
+      "titleEn": "Prohibition with man – not allowed",
+      "content_md_en": "Expressing a prohibition with **man** (= “you may not” / “it is not allowed”):\n**Structure** | **Example** | **Translation** |\nMan darf nicht + Verb | Man darf nicht grillen. | Barbecuing is not allowed here. |\nMan darf kein + Nomen | Man darf keine Haustiere haben. | Keeping pets is not allowed. |\n💡 **nicht** – negates the action | **kein/keine** – negates the noun💡 **man** – impersonal pronoun (= “not allowed” – with no specific person named)"
+    },
+    "r0021": {
+      "title": "Суффикс -lich – образование прилагательных",
+      "source": "manual",
+      "titleEn": "The suffix -lich – forming adjectives",
+      "content_md_en": "### The suffix **-lich** – forming adjectives\nThe suffix **-lich** turns a noun into an adjective meaning “relating to / like”. It lines up neatly with English **-ly**: friend → friendly, day → daily, month → monthly.\n**Noun** | **+ -lich** | **Meaning** |\ndas Herz (heart) | herz**lich** | cordial, warm |\nder Tag (day) | täg**lich** | daily |\nder Freund (friend) | freund**lich** | friendly |\nder Mensch (human being) | mensch**lich** | human |\nder Monat (month) | monat**lich** | monthly |\nder Beruf (profession) | beruf**lich** | professional |\n💡 The stem vowel often takes an Umlaut: Tag → t**ä**glich, Nacht → n**ä**chtlich"
+    },
+    "r0031": {
+      "title": "Wo? Präposition + Dativ",
+      "source": "manual",
+      "titleEn": "Wo? Präposition + Dativ",
+      "content_md_en": "### Wo? Präposition + Dativ\n\nAfter the question **Wo?** (where?) prepositions of place take the **Dativ**.\n\n| Preposition | Meaning | Example |\n|---------|----------|--------|\n| auf | on (horizontal) | Das Buch liegt **auf dem Tisch**. |\n| unter | under | Die Katze sitzt **unter dem Stuhl**. |\n| in | in | Das Heft ist **in der Tasche**. |\n| an | at / on (vertical) | Das Bild hängt **an der Wand**. |\n| über | above | Die Lampe hängt **über dem Tisch**. |\n| vor | in front of | Das Fahrrad steht **vor der Tür**. |\n| hinter | behind | Der Schrank steht **hinter der Tür**. |\n| neben | next to | Die Pflanze steht **neben dem Fenster**. |\n| zwischen | between | Der Tisch steht **zwischen den Pflanzen**. |\n\n💡 Wo? → always **Dativ**\n💡 Wohin? → always **Akkusativ** (where we put / place something)",
+      "noteEn": "Wo? = where something stands / lies / hangs → Dativ | Wohin? = where we put or place it → Akkusativ | an/in + dem = am/im"
+    },
+    "r0039": {
+      "title": "Одежда: anhaben / tragen / angezogen sein (не «sein in»)",
+      "source": "manual",
+      "titleEn": "Clothing: anhaben / tragen / angezogen sein (not “sein in”)",
+      "content_md_en": "“To be wearing …” is NOT expressed as *Er ist in einer Jacke* in German – that is a word-for-word carry-over from English “he is in a jacket”. Use one of these three:\n**Construction** | **Example** |\netw. **anhaben** (an … haben) | Er hat bunte Shorts an. |\netw. **tragen** | Er trägt bunte Shorts. |\n**angezogen sein** (how someone is dressed) | Er ist bunt angezogen. |\n⚠ *Er ist in …* – Germans simply do not say this.",
+      "noteEn": "! Do not carry the English “he is in …” over into German: not Er ist in ..., but Er hat ... an / Er trägt ... / Er ist ... angezogen. anhaben is separable (hat ... an)."
+    },
+    "r0043": {
+      "title": "Konjunktionen weil/dass/wenn – grammar/wordorder",
+      "source": "manual",
+      "titleEn": "Konjunktionen weil/dass/wenn",
+      "content_md_en": "Three common subordinating conjunctions – the question tells you which one to pick:\n**Question** | **Conjunction** | **Meaning** | **Example** |\nWarum? | **weil** | because (reason) | Ich gehe zum Bahnhof, weil ich meinen Freund abholen will. |\nWas? | **dass** | that (content) | Ich glaube, dass mein Freund heute kommt. |\nWann? | **wenn** | when / if | Mein Freund ruft an, wenn er am Bahnhof ankommt. |\n💡 With all three the verb goes to the **end** of the subordinate clause (see the rule on verb order in the Nebensatz).\n⚠ A comma goes before the conjunction.\n💡 **wenn** often pairs up with **dann** in the main clause: Wenn das Wetter gut ist, dann gehen wir spazieren. (If/when …, then …)\n⚠ Do not mix up **wenn** (conjunction: if / when) and **wann** (question word: when?): Ich weiß nicht, wann er kommt.\n💡 wenn – “when” (repeated action) and “if” (condition). A one-off “when” in the past is als.",
+      "noteEn": "weil – reason (Warum?), dass – content (Was?), wenn – time/condition (Wann?). Verb to the end. wenn ↔ dann in the main clause. Do not confuse wenn (conjunction) with wann (question word). Als is the one-off “when” in the past."
+    },
+    "r0057": {
+      "title": "sowohl...als auch / weder...noch – парные союзы",
+      "source": "manual",
+      "titleEn": "sowohl...als auch / weder...noch – paired conjunctions",
+      "content_md_en": "### Paired conjunctions: sowohl...als auch / weder...noch\n\n**sowohl ... als auch** – “both ... and ...” (both elements hold equally)\nSie spricht sowohl Deutsch als auch Englisch. – She speaks both German and English.\n\n**weder ... noch** – “neither ... nor ...” (both elements are negated at once)\nEr trinkt weder Kaffee noch Tee. – He drinks neither coffee nor tea.\n\n### Word order\nBoth pairs behave like coordinating conjunctions (aber/und/oder) – the word order after them does not change, and the verb stays in second position in the sentence as a whole:\nSowohl mein Bruder als auch meine Schwester wohnen in Berlin. – subject (mein Bruder), verb in second position (wohnen) exactly as usual.\n\n⚠ weder...noch: the verb itself stays affirmative – the negation is carried by the conjunction, so no separate nicht/kein is needed.",
+      "examplesEn": "Sowohl mein Bruder als auch meine Schwester wohnen in Berlin. – Both my brother and my sister live in Berlin.\nSie spricht sowohl Deutsch als auch Englisch. – She speaks both German and English.\nEr trinkt weder Kaffee noch Tee. – He drinks neither coffee nor tea.\nWeder meine Mutter noch mein Vater kochen gern. – Neither my mother nor my father likes cooking.",
+      "noteEn": "sowohl...als auch marks the two elements as equally weighted (not a plain list with und, but an emphasis that both hold to the same degree); weder...noch follows the same logic in the negative."
+    }
+  }
+}

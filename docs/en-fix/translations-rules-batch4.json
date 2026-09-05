@@ -1,0 +1,88 @@
+{
+  "_meta": {
+    "source": "manual",
+    "batch": "rules 4/4 — правила с отсылками к русскому языку",
+    "date": "2026-08-27",
+    "note": "Во всех этих правилах опорой служил русский язык. Мостики заменены английскими, а не переведены: -er/-est для степеней сравнения, I/me/him для падежей, 'supposed to' vs 'have to' для sollen/müssen, 'ago' для vor, притяжательное 's для Genitiv, 'X-year-old' для -jährig. Отклонения перечислены в сопроводительном сообщении."
+  },
+  "RULES": {
+    "r0004": {
+      "title": "Perfekt: sein или haben?",
+      "source": "manual",
+      "titleEn": "sein or haben?",
+      "content_md_en": "**Verb** | **Used with** | **Example** |\n**sein** | adjectives, professions, nationalities | Ich **bin** Arzt. / Er **ist** müde. |\n**haben** | nouns (something you have) | Ich **habe** Hunger. / Er **hat** Zeit. |\n💡 Test: followed by an **adjective** → sein  |  followed by a **noun** → haben. ⚠ English says “I am hungry”, but German says Ich **habe** Hunger – the noun decides, not the English wording."
+    },
+    "r0018": {
+      "title": "sollen vs müssen",
+      "source": "manual",
+      "titleEn": "sollen vs müssen",
+      "content_md_en": "**** | **sollen** | **müssen** |\nSource | external – someone said so / it is the rule | internal / objective – you decided yourself, or there is no other way |\nExample | Du **sollst** nicht rauchen(you are being told not to) | Ich **muss** schlafen(you are tired yourself) |\nMore | Ich **soll** Milch kaufen(mum asked me to) | Ich **muss** Milch kaufen(we ran out at home) |\n💡 Roughly: **sollen** – “you are supposed to” | **müssen** – “you have to”"
+    },
+    "r0024": {
+      "title": "Падежи: роль в предложении",
+      "source": "manual",
+      "titleEn": "Cases: their role in the sentence",
+      "content_md_en": "### Cases: their role in the sentence\n\n**Case** | **Role** | **Question** | **Example**\nNominativ | the subject – who performs the action | Wer? | **Ich** lerne Deutsch.\nAkkusativ | the direct object – who or what the action affects | Wen? Was? | Ich kaufe **einen Kaffee**.\nDativ | the indirect object – to whom, for whom, where | Wem? | Ich gebe **dir** das Buch.\n\n💡 **Nominativ** – there is always exactly one per sentence, the “doer”. English keeps this distinction only in pronouns: **I** / he / we\n💡 **Akkusativ** – the direct object, answers “what / whom?”. English pronouns: **me** / him / us\n💡 **Dativ** – the indirect object, answers “to whom?”, and is also used after the prepositions mit, bei, in (Wo?)",
+      "noteEn": "Nominativ – always the subject, never changes after the article. Akkusativ – only the masculine changes: der→den, ein→einen. Dativ – everything changes: dem/der/dem, einem/einer/einem. The prepositions mit, bei, nach, von, zu, aus – always Dativ. The prepositions durch, für, gegen, ohne, um – always Akkusativ."
+    },
+    "r0025": {
+      "title": "Verben mit Dativ",
+      "source": "manual",
+      "titleEn": "Verben mit Dativ",
+      "content_md_en": "### Verben mit Dativ – verbs that are always followed by the Dativ\n\nAfter certain verbs the object is **always in the Dativ** (never the Akkusativ!).\n\n**Verb** | **Example** | **Translation**\nantworten | Ich antworte **dir**. | I answer you.\ndanken | Ich danke **dem Team**. | I thank the team.\ngefallen | Das gefällt **mir**. | I like that.\ngehören | Das gehört **mir**. | That belongs to me.\ngratulieren | Ich gratuliere **dir**. | I congratulate you.\nhelfen | Er hilft **der Kundin**. | He helps the customer.\nschmecken | Das schmeckt **mir**. | That tastes good to me.",
+      "noteEn": "Learn the list by heart: antworten, danken, gefallen, gehören, gratulieren, helfen, schmecken – the Dativ always follows. Test: ask the question “to whom?” (Wem?). Note that several of these take a direct object in English (I thank you, I help her, I congratulate you) – German still uses the Dativ."
+    },
+    "r0035": {
+      "title": "Modalverben: Bedeutung (will / muss / darf / kann / möchte)",
+      "source": "manual",
+      "titleEn": "Modalverben: Bedeutung (will / muss / darf / kann / möchte)",
+      "content_md_en": "**Example** | **Meaning** |\nIch **will** arbeiten. | wollen – I want to (a firm intention) |\nIch **muss** arbeiten. | müssen – I must / I have to |\nIch **darf** arbeiten. | dürfen – I may / I am allowed to |\nIch **kann** arbeiten. | können – I can / I know how to |\nIch **möchte** arbeiten. | I would like to (polite, a form of mögen) |",
+      "noteEn": "möchte – the polite form of mögen\n\n💡 möglich is NOT a verb but an adjective, “possible”: Das ist möglich."
+    },
+    "r0036": {
+      "title": "Образование прилагательных возраста (Zahl+jährig=Х-летний)",
+      "source": "manual",
+      "titleEn": "Building age adjectives (Zahl+jährig = X-year-old)",
+      "content_md_en": "Zahl + **-jährig** = “X-year-old” (an adjective)\nacht + jährig → achtjährig – eight-year-old\nBeispiele: ein dreijähriges Kind, eine 18-jährige Frau\n💡 Written as one word; the number spelled out, or as a digit with a hyphen (8-jährig). The same goes for: -tägig (days), -stündig (hours), -monatig (months).",
+      "noteEn": "≠ jährlich (annually)"
+    },
+    "r0041": {
+      "title": "Komparativ (сравнительная степень)",
+      "source": "manual",
+      "titleEn": "Komparativ (comparative)",
+      "content_md_en": "**Komparativ** = “more / -er”. Formed with adjective + **-er**, exactly like English fast → faster. Comparison uses **als** (than).\n**Positiv** | **Komparativ** | **Example** |\nschnell | schneller | Er läuft schneller als ich. |\nklein | kleiner | Mein Zimmer ist kleiner als deins. |\nschön | schöner | Heute ist es schöner als gestern. |\n💡 Short adjectives with a / o / u often take an **Umlaut**: alt → älter, groß → größer, jung → jünger, kurz → kürzer, lang → länger, warm → wärmer.\n⚠ Irregular (learn by heart): gut → besser | viel → mehr | gern → lieber | hoch → höher | teuer → teurer | nah → näher",
+      "noteEn": "Comparison uses als. Umlaut on short a/o/u adjectives. Special forms: besser, mehr, lieber, höher, teurer. Unlike English, German has no “more + adjective” alternative – long adjectives take -er too: interessanter, not mehr interessant."
+    },
+    "r0042": {
+      "title": "Superlativ (превосходная степень)",
+      "source": "manual",
+      "titleEn": "Superlativ (superlative)",
+      "content_md_en": "**Superlativ** = “the most / -est”. The form depends on the position:\n**Position** | **Form** | **Example** |\nWith a verb / predicative | am …**sten** | Er läuft am schnellsten. |\nBefore a noun (with an article) | der/die/das …**ste(n)** | Das ist der schnellste Mann. |\n💡 With an article – NO am: die schnellsten Sportler (not “die am schnellsten”). With **am** the ending is always **-sten**.\n💡 Umlaut – whenever the Komparativ has one: kurz → kürzer → am kürzesten.\n💡 After **-t, -d, -s, -sch, -x, -z** an e is inserted → the ending becomes **-este(n)**: am härtesten, der kürzeste Weg, am heißesten.\n⚠ Irregular (same stems as in the Komparativ): gut → am besten | viel → am meisten | gern → am liebsten | hoch → am höchsten | teuer → am teuersten | groß → am größten (no -e-!)",
+      "noteEn": "With an article: der/die/das …ste – no am. Predicative: am …sten. After t/d/s/sch/x/z → -este(n). Special forms: am besten, am meisten, am liebsten, am größten (no -e-)."
+    },
+    "r0044": {
+      "title": "seit vs. vor – beide mit Dativ, unterschiedliche Bedeutung",
+      "source": "manual",
+      "titleEn": "seit vs. vor – beide mit Dativ, unterschiedliche Bedeutung",
+      "content_md_en": "### seit vs vor\n**seit** – the action started in the past and is **still going on** (Perfekt/Präsens). Example: Ich lerne **seit** zwei Jahren Deutsch.\n**vor** – simply states **how long ago** something happened; the action is over. Example: Ich habe **vor** zwei Jahren angefangen.\n💡 Test: if you can add “…and still am” → seit; if it is just “that was N ago” → vor. ⚠ English uses the present perfect here (“I have been learning for two years”), German uses the plain Präsens: Ich lerne seit zwei Jahren."
+    },
+    "r0045": {
+      "title": "Modalverb im Präteritum: konnten...",
+      "source": "manual",
+      "titleEn": "Modalverb im Präteritum: konnten...",
+      "content_md_en": "### Modalverb in the Präteritum\nThe modal verb (können, müssen, dürfen...) is conjugated in the Präteritum, and the main verb goes to the end of the sentence as an Infinitiv.\nExample: ..., damit sie besser Deutsch **sprechen konnten** = “...so that they could speak German better”.\n💡 wir/sie → **konnten**, ich/er/sie/es → **konnte**, du → **konntest**"
+    },
+    "r0047": {
+      "title": "Genitiv in Eigennamen: Kaufhaus des Westens",
+      "source": "manual",
+      "titleEn": "Genitiv in Eigennamen: Kaufhaus des Westens",
+      "content_md_en": "### Genitiv in compound names\nThe Genitiv answers the question “whose? of what?” and attaches to a masculine or neuter noun with the ending -s – much like the English of-phrase, or the possessive 's.\nder Westen → Genitiv → des Westens\nExample: Kaufhaus **des Westens** = “the department store [of what?] of the West”, just like das Auto **des** Mannes – the man's car."
+    },
+    "r0050": {
+      "title": "zuerst vs erst vs erste – разные слова, разный смысл",
+      "source": "manual",
+      "titleEn": "zuerst vs erst vs erste – three different words, three meanings",
+      "content_md_en": "### zuerst vs erst vs erste\n**zuerst** – first, first of all (the order in which things are done). Zuerst esse ich, dann arbeite ich.\n**erst** (adverb, no ending) – only, not until (something happens later or amounts to less than expected). Ich komme erst um 20 Uhr. / Er hat erst zwei Bücher gelesen.\n**erste/erster/erstes** (+ ending) – first (the ordinal number). mein erstes Auto\nIn short: zuerst = “first of all”, erst = “only / not until”, erste = “first” (in front of a noun)."
+    }
+  }
+}

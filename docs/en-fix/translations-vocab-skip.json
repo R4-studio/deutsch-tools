@@ -1,0 +1,1293 @@
+{
+  "_meta": {
+    "source": "manual",
+    "date": "2026-09-05",
+    "note": "Слова, которые арбитр на Haiku пометил skip либо детектор обратного перевода срезал ложно. Разобраны вручную в чате. Загружаются в translations.json['VOCAB'] как source: manual — автоперевод их больше не трогает. | 05.09.2026: ключи перевыставлены на актуальные id — 37 записей съехали после вставки новых слов в xlsx и применялись к чужим словам. В каждую запись добавлено поле de для сверки. | 05.09.2026, вторая волна: 90 правок значений по аудиту английского слоя (разделы C–G): непереведённые немецкие слова, не то значение многозначного, артефакты пивота RU→EN в altEn.",
+    "instructions_for_loader": [
+      "Ключи здесь — id из data.js, НО id меняются при вставке строк в xlsx. В каждой записи есть поле de: загрузчик обязан сверить его с item['de'] и пропустить запись с предупреждением, если не совпало.",
+      "Проставить source: 'manual'. Записи с этой пометкой не перезаписываются ни при каких флагах.",
+      "Поле altEn задано только там, где оно осмысленно; altEnSource для них тоже 'manual'.",
+      "Нормализацию (регистр, 'to ') НЕ применять — значения уже приведены к конвенциям: глаголы в форме 'to X', существительные со строчной."
+    ],
+    "rationale": [
+      "Wolke — арбитр побоялся IT-значения, но облачное хранилище по-немецки die Cloud, английское заимствование. Wolke — только облако в небе.",
+      "hierlassen — арбитр счёл нестандартным глаголом. Стандартный, есть в Duden: etwas hierlassen.",
+      "Haar — исчисляемость не меняет перевод.",
+      "adv0038/ph0032/p0014 — детектор обратного перевода срезал ложно: both→beides, free→Verfügbar, every→alle (то же слово либо синоним).",
+      "ph0032 Frei / Besetzt — это табличка на двери; английская пара Free / Occupied.",
+      "ph0081 altEn — машинный 'to eat in portions' мимо смысла (сленг про дозы), вручную 'to use in doses'."
+    ]
+  },
+  "VOCAB": {
+    "a0045": {
+      "de": "einfach",
+      "altEn": "easy",
+      "source": "manual",
+      "altEnSource": "manual"
+    },
+    "a0076": {
+      "de": "direkt",
+      "en": "direct",
+      "altEn": "directly",
+      "source": "manual",
+      "altEnSource": "manual"
+    },
+    "a0099": {
+      "de": "klassisch",
+      "en": "classic",
+      "source": "manual"
+    },
+    "a0108": {
+      "de": "weit",
+      "en": "wide",
+      "altEn": "loose",
+      "source": "manual",
+      "altEnSource": "manual"
+    },
+    "a0113": {
+      "de": "weiter",
+      "altEn": "more",
+      "source": "manual",
+      "altEnSource": "manual"
+    },
+    "a0127": {
+      "de": "doof",
+      "altEn": "stupid",
+      "source": "manual",
+      "altEnSource": "manual"
+    },
+    "a0145": {
+      "de": "sicher",
+      "en": "sure",
+      "source": "manual"
+    },
+    "a0193": {
+      "de": "bestimmt",
+      "en": "definitely",
+      "altEn": "certain",
+      "altEnSource": "manual",
+      "noteEn": "adverb: Das ist bestimmt richtig | adjective: bestimmte Produkte",
+      "source": "manual"
+    },
+    "a0203": {
+      "de": "mitversichert",
+      "en": "covered by the same policy",
+      "source": "manual"
+    },
+    "a0206": {
+      "de": "knapp",
+      "en": "tight",
+      "altEn": "barely enough",
+      "altEnSource": "manual",
+      "source": "manual"
+    },
+    "a0208": {
+      "de": "freiberuflich",
+      "altEn": "self-employed",
+      "source": "manual",
+      "altEnSource": "manual"
+    },
+    "a0211": {
+      "de": "folgend",
+      "en": "following",
+      "source": "manual"
+    },
+    "a0216": {
+      "de": "einmalig",
+      "en": "one-off",
+      "altEn": "one-time",
+      "altEnSource": "manual",
+      "source": "manual"
+    },
+    "a0226": {
+      "de": "fett",
+      "en": "fatty",
+      "source": "manual"
+    },
+    "a0227": {
+      "de": "gestresst",
+      "en": "stressed",
+      "source": "manual"
+    },
+    "a0228": {
+      "de": "verärgert",
+      "en": "annoyed",
+      "source": "manual"
+    },
+    "a0230": {
+      "de": "berufstätig",
+      "en": "employed",
+      "source": "manual"
+    },
+    "a0255": {
+      "de": "fremd",
+      "en": "foreign",
+      "source": "manual"
+    },
+    "a0261": {
+      "de": "böse",
+      "en": "angry",
+      "source": "manual"
+    },
+    "adv0021": {
+      "de": "nächste",
+      "en": "next",
+      "noteEn": "superlative of nah (near) | declines: nächste Woche (f) | nächsten Montag (m, Akk) | im nächsten Jahr (Dat) | see the rule on Adjektivdeklination",
+      "source": "manual",
+      "altEn": "nearest"
+    },
+    "adv0022": {
+      "de": "da",
+      "en": "here",
+      "source": "manual"
+    },
+    "adv0035": {
+      "de": "zu",
+      "en": "too",
+      "source": "manual"
+    },
+    "adv0038": {
+      "de": "beide",
+      "en": "both",
+      "source": "manual"
+    },
+    "adv0045": {
+      "de": "egal",
+      "en": "no matter",
+      "source": "manual"
+    },
+    "adv0049": {
+      "de": "dabei",
+      "en": "there",
+      "source": "manual"
+    },
+    "adv0085": {
+      "de": "lieber",
+      "altEn": "preferably",
+      "source": "manual",
+      "altEnSource": "manual"
+    },
+    "adv0104": {
+      "de": "los",
+      "en": "go on",
+      "source": "manual"
+    },
+    "adv0118": {
+      "de": "darauf",
+      "en": "on it",
+      "altEn": "after that",
+      "altEnSource": "manual",
+      "source": "manual"
+    },
+    "adv0120": {
+      "de": "voraussichtlich",
+      "en": "presumably",
+      "source": "manual"
+    },
+    "adv0121": {
+      "de": "seither",
+      "en": "since then",
+      "source": "manual"
+    },
+    "adv0122": {
+      "de": "darüber",
+      "en": "about it",
+      "altEn": "over it",
+      "altEnSource": "manual",
+      "source": "manual"
+    },
+    "adv0123": {
+      "de": "schließlich",
+      "en": "finally",
+      "altEn": "after all",
+      "altEnSource": "manual",
+      "source": "manual"
+    },
+    "adv0126": {
+      "de": "zwischendurch",
+      "en": "in between",
+      "altEn": "now and then",
+      "altEnSource": "manual",
+      "source": "manual"
+    },
+    "adv0128": {
+      "de": "auswärts",
+      "en": "away from home",
+      "noteEn": "auswärts essen – to eat out",
+      "source": "manual"
+    },
+    "adv0152": {
+      "de": "nebenan",
+      "en": "next door",
+      "source": "manual"
+    },
+    "n0003": {
+      "de": "Postleitzahl",
+      "altEn": "ZIP code",
+      "source": "manual",
+      "altEnSource": "manual"
+    },
+    "n0006": {
+      "de": "Ort",
+      "en": "town",
+      "source": "manual"
+    },
+    "n0008": {
+      "de": "Handynummer",
+      "altEn": "phone number",
+      "source": "manual",
+      "altEnSource": "manual"
+    },
+    "n0039": {
+      "de": "Freund",
+      "altEn": "boyfriend",
+      "source": "manual",
+      "altEnSource": "manual"
+    },
+    "n0079": {
+      "de": "Jugendliche",
+      "en": "teenager",
+      "altEn": "young person",
+      "source": "manual",
+      "altEnSource": "manual"
+    },
+    "n0185": {
+      "de": "Glas",
+      "en": "glass",
+      "altEn": "jar",
+      "source": "manual",
+      "altEnSource": "manual"
+    },
+    "n0203": {
+      "de": "Fleischabteilung",
+      "en": "meat department",
+      "source": "manual"
+    },
+    "n0234": {
+      "de": "Paprika",
+      "en": "bell pepper",
+      "source": "manual"
+    },
+    "n0248": {
+      "de": "Eis",
+      "en": "ice cream",
+      "source": "manual"
+    },
+    "n0268": {
+      "de": "Dachgeschoss",
+      "altEn": "top floor",
+      "source": "manual",
+      "altEnSource": "manual"
+    },
+    "n0269": {
+      "de": "Stock",
+      "en": "floor",
+      "source": "manual"
+    },
+    "n0281": {
+      "de": "Rathaus",
+      "en": "city hall",
+      "source": "manual"
+    },
+    "n0288": {
+      "de": "Homeoffice",
+      "en": "home office",
+      "source": "manual"
+    },
+    "n0332": {
+      "de": "Anhang",
+      "en": "attachment",
+      "source": "manual"
+    },
+    "n0336": {
+      "de": "Beziehungen",
+      "altEn": "contacts",
+      "source": "manual",
+      "altEnSource": "manual"
+    },
+    "n0337": {
+      "de": "Glück",
+      "en": "happiness",
+      "source": "manual"
+    },
+    "n0340": {
+      "de": "Leitung",
+      "en": "management",
+      "source": "manual"
+    },
+    "n0344": {
+      "de": "Schatz",
+      "en": "darling",
+      "source": "manual"
+    },
+    "n0352": {
+      "de": "Nachrichten",
+      "altEn": "messages",
+      "source": "manual",
+      "altEnSource": "manual"
+    },
+    "n0373": {
+      "de": "Zeiger",
+      "en": "clock hand",
+      "source": "manual"
+    },
+    "n0381": {
+      "de": "Decke",
+      "en": "ceiling",
+      "source": "manual"
+    },
+    "n0392": {
+      "de": "Gruß",
+      "altEn": "regards",
+      "source": "manual",
+      "altEnSource": "manual"
+    },
+    "n0399": {
+      "de": "Sonderausstellung",
+      "en": "special exhibition",
+      "source": "manual"
+    },
+    "n0402": {
+      "de": "Teamleiter",
+      "en": "team leader",
+      "source": "manual"
+    },
+    "n0420": {
+      "de": "Altstadt",
+      "en": "old town",
+      "source": "manual"
+    },
+    "n0433": {
+      "de": "Artikelmerkmale",
+      "en": "product features",
+      "source": "manual"
+    },
+    "n0434": {
+      "de": "Gebot",
+      "en": "bid",
+      "source": "manual"
+    },
+    "n0440": {
+      "de": "Höhe",
+      "en": "height",
+      "altEn": "amount",
+      "altEnSource": "manual",
+      "noteEn": "↔ Breite, Tiefe | die Höhe des Beitrags – the amount of the contribution",
+      "source": "manual"
+    },
+    "n0453": {
+      "de": "Fotoausstellung",
+      "en": "photo exhibition",
+      "source": "manual"
+    },
+    "n0471": {
+      "de": "Friseur",
+      "altEn": "female hairdresser",
+      "source": "manual",
+      "altEnSource": "manual"
+    },
+    "n0497": {
+      "de": "Stiefel",
+      "en": "boot",
+      "source": "manual"
+    },
+    "n0514": {
+      "de": "Anprobe",
+      "en": "fitting",
+      "source": "manual"
+    },
+    "n0538": {
+      "de": "Technik",
+      "en": "technology",
+      "source": "manual"
+    },
+    "n0546": {
+      "de": "Kinderabteilung",
+      "en": "children's department",
+      "source": "manual"
+    },
+    "n0547": {
+      "de": "Sportabteilung",
+      "en": "sports department",
+      "source": "manual"
+    },
+    "n0550": {
+      "de": "Herrenmode",
+      "en": "men's fashion",
+      "source": "manual"
+    },
+    "n0553": {
+      "de": "Fundbüro",
+      "en": "lost and found office",
+      "source": "manual"
+    },
+    "n0563": {
+      "de": "Schwager",
+      "source": "manual"
+    },
+    "n0594": {
+      "de": "Erste-Hilfe-Kurs",
+      "en": "first aid course",
+      "source": "manual"
+    },
+    "n0600": {
+      "de": "Verdienst",
+      "en": "earnings",
+      "source": "manual"
+    },
+    "n0609": {
+      "de": "Wolke",
+      "en": "cloud",
+      "source": "manual"
+    },
+    "n0619": {
+      "de": "Anreise",
+      "en": "arrival",
+      "source": "manual"
+    },
+    "n0623": {
+      "de": "Schifffahrt",
+      "en": "shipping",
+      "source": "manual"
+    },
+    "n0625": {
+      "de": "Hauptbahnhof",
+      "en": "central station",
+      "source": "manual"
+    },
+    "n0626": {
+      "de": "Brandenburger Tor",
+      "en": "Brandenburg Gate",
+      "source": "manual"
+    },
+    "n0685": {
+      "de": "Bildung",
+      "en": "education",
+      "source": "manual"
+    },
+    "n0689": {
+      "de": "Zoll",
+      "en": "customs",
+      "source": "manual"
+    },
+    "n0692": {
+      "de": "Bogen",
+      "en": "form",
+      "source": "manual"
+    },
+    "n0694": {
+      "de": "Telefonauskunft",
+      "en": "directory assistance",
+      "source": "manual"
+    },
+    "n0703": {
+      "de": "Kopierraum",
+      "en": "copy room",
+      "source": "manual"
+    },
+    "n0709": {
+      "de": "Rat",
+      "en": "advice",
+      "source": "manual"
+    },
+    "n0725": {
+      "de": "Deutschlandkarte",
+      "en": "map of Germany",
+      "source": "manual"
+    },
+    "n0729": {
+      "de": "Zeiteinteilung",
+      "en": "time management",
+      "source": "manual"
+    },
+    "n0735": {
+      "de": "Erwachsene",
+      "en": "adult",
+      "source": "manual"
+    },
+    "n0738": {
+      "de": "Ferienwohnung",
+      "en": "vacation rental",
+      "source": "manual"
+    },
+    "n0742": {
+      "de": "Preisvergleich",
+      "en": "price comparison",
+      "source": "manual"
+    },
+    "n0746": {
+      "de": "Jugendaustausch",
+      "en": "youth exchange",
+      "source": "manual"
+    },
+    "n0750": {
+      "de": "Antwortbogen",
+      "en": "answer sheet",
+      "source": "manual"
+    },
+    "n0769": {
+      "de": "Bundesliga",
+      "altEn": "German football league",
+      "source": "manual",
+      "altEnSource": "manual"
+    },
+    "n0785": {
+      "de": "Regierungsviertel",
+      "en": "government district",
+      "source": "manual"
+    },
+    "n0807": {
+      "de": "Reihe",
+      "en": "row",
+      "source": "manual"
+    },
+    "n0825": {
+      "de": "Haar",
+      "en": "hair",
+      "source": "manual"
+    },
+    "n0835": {
+      "de": "Einwohnermeldeamt",
+      "en": "resident registration office",
+      "source": "manual"
+    },
+    "n0837": {
+      "de": "Gesundheitsamt",
+      "en": "public health department",
+      "source": "manual"
+    },
+    "n0841": {
+      "de": "Standesamt",
+      "en": "registry office",
+      "source": "manual"
+    },
+    "n0846": {
+      "de": "Hygieneschulung",
+      "en": "hygiene training",
+      "source": "manual"
+    },
+    "n0850": {
+      "de": "Pass",
+      "en": "passport",
+      "source": "manual"
+    },
+    "n0853": {
+      "de": "Antrag",
+      "en": "application",
+      "source": "manual"
+    },
+    "n0870": {
+      "de": "Paketbotin",
+      "en": "parcel courier",
+      "noteEn": "female form of Paketbote",
+      "source": "manual"
+    },
+    "n0871": {
+      "de": "Scheibe",
+      "en": "pane",
+      "source": "manual"
+    },
+    "n0882": {
+      "de": "Bedienungsanleitung",
+      "en": "user manual",
+      "source": "manual"
+    },
+    "n0889": {
+      "de": "Öffnungszeiten",
+      "en": "hours of operation",
+      "source": "manual"
+    },
+    "n0904": {
+      "de": "Praxis",
+      "en": "practice",
+      "altEn": "doctor's office",
+      "altEnSource": "manual",
+      "source": "manual"
+    },
+    "n0907": {
+      "de": "Haftpflichtversicherung",
+      "en": "liability insurance",
+      "source": "manual"
+    },
+    "n0917": {
+      "de": "Bewerbungsgespräch",
+      "en": "job interview",
+      "noteEn": "same as Vorstellungsgespräch",
+      "source": "manual"
+    },
+    "n0918": {
+      "de": "Haftpflicht",
+      "en": "personal liability",
+      "noteEn": "short for Haftpflichtversicherung",
+      "source": "manual"
+    },
+    "n0919": {
+      "de": "Kredit",
+      "en": "loan",
+      "altEn": "credit",
+      "altEnSource": "manual",
+      "source": "manual"
+    },
+    "n0921": {
+      "de": "Schadenssumme",
+      "en": "amount of damages",
+      "source": "manual"
+    },
+    "n0922": {
+      "de": "Einzelperson",
+      "en": "individual",
+      "source": "manual"
+    },
+    "n0923": {
+      "de": "Tarif",
+      "en": "rate",
+      "altEn": "plan",
+      "altEnSource": "manual",
+      "source": "manual"
+    },
+    "n0925": {
+      "de": "Anspruch",
+      "en": "claim",
+      "source": "manual"
+    },
+    "n0926": {
+      "de": "Versicherungsbeitrag",
+      "en": "insurance premium",
+      "source": "manual"
+    },
+    "n0927": {
+      "de": "Lastschrift",
+      "en": "direct debit",
+      "source": "manual"
+    },
+    "n0928": {
+      "de": "Überweisung",
+      "en": "bank transfer",
+      "source": "manual"
+    },
+    "n0929": {
+      "de": "Makler",
+      "en": "broker",
+      "altEn": "agent",
+      "altEnSource": "manual",
+      "source": "manual"
+    },
+    "n0930": {
+      "de": "Versicherungsvertreter",
+      "en": "insurance agent",
+      "source": "manual"
+    },
+    "n0934": {
+      "de": "Bereich",
+      "en": "area",
+      "altEn": "field",
+      "altEnSource": "manual",
+      "source": "manual"
+    },
+    "n0936": {
+      "de": "Digitales",
+      "en": "digital matters",
+      "noteEn": "a nominalised adjective, used without an article in lists",
+      "source": "manual"
+    },
+    "n0940": {
+      "de": "Verbraucherzentrale",
+      "en": "consumer advice centre",
+      "source": "manual"
+    },
+    "n0942": {
+      "de": "Beratungsstelle",
+      "en": "advice centre",
+      "source": "manual"
+    },
+    "n0943": {
+      "de": "Ratgeber",
+      "en": "guide",
+      "altEn": "adviser",
+      "altEnSource": "manual",
+      "source": "manual"
+    },
+    "n0944": {
+      "de": "Entschuldigung",
+      "en": "apology",
+      "source": "manual"
+    },
+    "n0946": {
+      "de": "Recht",
+      "en": "right",
+      "altEn": "law",
+      "altEnSource": "manual",
+      "source": "manual"
+    },
+    "n0949": {
+      "de": "Verbraucherthema",
+      "en": "consumer issue",
+      "source": "manual"
+    },
+    "n0950": {
+      "de": "Aktion",
+      "en": "campaign",
+      "altEn": "event",
+      "altEnSource": "manual",
+      "source": "manual"
+    },
+    "n0953": {
+      "de": "Institution",
+      "en": "institution",
+      "source": "manual"
+    },
+    "n0956": {
+      "de": "Einzelreise",
+      "en": "individual trip",
+      "source": "manual"
+    },
+    "n0958": {
+      "de": "Frischhaltedose",
+      "en": "food storage container",
+      "source": "manual"
+    },
+    "n0959": {
+      "de": "Schokoriegel",
+      "en": "chocolate bar",
+      "source": "manual"
+    },
+    "n0960": {
+      "de": "Nussecke",
+      "en": "nut triangle",
+      "noteEn": "a German pastry",
+      "source": "manual"
+    },
+    "n0961": {
+      "de": "Fastfood",
+      "en": "fast food",
+      "source": "manual"
+    },
+    "n0964": {
+      "de": "Essgewohnheit",
+      "en": "eating habit",
+      "source": "manual"
+    },
+    "n0968": {
+      "de": "Drittel",
+      "en": "third",
+      "source": "manual"
+    },
+    "n0970": {
+      "de": "Mahlzeit",
+      "en": "meal",
+      "source": "manual"
+    },
+    "n0972": {
+      "de": "Obstdiät",
+      "en": "fruit diet",
+      "source": "manual"
+    },
+    "n0973": {
+      "de": "Ding",
+      "en": "thing",
+      "source": "manual"
+    },
+    "n0975": {
+      "de": "Essverhalten",
+      "en": "eating behaviour",
+      "source": "manual"
+    },
+    "n0979": {
+      "de": "Besichtigung",
+      "en": "tour",
+      "altEn": "viewing",
+      "altEnSource": "manual",
+      "source": "manual"
+    },
+    "n1011": {
+      "de": "OP",
+      "en": "surgery",
+      "source": "manual"
+    },
+    "n1040": {
+      "de": "Lippe",
+      "en": "lip",
+      "source": "manual"
+    },
+    "n1175": {
+      "de": "Bad",
+      "en": "bathroom",
+      "source": "manual"
+    },
+    "n1193": {
+      "de": "Führung",
+      "en": "guided tour",
+      "source": "manual"
+    },
+    "n1198": {
+      "de": "Halle",
+      "en": "hall",
+      "source": "manual"
+    },
+    "n1213": {
+      "de": "Pause",
+      "en": "break",
+      "source": "manual"
+    },
+    "n1217": {
+      "de": "Schalter",
+      "en": "counter",
+      "source": "manual"
+    },
+    "n1268": {
+      "de": "Reinigung",
+      "en": "dry cleaner's",
+      "source": "manual"
+    },
+    "p0014": {
+      "de": "jeder",
+      "en": "every",
+      "source": "manual"
+    },
+    "ph0003": {
+      "de": "Freut mich!",
+      "en": "Nice to meet you!",
+      "source": "manual"
+    },
+    "ph0032": {
+      "de": "Frei",
+      "en": "free",
+      "altEn": "occupied",
+      "altEnSource": "manual",
+      "source": "manual"
+    },
+    "ph0035": {
+      "de": "Ich hätte gern …",
+      "en": "I'd like …",
+      "source": "manual"
+    },
+    "ph0039": {
+      "de": "Sprechen",
+      "en": "Speak",
+      "source": "manual"
+    },
+    "ph0040": {
+      "de": "Schreiben",
+      "en": "Write",
+      "source": "manual"
+    },
+    "ph0041": {
+      "de": "Lesen",
+      "en": "Read",
+      "source": "manual"
+    },
+    "ph0042": {
+      "de": "Fragen",
+      "en": "Ask",
+      "source": "manual"
+    },
+    "ph0043": {
+      "de": "Antworten",
+      "en": "Answer",
+      "source": "manual"
+    },
+    "ph0048": {
+      "de": "Betrachten",
+      "en": "Look at",
+      "source": "manual"
+    },
+    "ph0050": {
+      "de": "dann kein",
+      "en": "then no",
+      "source": "manual"
+    },
+    "ph0052": {
+      "de": "LG (Liebe Grüße)",
+      "en": "Kind regards",
+      "source": "manual"
+    },
+    "ph0054": {
+      "de": "hätte gern",
+      "en": "would like",
+      "source": "manual"
+    },
+    "ph0077": {
+      "de": "geboren sein",
+      "altEn": "to be born",
+      "source": "manual",
+      "altEnSource": "manual"
+    },
+    "ph0081": {
+      "de": "Teile konsumieren",
+      "en": "to use (drugs)",
+      "altEn": "to use in doses",
+      "altEnSource": "manual",
+      "noteEn": "slang; may refer to drug use – depends on context",
+      "source": "manual"
+    },
+    "ph0085": {
+      "de": "es handelt sich um",
+      "en": "it is about",
+      "altEn": "it concerns",
+      "altEnSource": "manual",
+      "noteEn": "sich um + Akkusativ: Es handelt sich um einen Fehler | von + Dativ (a book, a film): Das Buch handelt von der Liebe",
+      "source": "manual"
+    },
+    "ph0086": {
+      "de": "aus Versehen",
+      "en": "by mistake",
+      "source": "manual"
+    },
+    "ph0087": {
+      "de": "Es lohnt sich nicht",
+      "en": "It's not worth it",
+      "source": "manual"
+    },
+    "ph0088": {
+      "de": "mit anderen zusammen",
+      "en": "together with others",
+      "source": "manual"
+    },
+    "ph0091": {
+      "de": "den Versicherungsbeitrag per Überweisung zahlen",
+      "en": "to pay the insurance premium by bank transfer",
+      "source": "manual"
+    },
+    "ph0092": {
+      "de": "wegen Krankheit vorzeitig beenden",
+      "en": "to end early due to illness",
+      "source": "manual"
+    },
+    "u0015": {
+      "de": "…zig",
+      "en": "-ty",
+      "noteEn": "the suffix in zwanzig, dreißig — like English -ty in twenty, thirty",
+      "source": "manual"
+    },
+    "v0006": {
+      "de": "brauchen",
+      "en": "to need",
+      "source": "manual"
+    },
+    "v0012": {
+      "de": "grenzen",
+      "en": "to border",
+      "source": "manual"
+    },
+    "v0015": {
+      "de": "hinzufügen",
+      "en": "to add",
+      "source": "manual"
+    },
+    "v0026": {
+      "de": "setzen",
+      "en": "to put",
+      "source": "manual"
+    },
+    "v0044": {
+      "de": "sich wundern",
+      "en": "to be surprised",
+      "source": "manual"
+    },
+    "v0060": {
+      "de": "abstellen",
+      "en": "to put down",
+      "source": "manual"
+    },
+    "v0063": {
+      "de": "aufmachen",
+      "en": "to open",
+      "source": "manual"
+    },
+    "v0070": {
+      "de": "öffnen",
+      "en": "to open",
+      "source": "manual"
+    },
+    "v0074": {
+      "de": "staubsaugen",
+      "en": "to vacuum",
+      "source": "manual"
+    },
+    "v0086": {
+      "de": "singen",
+      "en": "to sing",
+      "source": "manual"
+    },
+    "v0091": {
+      "de": "treiben",
+      "en": "to drive",
+      "source": "manual"
+    },
+    "v0102": {
+      "de": "abholen",
+      "altEn": "to collect",
+      "source": "manual",
+      "altEnSource": "manual"
+    },
+    "v0103": {
+      "de": "bringen",
+      "en": "to bring",
+      "source": "manual"
+    },
+    "v0126": {
+      "de": "abschließen",
+      "en": "to lock",
+      "altEn": "to take out (insurance), to sign (a contract)",
+      "altEnSource": "manual",
+      "noteEn": "eine Versicherung / einen Vertrag abschließen – to take out insurance / to sign a contract",
+      "source": "manual"
+    },
+    "v0151": {
+      "de": "fernsehen",
+      "en": "to watch TV",
+      "source": "manual"
+    },
+    "v0153": {
+      "de": "geschehen",
+      "en": "to happen",
+      "source": "manual"
+    },
+    "v0161": {
+      "de": "leihen",
+      "altEn": "to borrow",
+      "source": "manual",
+      "altEnSource": "manual"
+    },
+    "v0164": {
+      "de": "mitbringen",
+      "en": "to bring",
+      "source": "manual"
+    },
+    "v0168": {
+      "de": "passieren",
+      "en": "to happen",
+      "source": "manual"
+    },
+    "v0189": {
+      "de": "unterhalten",
+      "en": "to talk",
+      "source": "manual"
+    },
+    "v0194": {
+      "de": "vergessen",
+      "en": "to forget",
+      "source": "manual"
+    },
+    "v0247": {
+      "de": "meinen",
+      "en": "to mean",
+      "source": "manual"
+    },
+    "v0264": {
+      "de": "beraten",
+      "en": "to advise",
+      "source": "manual"
+    },
+    "v0276": {
+      "de": "klingeln",
+      "altEn": "to call",
+      "source": "manual",
+      "altEnSource": "manual",
+      "en": "to ring"
+    },
+    "v0283": {
+      "de": "füttern",
+      "en": "to feed",
+      "source": "manual"
+    },
+    "v0286": {
+      "de": "besichtigen",
+      "en": "to view",
+      "source": "manual"
+    },
+    "v0288": {
+      "de": "einfahren",
+      "en": "to drive in",
+      "source": "manual"
+    },
+    "v0304": {
+      "de": "auswählen",
+      "en": "to select",
+      "source": "manual"
+    },
+    "v0312": {
+      "de": "beschäftigen",
+      "en": "to be busy with",
+      "source": "manual"
+    },
+    "v0317": {
+      "de": "zurücklegen",
+      "en": "to put aside",
+      "altEn": "to cover",
+      "source": "manual",
+      "altEnSource": "manual"
+    },
+    "v0326": {
+      "de": "hierlassen",
+      "en": "to leave here",
+      "source": "manual"
+    },
+    "v0335": {
+      "de": "anmelden",
+      "en": "to sign up",
+      "source": "manual"
+    },
+    "v0341": {
+      "de": "handeln",
+      "en": "to act",
+      "altEn": "to trade",
+      "altEnSource": "manual",
+      "source": "manual"
+    },
+    "v0346": {
+      "de": "bellen",
+      "en": "to bark",
+      "source": "manual"
+    },
+    "v0368": {
+      "de": "eröffnen",
+      "en": "to open",
+      "source": "manual"
+    },
+    "v0374": {
+      "de": "abheben",
+      "en": "to withdraw",
+      "source": "manual"
+    },
+    "v0378": {
+      "de": "aussetzen",
+      "en": "to abandon",
+      "source": "manual"
+    },
+    "v0380": {
+      "de": "verursachen",
+      "en": "to cause",
+      "source": "manual"
+    },
+    "v0381": {
+      "de": "stürzen",
+      "en": "to fall",
+      "source": "manual"
+    },
+    "v0382": {
+      "de": "verletzen",
+      "en": "to injure",
+      "altEn": "to hurt oneself",
+      "altEnSource": "manual",
+      "source": "manual"
+    },
+    "v0383": {
+      "de": "einschließen",
+      "en": "to include",
+      "source": "manual"
+    },
+    "v0384": {
+      "de": "zufügen",
+      "en": "to inflict",
+      "source": "manual"
+    },
+    "v0385": {
+      "de": "kündigen",
+      "en": "to terminate",
+      "altEn": "to resign",
+      "altEnSource": "manual",
+      "source": "manual"
+    },
+    "v0386": {
+      "de": "befreien",
+      "en": "to free",
+      "altEn": "to exempt",
+      "altEnSource": "manual",
+      "noteEn": "befreit von + Dativ – exempt from",
+      "source": "manual"
+    },
+    "v0388": {
+      "de": "lohnen",
+      "en": "to be worth it",
+      "noteEn": "used impersonally: es lohnt sich / es lohnt sich nicht",
+      "source": "manual"
+    },
+    "v0389": {
+      "de": "absichern",
+      "en": "to safeguard",
+      "source": "manual"
+    },
+    "v0390": {
+      "de": "engagieren",
+      "en": "to get involved",
+      "noteEn": "sich engagieren für + Akkusativ",
+      "source": "manual"
+    },
+    "v0391": {
+      "de": "gelten",
+      "en": "to be valid",
+      "noteEn": "die Versicherung gilt ab / für – the policy is valid from / for",
+      "source": "manual"
+    },
+    "v0393": {
+      "de": "verbrennen",
+      "en": "to burn",
+      "source": "manual",
+      "altEn": "to burn oneself"
+    },
+    "v0395": {
+      "de": "hingehen",
+      "en": "to go there",
+      "source": "manual"
+    },
+    "v0396": {
+      "de": "ernähren",
+      "en": "to eat",
+      "noteEn": "sich ernähren von + Dativ – to live on",
+      "source": "manual"
+    },
+    "v0397": {
+      "de": "ändern",
+      "en": "to change",
+      "source": "manual"
+    },
+    "v0398": {
+      "de": "zunehmen",
+      "en": "to gain weight",
+      "altEn": "to increase",
+      "altEnSource": "manual",
+      "source": "manual"
+    },
+    "v0399": {
+      "de": "rasen",
+      "en": "to speed",
+      "source": "manual"
+    },
+    "v0402": {
+      "de": "langweilen",
+      "en": "to be bored",
+      "source": "manual"
+    },
+    "v0409": {
+      "de": "umdrehen",
+      "en": "to turn around",
+      "source": "manual"
+    },
+    "v0416": {
+      "de": "bluten",
+      "en": "to bleed",
+      "source": "manual"
+    },
+    "v0419": {
+      "de": "röntgen",
+      "en": "to X-ray",
+      "source": "manual"
+    },
+    "v0438": {
+      "de": "zuhören",
+      "en": "to listen",
+      "source": "manual"
+    },
+    "v0447": {
+      "de": "schimpfen",
+      "en": "to scold",
+      "source": "manual"
+    },
+    "v0451": {
+      "de": "basteln",
+      "en": "to do crafts",
+      "source": "manual"
+    }
+  }
+}

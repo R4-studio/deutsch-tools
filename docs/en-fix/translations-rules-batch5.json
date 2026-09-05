@@ -1,0 +1,26 @@
+{
+  "_meta": {
+    "source": "manual",
+    "batch": "rules 5 — trotzdem/deswegen и Genitiv Plural",
+    "date": "2026-08-30",
+    "note": "ЧЕРНОВИК до прогона update_data.py. Русские мостики заменены английскими: «поэтому» → therefore, «несмотря на это» → nevertheless, «хотя» → although. Названия падежей, чисел и Nebensatz оставлены по-немецки."
+  },
+  "RULES": {
+    "r0060": {
+      "title": "trotzdem vs deshalb/deswegen – уступка и следствие",
+      "source": "manual",
+      "titleEn": "trotzdem vs deshalb/deswegen - concession and consequence",
+      "content_md_en": "### Two connecting adverbs that get mixed up\n\ndeshalb / deswegen / darum / daher — consequence. There is a cause, and the result you would expect from it.\ntrotzdem — concession. The cause is there, but the result contradicts it.\n\nEs regnet. Deswegen bleibe ich zu Hause. – It is raining. Therefore I am staying home. (as expected)\nEs regnet. Trotzdem gehe ich spazieren. – It is raining. Nevertheless I am going for a walk. (against expectation)\n\n### A one-question test\nSubstitute \"therefore\". If the meaning still works, you need deswegen/deshalb. If \"anyway / nevertheless\" fits better, you need trotzdem.\n\n### The link to Nebensatz conjunctions\nEach adverb has a matching subordinating conjunction. One idea, two ways to say it:\nweil (because) - deshalb / deswegen (therefore)\nobwohl (although) - trotzdem (nevertheless)\n\nIch bleibe zu Hause, weil es regnet. = Es regnet. Deswegen bleibe ich zu Hause.\nIch gehe spazieren, obwohl es regnet. = Es regnet. Trotzdem gehe ich spazieren.\n\n### Word order\ntrotzdem, deshalb, deswegen are adverbs, not conjunctions. They take position 1, the verb stays in position 2, and the subject moves after the verb:\nTrotzdem gehe ich spazieren. (not \"Trotzdem ich gehe\")\nDeswegen bleibe ich zu Hause. (not \"Deswegen ich bleibe\")\n\n⚠ weil and obwohl are subordinating conjunctions - the verb goes to the end of the Nebensatz. deshalb and trotzdem are adverbs - the verb stays in second position. Positions are covered in the rule \"Sentence positions\".",
+      "examplesEn": "Es regnet. Deswegen bleibe ich zu Hause. – It is raining. Therefore I am staying home.\nEs regnet. Trotzdem gehe ich spazieren. – It is raining. Nevertheless I am going for a walk.\nEr hat viel gearbeitet. Trotzdem ist er nicht müde. – He worked a lot. Nevertheless he is not tired.\nIch habe keine Zeit. Deshalb komme ich nicht. – I have no time. Therefore I am not coming.\nIch bleibe zu Hause, weil es regnet. – I am staying home because it is raining.\nIch gehe spazieren, obwohl es regnet. – I am going for a walk although it is raining.",
+      "noteEn": "deshalb/deswegen mark a consequence (the pair to weil), trotzdem marks a concession (the pair to obwohl). Both are adverbs, not conjunctions: position 1, verb in position 2, inversion."
+    },
+    "r0061": {
+      "title": "Genitiv Plural – один артикль на все роды",
+      "source": "manual",
+      "titleEn": "Genitiv Plural - one article for every gender",
+      "content_md_en": "### Genitiv Plural - one article for every gender\n\nIn the plural, gender disappears. The article in the Genitiv Plural is always der, no matter what gender the word has in the Singular.\n\nNominativ Plural: die Männer / die Frauen / die Kinder\nGenitiv Plural: der Männer / der Frauen / der Kinder\n\n### The noun itself does not change\nUnlike the Singular, no -(e)s ending is added in the Genitiv Plural:\nSingular: des Mannes, des Hauses\nPlural: der Männer, der Häuser\n\nThis is also what separates the Genitiv Plural from the Dativ Plural, where -n is obligatory:\nDativ Plural: mit den Kindern, mit den Häusern\nGenitiv Plural: die Farbe der Kinder, das Dach der Häuser\n\n### With possessive and negative articles\nThe ending is -er, the same as on the article der:\ndie Bücher meiner Kinder – my children's books\ndie Wohnung unserer Freunde – our friends' flat\ndie Rechte keiner Bürger werden verletzt – no citizens' rights are being violated\ndie Stimmen aller Wähler – all the voters' votes\n\n### After prepositions that take the Genitiv\nThe same prepositions as in the Singular (wegen, trotz, während, statt/anstatt, außerhalb/innerhalb), only the article is der:\nwegen der Kinder – because of the children\ntrotz der Probleme – despite the problems\nwährend der Ferien – during the holidays\n\n⚠ Do not confuse der in the Genitiv Plural with der in the Nominativ Singular masculine - only the context tells them apart: der Mann kommt (Nom. Sg.) vs die Bücher der Männer (Gen. Pl.)\n\n⚠ Forming the Genitiv Singular by gender, weak declension and proper names are covered in the separate rule \"Genitiv Singular\".",
+      "examplesEn": "die Rechte der Bürger – the citizens' rights\ndie Farbe der Häuser – the colour of the houses\ndas Ende der Ferien – the end of the holidays\ndie Bücher meiner Freunde – my friends' books\nwegen der Kinder – because of the children\ntrotz der Probleme – despite the problems\nwährend der Verhandlungen – during the negotiations",
+      "noteEn": "Genitiv Plural: the article der for every gender, and the noun takes no ending (unlike the Genitiv Singular, and unlike the Dativ Plural with -n). Complements the rule \"Genitiv Singular\"."
+    }
+  }
+}
