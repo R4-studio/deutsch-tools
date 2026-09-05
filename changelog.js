@@ -1,4 +1,70 @@
 window.CHANGELOG = [
+    {
+    "date": "2026-09-05",
+    "title": "135 слов, правило про werden и сортировка в справочнике",
+    "items": [
+      "135 новых слов:",
+      "52 глагола",
+      "46 прилагательных",
+      "37 наречий",
+      "3 новые темы: Документы, Размер, Качества",
+      "1 новое правило: Три роли werden — становиться, Passiv, Futur",
+      "Справочник: кнопка сортировки в шапке — по темам, по уровню, по алфавиту",
+      "Вкладка «Новые» разложена по темам, а не одним общим списком",
+      "В карточке слова больше не показываются служебные поля тренажёра",
+      "Из колонки перевода убрано «Pl:» — множественное число осталось в карточке слова"
+    ],
+    "titleEn": "135 words, the werden rule and sorting in the reference",
+    "itemsEn": [
+      "135 new words:",
+      "52 verbs",
+      "46 adjectives",
+      "37 adverbs",
+      "3 new topics: Documents, Size, Qualities",
+      "1 new rule: The three roles of werden — become, Passiv, Futur",
+      "Reference: a sort button in the header — by topic, by level, alphabetically",
+      "The \"New\" tab is now split by topic instead of one long list",
+      "The word card no longer shows the trainer's internal fields",
+      "\"Pl:\" removed from the translation column — the plural stays in the word card"
+    ]
+  },
+  {
+    "date": "2026-09-04",
+    "title": "Обновление базы: 126 слов, три правила и карточки правил",
+    "items": [
+      "126 новых слов:",
+      "76 существительных",
+      "23 глагола",
+      "17 прилагательных",
+      "5 наречий",
+      "5 устойчивых выражений",
+      "2 новые темы: Медицина и аптека, Язык",
+      "3 новых правила:",
+      "Nebensatz mit seit / seitdem und bis",
+      "Verben mit Präpositionen — вопрос о лице (wen / wem)",
+      "Präpositionaladverbien — wo(r)- и da(r)-",
+      "Справочник: правила показываются карточками — иконка темы в заголовке, примеры отдельным блоком, заметка внизу",
+      "Составной род m/f больше не сливается в один нечитаемый бейдж",
+      "26 правил переведены на английский вручную, вместе с примерами"
+    ],
+    "titleEn": "Database update: 126 words, three rules and rule cards",
+    "itemsEn": [
+      "126 new words:",
+      "76 nouns",
+      "23 verbs",
+      "17 adjectives",
+      "5 adverbs",
+      "5 idioms",
+      "2 new topics: Medicine & Pharmacy, Language",
+      "3 new rules:",
+      "Nebensatz mit seit / seitdem und bis",
+      "Verben mit Präpositionen — asking about a person (wen / wem)",
+      "Präpositionaladverbien — wo(r)- and da(r)-",
+      "Reference: rules are shown as cards — topic icon in the heading, examples as a separate block, note at the bottom",
+      "Compound gender m/f no longer collapses into one unreadable badge",
+      "26 rules translated into English by hand, examples included"
+    ]
+  },
   {
     "date": "2026-08-30",
     "title": "Обновление базы: страхование, питание, потребительские права",
