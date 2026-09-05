@@ -3331,11 +3331,18 @@
       "titleEn": "Präpositionaladverbien: wo(r)- and da(r)-"
     },
     "r0065": {
-      "content_md_en": "[sub] one verb in three constructions — the role is visible from what follows it\n### Conjugation\nThe verb is irregular, the stem changes in the 2nd and 3rd person.\nperson | Präsens | Präteritum |\nich | werde | wurde |\ndu | wirst | wurdest |\ner/sie/es | wird | wurde |\nwir | werden | wurden |\nihr | werdet | wurdet |\nsie/Sie | werden | wurden |\n### Look at what stands after werden\n:::outcomes\nNoun or adjective → \"to become\" | Ich werde Arzt. Ich werde reich.\nPartizip II → Passiv, something is done to the object | Der Motor wird montiert.\nInfinitiv → Futur, an action in the future | Die Schulen werden mehr Geld bekommen.\n:::\n### Perfekt: geworden or worden\nBoth forms take sein, but in Passiv the prefix ge- drops.\nrole | Perfekt |\nto become | Ich bin Arzt geworden. |\nPassiv | Der Motor ist montiert worden. |\n### Futur and assumption [collapse]\nFutur I = werden + Infinitiv. werden is conjugated and stands second, the infinitive moves to the end of the sentence.\nWith wohl, wahrscheinlich, sicher the same form reads as an assumption rather than as the future.\n💡 In speech the future is usually expressed with Präsens plus a time word: Ich gehe morgen zum Arzt. Futur I is left for promises, forecasts and intentions.",
-      "examplesEn": "Ich werde Arzt. – I am going to be a doctor.\nIch bin reich geworden. – I have become rich.\nDer Motor wird montiert. – The engine is being assembled.\nDer Motor ist montiert worden. – The engine has been assembled.\nDie Schulen werden mehr Geld bekommen. – The schools will get more money.\nDie Schulen werden wohl weniger Geld bekommen. – The schools will probably get less money.",
-      "noteEn": "⚠ geworden and worden are different things: geworden means \"became\", worden occurs only in Passiv.\nPartizip II is covered in r0015, Perfekt in r0022.",
+      "content_md_en": "[sub] werden + infinitive; werden itself is not translated, the meaning sits in the verb at the end\n### How it is built\nwerden is conjugated and stands in second position, the main verb moves to the end of the sentence as an infinitive.\nIch werde das Buch lesen. – I will read this book.\nWir werden im Sommer nach Berlin fahren. – In summer we will travel to Berlin.\n### Conjugation of werden [collapse]\nThe verb is irregular, the stem changes in the 2nd and 3rd person singular.\nperson | Präsens | Präteritum |\nich | werde | wurde |\ndu | wirst | wurdest |\ner/sie/es | wird | wurde |\nwir | werden | wurden |\nihr | werdet | wurdet |\nsie/Sie | werden | wurden |\n### In everyday speech the future is usually the present\nPräsens plus a time word is the normal way to talk about the future.\nIch gehe morgen zum Arzt. – Tomorrow I am going to the doctor.\n💡 Futur I is kept for promises, forecasts and intentions — where it matters that the action has not happened yet.\n### The same form as an assumption\nWith wohl, wahrscheinlich, sicher the construction reads not as a future but as a guess about the present.\nEr wird wohl krank sein. – He is probably ill. This is about now, not about later.\n### Futur II — \"by that point already\" [collapse]\nIt is built as werden + Partizip II + haben or sein.\nIch werde das Buch gelesen haben. – By then I will have read the book.\nAt B1 this meaning is rare. What does occur is the guess about the past: Er wird es vergessen haben. – He has probably forgotten it.",
+      "examplesEn": "Ich werde das Buch lesen. – I will read this book.\nWir werden im Sommer nach Berlin fahren. – In summer we will travel to Berlin.\nIch gehe morgen zum Arzt. – Tomorrow I am going to the doctor.\nEr wird wohl krank sein. – He is probably ill.\nIch werde das Buch gelesen haben. – By then I will have read the book.",
+      "noteEn": "⚠ Tell them apart by what follows werden: an infinitive means the future, a Partizip II means Passiv.\nPassiv is covered in r0066. On its own werden means \"to become\": Ich werde Arzt is present tense, not future.",
       "source": "manual",
-      "titleEn": "The three roles of werden: become, Passiv, Futur"
+      "titleEn": "Futur I and Futur II — the future with werden"
+    },
+    "r0066": {
+      "content_md_en": "[sub] what matters is not who does it, but what happens to the thing\n### Aktiv and Passiv\nIn Aktiv the subject acts by itself. In Passiv it receives the action instead.\nDer Mechaniker montiert den Motor. – The mechanic assembles the engine.\nDer Motor wird montiert. – The engine is being assembled.\nThe direct object of the Aktiv sentence (den Motor, Akkusativ) becomes the subject of the Passiv one (der Motor, Nominativ).\n### Who does it — von + Dativ\nMost of the time the agent is not named at all: it does not matter, otherwise Passiv would make no sense.\nDer Motor wird von dem Mechaniker montiert. – The engine is assembled by the mechanic.\n### Passiv exists in every tense\nThe tense is set by the form of werden, the voice by the Partizip II at the end.\ntense | example |\nPräsens | Der Motor wird montiert. |\nPräteritum | Der Motor wurde montiert. |\nPerfekt | Der Motor ist montiert worden. |\nFutur I | Der Motor wird montiert werden. |\n💡 The last line has two werden in a row: the first marks the future, the second marks Passiv.\n### Perfekt: worden, not geworden\nIn Passiv the prefix ge- drops. The form geworden belongs only to the ordinary verb \"to become\".\nDer Motor ist montiert worden. – The engine has been assembled.\nIch bin Arzt geworden. – I have become a doctor.\n### How it comes out in English [collapse]\nGerman Passiv normally turns into the English passive with \"to be\", or into an impersonal sentence.\nDer Motor wird montiert. – The engine is being assembled. Or: they are assembling the engine.\nEnglish marks the passive with \"to be\" plus the third form, German marks it with werden plus Partizip II.",
+      "examplesEn": "Der Mechaniker montiert den Motor. – The mechanic assembles the engine.\nDer Motor wird montiert. – The engine is being assembled.\nDer Motor wird von dem Mechaniker montiert. – The engine is assembled by the mechanic.\nDer Motor wurde montiert. – The engine was being assembled.\nDer Motor ist montiert worden. – The engine has been assembled.",
+      "noteEn": "⚠ werden + Partizip II is Passiv, werden + infinitive is the future.\nThe future is covered in r0065, Partizip II in r0015, Perfekt in r0022.",
+      "source": "manual",
+      "titleEn": "Passiv — werden + Partizip II"
     }
   },
   "SOUNDS": {
@@ -3945,12 +3952,12 @@
       "verdict": "ok"
     },
     "0370e8ddb29c78cd": {
-      "_src_note": "вся нога; ступня — der Fuß",
+      "_src_note": "вся нога; ступня – der Fuß",
       "backtranslation": "das Bein",
-      "date": "2026-09-03",
+      "date": "2026-09-05",
       "de": "Bein",
       "en": "leg",
-      "noteEn": "the entire leg; foot — der Fuß",
+      "noteEn": "the entire leg; the foot – der Fuß",
       "source": "deepl"
     },
     "038c6da4b5244ad3": {
@@ -5326,12 +5333,12 @@
       "verdict": "ok"
     },
     "17d8e27643a715ee": {
-      "_src_note": "Genitiv des Herzens — особое склонение",
+      "_src_note": "Genitiv des Herzens – особое склонение",
       "backtranslation": "das Herz",
-      "date": "2026-09-03",
+      "date": "2026-09-05",
       "de": "Herz",
       "en": "heart",
-      "noteEn": "Genitiv des Herzens — special declension",
+      "noteEn": "Genitiv des Herzens – a special case",
       "source": "deepl"
     },
     "17de7fc8bec17435": {
@@ -8156,14 +8163,14 @@
     },
     "3e98c2735b2b61b7": {
       "_src_altEn": "быть настороже",
-      "_src_note": "идиома (Redewendung), дословно «быть на страже» | auf der Hut sein vor + Dativ: sei auf der Hut vor ihm | die Hut здесь — осторожность, не der Hut (шляпа); вне этого оборота почти не встречается",
+      "_src_note": "идиома (Redewendung), дословно «быть на страже» | auf der Hut sein vor + Dativ: sei auf der Hut vor ihm | die Hut здесь – осторожность, не der Hut (шляпа); вне этого оборота почти не встречается",
       "altEn": "to be on guard",
       "altEnSource": "deepl-ru",
       "backtranslation": "auf der Hut sein",
-      "date": "2026-09-03",
+      "date": "2026-09-05",
       "de": "auf der Hut sein",
       "en": "be on guard",
-      "noteEn": "idiom (Redewendung), literally “to be on guard” | auf der Hut sein vor + Dativ: sei auf der Hut vor ihm | die Hut here — caution, not der Hut (hat); outside of this idiom, it is almost never used",
+      "noteEn": "idiom (Redewendung), literally “to be on guard” | auf der Hut sein vor + Dativ: sei auf der Hut vor ihm | die Hut here, it means “caution,” not der Hut (hat); outside of this idiom, it is almost never used",
       "source": "deepl"
     },
     "3eae999416acceef": {
@@ -8724,14 +8731,14 @@
     },
     "45a91627f41b4ccb": {
       "_src_altEn": "Mir geht es super",
-      "_src_note": "super / toll — усиление",
+      "_src_note": "super / toll – усиление",
       "altEn": "I'm doing great",
       "altEnSource": "deepl",
       "backtranslation": "Mir geht es gut",
-      "date": "2026-08-29",
+      "date": "2026-09-05",
       "de": "Mir geht es gut",
       "en": "I'm fine",
-      "noteEn": "super / toll — amplification",
+      "noteEn": "super / toll – amplification",
       "source": "deepl"
     },
     "46026eb055cc67b1": {
@@ -10713,14 +10720,14 @@
     },
     "6275b393554a6fb9": {
       "_src_altEn": "Zehe",
-      "_src_note": "палец руки — der Finger",
+      "_src_note": "палец руки – der Finger",
       "altEn": "toe",
       "altEnSource": "deepl",
       "backtranslation": "die Zehe",
-      "date": "2026-09-03",
+      "date": "2026-09-05",
       "de": "Zeh",
       "en": "toe",
-      "noteEn": "finger — der Finger",
+      "noteEn": "finger – der Finger",
       "source": "haiku",
       "verdict": "ok"
     },
@@ -12623,11 +12630,11 @@
     },
     "7c22e553fa34632b": {
       "_src_altEn": "оставить",
-      "_src_note": "не для физического \"бросить/швырнуть\" — это werfen; aussetzen про оставление животного/человека без помощи",
+      "_src_note": "не для физического \"бросить/швырнуть\" – это werfen; aussetzen про оставление животного/человека без помощи",
       "altEn": "to leave",
       "altEnSource": "deepl-ru",
       "backtranslation": "aussetzen",
-      "date": "2026-08-27",
+      "date": "2026-09-05",
       "de": "aussetzen",
       "en": "to suspend",
       "noteEn": "Not in the sense of physically \"throwing\" or \"tossing\"—this is werfen; aussetzen, which is about leaving an animal or a person without help",
@@ -13640,13 +13647,13 @@
       "source": "deepl"
     },
     "8ba873b5ae895e7f": {
-      "_src_warning": "язык как речь — die Sprache",
+      "_src_warning": "язык как речь – die Sprache",
       "backtranslation": "die Zunge",
-      "date": "2026-09-03",
+      "date": "2026-09-05",
       "de": "Zunge",
       "en": "tongue",
       "source": "deepl",
-      "warningEn": "Language as Speech — die Sprache"
+      "warningEn": "Language as Speech – die Sprache"
     },
     "8ba99d25bf420684": {
       "backtranslation": "Trauzeugin",
@@ -16089,14 +16096,14 @@
     },
     "b160cf0fef6ae32e": {
       "_src_altEn": "ein",
-      "_src_note": "eins — при счёте, ein — перед существительным: ein Buch",
+      "_src_note": "eins – при счёте, ein – перед существительным: ein Buch",
       "altEn": "one",
       "altEnSource": "deepl",
       "backtranslation": "eins",
-      "date": "2026-08-29",
+      "date": "2026-09-05",
       "de": "eins",
       "en": "one",
-      "noteEn": "eins — when counting: ein — before a noun: ein Buch",
+      "noteEn": "eins – when counting: ein – before a noun: ein Buch",
       "source": "deepl"
     },
     "b1670371e01351d4": {

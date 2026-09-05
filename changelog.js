@@ -1,29 +1,35 @@
 window.CHANGELOG = [
-    {
+      {
     "date": "2026-09-05",
-    "title": "135 слов, правило про werden и сортировка в справочнике",
+    "title": "135 слов, Futur и Passiv, сортировка в справочнике",
     "items": [
       "135 новых слов:",
       "52 глагола",
       "46 прилагательных",
       "37 наречий",
       "3 новые темы: Документы, Размер, Качества",
-      "1 новое правило: Три роли werden — становиться, Passiv, Futur",
-      "Справочник: кнопка сортировки в шапке — по темам, по уровню, по алфавиту",
+      "2 новых правила:",
+      "Futur I и Futur II — будущее через werden",
+      "Passiv — werden + Partizip II",
+      "Справочник: сортировка в шапке — по темам, по уровню и по дате добавления, в обе стороны",
       "Вкладка «Новые» разложена по темам, а не одним общим списком",
+      "В карточке правила ссылка «см. также» показывает все связанные правила, а не только первое",
       "В карточке слова больше не показываются служебные поля тренажёра",
       "Из колонки перевода убрано «Pl:» — множественное число осталось в карточке слова"
     ],
-    "titleEn": "135 words, the werden rule and sorting in the reference",
+    "titleEn": "135 words, Futur and Passiv, sorting in the reference",
     "itemsEn": [
       "135 new words:",
       "52 verbs",
       "46 adjectives",
       "37 adverbs",
       "3 new topics: Documents, Size, Qualities",
-      "1 new rule: The three roles of werden — become, Passiv, Futur",
-      "Reference: a sort button in the header — by topic, by level, alphabetically",
+      "2 new rules:",
+      "Futur I and Futur II — the future with werden",
+      "Passiv — werden + Partizip II",
+      "Reference: sorting in the header — by topic, by level and by date added, in both directions",
       "The \"New\" tab is now split by topic instead of one long list",
+      "A rule card now links to every related rule, not just the first one",
       "The word card no longer shows the trainer's internal fields",
       "\"Pl:\" removed from the translation column — the plural stays in the word card"
     ]

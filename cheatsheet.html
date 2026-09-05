@@ -649,6 +649,8 @@ tr[data-vid], [data-vid].conj-card { cursor: pointer; }
   flex-wrap: wrap; margin-top: 16px;
 }
 .rule-card__footer.is-endonly { justify-content: flex-end; }
+/* группа ссылок «см. также» — их может быть несколько на одно правило */
+.rule-card__links { display: flex; flex-direction: column; align-items: flex-start; gap: 6px; }
 .rule-seealso {
   display: inline-flex; align-items: center; gap: 6px;
   font-size: 12.5px; font-weight: 600;
@@ -3453,14 +3455,26 @@ document.addEventListener('click', function(e) {
     return groups;
   }
 
-  // ─── Сортировка справочника по темам/уровню (кнопка sortBtn) ───────────
+  // ─── Сортировка справочника по темам/уровню/дате (кнопка sortBtn) ───────
   const LEVEL_ORDER = ['A1', 'A2', 'B1', 'B2', 'C1'];
-  const SORT_MODES = ['topic-az', 'topic-za', 'level-asc', 'level-desc'];
+  const SORT_MODES = ['topic-az', 'topic-za', 'date-asc', 'date-desc', 'level-asc', 'level-desc'];
+
+  // id растёт по мере добавления слова в базу (независимо от уровня) —
+  // числовой хвост id используем как суррогат «даты добавления»
+  function idNum(item) {
+    const m = String(item && item.id || '').match(/(\d+)$/);
+    return m ? parseInt(m[1], 10) : 0;
+  }
 
   // Возвращает НОВЫЙ отсортированный массив по правилам текущего SORT_MODE
   function sortRows(items) {
     const mode = window.SORT_MODE || 'topic-az';
     const arr = items.slice();
+    if (mode === 'date-asc' || mode === 'date-desc') {
+      const reversed = mode === 'date-desc';
+      arr.sort((a, b) => reversed ? idNum(b) - idNum(a) : idNum(a) - idNum(b));
+      return arr;
+    }
     const reversed = mode === 'topic-za' || mode === 'level-desc';
     arr.sort((a, b) => {
       const r = String(a.de).localeCompare(String(b.de), 'de');
@@ -3540,15 +3554,20 @@ document.addEventListener('click', function(e) {
   const SORT_LABEL_KEYS = {
     'topic-az': 'cheatsheet.sort_topic_az',
     'topic-za': 'cheatsheet.sort_topic_za',
+    'date-asc': 'cheatsheet.sort_date_asc',
+    'date-desc': 'cheatsheet.sort_date_desc',
     'level-asc': 'cheatsheet.sort_level_asc',
     'level-desc': 'cheatsheet.sort_level_desc'
   };
   // Иконки режимов: горизонтальные линии — алфавитная сортировка тем (длина
-  // линий растёт/убывает + стрелка направления), вертикальные столбики —
-  // сортировка по уровню (высота растёт/убывает слева направо: A1…C1).
+  // линий растёт/убывает + стрелка направления), часы — сортировка по дате
+  // добавления (id), вертикальные столбики — сортировка по уровню (высота
+  // растёт/убывает слева направо: A1…C1).
   const SORT_ICONS = {
     'topic-az': '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 6h5M4 12h8M4 18h11"/><path d="M20 4v14M20 18l-3-3M20 18l3-3"/></svg>',
     'topic-za': '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 6h11M4 12h8M4 18h5"/><path d="M20 18V4M20 4l-3 3M20 4l3 3"/></svg>',
+    'date-asc': '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="12" r="7"/><path d="M9 8v4l3 2"/><path d="M20 4v14M20 18l-3-3M20 18l3-3"/></svg>',
+    'date-desc': '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="12" r="7"/><path d="M9 8v4l3 2"/><path d="M20 18V4M20 4l-3 3M20 4l3 3"/></svg>',
     'level-asc': '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 15v5M12 9v11M19 4v16"/></svg>',
     'level-desc': '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 4v16M12 9v11M19 15v5"/></svg>'
   };
@@ -4119,14 +4138,17 @@ document.addEventListener('click', function(e) {
 
   function renderRuleSeeAlso(rule) {
     const ids = ((rule.note || '').match(/\br\d{4}\b/g) || []);   // id языконезависимы — из RU-note
+    const seen = {};
+    const links = [];
     for (const id of ids) {
-      if (id !== rule.id && RULES_BY_ID[id]) {
-        const title = wordField(RULES_BY_ID[id], 'title', 'titleEn');
-        return '<button type="button" class="rule-seealso" onclick="gotoRule(\'' + id + '\')">'
-             + ic('link') + '<span>' + escHtml(id) + ' — ' + escHtml(title) + '</span></button>';
-      }
+      if (id === rule.id || seen[id] || !RULES_BY_ID[id]) continue;
+      seen[id] = true;
+      const title = wordField(RULES_BY_ID[id], 'title', 'titleEn');
+      links.push('<button type="button" class="rule-seealso" onclick="gotoRule(\'' + id + '\')">'
+             + ic('link') + '<span>' + escHtml(id) + ' — ' + escHtml(title) + '</span></button>');
     }
-    return '';
+    if (!links.length) return '';
+    return '<div class="rule-card__links">' + links.join('') + '</div>';
   }
 
   // Кнопка «к тесту»: надпись прокручивается на «скоро» при наведении и по

@@ -90,6 +90,8 @@ window.I18N_RU = {
   "cheatsheet.sort_title": "Сортировка",
   "cheatsheet.sort_topic_az": "Темы A→Z",
   "cheatsheet.sort_topic_za": "Темы Z→А",
+  "cheatsheet.sort_date_asc": "Старые → новые",
+  "cheatsheet.sort_date_desc": "Новые → старые",
   "cheatsheet.sort_level_asc": "Уровень ↓",
   "cheatsheet.sort_level_desc": "Уровень ↑",
 

@@ -89,6 +89,8 @@ window.I18N_EN = {
   "cheatsheet.sort_title": "Sort",
   "cheatsheet.sort_topic_az": "Topics A→Z",
   "cheatsheet.sort_topic_za": "Topics Z→A",
+  "cheatsheet.sort_date_asc": "Oldest → newest",
+  "cheatsheet.sort_date_desc": "Newest → oldest",
   "cheatsheet.sort_level_asc": "Level ↓",
   "cheatsheet.sort_level_desc": "Level ↑",
 
