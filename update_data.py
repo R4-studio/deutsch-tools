@@ -1140,7 +1140,22 @@ def write_rules_review_report(rules, translations, field_report_rows):
         has_content = "ok" if r.get("content_md_en") else "—"
         has_note = "ok" if (not r.get("note")) or r.get("noteEn") else "—"
         has_examples = "ok" if (not r.get("examples")) or r.get("examplesEn") else "—"
-        fails = "; ".join(fails_by_id.get(rid, [])) or ""
+        fails_list = list(fails_by_id.get(rid, []))
+        # Ручные переводы идут мимо автопроверки (их не гоняет
+        # translate_ignoretag_field), поэтому рассинхрон RU↔EN в них не виден
+        # ниоткуда: правило с 24 строками по-русски и 17 по-английски
+        # показывалось как ok. Гоняем инварианты и здесь — только в отчёт,
+        # без WARN в консоли и без отбрасывания записи.
+        if source == "manual":
+            for field, en_field in (("title", "titleEn"), ("content_md", "content_md_en"),
+                                     ("note", "noteEn"), ("examples", "examplesEn")):
+                orig, tr = r.get(field), r.get(en_field)
+                if not orig or not tr:
+                    continue
+                ok, reason = check_rule_field_invariants(orig, tr)
+                if not ok:
+                    fails_list.append(f"{en_field} (manual): {reason}")
+        fails = "; ".join(fails_list) or ""
         title_short = (r.get("title") or "")[:45]
         lines.append(f"| {rid} | {title_short} | {source} | {has_title} | {has_content} | {has_note} | {has_examples} | {fails} |")
     path.write_text("\n".join(lines) + "\n", encoding="utf-8")
