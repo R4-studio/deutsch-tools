@@ -3,7 +3,7 @@
     "source": "manual",
     "batch": "rules 6 — переработанные под карточный рендер + новые r0062-r0064",
     "date": "2026-09-03",
-    "note": "Собрано после переноса подсказок из content_md в note и вывода examples на карточку. Записи ПОЛНЫЕ: загрузчик делает cache[rid] = dict(entry), частичная запись затёрла бы существующий английский. Русские мостики заменены английскими: -lich через -ly, падежи через I/me/him, sollen/müssen через supposed to / have to, seit/bis через since / until."
+    "note": "Собрано после переноса подсказок из content_md в note и вывода examples на карточку. Записи ПОЛНЫЕ: загрузчик делает cache[rid] = dict(entry), частичная запись затёрла бы существующий английский. Русские мостики заменены английскими: -lich через -ly, падежи через I/me/him, sollen/müssen через supposed to / have to, seit/bis через since / until. Чистка 2026-09-13: r0032 убран — актуальная версия (окончания -n) в translations-rules-batch9.json."
   },
   "RULES": {
     "r0002": {
@@ -96,13 +96,6 @@
       "content_md_en": "### Wo? Präposition + Dativ\n\nIn answer to **Wo?** (where?) prepositions of place take the **Dativ**.\n\n| Preposition | Meaning | Example |\n|---------|----------|--------|\n| auf | on (horizontal) | Das Buch liegt **auf dem Tisch**. |\n| unter | under | Die Katze sitzt **unter dem Stuhl**. |\n| in | in | Das Heft ist **in der Tasche**. |\n| an | at / on (vertical) | Das Bild hängt **an der Wand**. |\n| über | above | Die Lampe hängt **über dem Tisch**. |\n| vor | in front of | Das Fahrrad steht **vor der Tür**. |\n| hinter | behind | Der Schrank steht **hinter der Tür**. |\n| neben | next to | Die Pflanze steht **neben dem Fenster**. |\n| zwischen | between | Der Tisch steht **zwischen den Pflanzen**. |",
       "examplesEn": "Auf dem Tisch. | Unter dem Buch. | In der Tasche. | Zwischen den Pflanzen. | An der Wand.",
       "noteEn": "Wo? = where something stands/lies/hangs → Dativ | Wohin? = where we put it → Akkusativ | an/in + dem = am/im\n\n💡 Wo? → always **Dativ**\n💡 Wohin? → always **Akkusativ** (where we put or place something)"
-    },
-    "r0032": {
-      "title": "Modalverben im Präteritum",
-      "source": "manual",
-      "titleEn": "Modalverben im Präteritum",
-      "content_md_en": "**Person** | **Endung** | **müssen** | **können** | **wollen** | **dürfen** |\nich | – | musste | konnte | wollte | durfte |\ndu | -st | musstest | konntest | wolltest | durftest |\ner/sie/es | – | musste | konnte | wollte | durfte |\nwir | -en | mussten | konnten | wollten | durften |\nihr | -t | musstet | konntet | wolltet | durftet |\nsie/Sie | -en | mussten | konnten | wollten | durften |",
-      "noteEn": "in speech the past of Modalverben is usually the Präteritum, not the Perfekt\n\n💡 Stem + -te + endings (ich/er take none). The Umlaut disappears: müssen→musste, können→konnte, dürfen→durfte. Genauso: sollen→sollte, mögen→mochte."
     },
     "r0033": {
       "title": "Adjektivdeklination (ein-/Possessiv, Nom + Akk + Dativ)",

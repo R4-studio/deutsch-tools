@@ -1,0 +1,23 @@
+{
+  "_meta": {
+    "source": "manual",
+    "batch": "rules 2/7 — смешанные, заголовки, кириллица",
+    "date": "2026-08-25",
+    "note": "В r0021 и r0039 русскоязычный мостик заменён английским, а не переведён — см. сопроводительное сообщение. r0057 удалён 2026-09-13: правило выросло на блок entweder...oder, актуальный перевод — в translations-rules-batch9.json. Чистка 2026-09-13: убраны записи, продублированные в более поздних батчах (актуальные версии там). Каждое правило теперь лежит ровно в одном файле."
+  },
+  "RULES": {
+    "r0001": {
+      "title": "Personalpronomen - три падежа",
+      "source": "manual",
+      "titleEn": "Personalpronomen – the three cases",
+      "content_md_en": "### Personalpronomen – the three cases\n**Nominativ (Wer?)** | **Akkusativ (Wen?)** | **Dativ (Wem?)** |\nich | mich | mir |\ndu | dich | dir |\ner | ihn | ihm |\nes | es | ihm |\nsie (she) | sie | ihr |\nwir | uns | uns |\nihr (you, group) | euch | euch |\nsie (they) | sie | ihnen |\nSie (formal) | Sie | Ihnen |\n⚠ es in the Dativ is **ihm**, not ihr | **ihr** = “to her” (Dativ of sie – she) and “you” (group, Nominativ) – two completely different things!"
+    },
+    "r0039": {
+      "title": "Одежда: anhaben / tragen / angezogen sein (не «sein in»)",
+      "source": "manual",
+      "titleEn": "Clothing: anhaben / tragen / angezogen sein (not “sein in”)",
+      "content_md_en": "“To be wearing …” is NOT expressed as *Er ist in einer Jacke* in German – that is a word-for-word carry-over from English “he is in a jacket”. Use one of these three:\n**Construction** | **Example** |\netw. **anhaben** (an … haben) | Er hat bunte Shorts an. |\netw. **tragen** | Er trägt bunte Shorts. |\n**angezogen sein** (how someone is dressed) | Er ist bunt angezogen. |\n⚠ *Er ist in …* – Germans simply do not say this.",
+      "noteEn": "! Do not carry the English “he is in …” over into German: not Er ist in ..., but Er hat ... an / Er trägt ... / Er ist ... angezogen. anhaben is separable (hat ... an)."
+    }
+  }
+}

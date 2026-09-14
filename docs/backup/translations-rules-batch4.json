@@ -1,0 +1,29 @@
+{
+  "_meta": {
+    "source": "manual",
+    "batch": "rules 4/4 — правила с отсылками к русскому языку",
+    "date": "2026-08-27",
+    "note": "Во всех этих правилах опорой служил русский язык. Мостики заменены английскими, а не переведены: -er/-est для степеней сравнения, I/me/him для падежей, 'supposed to' vs 'have to' для sollen/müssen, 'ago' для vor, притяжательное 's для Genitiv, 'X-year-old' для -jährig. Отклонения перечислены в сопроводительном сообщении. Чистка 2026-09-13: убраны записи, продублированные в более поздних батчах (актуальные версии там). Каждое правило теперь лежит ровно в одном файле."
+  },
+  "RULES": {
+    "r0035": {
+      "title": "Modalverben: Bedeutung (will / muss / darf / kann / möchte)",
+      "source": "manual",
+      "titleEn": "Modalverben: Bedeutung (will / muss / darf / kann / möchte)",
+      "content_md_en": "**Example** | **Meaning** |\nIch **will** arbeiten. | wollen – I want to (a firm intention) |\nIch **muss** arbeiten. | müssen – I must / I have to |\nIch **darf** arbeiten. | dürfen – I may / I am allowed to |\nIch **kann** arbeiten. | können – I can / I know how to |\nIch **möchte** arbeiten. | I would like to (polite, a form of mögen) |",
+      "noteEn": "möchte – the polite form of mögen\n\n💡 möglich is NOT a verb but an adjective, “possible”: Das ist möglich."
+    },
+    "r0047": {
+      "title": "Genitiv in Eigennamen: Kaufhaus des Westens",
+      "source": "manual",
+      "titleEn": "Genitiv in Eigennamen: Kaufhaus des Westens",
+      "content_md_en": "### Genitiv in compound names\nThe Genitiv answers the question “whose? of what?” and attaches to a masculine or neuter noun with the ending -s – much like the English of-phrase, or the possessive 's.\nder Westen → Genitiv → des Westens\nExample: Kaufhaus **des Westens** = “the department store [of what?] of the West”, just like das Auto **des** Mannes – the man's car."
+    },
+    "r0050": {
+      "title": "zuerst vs erst vs erste – разные слова, разный смысл",
+      "source": "manual",
+      "titleEn": "zuerst vs erst vs erste – three different words, three meanings",
+      "content_md_en": "### zuerst vs erst vs erste\n**zuerst** – first, first of all (the order in which things are done). Zuerst esse ich, dann arbeite ich.\n**erst** (adverb, no ending) – only, not until (something happens later or amounts to less than expected). Ich komme erst um 20 Uhr. / Er hat erst zwei Bücher gelesen.\n**erste/erster/erstes** (+ ending) – first (the ordinal number). mein erstes Auto\nIn short: zuerst = “first of all”, erst = “only / not until”, erste = “first” (in front of a noun)."
+    }
+  }
+}
