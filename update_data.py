@@ -3186,6 +3186,8 @@ def process_questions(rows, warn):
 
         level = clean(r.get("level"))
         if level: item["level"] = level
+        rule = clean(r.get("rule"))
+        if rule: item["rule"] = rule
         diff = to_int(r.get("difficulty"))
         item["difficulty"] = diff if diff is not None else DIFFICULTY_DEFAULTS.get(qtype, 1)
 
@@ -3644,7 +3646,7 @@ if __name__ == '__main__':
     CONJ_KEYS = ["id", "verb", "ru", "en", "tense", "modal", "level", "pronouns", "forms",
                  "partizip2", "aux", "praeteritum", "separable", "reflexive",
                  "impersonal", "case"]
-    Q_KEYS = ["id", "topic", "level", "difficulty", "type", "q",
+    Q_KEYS = ["id", "topic", "level", "difficulty", "type", "q", "rule",
               "opts", "ans", "words", "pronouns", "altAns", "hint", "explain"]
     R_KEYS = ["id", "title", "titleEn", "topic", "domen", "group", "level", "content_md", "content_md_en",
               "examples", "examplesEn", "note", "noteEn", "new"]

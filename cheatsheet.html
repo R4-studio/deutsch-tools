@@ -6,10 +6,10 @@
 <meta property="og:title" content="Справочник — Deutsch Tools">
 <meta property="og:description" content="Интерактивный справочник по немецкому: слова, правила, произношение">
 <meta property="og:type" content="website">
-<link rel="stylesheet" href="theme.css?v=20260914">
-<script src="i18n/ru.js?v=20260914"></script>
-<script src="i18n/en.js?v=20260914"></script>
-<script src="i18n/i18n.js?v=20260914"></script>
+<link rel="stylesheet" href="theme.css?v=20260917">
+<script src="i18n/ru.js?v=20260917"></script>
+<script src="i18n/en.js?v=20260917"></script>
+<script src="i18n/i18n.js?v=20260917"></script>
 <style>
 *{box-sizing:border-box;margin:0;padding:0}
 body{font-family:sans-serif;font-size:13px;color:var(--text-main);line-height:1.4;background:var(--bg-body);overflow-x:hidden}
@@ -93,11 +93,6 @@ td{padding:6px 10px;border-bottom:1px solid var(--border-row);vertical-align:top
 tr:hover td{background:var(--bg-row-hover)}
 .badge{display:inline-block;font-size:10px;padding:2px 5px;border-radius:3px;font-weight:bold;margin-right:5px}
 .m{background:var(--badge-m-bg);color:var(--badge-m-fg)} .f{background:var(--badge-f-bg);color:var(--badge-f-fg)} .n{background:var(--badge-n-bg);color:var(--badge-n-fg)} .pl{background:var(--badge-pl-bg);color:var(--badge-pl-fg)}
-/* Inline-окраска родов для текста внутри правил (артикли в примерах) */
-.g-m{color:var(--badge-m-fg);font-weight:600}
-.g-f{color:var(--badge-f-fg);font-weight:600}
-.g-n{color:var(--badge-n-fg);font-weight:600}
-.g-pl{color:var(--badge-pl-fg);font-weight:600}
 .rule-box{background:var(--bg-rule-box);padding:14px 16px;border-radius:14px;margin-bottom:15px;border-left:4px solid var(--accent);box-shadow:var(--shadow-card)}
 .warning{background:var(--bg-warning);border-left:4px solid var(--warning-border);padding:10px 14px;margin:10px 0;font-size:12px;border-radius:10px}
 .grid-2{display:grid;grid-template-columns:1fr 1fr;gap:15px}
@@ -126,11 +121,6 @@ tr:hover td{background:var(--bg-row-hover)}
 #searchBtn:active { transform: scale(0.96); }
 @media (hover: hover) {
   #searchBtn:hover { filter: brightness(1.08); }
-}
-.table-wrap {
-  overflow-x: auto;
-  -webkit-overflow-scrolling: touch;
-  width: 100%;
 }
 @media (max-width: 768px){
   td, th{
@@ -497,195 +487,6 @@ tr[data-vid], [data-vid].conj-card { cursor: pointer; }
   cursor: pointer; line-height: 1;
 }
 .word-modal-close:hover { color: var(--text-main); }
-
-/* ═══════════════════════════════════════════════════════════════
-   Карточный рендер правил — renderRuleCard()
-   Блоки: шапка · чек-лист шагов · парные карточки-исходы ·
-   раскрывашки · плашка-примечание · футер (ссылка + кнопка теста).
-   Палитра — фиксированная (не через --accent, который в тёмной теме
-   уходит в зелёный): циан/красный/янтарь из theme.css.
-   ═══════════════════════════════════════════════════════════════ */
-.rule-card {
-  background: var(--bg-rule-box);
-  border: 1px solid var(--border-soft);
-  border-left: 1px solid var(--border-soft);   /* перебиваем .rule-box */
-  border-radius: 16px;
-  padding: 18px 18px 16px;
-  box-shadow: var(--shadow-card);
-  margin-bottom: 18px;
-}
-/* блок примеров — отдельная колонка examples, между телом и плашкой */
-.rule-examples {
-  margin: 16px 0 0; padding: 12px 0;
-  border-top: 1px solid var(--border-soft);
-  border-bottom: 1px solid var(--border-soft);
-}
-/* после раскрывашки нижняя граница уже нарисована ею — второй линии не надо */
-.rule-collapse + .rule-examples { border-top: none; padding-top: 6px; }
-.rule-examples__head {
-  display: flex; align-items: center; gap: 6px;
-  font-size: 11px; font-weight: 700; letter-spacing: .04em; text-transform: uppercase;
-  color: var(--green-300); margin: 0 0 8px;
-}
-.rule-examples__head > svg { flex-shrink: 0; width: 13px; height: 13px; }
-.rule-examples > .rule-sec:first-of-type,
-.rule-examples > p:first-of-type { margin-top: 0; }
-/* .section с карточками правил не должна сама становиться «карточкой»
-   из-за .section:has(table) — иначе карточка в карточке */
-.section:has(.rule-card) { background: none; border: none; box-shadow: none; padding: 0; }
-
-/* шапка карточки: иконка домена слева, плашка тянется на все три строки
-   (eyebrow / title / subtitle) — высота считается из содержимого, длинный
-   заголовок в две строки растянет её сам */
-.rule-card__head {
-  display: grid; grid-template-columns: auto 1fr;
-  column-gap: 13px; align-items: stretch;
-  margin-bottom: 14px;
-}
-.rule-card__head > .rule-card__eyebrow  { margin-bottom: 3px; }
-.rule-card__head > .rule-card__subtitle { margin-bottom: 0; }
-.rule-icon {
-  grid-row: 1 / 4; align-self: stretch;
-  width: 44px; border-radius: 12px;
-  display: inline-flex; align-items: center; justify-content: center;
-  background: color-mix(in srgb, var(--accent) 14%, transparent);
-  color: var(--accent);
-}
-.rule-icon svg { width: 21px; height: 21px; }
-/* фолбэк для браузеров без color-mix */
-@supports not (background: color-mix(in srgb, red 14%, transparent)) {
-  .rule-icon { background: var(--bg-th); }
-}
-.rule-card__eyebrow {
-  font-size: 11px; font-weight: 600; letter-spacing: .02em;
-  color: var(--text-muted);
-  display: flex; align-items: center; gap: 6px;
-  margin-bottom: 6px;
-}
-.rule-card__eyebrow svg { width: 13px; height: 13px; }
-.rule-card__title {
-  font-size: 19px; font-weight: 700; line-height: 1.25;
-  color: var(--text-title); margin: 0 0 2px;
-}
-.rule-card__title.is-last { margin-bottom: 14px; }
-.rule-card__subtitle { font-size: 13px; color: var(--text-muted); margin: 0 0 14px; }
-
-.rule-card p { margin: 8px 0; font-size: 13px; line-height: 1.5; }
-.rule-card p:first-child { margin-top: 0; }
-.rule-card p.rule-callout { font-size: 12px; color: var(--text-muted); display: flex; gap: 7px; align-items: baseline; }
-.rule-callout svg { flex-shrink: 0; width: 13px; height: 13px; }
-/* цветной левый бордер + иконка по типу: лампочка — жёлтый, знаки — красный */
-.rule-callout--bulb { border-left: 2px solid var(--orange-400); padding-left: 10px; }
-.rule-callout--warn { border-left: 2px solid var(--red-500);    padding-left: 10px; }
-.rule-callout--bulb svg { color: var(--orange-400); }
-.rule-callout--warn svg { color: var(--red-500); }
-
-.rule-sec { margin: 14px 0 0; }
-.rule-sec__head { font-size: 13px; font-weight: 700; color: var(--text-title); margin: 0 0 6px; }
-
-/* чек-лист шагов — без «обёртки», только нумерованные кружки */
-.rule-steps { list-style: none; margin: 12px 0 0; padding: 0; }
-.rule-steps li { display: flex; gap: 10px; align-items: flex-start; margin-bottom: 10px; font-size: 13px; line-height: 1.45; }
-.rule-steps__n {
-  flex: 0 0 22px; width: 22px; height: 22px; border-radius: 50%;
-  background: var(--cyan-500); color: #fff;
-  font-size: 12px; font-weight: 700;
-  display: inline-flex; align-items: center; justify-content: center;
-  margin-top: 1px;
-}
-
-/* парные карточки-исходы — цветной бордер слева, без заливки и скругления */
-.rule-outcomes { display: grid; grid-template-columns: 1fr 1fr; gap: 10px 16px; margin: 14px 0 0; }
-@media (max-width: 560px) { .rule-outcomes { grid-template-columns: 1fr; } }
-.rule-outcome {
-  border-left: 3px solid var(--text-muted);
-  padding: 2px 0 2px 12px; font-size: 13px; line-height: 1.4;
-}
-.rule-outcome b { color: var(--text-title); }
-.rule-outcome__cap { display: block; margin-top: 3px; color: var(--text-muted); font-size: 12px; }
-.rule-outcome--cyan  { border-left-color: var(--cyan-500); }
-.rule-outcome--red   { border-left-color: var(--red-500); }
-.rule-outcome--amber { border-left-color: var(--orange-400); }
-
-/* раскрывашка — тонкая линия-разделитель, без «пузыря» */
-.rule-collapse { margin-top: 8px; border-top: 1px solid var(--border-soft); }
-.rule-collapse:not(:has(+ .rule-collapse)) { border-bottom: 1px solid var(--border-soft); }
-.rule-collapse + .rule-collapse { margin-top: 0; }
-.rule-collapse > summary {
-  list-style: none; cursor: pointer; padding: 10px 2px;
-  font-size: 13px; font-weight: 600; color: var(--text-title);
-  display: flex; align-items: center; justify-content: space-between; gap: 10px;
-}
-.rule-collapse > summary::-webkit-details-marker { display: none; }
-.rule-collapse__chev { flex-shrink: 0; width: 15px; height: 15px; transition: transform .2s var(--ease-dt); color: var(--text-muted); }
-.rule-collapse[open] .rule-collapse__chev { transform: rotate(180deg); }
-.rule-collapse__body { padding: 0 2px 12px; }
-.rule-collapse__body > p:first-child,
-.rule-collapse__body > .rule-sec:first-child { margin-top: 2px; }
-
-/* плашка-примечание — цветной бордер слева, текст нейтральный, без заливки */
-.rule-plate {
-  margin: 14px 0 0; padding: 2px 0 2px 12px;
-  border-left: 3px solid var(--orange-400);
-  font-size: 12.5px; color: var(--text-main); line-height: 1.5;
-}
-.rule-plate--cyan { border-left-color: var(--cyan-500); }
-.rule-plate--red  { border-left-color: var(--red-500); }
-.rule-plate > svg { width: 13px; height: 13px; vertical-align: -2px; margin-right: 6px; color: var(--orange-400); }
-.rule-plate--red > svg { color: var(--red-500); }
-.rule-plate--cyan > svg { color: var(--cyan-500); }
-.rule-plate b { color: var(--text-title); }
-
-/* таблицы правил: колонки по содержимому + горизонтальный скролл (.table-wrap) */
-.rule-card table { table-layout: auto; }
-.rule-card th { white-space: nowrap; }
-
-/* вертикальная окраска колонок: падежи держат свой цвет, остальные — по порядку */
-.rule-card th.rc-nom,   .rule-card td.rc-nom   { box-shadow: inset 2px 0 0 var(--border-soft); }
-.rule-card th.rc-cyan,  .rule-card td.rc-cyan  { box-shadow: inset 2px 0 0 var(--cyan-500); }
-.rule-card th.rc-red,   .rule-card td.rc-red   { box-shadow: inset 2px 0 0 var(--red-500); }
-.rule-card th.rc-amber, .rule-card td.rc-amber { box-shadow: inset 2px 0 0 var(--orange-400); }
-.rule-card th.rc-green, .rule-card td.rc-green { box-shadow: inset 2px 0 0 var(--green-500); }
-.rule-card th.rc-cyan  { color: var(--cyan-600); }
-.rule-card th.rc-red   { color: var(--red-500); }
-.rule-card th.rc-amber { color: var(--orange-400); }
-.rule-card th.rc-green { color: var(--green-600); }
-
-/* футер: ссылка на связанное правило + кнопка теста */
-.rule-card__footer {
-  display: flex; align-items: center; justify-content: space-between; gap: 12px;
-  flex-wrap: wrap; margin-top: 16px;
-}
-.rule-card__footer.is-endonly { justify-content: flex-end; }
-/* группа ссылок «см. также» — их может быть несколько на одно правило */
-.rule-card__links { display: flex; flex-direction: column; align-items: flex-start; gap: 6px; }
-.rule-seealso {
-  display: inline-flex; align-items: center; gap: 6px;
-  font-size: 12.5px; font-weight: 600;
-  color: var(--green-300); text-decoration: none;
-  background: none; border: none; padding: 0; cursor: pointer; font-family: inherit;
-}
-.rule-seealso svg { width: 13px; height: 13px; }
-.rule-seealso:hover { text-decoration: underline; }
-
-/* кнопка к тесту — надпись «скоро» проступает при наведении и по тапу */
-.rule-testbtn {
-  display: inline-flex; align-items: center; gap: 6px;
-  font-family: inherit; font-size: 12.5px; font-weight: 600;
-  color: var(--text-muted); background: none; border: none;
-  padding: 6px 2px; cursor: default;
-}
-.rule-testbtn__roll { overflow: hidden; height: 1.25em; }
-.rule-testbtn__roll-inner { display: flex; flex-direction: column; transition: transform .32s var(--ease-dt); }
-.rule-testbtn__roll-inner > span { height: 1.25em; line-height: 1.25em; white-space: nowrap; }
-.rule-testbtn:hover .rule-testbtn__roll-inner,
-.rule-testbtn.is-peek .rule-testbtn__roll-inner { transform: translateY(-50%); }
-.rule-testbtn__arrow { flex-shrink: 0; width: 13px; height: 13px; transition: transform .32s var(--ease-dt); }
-.rule-testbtn:hover .rule-testbtn__arrow,
-.rule-testbtn.is-peek .rule-testbtn__arrow { transform: translateX(2px); }
-@media (prefers-reduced-motion: reduce) {
-  .rule-testbtn__roll-inner, .rule-testbtn__arrow { transition: none; }
-}
 </style>
 <script>
 // Инициализация темы ДО рендера — чтобы не было вспышки светлой темы при загрузке
@@ -694,15 +495,9 @@ tr[data-vid], [data-vid].conj-card { cursor: pointer; }
   document.documentElement.classList.add('theme-' + saved);
 })();
 </script>
-<script src="data.js?v=20260914"></script>
+<script src="data.js?v=20260917"></script>
+<script src="rule-render.js?v=20260914"></script>
 <script>
-// ─── Глобальный хелпер экранирования HTML ────────────────────────────────
-function escHtml(s) {
-  if (s === null || s === undefined) return '';
-  return String(s)
-    .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
-    .replace(/"/g, '&quot;');
-}
 // wordText(item) — перевод слова с учётом языка (мультиязычность, слой 2):
 // en, если выбран английский и оно переведено (VOCAB.en из update_data.py/DeepL),
 // иначе всегда ru. Безопасно для CONJUGATIONS/TERMS — там en нет, просто вернёт ru.
@@ -760,16 +555,12 @@ function wordField(item, field, enField) {
 </div>
 <div class="tabs" id="tabsRow" style="margin-bottom:10px" ></div>
 <script>
-// ic(key) — достаёт SVG-разметку иконки из ICON_SVGS (единый источник, генерируется в data.js)
-function ic(key) { return (typeof ICON_SVGS !== 'undefined' && ICON_SVGS[key]) || ''; }
 // topicTitleHtml(topic) — иконка + подпись для domen:group из TOPIC_TITLES ({icon,label})
 function topicTitleHtml(topic) {
   var t = typeof TOPIC_TITLES !== 'undefined' ? TOPIC_TITLES[topic] : null;
   if (!t) return escHtml(topic);
   return (t.icon ? ic(t.icon) + ' ' : '') + escHtml(t.label);
 }
-// Маркеры-иконки в начале строк content_md (правила): 💡 совет, ⚠ предупреждение и т.п.
-var NOTE_ICON_MAP = { '💡': 'bulb', '⚠': 'warning', '📍': 'pin', '🔑': 'key', '✓': 'check', '✗': 'cross', '❗': 'warning', '👉': 'arrow-right' };
 var TABS_CONFIG = [
   { id: 'new',     icon: 'sparkle',   label: 'Neu' },
   { id: 'nums',    icon: 'hash',      label: 'Zahlen' },
@@ -2959,6 +2750,12 @@ function gotoRule(id) {
     el.classList.add('search-flash');
   });
 }
+window.onRuleLinkClick = gotoRule;
+
+// Кнопка «к тесту» в карточке правила — уходим в тренажёр на экран этого правила.
+window.onRuleTestClick = function (ruleId) {
+  window.location.href = 'trainer.html?rule=' + encodeURIComponent(ruleId);
+};
 
 // Кнопка «к тесту»: тап (мобилка / без hover) на 1.6 с проявляет «скоро»
 document.addEventListener('click', function(e) {
@@ -3931,289 +3728,6 @@ document.addEventListener('click', function(e) {
       html += '</div>';
     }
     panel.innerHTML = html;
-  }
-
-  // ─── Утилиты для рендера правил ────────────────────────────────────────
-
-  // Превращает inline-разметку **жирное** в HTML
-  function renderInline(s) {
-    return escHtml(s)
-      .replace(/\*\*([^*]+)\*\*/g, '<b>$1</b>')
-      .replace(/__([^_]+)__/g, '<b>$1</b>')
-      // Разрешаем inline-окраску родов: <span class="g-m">текст</span>
-      // (после escHtml теги превратились в &lt;span...&gt; — возвращаем обратно)
-      .replace(/&lt;span class=&quot;(g-(?:m|f|n|pl))&quot;&gt;([\s\S]*?)&lt;\/span&gt;/g,
-               '<span class="$1">$2</span>');
-  }
-
-  // ─── Карточный рендер правила — renderRuleCard() ───────────────────────
-  // Разметка внутри content_md (маркеры — ASCII, EN-пайплайн заворачивает их
-  // в <x>…</x>, DeepL не трогает; число строк и `|` сохраняется):
-  //   [sub] текст              — 1-я непустая строка → подзаголовок в шапке
-  //   1. … / 2. …              — подряд ≥2 строк → нумерованный чек-лист (кружки)
-  //   :::outcomes … :::        — парные карточки; строка «метка → акцент | подпись»
-  //   ### Заголовок [collapse] — секцию (до следующего ###) прячем в <details>
-  //   ### Заголовок            — обычная открытая подсекция
-  //   💡 ⚠ 📍 …                — callout мелким шрифтом
-  //   | a | b |                — таблица
-  //   прочее                   — <p> (ни одно предложение не теряется)
-  // Плашка-примечание снизу — из r.note/noteEn. Зелёная ссылка «см. также» —
-  // id вида r0053 в r.note, если резолвится в другое правило.
-  const RULES_BY_ID = (typeof RULES !== 'undefined')
-    ? Object.fromEntries(RULES.map(r => [r.id, r])) : {};
-
-  const RULE_CHEVRON = '<svg class="rule-collapse__chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg>';
-
-  function ruleAccent(text) {
-    const s = (text || '').toLowerCase();
-    if (/\bdativ\b/.test(s)) return 'cyan';
-    if (/\bakkusativ\b/.test(s)) return 'red';
-    return null;
-  }
-
-  // Вертикальная окраска колонок таблицы. Падежи держат закреплённый цвет
-  // (Akkusativ — красный, Dativ — циан, Genitiv — янтарь, Nominativ — серый),
-  // остальные колонки — по порядку. Первая колонка обычно строковая «шапка
-  // строки» — оставляем нейтральной (серой).
-  const RULE_CASE_COL = [
-    [/\bakkusativ\b|\bwen\?/i,  'rc-red'],
-    [/\bdativ\b|\bwem\?/i,      'rc-cyan'],
-    [/\bgenitiv\b|\bwessen\?/i, 'rc-amber'],
-    [/\bnominativ\b|\bwer\?/i,  'rc-nom'],
-  ];
-  const RULE_POS_COL = ['rc-cyan', 'rc-red', 'rc-amber', 'rc-green'];
-  function ruleTable(rows) {
-    const colCls = (rows[0] || []).map((hCell, ci) => {
-      const plain = String(hCell).replace(/\*\*/g, '');
-      for (const [re, cls] of RULE_CASE_COL) if (re.test(plain)) return cls;
-      if (ci === 0) return 'rc-nom';
-      return RULE_POS_COL[(ci - 1) % RULE_POS_COL.length];
-    });
-    let h = '<table>';
-    rows.forEach((cells, idx) => {
-      const tag = idx === 0 ? 'th' : 'td';
-      h += '<tr>';
-      cells.forEach((c, ci) => {
-        const cls = colCls[ci] ? ' class="' + colCls[ci] + '"' : '';
-        h += '<' + tag + cls + '>' + renderInline(c) + '</' + tag + '>';
-      });
-      h += '</tr>';
-    });
-    return h + '</table>';
-  }
-
-  function ruleChecklist(steps) {
-    let h = '<ol class="rule-steps">';
-    steps.forEach((s, i) => {
-      h += '<li><span class="rule-steps__n">' + (i + 1) + '</span><span>' + renderInline(s) + '</span></li>';
-    });
-    return h + '</ol>';
-  }
-
-  function ruleOutcomes(rows) {
-    let h = '<div class="rule-outcomes">';
-    rows.forEach((raw, i) => {
-      let cap = '';
-      const p = raw.indexOf('|');
-      if (p !== -1) { cap = raw.slice(p + 1).trim(); raw = raw.slice(0, p).trim(); }
-      const accent = ruleAccent(raw) || ['cyan', 'red', 'amber'][i];
-      h += '<div class="rule-outcome' + (accent ? ' rule-outcome--' + accent : '') + '">'
-         + renderInline(raw)
-         + (cap ? '<span class="rule-outcome__cap">' + renderInline(cap) + '</span>' : '')
-         + '</div>';
-    });
-    return h + '</div>';
-  }
-
-  // Буфер подряд идущих строк → чек-лист (1-я «N. …», строки без номера
-  // приклеиваются к предыдущему шагу). null — это не чек-лист.
-  function tryChecklist(buf) {
-    if (!/^\d+\.\s+/.test(buf[0])) return null;
-    const steps = [];
-    for (const l of buf) {
-      const m = l.match(/^(\d+)\.\s+(.*)$/);
-      if (m) steps.push(m[2]);
-      else if (steps.length) steps[steps.length - 1] += ' ' + l.trim();
-      else return null;
-    }
-    return steps.length >= 2 ? steps : null;
-  }
-
-  function renderRuleBlocks(md) {
-    const lines = (md || '').split(/\r?\n/);
-    let out = '', buf = [], tableRows = [];
-
-    const flushTable = () => { if (tableRows.length) { out += ruleTable(tableRows); tableRows = []; } };
-    const flushBuf = () => {
-      if (!buf.length) return;
-      const steps = tryChecklist(buf);
-      if (steps) { out += ruleChecklist(steps); buf = []; return; }
-      for (const line of buf) {
-        // флаг u — иначе emoji-класс матчит только суррогатную половину 💡/📍/🔑
-        const m = line.match(/^([💡⚠📍🔑✓✗❗👉])\s*/u);
-        if (m) {
-          const ch = m[1];
-          const icon = NOTE_ICON_MAP[ch];
-          const mod = ch === '💡' ? ' rule-callout--bulb'
-                    : (ch === '⚠' || ch === '❗' || ch === '✗') ? ' rule-callout--warn' : '';
-          out += '<p class="rule-callout' + mod + '">' + (icon ? ic(icon) : '') + '<span>' + renderInline(line.slice(m[0].length)) + '</span></p>';
-        } else out += '<p>' + renderInline(line) + '</p>';
-      }
-      buf = [];
-    };
-    const flushAll = () => { flushTable(); flushBuf(); };
-
-    for (let i = 0; i < lines.length; i++) {
-      const trimmed = lines[i].trim();
-
-      // фенс :::outcomes … :::
-      if (/^:::\s*outcomes\b/i.test(trimmed)) {
-        flushAll();
-        const rows = [];
-        i++;
-        for (; i < lines.length && !/^:::\s*$/.test(lines[i].trim()); i++) {
-          if (lines[i].trim()) rows.push(lines[i].trim());
-        }
-        if (rows.length) out += ruleOutcomes(rows);
-        continue;
-      }
-
-      // заголовок секции ### / ##
-      const hm = trimmed.match(/^#{2,3}\s+(.*)$/);
-      if (hm) {
-        flushAll();
-        let head = hm[1];
-        const collapse = /\[collapse\]\s*$/i.test(head);
-        if (collapse) head = head.replace(/\s*\[collapse\]\s*$/i, '');
-        const body = [];
-        let j = i + 1;
-        for (; j < lines.length; j++) {
-          const lt = lines[j].trim();
-          if (/^#{2,3}\s+/.test(lt) || /^:::\s*outcomes\b/i.test(lt)) break;
-          body.push(lines[j]);
-        }
-        const bodyHtml = renderRuleBlocks(body.join('\n'));
-        if (collapse) {
-          out += '<details class="rule-collapse"><summary><span>' + renderInline(head) + '</span>' + RULE_CHEVRON + '</summary>'
-               + '<div class="rule-collapse__body">' + bodyHtml + '</div></details>';
-        } else {
-          out += '<div class="rule-sec"><div class="rule-sec__head">' + renderInline(head) + '</div>' + bodyHtml + '</div>';
-        }
-        i = j - 1;
-        continue;
-      }
-
-      if (!trimmed) { flushAll(); continue; }
-
-      // таблица: строка с 2+ '|'
-      if ((trimmed.match(/\|/g) || []).length >= 2) {
-        flushBuf();
-        const cells = trimmed.split('|').map(c => c.trim()).filter(c => c !== '');
-        if (cells.length) { tableRows.push(cells); continue; }
-      }
-
-      flushTable();
-      buf.push(trimmed);
-    }
-    flushAll();
-    return out;
-  }
-
-  function renderRulePlate(text) {
-    if (!text) return '';
-    let cls = 'rule-plate', icon = '';
-    // note может начинаться с маркера 💡/⚠ — вырезаем его, ставим иконку и цвет
-    const m = text.match(/^([💡⚠📍🔑✓✗❗👉])\s*/u);
-    if (m) {
-      text = text.slice(m[0].length);
-      const key = NOTE_ICON_MAP[m[1]];
-      if (key) icon = ic(key);
-      if (m[1] === '⚠' || m[1] === '❗' || m[1] === '✗') cls += ' rule-plate--red';
-    }
-    return '<div class="' + cls + '">' + icon + renderInline(text) + '</div>';
-  }
-
-  // Примеры — отдельная колонка examples/examplesEn. Прогоняются через тот же
-  // renderRuleBlocks, что и тело: там встречаются таблицы (r0019) и подсказки.
-  function renderRuleExamples(rule) {
-    const md = wordField(rule, 'examples', 'examplesEn');
-    if (!md || !md.trim()) return '';
-    return '<div class="rule-examples">'
-         + '<div class="rule-examples__head">' + ic('notes') + '<span>' + escHtml(t('cheatsheet.rule_examples')) + '</span></div>'
-         + renderRuleBlocks(md)
-         + '</div>';
-  }
-
-  function renderRuleSeeAlso(rule) {
-    const ids = ((rule.note || '').match(/\br\d{4}\b/g) || []);   // id языконезависимы — из RU-note
-    const seen = {};
-    const links = [];
-    for (const id of ids) {
-      if (id === rule.id || seen[id] || !RULES_BY_ID[id]) continue;
-      seen[id] = true;
-      const title = wordField(RULES_BY_ID[id], 'title', 'titleEn');
-      links.push('<button type="button" class="rule-seealso" onclick="gotoRule(\'' + id + '\')">'
-             + ic('link') + '<span>' + escHtml(id) + ' — ' + escHtml(title) + '</span></button>');
-    }
-    if (!links.length) return '';
-    return '<div class="rule-card__links">' + links.join('') + '</div>';
-  }
-
-  // Кнопка «к тесту»: надпись прокручивается на «скоро» при наведении и по
-  // тапу (для мобилки). Тест по правилу пока не реализован — переход не делаем.
-  function renderRuleTestBtn() {
-    return '<button type="button" class="rule-testbtn" aria-disabled="true">'
-         + '<span class="rule-testbtn__roll"><span class="rule-testbtn__roll-inner">'
-         + '<span>' + escHtml(t('cheatsheet.rule_take_test')) + '</span>'
-         + '<span>' + escHtml(t('cheatsheet.rule_soon')) + '</span></span></span>'
-         + '<svg class="rule-testbtn__arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>'
-         + '</button>';
-  }
-
-  // Полная карточка правила. opts.compact — компактный отступ сверху (вкладка «Местоимения»).
-  function renderRuleCard(rule, opts) {
-    opts = opts || {};
-    const lines = (wordField(rule, 'content_md', 'content_md_en') || '').split(/\r?\n/);
-    const eyebrow = [rule.domen, rule.group].filter(Boolean).join(' · ');
-    const title = wordField(rule, 'title', 'titleEn');
-    const norm = s => (s || '').replace(/\s+/g, ' ').trim().toLowerCase();
-
-    let subtitle = '';
-    for (let k = 0; k < lines.length; k++) {
-      if (!lines[k].trim()) continue;
-      const t = lines[k].trim();
-      const sm = t.match(/^\[sub\]\s*(.*)$/i);
-      if (sm) { subtitle = sm[1]; lines.splice(k, 1); break; }
-      // первый ### дублирует заголовок карточки — убираем, тело секции остаётся
-      const hm = t.match(/^#{2,3}\s+(.*?)(?:\s*\[collapse\])?$/i);
-      if (hm && norm(hm[1]) === norm(title)) lines.splice(k, 1);
-      break;
-    }
-
-    let h = '<div class="rule-box rule-card" data-rule-id="' + escHtml(rule.id || '') + '"'
-          + (opts.compact ? ' style="margin-top:12px"' : '') + '>';
-    // Иконка домена: пара domen:group уже описана в TOPIC_TITLES ({icon,label}),
-    // отдельной привязки заводить не надо. Темы нет в справочнике — иконки нет,
-    // шапка тогда собирается по-старому, без сетки.
-    const topicKey = rule.topic || ((rule.domen && rule.group) ? rule.domen + ':' + rule.group : '');
-    const topicMeta = (typeof TOPIC_TITLES !== 'undefined' && topicKey) ? TOPIC_TITLES[topicKey] : null;
-    const iconSvg = (topicMeta && topicMeta.icon) ? ic(topicMeta.icon) : '';
-
-    const headInner = (eyebrow ? '<div class="rule-card__eyebrow">' + escHtml(eyebrow) + '</div>' : '')
-      + '<div class="rule-card__title' + ((subtitle || iconSvg) ? '' : ' is-last') + '">' + escHtml(title) + '</div>'
-      + (subtitle ? '<div class="rule-card__subtitle">' + renderInline(subtitle) + '</div>' : '');
-    h += iconSvg
-      ? '<div class="rule-card__head"><span class="rule-icon">' + iconSvg + '</span>' + headInner + '</div>'
-      : headInner;
-
-    h += renderRuleBlocks(lines.join('\n'));
-    h += renderRuleExamples(rule);
-    h += renderRulePlate(wordField(rule, 'note', 'noteEn'));
-
-    const seeAlso = renderRuleSeeAlso(rule);
-    h += '<div class="rule-card__footer' + (seeAlso ? '' : ' is-endonly') + '">' + seeAlso + renderRuleTestBtn() + '</div>';
-
-    return h + '</div>';
   }
 
   // ─── Рендер: phrases ────────────────────────────────────────────────────
