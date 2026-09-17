@@ -129,6 +129,7 @@ window.I18N_RU = {
   "trainer.rules_test_all": "Тест по всем правилам",
   "trainer.n_rules": "правил",
   "trainer.rule_no_test": "нет теста",
+  "trainer.rule_peek": "Посмотреть правило",
   "trainer.pick_block": "Выбери блок",
   "trainer.n_topics": "тем",
   "trainer.n_verbs": "глаголов",

@@ -128,6 +128,7 @@ window.I18N_EN = {
   "trainer.rules_test_all": "Test on all rules",
   "trainer.n_rules": "rules",
   "trainer.rule_no_test": "no test yet",
+  "trainer.rule_peek": "View the rule",
   "trainer.pick_block": "Choose a block",
   "trainer.n_topics": "topics",
   "trainer.n_verbs": "verbs",

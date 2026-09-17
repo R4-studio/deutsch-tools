@@ -152,6 +152,35 @@ button:active { transform: scale(0.96); }
   display: inline-flex; align-items: center; gap: 5px;
 }
 .dt-rule-open:hover { text-decoration: underline; }
+
+/* Плоская капсула «Посмотреть правило» под карточкой вопроса.
+   Плоская намеренно: это вспомогательное действие, оно не должно спорить
+   с кнопкой «Проверить». Отсюда без заливки и без тени — только контур. */
+.dt-rule-peek {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  width: 100%;
+  margin-top: 12px;
+  padding: 10px 18px;
+  border-radius: 999px;
+  border: 1px solid var(--border-soft);
+  background: transparent;
+  color: var(--text-muted);
+  font: inherit;
+  font-size: 13px;
+  cursor: pointer;
+  transition: border-color 0.15s var(--ease-dt), color 0.15s var(--ease-dt),
+              background 0.15s var(--ease-dt);
+}
+@media (hover: hover) {
+  .dt-rule-peek:hover {
+    border-color: var(--c-block-regeln);
+    color: var(--c-block-regeln);
+  }
+}
+.dt-rule-peek:active { transform: scale(0.99); background: var(--bg-row-hover); }
 </style>
 </head>
 <body>
@@ -4445,11 +4474,7 @@ function App() {
             </span>}
             icon={icon} onTheme={cycleTheme} onLang={cycleLang} onHome={goHome} />
           <div style={{ textAlign: "center", color: "var(--text-muted)", fontSize: 13, marginBottom: 12 }}>
-            {headerRule ? (
-              <button className="dt-rule-open" onClick={() => setRuleOverlayId(headerRule.id)}>
-                <Icon name="book-open" size={13} /> {wordField(headerRule, 'title', 'titleEn')}
-              </button>
-            ) : subLabel}
+            {headerRule ? wordField(headerRule, 'title', 'titleEn') : subLabel}
             {" · "}{modeTitle}
           </div>
 
@@ -4493,6 +4518,13 @@ function App() {
               return <div style={S.explain}><Icon name="bulb" size={13} /> {explainText}</div>;
             })()}
           </div>
+          {headerRule && (
+            <button type="button" className="dt-rule-peek"
+                    onClick={() => setRuleOverlayId(headerRule.id)}>
+              <Icon name="eye" size={15} />
+              {window.t('trainer.rule_peek')}
+            </button>
+          )}
           {answered && (
             <div style={{ textAlign: "center", marginTop: 16 }}>
               <button style={S.primaryBtn(activeBlock.color)} onClick={nextQ}>
