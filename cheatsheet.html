@@ -140,26 +140,6 @@ tr:hover td{background:var(--bg-row-hover)}
     font-size:12px;
   }
 }
-.to-top {
-  position: fixed;
-  left: 20px;
-  bottom: 20px;
-  z-index: 999;
-  opacity: 0.85;
-  display: inline-flex;
-  background: var(--accent);
-  color: var(--on-color);
-  user-select: none;
-  box-shadow: 0 4px 12px rgba(0,0,0,0.2);
-  transition: transform 0.2s var(--ease-dt), filter 0.2s opacity 0.2s var(--ease-dt), background 0.15s var(--ease-dt);
-}
-@media (hover: hover) {
-  .to-top:hover { filter: brightness(1.08); }
-}
-.to-top:active {
-  transform: scale(0.96);
-  background: var(--accent-dark);
-}
 .panel.active::after {
   content: '';
   display: block;
@@ -3180,6 +3160,30 @@ document.addEventListener('click', function(e) {
   </span></span>
   <span class="dt-cta__arrow"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 19V5M5 12l7-7 7 7"/></svg></span>
 </button>
+<script>
+// Кнопка «Наверх» появляется, только когда прокрутили примерно на экран вниз.
+// Слушатель пассивный и через requestAnimationFrame: событие scroll на телефоне
+// стреляет десятки раз в секунду, и работа со стилями прямо в обработчике — верный
+// способ получить дёрганую прокрутку.
+(function () {
+  var btn = document.querySelector('.to-top');
+  if (!btn) return;
+  var ticking = false;
+
+  function update() {
+    ticking = false;
+    btn.classList.toggle('is-visible', window.scrollY > window.innerHeight);
+  }
+
+  window.addEventListener('scroll', function () {
+    if (ticking) return;
+    ticking = true;
+    requestAnimationFrame(update);
+  }, { passive: true });
+
+  update();   // на случай, если страница открылась уже прокрученной
+})();
+</script>
 <!-- Рендер справочника из data.js -->
 <script>
 // ═══════════════════════════════════════════════════════════════

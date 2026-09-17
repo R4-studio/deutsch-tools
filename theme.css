@@ -760,3 +760,41 @@ html {
   width: 100%;
 }
 .dt-cta:hover .dt-cta__arrow { transform: rotate(-45deg); }
+
+/* ─── Кнопка «Наверх» ────────────────────────────────────────────────────
+   Капсула строится на .dt-cta, здесь только позиционирование и появление.
+   Спрятана по умолчанию: показывается, когда прокрутили примерно на экран. */
+.to-top {
+  position: fixed;
+  left: 20px;
+  bottom: 20px;
+  z-index: 999;
+  display: inline-flex;
+  background: var(--accent);
+  color: var(--on-color);
+  user-select: none;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(20px);
+  pointer-events: none;
+  transition: transform 0.25s var(--ease-dt), opacity 0.25s var(--ease-dt),
+              filter 0.2s var(--ease-dt), background 0.15s var(--ease-dt);
+}
+.to-top.is-visible {
+  opacity: 0.85;
+  visibility: visible;
+  transform: translateY(0);
+  pointer-events: auto;
+}
+@media (hover: hover) {
+  .to-top:hover { filter: brightness(1.08); }
+}
+.to-top:active {
+  transform: scale(0.96);
+  background: var(--accent-dark);
+}
+@media (prefers-reduced-motion: reduce) {
+  .to-top,
+  .to-top.is-visible { transform: none; }
+}
