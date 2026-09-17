@@ -2766,7 +2766,7 @@ window.onRuleTestClick = function (ruleId) {
 
 // Кнопка «к тесту»: тап (мобилка / без hover) на 1.6 с проявляет «скоро»
 document.addEventListener('click', function(e) {
-  var btn = e.target.closest && e.target.closest('.rule-testbtn');
+  var btn = e.target.closest && e.target.closest('.rule-cta--soon');
   if (!btn) return;
   btn.classList.add('is-peek');
   clearTimeout(btn._peekT);

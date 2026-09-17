@@ -114,7 +114,7 @@ window.I18N_RU = {
   "cheatsheet.sounds_title": "Произношение букв и сочетаний",
   "cheatsheet.no_new_words": "Новых слов пока нет",
   "cheatsheet.to_top": "Наверх",
-  "cheatsheet.rule_take_test": "к тесту",
+  "cheatsheet.rule_take_test": "перейти к тесту",
   "cheatsheet.rule_soon": "скоро",
   "cheatsheet.rule_examples": "Примеры",
   "trainer.title_home": "Тренажёр немецкого",

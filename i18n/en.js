@@ -113,7 +113,7 @@ window.I18N_EN = {
   "cheatsheet.sounds_title": "Pronunciation of letters and combos",
   "cheatsheet.no_new_words": "No new words yet",
   "cheatsheet.to_top": "Top",
-  "cheatsheet.rule_take_test": "to test",
+  "cheatsheet.rule_take_test": "go to test",
   "cheatsheet.rule_soon": "soon",
   "cheatsheet.rule_examples": "Examples",
   "trainer.title_home": "German Trainer",

@@ -535,6 +535,42 @@ html {
 }
 .dt-cta__arrow svg { width: 13px; height: 13px; display: block; }
 
+/* ─── Капсула «перейти к тесту» на карточке правила ──────────────────────
+   Базой служит .dt-cta, здесь только то, чем она отличается: иконка слева
+   (отсюда меньший левый паддинг) и собственный фон. Фон свой, а не как у
+   .dt-cta, по двум причинам: у .dt-cta он прибит к --grey-900, что в тёмной
+   теме совпадает с --bg-rule-box и капсула пропадает; и роль у кнопки другая —
+   она запускает тест, а не ведёт в раздел, ей положено быть заметнее. */
+.rule-cta {
+  padding: 6px 6px 6px 14px;
+  font-size: 13px;
+}
+.rule-cta__icon {
+  flex-shrink: 0;
+  width: 16px; height: 16px;
+  display: inline-flex; align-items: center; justify-content: center;
+}
+.rule-cta__icon svg { width: 16px; height: 16px; display: block; }
+
+/* тест готов */
+.rule-cta--ready {
+  background: var(--green);
+  color: var(--on-color);
+}
+
+/* теста ещё нет — та же форма, приглушённая, курсор обычный */
+.rule-cta--soon {
+  background: var(--bg-tab);
+  color: var(--text-muted);
+  cursor: default;
+}
+.rule-cta--soon .dt-cta__arrow {
+  background: var(--bg-card);
+  color: var(--text-muted);
+}
+/* подпись роллит на «скоро» по наведению и по тапу (класс вешает cheatsheet.html) */
+.rule-cta--soon.is-peek .dt-cta__roll-inner { transform: translateY(-50%); }
+
 /* ═══════════════════════════════════════════════════════════════
    Карточный рендер правил — renderRuleCard()
    Блоки: шапка · чек-лист шагов · парные карточки-исходы ·
@@ -699,33 +735,11 @@ html {
 .rule-seealso {
   display: inline-flex; align-items: center; gap: 6px;
   font-size: 12.5px; font-weight: 600;
-  color: var(--green-300); text-decoration: none;
+  color: var(--green); text-decoration: none;
   background: none; border: none; padding: 0; cursor: pointer; font-family: inherit;
 }
 .rule-seealso svg { width: 13px; height: 13px; }
 .rule-seealso:hover { text-decoration: underline; }
-
-/* кнопка к тесту — надпись «скоро» проступает при наведении и по тапу */
-.rule-testbtn {
-  display: inline-flex; align-items: center; gap: 6px;
-  font-family: inherit; font-size: 12.5px; font-weight: 600;
-  color: var(--text-muted); background: none; border: none;
-  padding: 6px 2px; cursor: default;
-}
-.rule-testbtn__roll { overflow: hidden; height: 1.25em; }
-.rule-testbtn__roll-inner { display: flex; flex-direction: column; transition: transform .32s var(--ease-dt); }
-.rule-testbtn__roll-inner > span { height: 1.25em; line-height: 1.25em; white-space: nowrap; }
-.rule-testbtn:hover .rule-testbtn__roll-inner,
-.rule-testbtn.is-peek .rule-testbtn__roll-inner { transform: translateY(-50%); }
-.rule-testbtn__arrow { flex-shrink: 0; width: 13px; height: 13px; transition: transform .32s var(--ease-dt); }
-.rule-testbtn:hover .rule-testbtn__arrow,
-.rule-testbtn.is-peek .rule-testbtn__arrow { transform: translateX(2px); }
-/* живая кнопка — у правила есть готовый тест */
-.rule-testbtn--ready { color: var(--green); cursor: pointer; }
-.rule-testbtn--ready:hover { text-decoration: underline; }
-@media (prefers-reduced-motion: reduce) {
-  .rule-testbtn__roll-inner, .rule-testbtn__arrow { transition: none; }
-}
 
 /* базовые стили таблиц внутри карточки правила — в справочнике они приходили
    из глобальных table/th/td, в тренажёре таких нет */

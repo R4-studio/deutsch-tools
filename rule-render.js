@@ -282,31 +282,34 @@ function renderRuleSeeAlso(rule) {
   return '<div class="rule-card__links">' + links.join('') + '</div>';
 }
 
-// Кнопка к тесту. Живой она становится, только если (а) у правила набран тест и
+// Кнопка к тесту. Живой становится, только если (а) у правила набран тест и
 // (б) страница объявила window.onRuleTestClick. Справочник объявляет — и кнопка
-// уводит в тренажёр; в оверлее тренажёра обработчик будет свой.
+// уводит в тренажёр; в оверлее тренажёра кнопки нет (opts.noTestBtn).
+// Капсула построена на общем .dt-cta (theme.css) — от него приезжают форма,
+// ролл текста, кружок со стрелкой и поворот стрелки на наведении.
 function renderRuleTestBtn(rule) {
   const id = rule && rule.id;
-  const arrow = '<svg class="rule-testbtn__arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>';
   const ready = id && ruleHasTest(id) && typeof window.onRuleTestClick === 'function';
+  const arrow = '<span class="dt-cta__arrow"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span>';
+  const icon  = '<span class="rule-cta__icon">' + ic('target') + '</span>';
+
+  const roll = (a, b) =>
+    '<span class="dt-cta__roll"><span class="dt-cta__roll-inner">'
+    + '<span>' + escHtml(a) + '</span><span>' + escHtml(b) + '</span></span></span>';
 
   if (!ready) {
-    // как было: неактивная, «к тесту» → «скоро» на наведении и по тапу
-    return '<button type="button" class="rule-testbtn" aria-disabled="true">'
-         + '<span class="rule-testbtn__roll"><span class="rule-testbtn__roll-inner">'
-         + '<span>' + escHtml(window.t('cheatsheet.rule_take_test')) + '</span>'
-         + '<span>' + escHtml(window.t('cheatsheet.rule_soon')) + '</span></span></span>'
+    // теста ещё нет: та же капсула, но приглушённая; подпись роллит на «скоро»
+    return '<button type="button" class="dt-cta rule-cta rule-cta--soon" aria-disabled="true">'
+         + icon
+         + roll(window.t('cheatsheet.rule_take_test'), window.t('cheatsheet.rule_soon'))
          + arrow + '</button>';
   }
 
-  // Живая: подпись с числом вопросов, ролл крутится, но текст не меняется
-  // (та же механика, что у .dt-cta на главной тренажёра).
-  const label = escHtml(window.t('cheatsheet.rule_take_test')) + ' · ' + (RULE_Q_COUNT[id] || 0);
-  return '<button type="button" class="rule-testbtn rule-testbtn--ready" '
+  // тест готов: ролл крутится, но текст не меняется — как у .dt-cta на главной
+  const label = window.t('cheatsheet.rule_take_test');
+  return '<button type="button" class="dt-cta rule-cta rule-cta--ready" '
        + 'onclick="window.onRuleTestClick(\'' + escHtml(id) + '\')">'
-       + '<span class="rule-testbtn__roll"><span class="rule-testbtn__roll-inner">'
-       + '<span>' + label + '</span><span>' + label + '</span></span></span>'
-       + arrow + '</button>';
+       + icon + roll(label, label) + arrow + '</button>';
 }
 
 // Полная карточка правила. opts.compact — компактный отступ сверху (вкладка «Местоимения»).
