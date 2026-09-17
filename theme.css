@@ -4,14 +4,28 @@
    Переменные используются и шпорой, и тренажёром.
    ═══════════════════════════════════════════════════════════════ */
 @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&display=swap');
 
 /* ─── Глобальный сброс ────────────────────────────────────────── */
 * { box-sizing: border-box; }
 
+html {
+  /* место под полосу прокрутки резервируется всегда — иначе ширина окна
+     скачет на ~15px между длинной и короткой страницей, и центрированный
+     контент дёргается на ~7px при каждом переходе между экранами */
+  scrollbar-gutter: stable;
+  background: var(--bg-body);        /* красит и жёлоб, иначе он белый */
+
+  scrollbar-width: thin;
+  scrollbar-color: var(--scrollbar-thumb) transparent;
+
+  -webkit-tap-highlight-color: transparent;   /* серый прямоугольник при тапе */
+}
 /* ─── Светлая тема (по умолчанию) ─────────────────────────────── */
 :root {
   /* фон */
   --bg-body:       var(--grey-100);
+  --scrollbar-thumb: var(--grey-300);
   --bg-panel:      var(--grey-50);
   --bg-card:       var(--grey-50);
   --bg-tab:        var(--grey-200);
@@ -246,6 +260,7 @@
 .theme-dark {
   /* фон */
   --bg-body:       var(--grey-950);
+  --scrollbar-thumb: var(--grey-700);
   --bg-panel:      var(--grey-950);
   --bg-card:       var(--grey-900);
   --bg-tab:        var(--grey-800);
@@ -534,6 +549,7 @@
   padding: 18px 18px 16px;
   box-shadow: var(--shadow-card);
   margin-bottom: 18px;
+  color: var(--text-main);
 }
 /* блок примеров — отдельная колонка examples, между телом и плашкой */
 .rule-examples {
@@ -546,7 +562,7 @@
 .rule-examples__head {
   display: flex; align-items: center; gap: 6px;
   font-size: 11px; font-weight: 700; letter-spacing: .04em; text-transform: uppercase;
-  color: var(--green-300); margin: 0 0 8px;
+  color: var(--green); margin: 0 0 8px;
 }
 .rule-examples__head > svg { flex-shrink: 0; width: 13px; height: 13px; }
 .rule-examples > .rule-sec:first-of-type,
@@ -705,7 +721,7 @@
 .rule-testbtn:hover .rule-testbtn__arrow,
 .rule-testbtn.is-peek .rule-testbtn__arrow { transform: translateX(2px); }
 /* живая кнопка — у правила есть готовый тест */
-.rule-testbtn--ready { color: var(--green-300); cursor: pointer; }
+.rule-testbtn--ready { color: var(--green); cursor: pointer; }
 .rule-testbtn--ready:hover { text-decoration: underline; }
 @media (prefers-reduced-motion: reduce) {
   .rule-testbtn__roll-inner, .rule-testbtn__arrow { transition: none; }
