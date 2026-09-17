@@ -561,6 +561,13 @@ function topicTitleHtml(topic) {
   if (!t) return escHtml(topic);
   return (t.icon ? ic(t.icon) + ' ' : '') + escHtml(t.label);
 }
+// Текст подписи темы без разметки — для сортировки секций.
+// Сортируем по тому, что видно на экране (немецкая подпись), а не по ключу
+// domen:group: people:family на экране выглядит как «Familie».
+function topicLabel(topic) {
+  var t = typeof TOPIC_TITLES !== 'undefined' ? TOPIC_TITLES[topic] : null;
+  return (t && t.label) ? t.label : topic;
+}
 var TABS_CONFIG = [
   { id: 'new',     icon: 'sparkle',   label: 'Neu' },
   { id: 'nums',    icon: 'hash',      label: 'Zahlen' },
@@ -3343,7 +3350,25 @@ document.addEventListener('click', function(e) {
     } else {
       groups = groupByTopic(items);
     }
-    const topicsInTab = Object.keys(groups).filter(t => !t.startsWith("new:"));
+    let topicsInTab = Object.keys(groups).filter(t => !t.startsWith("new:"));
+
+    // Порядок секций. Раньше секции выводились в порядке первого появления темы
+    // в VOCAB — то есть ни один режим, кроме level-*, порядок не менял.
+    if (mode === 'topic-az' || mode === 'topic-za') {
+      topicsInTab.sort((a, b) => topicLabel(a).localeCompare(topicLabel(b), 'de'));
+      if (mode === 'topic-za') topicsInTab.reverse();
+    } else if (mode === 'date-asc' || mode === 'date-desc') {
+      // Тема встаёт по своему самому свежему слову: у date-desc сверху оказывается
+      // тема, в которую добавляли последней. Внутри таблицы порядок задаёт sortRows.
+      const freshest = {};
+      for (const t of topicsInTab) {
+        freshest[t] = groups[t].reduce((max, item) => Math.max(max, idNum(item)), 0);
+      }
+      topicsInTab.sort((a, b) => mode === 'date-desc'
+        ? freshest[b] - freshest[a]
+        : freshest[a] - freshest[b]);
+    }
+
     if (topicsInTab.length === 0) return '';
 
     return topicsInTab.map(topic => {

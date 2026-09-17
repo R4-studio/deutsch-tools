@@ -2341,23 +2341,26 @@ function applyQuota30(autoPool, manualPool) {
   const QUOTA = { 1: 8, 2: 6, 3: 6, 4: 6, 5: 4 };
   const manualSourceIds = new Set(manualPool.map(q => q.sourceId).filter(Boolean));
   const autoFiltered = autoPool.filter(q => !q.sourceId || !manualSourceIds.has(q.sourceId));
-  const byLevel = { 1: [], 2: [], 3: [], 4: [], 5: [] };
-  for (const q of [...autoFiltered, ...manualPool]) {
-    const lvl = q.difficulty || 1;
-    if (byLevel[lvl]) byLevel[lvl].push(q);
-  }
+
+  const byLevelAuto   = { 1: [], 2: [], 3: [], 4: [], 5: [] };
+  const byLevelManual = { 1: [], 2: [], 3: [], 4: [], 5: [] };
+  for (const q of autoFiltered) { const l = q.difficulty || 1; if (byLevelAuto[l])   byLevelAuto[l].push(q); }
+  for (const q of manualPool)   { const l = q.difficulty || 1; if (byLevelManual[l]) byLevelManual[l].push(q); }
+  const levelPool  = lvl => [...shuffle(byLevelManual[lvl]), ...shuffle(byLevelAuto[lvl])];
+  const levelCount = lvl => byLevelManual[lvl].length + byLevelAuto[lvl].length;
+
   const finalQuota = { ...QUOTA };
   for (const lvl of [5, 4, 3, 2]) {
-    const available = byLevel[lvl].length;
+    const available = levelCount(lvl);
     if (available < finalQuota[lvl]) {
       finalQuota[lvl - 1] += finalQuota[lvl] - available;
       finalQuota[lvl] = available;
     }
   }
-  if (byLevel[1].length < finalQuota[1]) finalQuota[1] = byLevel[1].length;
+  if (levelCount(1) < finalQuota[1]) finalQuota[1] = levelCount(1);
   const session = [];
   for (const lvl of [1, 2, 3, 4, 5]) {
-    session.push(...shuffle(byLevel[lvl]).slice(0, finalQuota[lvl]));
+    session.push(...levelPool(lvl).slice(0, finalQuota[lvl]));
   }
   return shuffleMC(session);
 }
@@ -2610,6 +2613,19 @@ function buildPraesensPool(verbItems, conjugations) {
   return pool;
 }
 
+// Принадлежит ли ручной вопрос этому блоку/сабблоку.
+// Два способа совпадения:
+//   1) служебная тема trainer:<blockId> (и trainer:<blockId>:<сабблок> для целого блока);
+//   2) обычная тема вопроса входит в список тем блока — так вопрос, у которого тема
+//      взята от слова-источника (например home:kitchenware), сам всплывает в блоке,
+//      который эту тему покрывает.
+function manualMatchesBlock(q, blockId, topics) {
+  const trainerTopic = 'trainer:' + blockId;
+  if (q.topic === trainerTopic) return true;
+  if (!blockId.includes(':') && q.topic.startsWith(trainerTopic + ':')) return true;
+  return (topics || []).includes(q.topic);
+}
+
 // ─── Сборщик: Partizip II тест (30 вопросов) ─────────────────────────────
 function buildPartizip2TestSession(blockId, topics) {
   let autoPool;
@@ -2634,11 +2650,8 @@ function buildPartizip2TestSession(blockId, topics) {
     autoPool = buildPartizip2Pool(verbItems, CONJUGATIONS);
   }
   // Ручные вопросы с тегом "partizip"
-  const trainerTopic = `trainer:${blockId}`;
-  const prefix = trainerTopic + ":";
   const manualPool = QUESTIONS.filter(q =>
-    (q.topic === trainerTopic || (!blockId.includes(":") && q.topic.startsWith(prefix))) &&
-    (q.tags || []).includes("partizip")
+    manualMatchesBlock(q, blockId, topics) && (q.tags || []).includes("partizip")
   );
   return applyQuota30(autoPool, manualPool);
 }
@@ -2662,11 +2675,8 @@ function buildPraesensTestSession(blockId, topics) {
     autoPool = buildPraesensPool(verbItems, CONJUGATIONS);
   }
   // Ручные вопросы для этого блока (исключая partizip)
-  const trainerTopic = `trainer:${blockId}`;
-  const prefix = trainerTopic + ":";
   const manualPool = QUESTIONS.filter(q =>
-    (q.topic === trainerTopic || (!blockId.includes(":") && q.topic.startsWith(prefix))) &&
-    !(q.tags || []).includes("partizip")
+    manualMatchesBlock(q, blockId, topics) && !(q.tags || []).includes("partizip")
   );
   return applyQuota30(autoPool, manualPool);
 }
@@ -2825,19 +2835,15 @@ function buildFullPool(blockId, topics, type, vocab, conjugations, manualQuestio
   }
 
   // Ручные вопросы
-  const trainerTopic = `trainer:${blockId}`;
-  const prefix = trainerTopic + ":";
   let manualPool;
   if (type === "partizip2") {
     manualPool = manualQuestions.filter(q =>
-      (q.topic === trainerTopic || q.topic.startsWith(prefix)) && (q.tags||[]).includes("partizip"));
+      manualMatchesBlock(q, blockId, topics) && (q.tags||[]).includes("partizip"));
   } else if (type === "praesens") {
     manualPool = manualQuestions.filter(q =>
-      (q.topic === trainerTopic || q.topic.startsWith(prefix)) && !(q.tags||[]).includes("partizip"));
+      manualMatchesBlock(q, blockId, topics) && !(q.tags||[]).includes("partizip"));
   } else {
-    manualPool = blockId.includes(":")
-      ? manualQuestions.filter(q => q.topic === trainerTopic)
-      : manualQuestions.filter(q => q.topic === trainerTopic || q.topic.startsWith(prefix));
+    manualPool = manualQuestions.filter(q => manualMatchesBlock(q, blockId, topics));
   }
 
   // Дедупликация manual vs auto
@@ -2890,34 +2896,27 @@ function buildTestSession(topics, vocab, conjugations, manualQuestions, blockId,
 
   // 2. Ручные вопросы из QUESTIONS, привязанные к этому блоку или сабблоку
   // blockId может быть либо "verbs" (весь блок), либо "verbs:modal" (сабблок)
-  const trainerTopic = `trainer:${blockId}`;
-  let manualPool;
-  if (blockId.includes(":")) {
-    // Сабблок — берём только точное совпадение topics
-    manualPool = manualQuestions.filter(q => q.topic === trainerTopic);
-  } else {
-    // Весь блок — берём и сам блок, и все его сабблоки
-    const prefix = trainerTopic + ":";
-    manualPool = manualQuestions.filter(q =>
-      q.topic === trainerTopic || q.topic.startsWith(prefix)
-    );
-  }
+  const manualPool = manualQuestions.filter(q => manualMatchesBlock(q, blockId, topics));
 
   // 3. Дедупликация: если на одно слово есть ручной вопрос и авто-вопрос — оставить ручной
   const manualSourceIds = new Set(manualPool.map(q => q.sourceId).filter(Boolean));
   const autoFiltered = autoPool.filter(q => !q.sourceId || !manualSourceIds.has(q.sourceId));
 
-  // 4. Объединяем по уровням
-  const byLevel = { 1: [], 2: [], 3: [], 4: [], 5: [] };
-  for (const q of [...autoFiltered, ...manualPool]) {
-    const lvl = q.difficulty || 1;
-    if (byLevel[lvl]) byLevel[lvl].push(q);
-  }
+  // 4. Объединяем по уровням — раздельными ведрами: ручные и авто.
+  const byLevelAuto   = { 1: [], 2: [], 3: [], 4: [], 5: [] };
+  const byLevelManual = { 1: [], 2: [], 3: [], 4: [], 5: [] };
+  for (const q of autoFiltered) { const l = q.difficulty || 1; if (byLevelAuto[l])   byLevelAuto[l].push(q); }
+  for (const q of manualPool)   { const l = q.difficulty || 1; if (byLevelManual[l]) byLevelManual[l].push(q); }
+
+  // Ручные идут раньше авто: перемешиваем каждую группу отдельно и склеиваем.
+  // Так квота уровня сначала выбирается ручными, и только остаток добирается авто.
+  const levelPool  = lvl => [...shuffle(byLevelManual[lvl]), ...shuffle(byLevelAuto[lvl])];
+  const levelCount = lvl => byLevelManual[lvl].length + byLevelAuto[lvl].length;
 
   // ─── Тест по одному уровню ─────────────────────────────────────────────
   if (levelFilter && [1, 2, 3, 4, 5].includes(levelFilter)) {
     const wanted = SOLO_SIZE[levelFilter];
-    const pool = shuffle(byLevel[levelFilter]).slice(0, wanted);
+    const pool = levelPool(levelFilter).slice(0, wanted);
     return shuffleMC(pool);
   }
 
@@ -2933,7 +2932,7 @@ function buildTestSession(topics, vocab, conjugations, manualQuestions, blockId,
   const finalQuota = { 1: QUOTA[1], 2: QUOTA[2], 3: QUOTA[3], 4: QUOTA[4], 5: QUOTA[5] };
   // Идём с самого верха (Ур 5) вниз. Если на уровне не хватает — донос на предыдущий
   for (const lvl of [5, 4, 3, 2]) {
-    const available = byLevel[lvl].length;
+    const available = levelCount(lvl);
     if (available < finalQuota[lvl]) {
       const shortfall = finalQuota[lvl] - available;
       finalQuota[lvl] = available;     // на этом уровне берём всё что есть
@@ -2941,13 +2940,13 @@ function buildTestSession(topics, vocab, conjugations, manualQuestions, blockId,
     }
   }
   // На Ур 1 может тоже не хватить — там просто берём что есть, никуда не переносим
-  if (byLevel[1].length < finalQuota[1]) {
-    finalQuota[1] = byLevel[1].length;
+  if (levelCount(1) < finalQuota[1]) {
+    finalQuota[1] = levelCount(1);
   }
 
   // Семплим по итоговым квотам
   for (const lvl of [1, 2, 3, 4, 5]) {
-    const pool = shuffle(byLevel[lvl].filter(q => !used.has(q)));
+    const pool = levelPool(lvl).filter(q => !used.has(q));
     const take = pool.slice(0, finalQuota[lvl]);
     take.forEach(q => used.add(q));
     takenByLevel[lvl] = take;
@@ -3921,15 +3920,7 @@ function App() {
     } else {
       autoPool = buildAutoQuestions(topics, VOCAB, CONJUGATIONS);
     }
-    const trainerTopic = `trainer:${blockId}`;
-    if (blockId.includes(":")) {
-      manualPool = QUESTIONS.filter(q => q.topic === trainerTopic);
-    } else {
-      const prefix = trainerTopic + ":";
-      manualPool = QUESTIONS.filter(q =>
-        q.topic === trainerTopic || q.topic.startsWith(prefix)
-      );
-    }
+    manualPool = QUESTIONS.filter(q => manualMatchesBlock(q, blockId, topics));
     const allPool = [...autoPool, ...manualPool];
     const countByLevel = { 1: 0, 2: 0, 3: 0, 4: 0, 5: 0 };
     for (const q of allPool) {
