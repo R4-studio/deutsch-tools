@@ -30,7 +30,7 @@ html, body {
   margin: 0; padding: 0;
   font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
 }
-#root { min-height: 100vh; }
+#root { min-height: 100vh; min-height: 100dvh; }
 .loader {
   position: fixed;
   top: 50%; left: 50%;
@@ -51,7 +51,7 @@ html, body {
 .flip-card-inner.flipped { transform: rotateY(180deg); }
 .flip-face { position: absolute; width: 100%; height: 100%; backface-visibility: hidden; -webkit-backface-visibility: hidden; display: flex; align-items: center; justify-content: center; padding: 24px; border-radius: 14px; }
 .flip-face.back { transform: rotateY(180deg); }
-input:focus, button:focus { outline: 2px solid var(--accent); outline-offset: 1px; }
+input:focus-visible, button:focus-visible { outline: 2px solid var(--accent); outline-offset: 1px; }
 /* ─── Универсальная tap/hover обратная связь для всех кнопок ───────────────
    :active работает и на тач-устройствах (тап), и при клике мышью — это
    основной, всегда срабатывающий сигнал. :hover — только там, где реально
@@ -221,6 +221,20 @@ function checkFill(userVal, ans, altAns = []) {
   if (u === normalise(ans)) return true;
   return altAns.some((a) => normalise(a) === u);
 }
+// Пословный разбор для типа open. Ответ на «переведи предложение» сверяется
+// целиком (checkFill), но при ошибке этого мало: ученику нужно видеть, ГДЕ
+// разошлось, иначе он смотрит на два предложения и ищет отличие глазами.
+// Сравнение идёт по нормализованным словам, а показываются слова эталона
+// как есть — с заглавными и пунктуацией.
+function diffWords(userVal, ans) {
+  const u = normalise(userVal).split(" ").filter(Boolean);
+  const a = normalise(ans).split(" ").filter(Boolean);
+  const shown = (ans || "").trim().split(/\s+/);
+  return {
+    cells: a.map((w, i) => ({ w: shown[i] || w, ok: u[i] === w })),
+    extra: u.length > a.length ? u.length - a.length : 0,
+  };
+}
 // Сделать MC-вопросы с перетасованными опциями
 function shuffleMC(questions) {
   return questions.map((q) => {
@@ -270,7 +284,7 @@ const RULES_BLOCK = {
 
 const S = {
   page: {
-    minHeight: "100vh",
+    minHeight: "100dvh",
     background: "var(--bg-body)",
     color: "var(--text-main)",
     fontFamily: "system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif",
@@ -347,6 +361,29 @@ const S = {
     gap: 6,
     lineHeight: 1,
   }),
+  // Поле свободного ввода (тип open). Отдельно от input: предложение не
+  // помещается в строку, поэтому textarea с переносом и без ресайза по
+  // горизонтали — иначе на телефоне его растягивают за край экрана.
+  openInput: {
+    width: "100%",
+    minHeight: 64,
+    padding: "10px 14px",
+    fontSize: 15,
+    lineHeight: 1.45,
+    border: "2px solid var(--border-input)",
+    borderRadius: 10,
+    background: "var(--bg-input)",
+    color: "var(--text-main)",
+    fontFamily: "inherit",
+    resize: "vertical",
+  },
+  diffWrap: {
+    marginTop: 10, padding: "8px 12px", borderRadius: 8,
+    background: "var(--bg-soft)", fontSize: 15, lineHeight: 1.7,
+  },
+  diffOk:  { color: "var(--text-muted)" },
+  diffBad: { background: "var(--red-bg)", color: "var(--red)",
+             borderRadius: 4, padding: "1px 4px", fontWeight: 600 },
   input: {
     width: "100%",
     padding: "10px 14px",
@@ -3305,7 +3342,7 @@ function App() {
     // у которых вопросов больше всех.
     const byRule = {};
     for (const q of QUESTIONS) {
-      if (!q.rule || q.type === "open") continue;
+      if (!q.rule) continue;
       (byRule[q.rule] = byRule[q.rule] || []).push(q);
     }
     const rules = shuffle(Object.keys(byRule));
@@ -4484,7 +4521,7 @@ function App() {
               {qIdx + 1} / {questions.length} · <Icon name="check" size={12} /> {correctCount}
             </span>}
             icon={icon} onTheme={cycleTheme} onLang={cycleLang} onHome={goHome} />
-            <div style={S.containerRead}>
+        <div style={S.containerRead}>
             <div style={{ textAlign: "center", color: "var(--text-muted)", fontSize: 13, marginBottom: 12 }}>
             {headerRule ? wordField(headerRule, 'title', 'titleEn') : subLabel}
             {" · "}{modeTitle}
@@ -4561,6 +4598,9 @@ function App() {
     if (q.type === "tiles") {
       return q.words ? q.words.join(" ") : "";
     }
+    if (q.type === "open") {
+      return q.ans || "";
+    }
     if (q.type === "conj") {
       // Для conj — показываем "Pronoun → Form" парами
       if (!q.pronouns || !q.ans) return "";
@@ -4598,6 +4638,50 @@ function App() {
                      submitAnswer(checkFill(userAns, q.ans, q.altAns), userAns);
                  }}
                  placeholder={window.t('trainer.enter_answer_placeholder')} />
+          {q.hint && (
+            <div style={{ marginTop: 8 }}>
+              {hintVisible ? (<div style={S.hint}><Icon name="bulb" size={13} /> {q.hint}</div>)
+                           : (<button style={S.linkBtn} onClick={() => setHintVisible(true)}>{window.t('trainer.show_hint')}</button>)}
+            </div>
+          )}
+          {!answered && (
+            <div style={{ marginTop: 12, textAlign: "right" }}>
+              <button style={S.primaryBtn(activeBlock.color)}
+                      onClick={() => submitAnswer(checkFill(userAns, q.ans, q.altAns), userAns)}>
+                {window.t('trainer.check_btn')}
+              </button>
+            </div>
+          )}
+        </div>
+      );
+    }
+    // Свободный ввод перевода предложения (уровень 5). От fill отличается
+    // тремя вещами: многострочное поле, Enter переносит строку а не отправляет
+    // (в предложении он нужен), и при ошибке показывается пословный разбор.
+    if (q.type === "open") {
+      const diff = answered && lastVerdict === false && q.ans ? diffWords(userAns, q.ans) : null;
+      return (
+        <div>
+          <textarea style={S.openInput} value={userAns}
+                    disabled={answered}
+                    onChange={e => setUserAns(e.target.value)}
+                    onKeyDown={e => {
+                      // Отправка на Ctrl/Cmd+Enter: одиночный Enter оставлен
+                      // за переносом строки, иначе длинный ответ не набрать.
+                      if (e.key === "Enter" && (e.ctrlKey || e.metaKey) && !answered)
+                        submitAnswer(checkFill(userAns, q.ans, q.altAns), userAns);
+                    }}
+                    placeholder={window.t('trainer.open_placeholder')} />
+          {diff && (
+            <div style={S.diffWrap}>
+              <div style={{ fontSize: 12, color: "var(--text-muted)", marginBottom: 4 }}>
+                {window.t('trainer.open_diff_note')}
+              </div>
+              {diff.cells.map((c, i) => (
+                <span key={i} style={c.ok ? S.diffOk : S.diffBad}>{c.w}{" "}</span>
+              ))}
+            </div>
+          )}
           {q.hint && (
             <div style={{ marginTop: 8 }}>
               {hintVisible ? (<div style={S.hint}><Icon name="bulb" size={13} /> {q.hint}</div>)

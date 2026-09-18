@@ -2483,6 +2483,9 @@ GERMAN_LABELS = {
     # ★ таксономия: питание и защита прав потребителей (август 2026)
     "products:nutrition":       ("dining",      "Ernährung"),
     "society:consumer":         ("scale",       "Verbraucherschutz"),
+    "society:ecology":          ("leaf",        "Umwelt"),
+    "communication:opinion":    ("chat",        "Meinung"),
+    "communication:discussion": ("users",       "Gespräch"),
 
     # ★ таксономия: медицина и язык (сентябрь 2026)
     "products:medical":         ("health",      "Medizin & Apotheke"),
@@ -2658,6 +2661,9 @@ RUSSIAN_LABELS = {
     # ★ таксономия: питание и защита прав потребителей (август 2026)
     "products:nutrition":       "Питание",
     "society:consumer":         "Защита прав потребителей",
+    "society:ecology":          "Экология",
+    "communication:opinion":    "Мнение и согласие",
+    "communication:discussion": "Ведение разговора",
 
     # ★ таксономия: медицина и язык (сентябрь 2026)
     "products:medical":         "Медицина и аптека",

@@ -206,6 +206,8 @@ window.I18N_EN = {
   "trainer.again_arrow": "Again →",
   "trainer.review_label": "Review",
   "trainer.your_answer": "Your answer:",
+  "trainer.open_placeholder": "Write the sentence in German... (Ctrl+Enter to check)",
+  "trainer.open_diff_note": "Mismatched words are highlighted",
   "trainer.no_questions_for_new_words": "No questions for new words. Add words to the \"Neu\" buffer.",
   "cheatsheet.th_type": "Type",
   "cheatsheet.th_rule": "Rule",

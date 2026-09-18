@@ -207,6 +207,8 @@ window.I18N_RU = {
   "trainer.again_arrow": "Ещё раз →",
   "trainer.review_label": "Разбор",
   "trainer.your_answer": "Твой ответ:",
+  "trainer.open_placeholder": "Напиши предложение по-немецки... (Ctrl+Enter — проверить)",
+  "trainer.open_diff_note": "Несовпавшие слова выделены",
   "trainer.no_questions_for_new_words": "Нет вопросов для новых слов. Добавь слова в буфер «Neu».",
   "cheatsheet.th_type": "Тип",
   "cheatsheet.th_rule": "Правило",

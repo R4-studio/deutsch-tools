@@ -1,21 +1,49 @@
-MIT License
+Copyright (c) 2026 Rudenko Artem. All Rights Reserved.
 
-Copyright (c) 2026 Rudenko Artem
+PROPRIETARY LICENSE
 
-Permission is hereby granted, free of charge, to any person obtaining a copy
-of this software and associated documentation files (the "Software"), to deal
-in the Software without restriction, including without limitation the rights
-to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-copies of the Software, and to permit persons to whom the Software is
-furnished to do so, subject to the following conditions:
+This project is proprietary software and is not open source.
 
-The above copyright notice and this permission notice shall be included in all
-copies or substantial portions of the Software.
+The original source code, database, educational content, documentation,
+visual design, and other original materials created by the copyright holder
+and included in this project are protected by applicable copyright law.
 
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-SOFTWARE.
+Except where expressly stated otherwise, no license or other permission is
+granted to use, copy, reproduce, modify, adapt, merge, publish, distribute,
+sublicense, sell, rent, or create derivative works from the project's
+source code, database, content, design, or other protected materials.
+
+The source code is publicly available on GitHub for viewing, portfolio,
+and transparency purposes. Public availability does not, by itself, grant
+permission to reuse, redistribute, modify, or create derivative works from
+the project's protected materials.
+
+You may access and use the publicly available Deutsch Tools website for
+its intended purpose. This does not grant any right to copy, extract,
+reproduce, republish, redistribute, commercially exploit, or create
+derivative works from the project's source code, database, educational
+content, or design without prior written permission.
+
+You may download and run the project locally for the sole purpose of
+evaluating it. This does not grant any right to publish, redistribute, or
+otherwise make the project, or any part of it, available to others.
+
+Third-party software, libraries, fonts, services, and other materials
+included in or used by the project are not covered by this license and
+remain subject to their respective licenses and terms. See THIRD-PARTY.md
+for the components used.
+
+If you wish to obtain permission to use, license, modify, redistribute,
+commercially exploit, or otherwise use protected materials from this
+project beyond the permissions stated above, please contact the copyright
+holder:
+
+  GitHub: https://github.com/R4-studio
+  E-Mail: TODO-EMAIL
+
+Unless otherwise required by applicable law, the protected materials are
+provided "AS IS", without warranties of any kind, express or implied,
+including but not limited to warranties of merchantability, fitness for a
+particular purpose, and non-infringement. To the extent permitted by
+applicable law, the copyright holder shall not be liable for any damages
+or other liability arising from the use of the protected materials.
