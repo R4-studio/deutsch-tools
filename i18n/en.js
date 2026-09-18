@@ -47,9 +47,10 @@ window.I18N_EN = {
   "about.p1": "Deutsch Tools is a toolkit for learning German. It's not a course and not a replacement for proper study — it's a companion that keeps what you need for reviewing rules and practicing material right at hand.",
   "about.p2": "The project has two parts:",
   "about.cheatsheet.desc": "A database: words, phrases, numbers, and grammar rules. Search the whole dictionary, check declensions and conjugations, see usage examples.",
-  "about.trainer.intro": "Practice built around the material, in two modes:",
+  "about.trainer.intro": "Practice built around the material, in three modes:",
   "about.trainer.li_learn": "<strong>Learn</strong> — flashcards for memorizing words",
   "about.trainer.li_test": "<strong>Test</strong> — check your knowledge across different task types and difficulty levels",
+  "about.trainer.li_rules": "<strong>Rules</strong> — a test for each grammar rule, with the theory one tap away",
   "about.github_label": "The source code is open:",
 
   "faq.title": "FAQ",
