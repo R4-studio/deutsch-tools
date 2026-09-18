@@ -4479,13 +4479,13 @@ function App() {
                 style={{ ...S.outlineBtn("var(--c-outline-grey)"), padding: "4px 8px", fontSize: 12, marginRight: 8 }}
                 onClick={() => { setDevIsFullPool(false); setDevModalPool(questions); }}>
                 <Icon name="wrench" />
-        <div style={S.containerRead}>
                 </button>
               )}
               {qIdx + 1} / {questions.length} · <Icon name="check" size={12} /> {correctCount}
             </span>}
             icon={icon} onTheme={cycleTheme} onLang={cycleLang} onHome={goHome} />
-          <div style={{ textAlign: "center", color: "var(--text-muted)", fontSize: 13, marginBottom: 12 }}>
+            <div style={S.containerRead}>
+            <div style={{ textAlign: "center", color: "var(--text-muted)", fontSize: 13, marginBottom: 12 }}>
             {headerRule ? wordField(headerRule, 'title', 'titleEn') : subLabel}
             {" · "}{modeTitle}
           </div>
