@@ -3203,7 +3203,10 @@ def process_questions(rows, warn):
             if opts: item["opts"] = [s.strip() for s in opts.split("|")]
             ans = to_int(r.get("ans_mc"))
             if ans is not None: item["ans"] = ans
-        elif qtype == "fill":
+        elif qtype in ("fill", "open"):
+            # open — свободный ввод предложения. Читается так же, как fill:
+            # в тренажёре оба сверяются одним checkFill + normalise, разница
+            # только в поле ввода и в пословном разборе при ошибке.
             ans = clean(r.get("answer"))
             if ans: item["ans"] = ans
             alt = clean(r.get("altAns"))
