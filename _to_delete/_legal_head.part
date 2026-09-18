@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>__TITLE__ — Deutsch Tools</title>
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🇩🇪</text></svg>">
+<meta name="robots" content="noindex">
+<link rel="stylesheet" href="theme.css?v=20260918">
+<style>
+html, body { margin: 0; padding: 0; background: var(--bg-body); color: var(--text-main);
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  min-height: 100vh; min-height: 100dvh; }
+.legal-wrap { padding: 28px 16px 72px; }
+.legal { max-width: var(--w-read); margin: 0 auto; line-height: 1.6; font-size: 15px; }
+.legal h1 { font-size: 26px; margin: 18px 0 6px; color: var(--text-title); }
+.legal h2 { font-size: 18px; margin: 28px 0 6px; color: var(--text-title); }
+.legal h3 { font-size: 15px; margin: 18px 0 4px; color: var(--text-title); }
+.legal p, .legal li { color: var(--text-main); }
+.legal ul { padding-left: 20px; }
+.legal a { color: var(--accent); }
+.legal__back { display: inline-flex; align-items: center; gap: 6px; font-size: 13px;
+  color: var(--text-muted); text-decoration: none; margin-bottom: 8px; }
+.legal__back svg { width: 15px; height: 15px; }
+.legal__note { background: var(--bg-soft); border-radius: 10px; padding: 12px 14px;
+  font-size: 13px; color: var(--text-muted); margin: 18px 0; }
+.legal__stand { font-size: 13px; color: var(--text-muted); margin-top: 32px; }
+</style>
+</head>
+<body>
+
+<div class="dt-topnav">
+  <a class="dt-topnav__brand" href="index.html">
+    <span class="dt-topnav__mark">DT</span>
+    <span class="dt-topnav__word">Deutsch Tools</span>
+  </a>
+</div>
+
+<div class="legal-wrap">
+  <div class="legal">
+    <a class="legal__back" href="index.html">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+      Zur Startseite
+    </a>

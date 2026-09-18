@@ -1,5 +1,38 @@
 window.CHANGELOG = [
       {
+    "date": "2026-09-18",
+    "title": "Свободный ввод, речевые клише и 111 новых слов",
+    "items": [
+      "Новый тип задания — свободный ввод перевода: пишешь предложение целиком, а при ошибке видишь, какое именно слово разошлось",
+      "111 новых слов и фраз:",
+      "55 существительных",
+      "19 прилагательных",
+      "15 глаголов",
+      "15 речевых клише (Redemittel)",
+      "6 наречий",
+      "3 новые темы: Экология, Мнение и согласие, Ведение разговора",
+      "28 новых вопросов в тренажёре",
+      "Тренажёр: кнопка «Наверх» в длинных списках",
+      "Единая ширина страниц — шапка больше не прыгает при переходе между экранами",
+      "Телефон: убрана синяя рамка при нажатии, на iOS починена высота экрана"
+    ],
+    "titleEn": "Free-form answers, speaking phrases and 111 new words",
+    "itemsEn": [
+      "A new exercise type — type the whole translation yourself; if you get it wrong, you see exactly which word differs",
+      "111 new words and phrases:",
+      "55 nouns",
+      "19 adjectives",
+      "15 verbs",
+      "15 speaking phrases (Redemittel)",
+      "6 adverbs",
+      "3 new topics: Environment, Opinion, Discussion",
+      "28 new trainer questions",
+      "Trainer: a «back to top» button in long lists",
+      "Consistent page width — the header no longer jumps between screens",
+      "Mobile: no more blue tap outline, fixed viewport height on iOS"
+    ]
+  },  
+    {
     "date": "2026-09-05",
     "title": "135 слов, Futur и Passiv, сортировка в справочнике",
     "items": [
