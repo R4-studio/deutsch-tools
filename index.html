@@ -808,6 +808,33 @@ window.onI18nApplied = function() {
 applyI18n();
 </script>
 
+<!-- Выключатель счётчика для своих устройств. На телефоне консоли нет, поэтому
+     флаг ставится через адрес: открыть сайт с #skipgc в конце. #unskipgc снимает.
+     Стоит выше count.js намеренно: тот грузится async и выполнится позже этого
+     скрипта, значит флаг успеет встать до первого подсчёта. -->
+<script>
+(function () {
+  var h = location.hash;
+  if (h !== '#skipgc' && h !== '#unskipgc') return;
+  var off = h === '#skipgc';
+  try {
+    if (off) localStorage.setItem('skipgc', 't');
+    else localStorage.removeItem('skipgc');
+  } catch (e) { return; }   // приватный режим: localStorage может бросить
+
+  var n = document.createElement('div');
+  n.textContent = off ? 'Счётчик выключен на этом устройстве' : 'Счётчик снова включён';
+  n.style.cssText = 'position:fixed;left:50%;bottom:24px;transform:translateX(-50%);z-index:9999;'
+    + 'background:#171717;color:#fff;padding:10px 18px;border-radius:999px;'
+    + 'font:14px system-ui,sans-serif;box-shadow:0 4px 14px rgba(0,0,0,.25)';
+  document.body.appendChild(n);
+  setTimeout(function () { n.remove(); }, 4000);
+
+  // убираем хэш из адреса, чтобы случайно не расшарить ссылку с выключателем
+  history.replaceState(null, '', location.pathname + location.search);
+})();
+</script>
+
 <!-- Счётчик посещений GoatCounter. Без cookies и без записи в localStorage,
      поэтому баннера согласия не требует (§25 TDDDG к нему не применяется).
      Свои визиты исключаются командой в консоли: localStorage.setItem('skipgc','t') -->
