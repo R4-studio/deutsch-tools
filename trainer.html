@@ -14,15 +14,15 @@
   document.documentElement.classList.add('theme-' + saved);
 })();
 </script>
-<link rel="stylesheet" href="theme.css?v=20260917">
-<script src="i18n/ru.js?v=20260917"></script>
-<script src="i18n/en.js?v=20260917"></script>
-<script src="i18n/i18n.js?v=20260917"></script>
+<link rel="stylesheet" href="theme.css?v=20260918">
+<script src="i18n/ru.js?v=20260918"></script>
+<script src="i18n/en.js?v=20260918"></script>
+<script src="i18n/i18n.js?v=20260918"></script>
 
 <script crossorigin src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
 <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
-<script src="data.js?v=20260917"></script>
-<script src="rule-render.js?v=20260914"></script>
+<script src="data.js?v=20260918"></script>
+<script src="rule-render.js?v=20260918"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/7.25.6/babel.min.js"></script>
 
 <style>
@@ -136,7 +136,7 @@ button:active { transform: scale(0.96); }
   overflow-y: auto; padding: 16px;
   display: flex; align-items: flex-start; justify-content: center;
 }
-.dt-rule-overlay__card { position: relative; width: 100%; max-width: 760px; margin: 0 auto; }
+.dt-rule-overlay__card { position: relative; width: 100%; max-width: var(--w-read); margin: 0 auto; }
 .dt-rule-overlay__close {
   position: sticky; top: 0; float: right; z-index: 1;
   width: 36px; height: 36px; border: none; border-radius: 50%;
@@ -276,7 +276,13 @@ const S = {
     fontFamily: "system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif",
     padding: "20px 16px 60px 16px",
   },
-  container: { maxWidth: 760, margin: "0 auto" },
+  // Ширина колонки выбирается по содержимому экрана, а не по экрану:
+  //   containerWide — сетки карточек (выбор блока, темы, списка правил)
+  //   container     — страницы-обёртки (главная, выбор типа теста)
+  //   containerRead — сплошной текст (вопрос, результаты, карточки, оверлей)
+  container:     { maxWidth: "var(--w-content)", margin: "0 auto" },
+  containerWide: { maxWidth: "var(--w-wide)",    margin: "0 auto" },
+  containerRead: { maxWidth: "var(--w-read)",    margin: "0 auto" },
   card: {
     background: "var(--bg-card)",
     color: "var(--text-main)",
@@ -288,7 +294,13 @@ const S = {
   h1: { fontSize: 24, marginBottom: 4, color: "var(--text-title)", textAlign: "center" },
   h2: { fontSize: 20, marginBottom: 12, color: "var(--text-title)" },
   muted: { color: "var(--text-muted)", fontSize: 13 },
-  topBar: { display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 16 },
+  // Шапка стоит вне контейнера экрана и держит одну ширину на всех экранах,
+  // иначе она прыгает вслед за контентом (760 на вопросе, 1440 в списке правил).
+  // Берёт самую широкую — так она никогда не окажется уже того, что под ней.
+  // Боковые отступы приходят от S.page, поэтому на телефоне ничего не прилипает
+  // к краям, а max-width на узком экране просто не срабатывает.
+  topBar: { display: "flex", justifyContent: "space-between", alignItems: "center",
+            maxWidth: "var(--w-wide)", margin: "0 auto 16px" },
   modeCard: {
     display: "flex",
     flexDirection: "column",
@@ -3640,8 +3652,8 @@ function App() {
   function renderHome() {
     return (
       <div style={S.page}>
+        <TopBar left={null} right={null} icon={icon} onTheme={cycleTheme} onLang={cycleLang} />
         <div style={S.container}>
-          <TopBar left={null} right={null} icon={icon} onTheme={cycleTheme} onLang={cycleLang} />
           <div style={{ textAlign: "center", marginBottom: 28 }}>
             <div
               style={{ display: "flex", alignItems: "center", justifyContent: "center", gap: 6, marginBottom: 6, cursor: "default", userSelect: "none" }}
@@ -3701,11 +3713,11 @@ function App() {
   function renderSelectBlock() {
     return (
       <div style={S.page}>
-        <div style={S.container}>
-          <TopBar
-            left={<button style={S.outlineBtn("var(--c-outline-grey)")} onClick={goHome}>{ICON_ARROW_LEFT} {window.t('trainer.back')}</button>}
-            right={<span style={S.muted}>{modeLabel}</span>}
-            icon={icon} onTheme={cycleTheme} onLang={cycleLang} onHome={goHome} />
+        <TopBar
+          left={<button style={S.outlineBtn("var(--c-outline-grey)")} onClick={goHome}>{ICON_ARROW_LEFT} {window.t('trainer.back')}</button>}
+          right={<span style={S.muted}>{modeLabel}</span>}
+          icon={icon} onTheme={cycleTheme} onLang={cycleLang} onHome={goHome} />
+        <div style={S.containerWide}>
           <h2 style={{ ...S.heading, textAlign: "center" }}>{window.t('trainer.pick_block')}</h2>
           <div style={S.grid}>
             {BLOCKS.filter(b => b.kind !== "sounds").map(b => (
@@ -3733,16 +3745,16 @@ function App() {
     const neuAllCount = isNeu ? getNeuAllVocab().length : 0;
     return (
       <div style={S.page}>
-        <div style={S.container}>
-          <TopBar
-            left={
-              <button style={S.outlineBtn(activeBlock.color)}
-                      onClick={() => { setPhase("select-block"); setActiveBlock(null); }}>
-                {ICON_ARROW_LEFT} {window.t('trainer.blocks')}
-              </button>
-            }
-            right={<span style={S.muted}>{modeLabel}</span>}
-            icon={icon} onTheme={cycleTheme} onLang={cycleLang} onHome={goHome} />
+        <TopBar
+          left={
+            <button style={S.outlineBtn(activeBlock.color)}
+                    onClick={() => { setPhase("select-block"); setActiveBlock(null); }}>
+              {ICON_ARROW_LEFT} {window.t('trainer.blocks')}
+            </button>
+          }
+          right={<span style={S.muted}>{modeLabel}</span>}
+          icon={icon} onTheme={cycleTheme} onLang={cycleLang} onHome={goHome} />
+        <div style={S.containerWide}>
           <h2 style={{ ...S.heading, textAlign: "center" }}><Icon name={activeBlock.icon} size={22} /> {activeBlock.label}</h2>
           <p style={{ ...S.subheading, textAlign: "center" }}>{window.t('trainer.pick_topic')}</p>
 
@@ -3843,11 +3855,11 @@ function App() {
     const headingIcon = activeSub ? activeSub.icon : activeBlock.icon;
     return (
       <div style={S.page}>
-        <div style={S.container}>
-          <TopBar
-            left={<button style={S.outlineBtn(activeBlock.color)} onClick={goBackToSubblocks}>{ICON_ARROW_LEFT} {window.t('trainer.back')}</button>}
-            right={<span style={S.muted}>{modeLabel}</span>}
-            icon={icon} onTheme={cycleTheme} onLang={cycleLang} onHome={goHome} />
+        <TopBar
+          left={<button style={S.outlineBtn(activeBlock.color)} onClick={goBackToSubblocks}>{ICON_ARROW_LEFT} {window.t('trainer.back')}</button>}
+          right={<span style={S.muted}>{modeLabel}</span>}
+          icon={icon} onTheme={cycleTheme} onLang={cycleLang} onHome={goHome} />
+        <div style={S.containerRead}>
           <h2 style={{ ...S.heading, textAlign: "center" }}><Icon name={headingIcon} size={22} /> {heading}</h2>
           <p style={{ ...S.subheading, textAlign: "center" }}>{vocab.length} {window.t('trainer.n_words')}</p>
 
@@ -3879,11 +3891,11 @@ function App() {
 
     return (
       <div style={S.page}>
-        <div style={S.container}>
-          <TopBar
-            left={<button style={S.outlineBtn("var(--c-outline-grey)")} onClick={goHome}>{ICON_ARROW_LEFT} {window.t('trainer.back')}</button>}
-            right={<span style={S.muted}>{modeLabel}</span>}
-            icon={icon} onTheme={cycleTheme} onLang={cycleLang} onHome={goHome} />
+        <TopBar
+          left={<button style={S.outlineBtn("var(--c-outline-grey)")} onClick={goHome}>{ICON_ARROW_LEFT} {window.t('trainer.back')}</button>}
+          right={<span style={S.muted}>{modeLabel}</span>}
+          icon={icon} onTheme={cycleTheme} onLang={cycleLang} onHome={goHome} />
+        <div style={S.containerWide}>
           <h2 style={{ ...S.heading, textAlign: "center" }}>{window.t('trainer.mode_rules_title')}</h2>
           <p style={{ ...S.subheading, textAlign: "center" }}>{window.t('trainer.pick_rule')}</p>
 
@@ -4027,16 +4039,16 @@ function App() {
 
     return (
       <div style={S.page}>
+        <TopBar
+          left={
+            <button style={S.outlineBtn(activeBlock.color)}
+                    onClick={goBackToSubblocks}>
+              {ICON_ARROW_LEFT} {window.t('trainer.back')}
+            </button>
+          }
+          right={<span style={S.muted}>{modeLabel}</span>}
+          icon={icon} onTheme={cycleTheme} onLang={cycleLang} onHome={goHome} />
         <div style={S.container}>
-          <TopBar
-            left={
-              <button style={S.outlineBtn(activeBlock.color)}
-                      onClick={goBackToSubblocks}>
-                {ICON_ARROW_LEFT} {window.t('trainer.back')}
-              </button>
-            }
-            right={<span style={S.muted}>{modeLabel}</span>}
-            icon={icon} onTheme={cycleTheme} onLang={cycleLang} onHome={goHome} />
 
           <h2 style={{ ...S.heading, textAlign: "center" }}><Icon name={headingIcon} size={22} /> {heading}</h2>
           <p style={{ ...S.subheading, textAlign: "center" }}>{window.t('trainer.pick_test')}</p>
@@ -4161,16 +4173,16 @@ function App() {
   function renderLearnCards() {
     const vocab = getActiveVocab();
     if (vocab.length === 0) {
-      return <div style={S.page}><div style={S.container}>{window.t('trainer.no_words_in_topic')}</div></div>;
+      return <div style={S.page}><div style={S.containerRead}>{window.t('trainer.no_words_in_topic')}</div></div>;
     }
     const item = vocab[cardIdx];
     return (
       <div style={S.page}>
-        <div style={S.container}>
-          <TopBar
-            left={<button style={S.outlineBtn(activeBlock.color)} onClick={() => setPhase("block-start")}>{ICON_ARROW_LEFT} {window.t('trainer.back')}</button>}
-            right={<span style={S.muted}>{cardIdx + 1} / {vocab.length}</span>}
-            icon={icon} onTheme={cycleTheme} onLang={cycleLang} onHome={goHome} />
+        <TopBar
+          left={<button style={S.outlineBtn(activeBlock.color)} onClick={() => setPhase("block-start")}>{ICON_ARROW_LEFT} {window.t('trainer.back')}</button>}
+          right={<span style={S.muted}>{cardIdx + 1} / {vocab.length}</span>}
+          icon={icon} onTheme={cycleTheme} onLang={cycleLang} onHome={goHome} />
+        <div style={S.containerRead}>
           <FlipCard key={item.id} item={item} flipped={flipped} onFlip={() => setFlipped(!flipped)} color={activeBlock.color} />
           <div style={{ display: "flex", gap: 12, justifyContent: "center", marginTop: 20 }}>
             <button style={S.outlineBtn()} onClick={prevCard} disabled={cardIdx === 0}>{ICON_ARROW_LEFT} {window.t('trainer.back')}</button>
@@ -4193,16 +4205,16 @@ function App() {
     const base = getNeuAllVocab();
     const vocab = neuShuffle && neuVocabOrder ? neuVocabOrder : base;
     if (vocab.length === 0) {
-      return <div style={S.page}><div style={S.container}>{window.t('trainer.no_new_words')}</div></div>;
+      return <div style={S.page}><div style={S.containerRead}>{window.t('trainer.no_new_words')}</div></div>;
     }
     const item = vocab[cardIdx];
     return (
       <div style={S.page}>
-        <div style={S.container}>
-          <TopBar
-            left={<button style={S.outlineBtn(activeBlock.color)} onClick={() => { setPhase("select-subblock"); setActiveSub(null); }}>{ICON_ARROW_LEFT} {window.t('trainer.back')}</button>}
-            right={<span style={S.muted}>{cardIdx + 1} / {vocab.length}</span>}
-            icon={icon} onTheme={cycleTheme} onLang={cycleLang} onHome={goHome} />
+        <TopBar
+          left={<button style={S.outlineBtn(activeBlock.color)} onClick={() => { setPhase("select-subblock"); setActiveSub(null); }}>{ICON_ARROW_LEFT} {window.t('trainer.back')}</button>}
+          right={<span style={S.muted}>{cardIdx + 1} / {vocab.length}</span>}
+          icon={icon} onTheme={cycleTheme} onLang={cycleLang} onHome={goHome} />
+        <div style={S.containerRead}>
           <h2 style={{ ...S.heading, textAlign: "center", marginBottom: 4 }}><Icon name="book" size={22} /> {window.t('trainer.general_learn')}</h2>
           <div style={{ textAlign: "center", marginBottom: 12 }}>
             <button
@@ -4262,11 +4274,11 @@ function App() {
     const praetCount = CONJUGATIONS.filter(c => c.praeteritum).length;
     return (
       <div style={S.page}>
-        <div style={S.container}>
-          <TopBar
-            left={<button style={S.outlineBtn("var(--c-outline-grey)")} onClick={goBackToSubblocks}>{ICON_ARROW_LEFT} {window.t('trainer.back')}</button>}
-            right={<span style={S.muted}><Icon name="brain" size={13} /> {window.t('trainer.mode_learn_title')}</span>}
-            icon={icon} onTheme={cycleTheme} onLang={cycleLang} onHome={goHome} />
+        <TopBar
+          left={<button style={S.outlineBtn("var(--c-outline-grey)")} onClick={goBackToSubblocks}>{ICON_ARROW_LEFT} {window.t('trainer.back')}</button>}
+          right={<span style={S.muted}><Icon name="brain" size={13} /> {window.t('trainer.mode_learn_title')}</span>}
+          icon={icon} onTheme={cycleTheme} onLang={cycleLang} onHome={goHome} />
+        <div style={S.containerRead}>
           <h2 style={{ ...S.heading, textAlign: "center" }}>{window.t('trainer.what_to_study')}</h2>
           <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
             <button
@@ -4305,21 +4317,21 @@ function App() {
   function renderLearnPraeteritumCards() {
     const praetList = CONJUGATIONS.filter(c => c.praeteritum);
     if (praetList.length === 0) {
-      return <div style={S.page}><div style={S.container}>{window.t('trainer.no_praeteritum_data')}</div></div>;
+      return <div style={S.page}><div style={S.containerRead}>{window.t('trainer.no_praeteritum_data')}</div></div>;
     }
     const conj = praetList[cardIdx] || praetList[0];
     return (
       <div style={S.page}>
-        <div style={S.container}>
-          <TopBar
-            left={
-              <button style={S.outlineBtn(activeBlock.color)}
-                      onClick={() => setPhase("select-learn-conj")}>
-                {ICON_ARROW_LEFT} {window.t('trainer.back')}
-              </button>
-            }
-            right={<span style={S.muted}>{cardIdx + 1} / {praetList.length}</span>}
-            icon={icon} onTheme={cycleTheme} onLang={cycleLang} onHome={goHome} />
+        <TopBar
+          left={
+            <button style={S.outlineBtn(activeBlock.color)}
+                    onClick={() => setPhase("select-learn-conj")}>
+              {ICON_ARROW_LEFT} {window.t('trainer.back')}
+            </button>
+          }
+          right={<span style={S.muted}>{cardIdx + 1} / {praetList.length}</span>}
+          icon={icon} onTheme={cycleTheme} onLang={cycleLang} onHome={goHome} />
+        <div style={S.containerRead}>
           <PraeteritumFlipCard key={conj.id || conj.verb} conj={conj} flipped={flipped}
                                onFlip={() => setFlipped(!flipped)}
                                color="var(--c-praeteritum)" />
@@ -4354,21 +4366,21 @@ function App() {
 
   function renderLearnConjCards() {
     if (CONJUGATIONS.length === 0) {
-      return <div style={S.page}><div style={S.container}>{window.t('trainer.no_conj_data')}</div></div>;
+      return <div style={S.page}><div style={S.containerRead}>{window.t('trainer.no_conj_data')}</div></div>;
     }
     const conj = CONJUGATIONS[cardIdx];
     return (
       <div style={S.page}>
-        <div style={S.container}>
-          <TopBar
-            left={
-              <button style={S.outlineBtn(activeBlock.color)}
-                      onClick={goBackToSubblocks}>
-                {ICON_ARROW_LEFT} {window.t('trainer.back')}
-              </button>
-            }
-            right={<span style={S.muted}>{cardIdx + 1} / {CONJUGATIONS.length}</span>}
-            icon={icon} onTheme={cycleTheme} onLang={cycleLang} onHome={goHome} />
+        <TopBar
+          left={
+            <button style={S.outlineBtn(activeBlock.color)}
+                    onClick={goBackToSubblocks}>
+              {ICON_ARROW_LEFT} {window.t('trainer.back')}
+            </button>
+          }
+          right={<span style={S.muted}>{cardIdx + 1} / {CONJUGATIONS.length}</span>}
+          icon={icon} onTheme={cycleTheme} onLang={cycleLang} onHome={goHome} />
+        <div style={S.containerRead}>
           <ConjFlipCard key={conj.id || conj.verb} conj={conj} flipped={flipped}
                         onFlip={() => setFlipped(!flipped)}
                         color={activeBlock.color} />
@@ -4404,11 +4416,11 @@ function App() {
     if (questions.length === 0) {
       return (
         <div style={S.page}>
-          <div style={S.container}>
-            <TopBar
-              left={<button style={S.outlineBtn(activeBlock.color)} onClick={goBackToSubblocks}>{ICON_ARROW_LEFT} {window.t('trainer.back')}</button>}
-              right={<span style={S.muted}>{modeLabel}</span>}
-              icon={icon} onTheme={cycleTheme} onLang={cycleLang} onHome={goHome} />
+          <TopBar
+            left={<button style={S.outlineBtn(activeBlock.color)} onClick={goBackToSubblocks}>{ICON_ARROW_LEFT} {window.t('trainer.back')}</button>}
+            right={<span style={S.muted}>{modeLabel}</span>}
+            icon={icon} onTheme={cycleTheme} onLang={cycleLang} onHome={goHome} />
+          <div style={S.containerRead}>
             <div style={{ textAlign: "center", marginTop: 40 }}>
               <p>{window.t('trainer.no_questions_for_block')}</p>
               <button style={S.primaryBtn(activeBlock.color)} onClick={goBackToSubblocks}>{window.t('trainer.back')}</button>
@@ -4441,33 +4453,33 @@ function App() {
 
     return (
       <div style={S.page}>
-        <div style={S.container}>
-          <TopBar
-            left={
-              <button style={S.outlineBtn(activeBlock.color)}
-                      onClick={phase === "learn-test"
-                                 ? () => {
-                                     // Если мы в блоке спряжений (Unregel внутри Verben) —
-                                     // возврат должен быть в карточки спряжений, иначе
-                                     // block-start покажет «0 слов» (у блока с kind:
-                                     // 'conjugations' нет topics).
-                                     if (activeBlock && activeBlock.kind === "conjugations") {
-                                       setCardIdx(0); setFlipped(false);
-                                       setPhase("learn-conj-cards");
-                                     } else {
-                                       setPhase("block-start");
-                                     }
+        <TopBar
+          left={
+            <button style={S.outlineBtn(activeBlock.color)}
+                    onClick={phase === "learn-test"
+                               ? () => {
+                                   // Если мы в блоке спряжений (Unregel внутри Verben) —
+                                   // возврат должен быть в карточки спряжений, иначе
+                                   // block-start покажет «0 слов» (у блока с kind:
+                                   // 'conjugations' нет topics).
+                                   if (activeBlock && activeBlock.kind === "conjugations") {
+                                     setCardIdx(0); setFlipped(false);
+                                     setPhase("learn-conj-cards");
+                                   } else {
+                                     setPhase("block-start");
                                    }
-                                 : goBackToSubblocks}>
-                {ICON_ARROW_LEFT} {window.t('trainer.back')}
-              </button>
-            }
-            right={<span style={S.muted}>
-              {devMode && (
-                <button
-                  style={{ ...S.outlineBtn("var(--c-outline-grey)"), padding: "4px 8px", fontSize: 12, marginRight: 8 }}
-                  onClick={() => { setDevIsFullPool(false); setDevModalPool(questions); }}>
-                  <Icon name="wrench" />
+                                 }
+                               : goBackToSubblocks}>
+              {ICON_ARROW_LEFT} {window.t('trainer.back')}
+            </button>
+          }
+          right={<span style={S.muted}>
+            {devMode && (
+              <button
+                style={{ ...S.outlineBtn("var(--c-outline-grey)"), padding: "4px 8px", fontSize: 12, marginRight: 8 }}
+                onClick={() => { setDevIsFullPool(false); setDevModalPool(questions); }}>
+                <Icon name="wrench" />
+        <div style={S.containerRead}>
                 </button>
               )}
               {qIdx + 1} / {questions.length} · <Icon name="check" size={12} /> {correctCount}
@@ -4692,11 +4704,11 @@ function App() {
     const pct = Math.round((correctCount / questions.length) * 100);
     return (
       <div style={S.page}>
-        <div style={S.container}>
-          <TopBar
-            left={<button style={S.outlineBtn(activeBlock.color)} onClick={goHome}>{ICON_ARROW_LEFT} {window.t('nav.back_home')}</button>}
-            right={<span style={S.muted}>{modeLabel}</span>}
-            icon={icon} onTheme={cycleTheme} onLang={cycleLang} onHome={goHome} />
+        <TopBar
+          left={<button style={S.outlineBtn(activeBlock.color)} onClick={goHome}>{ICON_ARROW_LEFT} {window.t('nav.back_home')}</button>}
+          right={<span style={S.muted}>{modeLabel}</span>}
+          icon={icon} onTheme={cycleTheme} onLang={cycleLang} onHome={goHome} />
+        <div style={S.containerRead}>
           <div style={{ ...S.questionCard, textAlign: "center", padding: 40 }}>
             <div style={{ display: "flex", justifyContent: "center", marginBottom: 16 }}>
               <Icon name={pct >= 80 ? "party" : pct >= 50 ? "thumbs-up" : "flex"} size={64} />

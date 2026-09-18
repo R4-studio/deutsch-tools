@@ -4,27 +4,19 @@
 # Источник правды — маркер CACHE_VERSION в самом верху <head> index.html:
 #   <!-- CACHE_VERSION: YYYYMMDD -->
 #
-# Если в коммите затронут хотя бы один из ASSET_FILES — хук проверяет, что
-# маркер равен сегодняшней дате, и сам прописывает это значение во ВСЕ
-# ?v=... у ASSET_FILES во ВСЕХ HTML_FILES (включая i18n/*.js — для них раньше
-# была отдельная схема с простым счётчиком, теперь всё под одной датой).
+# Триггер — любой .css/.js в коммите (кроме changelog.js, у него своя схема
+# с Date.now()). Подстановка — любой .css/.js во всех html-файлах репозитория.
+# Регистрировать новые файлы больше не нужно: под правило попадает всё.
 # Изменённые файлы автоматически добавляются в этот же коммит.
 
 REPO_ROOT=$(git rev-parse --show-toplevel)
 cd "$REPO_ROOT" || exit 1
 
-ASSET_FILES="theme.css data.js i18n/ru.js i18n/en.js i18n/i18n.js"
-HTML_FILES="index.html about.html faq.html cheatsheet.html trainer.html"
 TODAY=$(date +%Y%m%d)
 
-# Проверяем: тронут ли в этом коммите хоть один из ASSET_FILES?
+# Тронут ли в этом коммите хоть один .css/.js?
 STAGED=$(git diff --cached --name-only)
-NEED_CHECK=0
-for a in $ASSET_FILES; do
-  case "$STAGED" in
-    *"$a"*) NEED_CHECK=1 ;;
-  esac
-done
+NEED_CHECK=$(printf '%s\n' "$STAGED" | grep -E '\.(css|js)$' | grep -vc '^changelog\.js$')
 [ "$NEED_CHECK" = "0" ] && exit 0
 
 MARKER=$(grep -oE '<!-- CACHE_VERSION: [0-9]{8}' index.html | grep -oE '[0-9]{8}')
@@ -42,10 +34,11 @@ if [ "$MARKER" != "$TODAY" ]; then
   exit 1
 fi
 
-# Прописываем маркер во все ?v= у ASSET_FILES во всех HTML_FILES
-for f in $HTML_FILES; do
+# changelog.js?v=' + Date.now() под шаблон не попадает: после ?v= там кавычка,
+# а [0-9A-Za-z]+ требует хотя бы один буквенно-цифровой символ.
+for f in $(git ls-files '*.html'); do
   [ -f "$f" ] || continue
-  sed -i -E "s#(theme\.css|data\.js|i18n/(ru|en|i18n)\.js)\?v=[0-9A-Za-z]+#\1?v=$MARKER#g" "$f"
+  sed -i -E "s#(\.css|\.js)\?v=[0-9A-Za-z]+#\1?v=$MARKER#g" "$f"
   git add "$f"
 done
 

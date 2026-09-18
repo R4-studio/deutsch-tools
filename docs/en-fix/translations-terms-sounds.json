@@ -283,6 +283,11 @@
       "de": "deswegen",
       "en": "therefore",
       "noteEn": "a connecting adverb - triggers inversion: Deswegen bleibe ich."
+    },
+    "t0059": {
+      "de": "indem",
+      "en": "by (doing something)",
+      "noteEn": "Subordinating conjunction — the verb moves to the end: Man spart Strom, indem man den Stecker zieht. It names the manner, not the cause: replace it with weil and the sentence stops answering \"how?\""
     }
   },
   "SOUNDS": {
