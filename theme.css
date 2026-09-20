@@ -3,7 +3,7 @@
    Подключается в index.html, cheatsheet.html, trainer.html
    Переменные используются и шпорой, и тренажёром.
    ═══════════════════════════════════════════════════════════════ */
-@import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&display=swap');
+/* @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&display=swap'); */
 
 /* ─── Глобальный сброс ────────────────────────────────────────── */
 * { box-sizing: border-box; }

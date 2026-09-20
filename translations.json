@@ -3490,6 +3490,14 @@
       "source": "manual",
       "title": "Условие без wenn: Sollte …, müsste …",
       "titleEn": "A condition without wenn: Sollte …, müsste …"
+    },
+    "r0068": {
+      "content_md_en": "### Ersatzinfinitiv – the infinitive instead of Partizip II\n[sub] in Perfekt the participle can be missing altogether\nIf a verb stands **next to another infinitive**, the infinitive is used instead of Partizip II.\n\nIch habe **gearbeitet**. – a normal participle\nIch habe arbeiten **müssen**. – not gemusst\n\n**Verb** | **Replacement** | **Example** |\nModal verbs (dürfen, können, mögen, müssen, sollen, wollen) | always | Ich habe warten **müssen**. |\nbrauchen | always | Du hättest nicht kommen **brauchen**. |\nlassen, sehen, hören | as a rule | Ich habe das Auto reparieren **lassen**. |\nheißen, helfen, fühlen, lehren, lernen | varies | Er hat mir tragen **helfen** / **geholfen**. |\n\n### How to tell them apart\nCount the verbs at the end of the sentence.\nOne → Partizip II: Ich habe mein Handy zu Hause **gelassen**.\nTwo → infinitive: Ich habe mein Handy reparieren **lassen**.\n\n### In a subordinate clause haben moves forward\nNormally the conjugated verb comes last in a subordinate clause. With Ersatzinfinitiv it is the opposite: it stands **before** the infinitive group.\n…, weil ich mein Auto **habe** reparieren lassen.\n⚠ not …, weil ich mein Auto reparieren lassen habe.",
+      "examplesEn": "Ich habe mein Handy zu Hause gelassen. – I left my phone at home.\nIch habe mein Auto reparieren lassen. – I had my car repaired.\nSie hat sich die Haare schneiden lassen. – She had her hair cut.\nIch habe lange warten müssen. – I had to wait a long time.\n…, weil ich mein Auto habe reparieren lassen. – …, because I had my car repaired.",
+      "noteEn": "⚠ gelassen has not gone anywhere: it is still the Partizip II of lassen, it is simply not used next to a second infinitive. On its own, gelassen can also be an adjective: ein gelassener Mensch – a calm person.",
+      "source": "manual",
+      "title": "Ersatzinfinitiv – инфинитив вместо Partizip II",
+      "titleEn": "Ersatzinfinitiv – the infinitive instead of Partizip II"
     }
   },
   "SOUNDS": {
@@ -7357,7 +7365,7 @@
     },
     "298455bf82fe87b8": {
       "_src_altEn": "испытывать",
-      "_src_note": "попробовать на вкус — probieren или kosten",
+      "_src_note": "попробовать на вкус – probieren или kosten",
       "altEn": "to test",
       "altEnSource": "deepl-ru",
       "backtranslation": "versuchen",
@@ -7365,7 +7373,7 @@
       "de": "ausprobieren",
       "en": "to try",
       "exampleEn": "I'd like to try that.",
-      "noteEn": "Try it out — probieren or kosten",
+      "noteEn": "Try it out – probieren or kosten",
       "source": "haiku",
       "verdict": "ok"
     },
@@ -7938,7 +7946,7 @@
     },
     "2fdee69726310916": {
       "_src_altEn": "приготовить",
-      "_src_note": "о блюде; отапливать — heizen",
+      "_src_note": "о блюде; отапливать – heizen",
       "altEn": "to cook",
       "altEnSource": "deepl-ru",
       "backtranslation": "vorbereiten",
@@ -7946,7 +7954,7 @@
       "de": "zubereiten",
       "en": "to prepare",
       "exampleEn": "I'm making dinner.",
-      "noteEn": "about a dish; to heat — heizen",
+      "noteEn": "about a dish; to heat – heizen",
       "source": "haiku",
       "verdict": "ok"
     },
@@ -8265,12 +8273,12 @@
       "source": "deepl"
     },
     "340c0c97370d35dd": {
-      "_src_note": "цирковой артист; актёр — der Schauspieler. n-Deklination",
+      "_src_note": "цирковой артист; актёр – der Schauspieler. n-Deklination",
       "backtranslation": "der Künstler",
       "date": "2026-09-18",
       "de": "Artist",
       "en": "artist",
-      "noteEn": "circus performer; actor — der Schauspieler. n-Deklination",
+      "noteEn": "circus performer; actor – der Schauspieler. n-Deklination",
       "source": "haiku",
       "verdict": "ok"
     },
@@ -11435,11 +11443,11 @@
       "verdict": "ok"
     },
     "582def90429a6027": {
-      "_src_note": "районная; научная — die Bibliothek",
+      "_src_note": "районная; научная – die Bibliothek",
       "date": "2026-09-18",
       "de": "Bücherei",
       "en": "library (public, small-town)",
-      "noteEn": "Regional; Scientific — die Bibliothek",
+      "noteEn": "Regional; Scientific – die Bibliothek",
       "source": "haiku",
       "verdict": "fix"
     },
@@ -11923,13 +11931,13 @@
       "verdict": "ok"
     },
     "5f86b34d05c8812c": {
-      "_src_note": "как наречие — «вплотную»",
+      "_src_note": "как наречие – «вплотную»",
       "backtranslation": "schließen",
       "date": "2026-09-18",
       "de": "dicht",
       "en": "close",
       "exampleEn": "People were standing close together.",
-      "noteEn": "as an adverb — \"right up close\"",
+      "noteEn": "as an adverb—“right up close”",
       "source": "haiku",
       "verdict": "ok"
     },
@@ -12938,7 +12946,7 @@
     },
     "6a960194026c0ea9": {
       "_src_altEn": "рассылать",
-      "_src_note": "подарить — verschenken",
+      "_src_note": "подарить – verschenken",
       "altEn": "to send out",
       "altEnSource": "deepl-ru",
       "backtranslation": "senden",
@@ -12946,7 +12954,7 @@
       "de": "verschicken",
       "en": "to send",
       "exampleEn": "I'll send out the invitations.",
-      "noteEn": "give as a gift — verschenken",
+      "noteEn": "give as a gift – verschenken",
       "source": "haiku",
       "verdict": "ok"
     },
@@ -13967,14 +13975,14 @@
     },
     "775220fc91d218a3": {
       "_src_altEn": "тот же самый",
-      "_src_note": "как наречие gleich значит «сейчас» — см. adv0007",
+      "_src_note": "как наречие gleich значит «сейчас» – см. adv0007",
       "altEn": "the very same",
       "altEnSource": "deepl-ru",
-      "date": "2026-09-09",
+      "date": "2026-09-18",
       "de": "gleich",
       "en": "same",
       "exampleEn": "at the same time",
-      "noteEn": "As an adverb, “gleich” means “now” — see adv0007",
+      "noteEn": "As an adverb, \"gleich\" means \"now\"—see adv0007",
       "source": "haiku",
       "verdict": "fix"
     },
@@ -14067,14 +14075,14 @@
     },
     "783295c1178db0f4": {
       "_src_altEn": "позволять",
-      "_src_note": "lassen + Inf",
+      "_src_note": "В Perfekt две формы. Один глагол – gelassen: Ich habe es zu Hause gelassen. Рядом со вторым инфинитивом – lassen: Ich habe es reparieren lassen. Это Ersatzinfinitiv, см. r0068",
       "altEn": "to allow",
       "altEnSource": "deepl-ru",
       "backtranslation": "lass",
-      "date": "2026-08-27",
+      "date": "2026-09-18",
       "de": "lassen",
       "en": "to let",
-      "noteEn": "lassen + Inf",
+      "noteEn": "Perfekt has two forms. One verb—gelassen—is used in the following forms: Ich, habe, es, zu, Hause, gelassen. The second infinitive—lassen—is used in the following forms: Ich, habe, es, reparieren, lassen. This is Ersatzinfinitiv; see r0068.",
       "source": "haiku",
       "verdict": "ok"
     },
@@ -14808,7 +14816,7 @@
       "source": "deepl"
     },
     "8137e81c79bd3f6d": {
-      "_src_note": "всегда с sich; пропустить транспорт — verpassen",
+      "_src_note": "всегда с sich; пропустить транспорт – verpassen",
       "backtranslation": "sich verzögern",
       "date": "2026-09-18",
       "de": "verspäten",
@@ -15242,7 +15250,7 @@
       "verdict": "fix"
     },
     "87980cda89285bff": {
-      "_src_note": "о вещи или событии; о человеке — enttäuscht",
+      "_src_note": "о вещи или событии; о человеке – enttäuscht",
       "backtranslation": "enttäuschend",
       "date": "2026-09-18",
       "de": "enttäuschend",
@@ -15573,11 +15581,11 @@
       "source": "deepl"
     },
     "8b88b4771095dd12": {
-      "_src_note": "медсестра/медбрат — официальное название профессии",
-      "date": "2026-09-09",
+      "_src_note": "медсестра/медбрат – официальное название профессии",
+      "date": "2026-09-18",
       "de": "Pflegefachkraft",
       "en": "care worker",
-      "noteEn": "nurse — the official title of the profession",
+      "noteEn": "nurse – the official name of the profession",
       "source": "haiku",
       "verdict": "fix"
     },
@@ -15605,7 +15613,7 @@
     },
     "8bfba018e5bce6a9": {
       "_src_altEn": "как назло",
-      "_src_note": "выражает досаду, а не просто уточнение: «из всех возможных вариантов — этот»",
+      "_src_note": "выражает досаду, а не просто уточнение: «из всех возможных вариантов – этот»",
       "altEn": "as if on purpose",
       "altEnSource": "deepl-ru",
       "date": "2026-09-18",
@@ -15811,13 +15819,13 @@
     },
     "8eae5b35eae3af1e": {
       "_src_altEn": "подтверждение",
-      "_src_note": "ответ «да» на приглашение; отказ — die Absage",
+      "_src_note": "ответ «да» на приглашение; отказ – die Absage",
       "altEn": "confirmation",
       "altEnSource": "deepl-ru",
       "date": "2026-09-18",
       "de": "Zusage",
       "en": "acceptance",
-      "noteEn": "To accept the invitation, reply \"yes\"; to decline, email die or visit Absage",
+      "noteEn": "To accept the invitation, reply “yes”; to decline, email die or visit Absage",
       "source": "haiku",
       "verdict": "fix"
     },
@@ -18189,13 +18197,13 @@
       "verdict": "fix"
     },
     "abd1a85a8df1dea5": {
-      "_src_note": "о культуре Ближнего Востока; географическое «восточный» — östlich",
+      "_src_note": "о культуре Ближнего Востока; географическое «восточный» – östlich",
       "backtranslation": "orientalisch",
       "date": "2026-09-18",
       "de": "orientalisch",
       "en": "oriental",
       "exampleEn": "Belly dance",
-      "noteEn": "on Middle Eastern culture; the geographical term “Eastern”—östlich",
+      "noteEn": "on Middle Eastern culture; the geographical term “Eastern” – östlich",
       "source": "deepl"
     },
     "abed602e402d74e1": {
@@ -19409,7 +19417,7 @@
     },
     "bba3572a93552e57": {
       "_src_altEn": "в беспорядке",
-      "_src_note": "durcheinander sein — быть в растерянности",
+      "_src_note": "durcheinander sein – быть в растерянности",
       "altEn": "in disarray",
       "altEnSource": "deepl-ru",
       "backtranslation": "in Unordnung",
@@ -19417,7 +19425,7 @@
       "de": "durcheinander",
       "en": "in disarray",
       "exampleEn": "Everything was in disarray.",
-      "noteEn": "durcheinander sein — to be at a loss",
+      "noteEn": "durcheinander sein – to be at a loss",
       "source": "haiku",
       "verdict": "ok"
     },
@@ -21157,13 +21165,13 @@
       "verdict": "fix"
     },
     "d056f83145afdb02": {
-      "_src_note": "о пути «отсюда туда»; факт прибытия — ankommen",
+      "_src_note": "о пути «отсюда туда»; факт прибытия – ankommen",
       "backtranslation": "dorthin gelangen",
       "date": "2026-09-18",
       "de": "hinkommen",
       "en": "to get there",
       "exampleEn": "How do I get there?",
-      "noteEn": "about the route “from here to there”; proof of arrival — ankommen",
+      "noteEn": "about the route “from here to there”; proof of arrival – ankommen",
       "source": "haiku",
       "verdict": "ok"
     },
@@ -22095,7 +22103,7 @@
     },
     "dad487959a8e3caf": {
       "_src_altEn": "раздражённый",
-      "_src_note": "о ситуации — досадный, о человеке — раздражённый",
+      "_src_note": "о ситуации – досадный, о человеке – раздражённый",
       "altEn": "annoyed",
       "altEnSource": "deepl-ru",
       "backtranslation": "nervig",
@@ -22362,15 +22370,15 @@
     },
     "de4737a703b01c27": {
       "_src_altEn": "бережливый",
-      "_src_note": "≠ geizig: sparsam — нейтральное",
+      "_src_note": "≠ geizig: sparsam – нейтральное",
       "altEn": "thrifty",
       "altEnSource": "deepl-ru",
       "backtranslation": "wirtschaftlich",
-      "date": "2026-09-09",
+      "date": "2026-09-18",
       "de": "sparsam",
       "en": "economical",
       "exampleEn": "use water sparingly",
-      "noteEn": "≠ geizig: sparsam — neutral",
+      "noteEn": "≠ geizig: sparsam – neutral",
       "source": "haiku",
       "verdict": "ok"
     },
@@ -22812,7 +22820,7 @@
     },
     "e2875732d89ab1a4": {
       "_src_altEn": "только что",
-      "_src_note": "несколько минут назад, в пределах того же разговора; «недавно» о днях — neulich",
+      "_src_note": "несколько минут назад, в пределах того же разговора; «недавно» о днях – neulich",
       "altEn": "just now",
       "altEnSource": "deepl-ru",
       "backtranslation": "vor einer Weile",
@@ -22820,7 +22828,7 @@
       "de": "vorhin",
       "en": "a little while ago",
       "exampleEn": "You said something different a little while ago.",
-      "noteEn": "a few minutes ago, during the same conversation; “recently” referring to the past few days — neulich",
+      "noteEn": "a few minutes ago, during the same conversation; “recently” referring to the past few days – neulich",
       "source": "haiku",
       "verdict": "ok"
     },
@@ -23659,12 +23667,12 @@
       "source": "manual"
     },
     "eb5edf3d5a888295": {
-      "_src_note": "etwas ernst nehmen — принимать всерьёз",
+      "_src_note": "etwas ernst nehmen – принимать всерьёз",
       "date": "2026-09-18",
       "de": "ernst",
       "en": "serious",
       "exampleEn": "Please take this seriously.",
-      "noteEn": "etwas ernst nehmen — take seriously",
+      "noteEn": "etwas ernst nehmen – take seriously",
       "source": "haiku",
       "verdict": "fix"
     },
@@ -23968,14 +23976,14 @@
     },
     "ee611da6f4ae02df": {
       "_src_altEn": "скупой",
-      "_src_note": "≠ sparsam: geizig — с оттенком осуждения",
+      "_src_note": "≠ sparsam: geizig – с оттенком осуждения",
       "altEn": "stingy",
       "altEnSource": "deepl-ru",
       "backtranslation": "geizig",
-      "date": "2026-09-09",
+      "date": "2026-09-18",
       "de": "geizig",
       "en": "stingy",
-      "noteEn": "≠ sparsam: geizig — with a hint of disapproval",
+      "noteEn": "≠ sparsam: geizig – with a hint of disapproval",
       "source": "deepl"
     },
     "ee644672bd03d5fc": {

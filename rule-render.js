@@ -268,7 +268,7 @@ function renderRuleExamples(rule) {
 // свой (открытие правила в оверлее). Обработчика нет — ссылки не рисуются.
 function renderRuleSeeAlso(rule) {
   if (typeof window.onRuleLinkClick !== 'function') return '';
-  const ids = ((rule.note || '').match(/\br\d{4}\b/g) || []);   // id языконезависимы — из RU-note
+  const ids = ((rule.note || '').match(/\br\d{4}\b/g) || []);   // id языконезависимы – из RU-note
   const seen = {};
   const links = [];
   for (const id of ids) {
@@ -276,7 +276,7 @@ function renderRuleSeeAlso(rule) {
     seen[id] = true;
     const title = wordField(RULES_BY_ID[id], 'title', 'titleEn');
     links.push('<button type="button" class="rule-seealso" onclick="window.onRuleLinkClick(\'' + id + '\')">'
-           + ic('link') + '<span>' + escHtml(id) + ' — ' + escHtml(title) + '</span></button>');
+           + ic('link') + '<span>' + escHtml(id) + ' – ' + escHtml(title) + '</span></button>');
   }
   if (!links.length) return '';
   return '<div class="rule-card__links">' + links.join('') + '</div>';

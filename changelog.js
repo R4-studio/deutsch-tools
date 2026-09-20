@@ -3,7 +3,7 @@ window.CHANGELOG = [
     "date": "2026-09-18",
     "title": "Свободный ввод, речевые клише и 111 новых слов",
     "items": [
-      "Новый тип задания — свободный ввод перевода: пишешь предложение целиком, а при ошибке видишь, какое именно слово разошлось",
+      "Новый тип задания – свободный ввод перевода: пишешь предложение целиком, а при ошибке видишь, какое именно слово разошлось",
       "111 новых слов и фраз:",
       "55 существительных",
       "19 прилагательных",
@@ -13,12 +13,12 @@ window.CHANGELOG = [
       "3 новые темы: Экология, Мнение и согласие, Ведение разговора",
       "28 новых вопросов в тренажёре",
       "Тренажёр: кнопка «Наверх» в длинных списках",
-      "Единая ширина страниц — шапка больше не прыгает при переходе между экранами",
+      "Единая ширина страниц – шапка больше не прыгает при переходе между экранами",
       "Телефон: убрана синяя рамка при нажатии, на iOS починена высота экрана"
     ],
     "titleEn": "Free-form answers, speaking phrases and 111 new words",
     "itemsEn": [
-      "A new exercise type — type the whole translation yourself; if you get it wrong, you see exactly which word differs",
+      "A new exercise type – type the whole translation yourself; if you get it wrong, you see exactly which word differs",
       "111 new words and phrases:",
       "55 nouns",
       "19 adjectives",
@@ -28,7 +28,7 @@ window.CHANGELOG = [
       "3 new topics: Environment, Opinion, Discussion",
       "28 new trainer questions",
       "Trainer: a «back to top» button in long lists",
-      "Consistent page width — the header no longer jumps between screens",
+      "Consistent page width – the header no longer jumps between screens",
       "Mobile: no more blue tap outline, fixed viewport height on iOS"
     ]
   },  
@@ -42,13 +42,13 @@ window.CHANGELOG = [
       "37 наречий",
       "3 новые темы: Документы, Размер, Качества",
       "2 новых правила:",
-      "Futur I и Futur II — будущее через werden",
-      "Passiv — werden + Partizip II",
-      "Справочник: сортировка в шапке — по темам, по уровню и по дате добавления, в обе стороны",
+      "Futur I и Futur II – будущее через werden",
+      "Passiv – werden + Partizip II",
+      "Справочник: сортировка в шапке – по темам, по уровню и по дате добавления, в обе стороны",
       "Вкладка «Новые» разложена по темам, а не одним общим списком",
       "В карточке правила ссылка «см. также» показывает все связанные правила, а не только первое",
       "В карточке слова больше не показываются служебные поля тренажёра",
-      "Из колонки перевода убрано «Pl:» — множественное число осталось в карточке слова"
+      "Из колонки перевода убрано «Pl:» – множественное число осталось в карточке слова"
     ],
     "titleEn": "135 words, Futur and Passiv, sorting in the reference",
     "itemsEn": [
@@ -58,13 +58,13 @@ window.CHANGELOG = [
       "37 adverbs",
       "3 new topics: Documents, Size, Qualities",
       "2 new rules:",
-      "Futur I and Futur II — the future with werden",
-      "Passiv — werden + Partizip II",
-      "Reference: sorting in the header — by topic, by level and by date added, in both directions",
+      "Futur I and Futur II – the future with werden",
+      "Passiv – werden + Partizip II",
+      "Reference: sorting in the header – by topic, by level and by date added, in both directions",
       "The \"New\" tab is now split by topic instead of one long list",
       "A rule card now links to every related rule, not just the first one",
       "The word card no longer shows the trainer's internal fields",
-      "\"Pl:\" removed from the translation column — the plural stays in the word card"
+      "\"Pl:\" removed from the translation column – the plural stays in the word card"
     ]
   },
   {
@@ -80,9 +80,9 @@ window.CHANGELOG = [
       "2 новые темы: Медицина и аптека, Язык",
       "3 новых правила:",
       "Nebensatz mit seit / seitdem und bis",
-      "Verben mit Präpositionen — вопрос о лице (wen / wem)",
-      "Präpositionaladverbien — wo(r)- и da(r)-",
-      "Справочник: правила показываются карточками — иконка темы в заголовке, примеры отдельным блоком, заметка внизу",
+      "Verben mit Präpositionen – вопрос о лице (wen / wem)",
+      "Präpositionaladverbien – wo(r)- и da(r)-",
+      "Справочник: правила показываются карточками – иконка темы в заголовке, примеры отдельным блоком, заметка внизу",
       "Составной род m/f больше не сливается в один нечитаемый бейдж",
       "26 правил переведены на английский вручную, вместе с примерами"
     ],
@@ -97,9 +97,9 @@ window.CHANGELOG = [
       "2 new topics: Medicine & Pharmacy, Language",
       "3 new rules:",
       "Nebensatz mit seit / seitdem und bis",
-      "Verben mit Präpositionen — asking about a person (wen / wem)",
-      "Präpositionaladverbien — wo(r)- and da(r)-",
-      "Reference: rules are shown as cards — topic icon in the heading, examples as a separate block, note at the bottom",
+      "Verben mit Präpositionen – asking about a person (wen / wem)",
+      "Präpositionaladverbien – wo(r)- and da(r)-",
+      "Reference: rules are shown as cards – topic icon in the heading, examples as a separate block, note at the bottom",
       "Compound gender m/f no longer collapses into one unreadable badge",
       "26 rules translated into English by hand, examples included"
     ]
@@ -117,8 +117,8 @@ window.CHANGELOG = [
       "4 термина",
       "2 новые темы: Питание и Защита прав потребителей",
       "2 новых правила:",
-      "trotzdem vs deshalb/deswegen — уступка и следствие",
-      "Genitiv Plural — один артикль на все роды"
+      "trotzdem vs deshalb/deswegen – уступка и следствие",
+      "Genitiv Plural – один артикль на все роды"
     ],
     "titleEn": "Database Update: Insurance, Food, Consumer Rights",
     "itemsEn": [
@@ -131,22 +131,22 @@ window.CHANGELOG = [
       "4 terms",
       "2 new topics: Nutrition and Consumer Protection",
       "2 new rules:",
-      "trotzdem vs deshalb / deswegen — Concession and Consequence",
-      "Genitiv Plural — one article for all genders"
+      "trotzdem vs deshalb / deswegen – Concession and Consequence",
+      "Genitiv Plural – one article for all genders"
     ]
   },
   {
     "date": "2026-08-30",
     "title": "Чистка базы и доработка перевода",
     "items": [
-      "Убраны слэши и запятые из русских переводов — раньше в одной ячейке лежало два варианта, и тренажёр требовал оба сразу. Второй вариант переехал в отдельное поле",
+      "Убраны слэши и запятые из русских переводов – раньше в одной ячейке лежало два варианта, и тренажёр требовал оба сразу. Второй вариант переехал в отдельное поле",
       "То же для немецкого: jeder / jede, eins / ein, Frei / Besetzt, beide / beiden, nächste / nächst-",
-      "Разведена пара отрицаний: kein для существительных, nicht для глаголов и признаков — раньше вместо перевода стояло описание",
+      "Разведена пара отрицаний: kein для существительных, nicht для глаголов и признаков – раньше вместо перевода стояло описание",
       "handeln разделён на глагол и конструкцию es handelt sich um",
       "Числительные -zehn и -zig получили нормальный перевод: -надцать и -дцать вместо описаний",
       "Исправлена опечатка в переводе vier и 15 случайных заглавных букв",
-      "Тренажёр: русские глаголы совершенного вида теперь спрягаются (скажу, брошу, поставлю) — раньше подставлялся инфинитив «Я сказать». Глаголы, у которых личных форм нет вообще, из заданий исключены",
-      "Альтернативные переводы на английский перестали пересчитываться при каждой сборке — раньше один и тот же перевод менялся от прогона к прогону"
+      "Тренажёр: русские глаголы совершенного вида теперь спрягаются (скажу, брошу, поставлю) – раньше подставлялся инфинитив «Я сказать». Глаголы, у которых личных форм нет вообще, из заданий исключены",
+      "Альтернативные переводы на английский перестали пересчитываться при каждой сборке – раньше один и тот же перевод менялся от прогона к прогону"
     ],
     "titleEn": "Cleaning up the database and refining the translation"
   },
@@ -154,17 +154,17 @@ window.CHANGELOG = [
     "date": "2026-08-27",
     "title": "Английская версия: полная переработка перевода",
     "items": [
-      "Перевод шёл по цепочке немецкий → русский → английский, из-за чего значения искажались. Теперь источник — немецкий напрямую.",
+      "Перевод шёл по цепочке немецкий → русский → английский, из-за чего значения искажались. Теперь источник – немецкий напрямую.",
       "Словарь, 1759 слов. Исправлены ошибки многозначности: Eintritt был «Login» → entrance, backen был «oven» → to bake, Wäsche была «underwear» → laundry",
       "Единая форма глаголов (to X) и регистр существительных",
       "Примеры переводятся с немецкого оригинала, а не с русского пересказа",
-      "Правила, все 59. Немецкие примеры и таблицы больше не переводятся — раньше Modalverben im Präteritum показывал шесть одинаковых «had to» вместо musste/musstest/mussten",
+      "Правила, все 59. Немецкие примеры и таблицы больше не переводятся – раньше Modalverben im Präteritum показывал шесть одинаковых «had to» вместо musste/musstest/mussten",
       "Adjektivdeklination снова показывает окончания",
       "31 правило переведено вручную, включая те, где объяснение опиралось на русский язык",
-      "22 правила были без английского заголовка — исправлено",
+      "22 правила были без английского заголовка – исправлено",
       "Термины, 54 штуки: regelmäßig был «transitive verb» → regular verb, das Objekt был «supplement» → object, Wohin? совпадал с Wo? → Where to?",
-      "Звуки, 17 штук: транскрипция переведена на IPA. Раньше [и:] превращалось в «[and:]», а [шт] — в «[pcs]»",
-      "Примечания: 349 из 437 содержат немецкий — он теперь защищён от перевода"
+      "Звуки, 17 штук: транскрипция переведена на IPA. Раньше [и:] превращалось в «[and:]», а [шт] – в «[pcs]»",
+      "Примечания: 349 из 437 содержат немецкий – он теперь защищён от перевода"
     ],
     "titleEn": "English version: translation completely reworked",
     "itemsEn": [
@@ -172,13 +172,13 @@ window.CHANGELOG = [
       "Vocabulary, 1759 words. Ambiguity errors fixed: Eintritt was \"Login\" → entrance, backen was \"oven\" → to bake, Wäsche was \"underwear\" → laundry",
       "Consistent verb form (to X) and correct capitalisation of nouns",
       "Examples are translated from the German original, not from the Russian paraphrase",
-      "Rules, all 59. German examples and tables are no longer translated — Modalverben im Präteritum used to show six identical \"had to\" instead of musste/musstest/mussten",
+      "Rules, all 59. German examples and tables are no longer translated – Modalverben im Präteritum used to show six identical \"had to\" instead of musste/musstest/mussten",
       "Adjektivdeklination shows its endings again",
       "31 rules translated by hand, including those where the explanation leaned on Russian",
-      "22 rules had no English title at all — fixed",
+      "22 rules had no English title at all – fixed",
       "Terms, 54 entries: regelmäßig was \"transitive verb\" → regular verb, das Objekt was \"supplement\" → object, Wohin? was identical to Wo? → Where to?",
       "Sounds, 17 entries: transcription switched to IPA. Previously [и:] became \"[and:]\" and [шт] became \"[pcs]\"",
-      "Notes: 349 of 437 contain German — it is now protected from translation"
+      "Notes: 349 of 437 contain German – it is now protected from translation"
     ],
     "manualEn": true
   },
@@ -186,14 +186,14 @@ window.CHANGELOG = [
     "date": "2026-08-23",
     "title": "Реорганизация тем словаря",
     "items": [
-      "Слова не добавлялись — только перераспределены по темам",
+      "Слова не добавлялись – только перераспределены по темам",
       "492 слова переехали в более точные темы, +40 новых тем",
       "+5 новых разделов:",
-      "· Базовые глаголы — sein, haben, machen, tun и прочая основа больше не лежат в «Работе»",
-      "· Деньги — цены, банк, счёт, доход (раньше были размазаны между «Работой» и «Покупками»)",
-      "· Документы и ведомства — Antrag, Ausweis, Vertrag, страховки",
-      "· Общество — Streik, Kultur, Integration",
-      "· Качества — свойства предметов отделены от чувств и состояний человека",
+      "· Базовые глаголы – sein, haben, machen, tun и прочая основа больше не лежат в «Работе»",
+      "· Деньги – цены, банк, счёт, доход (раньше были размазаны между «Работой» и «Покупками»)",
+      "· Документы и ведомства – Antrag, Ausweis, Vertrag, страховки",
+      "· Общество – Streik, Kultur, Integration",
+      "· Качества – свойства предметов отделены от чувств и состояний человека",
       "Разобраны самые раздутые темы:",
       "· «Работа»: 90 глаголов → 6 тем",
       "· «Качества»: 87 прилагательных → 5 тем",
@@ -206,14 +206,14 @@ window.CHANGELOG = [
     ],
     "titleEn": "Reorganizing the Dictionary's Topics",
     "itemsEn": [
-      "No words were added—they were simply reorganized by topic",
+      "No words were added–they were simply reorganized by topic",
       "492 words were moved to more specific topics; +40 new topics",
       "+5 new sections:",
-      "· Basic verbs—sein, haben, machen, tun, and other similar forms—are no longer included in “Raba”",
-      "· Money — prices, bank, account, income (previously spread out between “Work” and “Purchases”)",
-      "· Documents and government agencies — Antrag, Ausweis, Vertrag, insurance",
-      "· Company — Streik, Kultur, Integration",
-      "· Qualities—the properties of objects are distinct from human sensations and states",
+      "· Basic verbs–sein, haben, machen, tun, and other similar forms–are no longer included in “Raba”",
+      "· Money – prices, bank, account, income (previously spread out between “Work” and “Purchases”)",
+      "· Documents and government agencies – Antrag, Ausweis, Vertrag, insurance",
+      "· Company – Streik, Kultur, Integration",
+      "· Qualities–the properties of objects are distinct from human sensations and states",
       "We've broken down the most overhyped topics:",
       "· “Work”: 90 verbs → 6 topics",
       "· “Qualities”: 87 adjectives → 5 themes",
@@ -238,9 +238,9 @@ window.CHANGELOG = [
       "2 термина",
       "4 новых правила:",
       "Akkusativ или Dativ для возвратного местоимения (Reflexivpronomen)",
-      "sowohl...als auch / weder...noch — парные союзы",
+      "sowohl...als auch / weder...noch – парные союзы",
       "Infinitiv mit zu",
-      "sondern — «не X, а Y»"
+      "sondern – «не X, а Y»"
     ],
     "titleEn": "Database Update",
     "itemsEn": [
@@ -253,9 +253,9 @@ window.CHANGELOG = [
       "2 terms",
       "4 new rules:",
       "Akkusativ or Dativ for the Reflexivpronomen",
-      "sowohl... als auch / weder... noch — paired conjunctions",
+      "sowohl... als auch / weder... noch – paired conjunctions",
       "Infinitiv mit zu",
-      "sondern — “Not X, but Y”"
+      "sondern – “Not X, but Y”"
     ]
   },
   {
@@ -370,12 +370,12 @@ window.CHANGELOG = [
     "date": "2026-08-04",
     "title": "Обновление тренажёра: английский язык  UI",
     "items": [
-      "Тренажёр теперь тоже доступен на английском — раньше перевод был активен только в справочнике",
+      "Тренажёр теперь тоже доступен на английском – раньше перевод был активен только в справочнике",
       "Мелкое улучшение UI: кнопка «Назад» визуально исправлена"
     ],
     "titleEn": "Simulator Update: English  UI",
     "itemsEn": [
-      "The trainer is now also available in English—previously, the translation was only available in the reference guide",
+      "The trainer is now also available in English–previously, the translation was only available in the reference guide",
       "A minor improvement in UI: The \"Back\" button has been visually fixed"
     ]
   },
@@ -399,7 +399,7 @@ window.CHANGELOG = [
     "title": "Перевод справочника на английский завершён",
     "items": [
       "Завершён перевод справочника на английский язык через DeepL API",
-      "Если заметите ошибки или неудачные формулировки — пишите, поправим"
+      "Если заметите ошибки или неудачные формулировки – пишите, поправим"
     ],
     "titleEn": "The translation of the manual into English is complete",
     "itemsEn": [
@@ -416,7 +416,7 @@ window.CHANGELOG = [
       "Новая шапка, hero-блок, карточки Справочник/Тренажёр",
       "Быстрый доступ: Профиль, Установка, FAQ, О проекте, Обратная связь",
       "Футер с соцсетями",
-      "Основные ссылки рабочие (часть — заглушки)",
+      "Основные ссылки рабочие (часть – заглушки)",
       "Написана страница «О проекте»",
       "Составлена структура и вопросы для FAQ"
     ],
@@ -512,7 +512,7 @@ window.CHANGELOG = [
       "1 местоимение",
       "2 термина",
       "5 новых правил:",
-      "seit vs vor — оба с Dativ, разное значение",
+      "seit vs vor – оба с Dativ, разное значение",
       "Modalverb im Präteritum: konnten...",
       "Отделяемые глаголы с zusammen-",
       "Genitiv в именах собственных: Kaufhaus des Westens",
@@ -530,7 +530,7 @@ window.CHANGELOG = [
       "1 pronoun",
       "2 terms",
       "5 new rules:",
-      "seit vs vor — both from Dativ, different meanings",
+      "seit vs vor – both from Dativ, different meanings",
       "Modalverb im Präteritum: konnten...",
       "Separable verbs with \"zusammen-\"",
       "Genitiv in proper nouns: Kaufhaus des Westens",
@@ -542,24 +542,24 @@ window.CHANGELOG = [
     "date": "2026-07-18",
     "title": "Обновление визуала сайта",
     "items": [
-      "Редизайн шпаргалки и тренажёра в едином стиле с главной страницей — округлые кнопки, поисковая строка и вкладки-капсулы, обновлённые карточки слов и правил",
+      "Редизайн шпаргалки и тренажёра в едином стиле с главной страницей – округлые кнопки, поисковая строка и вкладки-капсулы, обновлённые карточки слов и правил",
       "Все эмодзи в интерфейсе заменены на чёткие SVG-иконки",
       "Добавлена анимация при пролистывании карточек в тренажёре («Дальше» / «Назад»)",
       "Кнопки и карточки теперь реагируют на нажатие (в том числе на телефоне, не только при наведении мышью)",
-      "Фикс: на мобильном шапка перекрывала начало списка слов — добавлен отступ",
+      "Фикс: на мобильном шапка перекрывала начало списка слов – добавлен отступ",
       "Фикс: иконка бургер-меню была смещена от центра на мобильном",
-      "Фикс: в тренажёре иконки «на главную» и «Тестирование» были одинаковыми и путали — теперь разные",
+      "Фикс: в тренажёре иконки «на главную» и «Тестирование» были одинаковыми и путали – теперь разные",
       "Фикс важного бага: в режиме «Вперемешку» (Общее изучение → Neu) при перевороте карточки иногда показывался перевод другого слова, а не того, что на лицевой стороне"
     ],
     "titleEn": "Website Redesign",
     "itemsEn": [
-      "Redesign of the cheat sheet and practice tool to match the home page's style—rounded buttons, a search bar, and capsule-style tabs, along with updated word and rule cards",
+      "Redesign of the cheat sheet and practice tool to match the home page's style–rounded buttons, a search bar, and capsule-style tabs, along with updated word and rule cards",
       "All emojis in the interface have been replaced with crisp SVG- icons",
       "Added animation when swiping through cards in the simulator (“Next” / “Back”)",
       "Buttons and cards now respond when tapped (including on a phone, not just when the mouse hovers over them)",
-      "Fixed: On mobile, the header was covering the beginning of the word list—indentation has been added",
+      "Fixed: On mobile, the header was covering the beginning of the word list–indentation has been added",
       "Fixed: The burger menu icon was offset from the center on mobile devices",
-      "Fixed: In the simulator, the \"Home\" and \"Testing\" icons looked the same and were easy to confuse—now they're different",
+      "Fixed: In the simulator, the \"Home\" and \"Testing\" icons looked the same and were easy to confuse–now they're different",
       "Fixed an important bug: In \"Shuffled\" mode (General Study → Neu), when a card was flipped, the translation for a different word would sometimes appear instead of the one on the front of the card."
     ]
   },
@@ -601,7 +601,7 @@ window.CHANGELOG = [
       "Одежда: anhaben / tragen / angezogen sein",
       "Союзы: weil / dass / wenn",
       "2 правила обновлены:",
-      "Артикль — der / ein / kein / ohne",
+      "Артикль – der / ein / kein / ohne",
       "Окончания прилагательных после ein/kein/mein (теперь с Dativ)"
     ],
     "titleEn": "Updating the Database and Rules",
@@ -615,7 +615,7 @@ window.CHANGELOG = [
       "Clothing: anhaben / tragen / angezogen sein",
       "Links: weil / dass / wenn",
       "2 rules have been updated:",
-      "Article — der / ein / kein / ohne",
+      "Article – der / ein / kein / ohne",
       "Adjective endings after \"ein\" / \"kein\" / \"mein\" (now with \"Dativ\")"
     ]
   },
@@ -626,14 +626,14 @@ window.CHANGELOG = [
       "11 новых пар категорий (TAXONOMY)",
       "20 новых подблоков",
       "8 новых названий тем",
-      "Слова не добавлялись — только перераспределены по темам"
+      "Слова не добавлялись – только перераспределены по темам"
     ],
     "titleEn": "Structural Update (Reorganization)",
     "itemsEn": [
       "11 new TAXONOMY",
       "20 new subunits",
       "8 new topic titles",
-      "No words were added—they were simply reorganized by topic"
+      "No words were added–they were simply reorganized by topic"
     ]
   },
   {
@@ -648,7 +648,7 @@ window.CHANGELOG = [
       "2 наречия",
       "1 термин (ab)",
       "5 новых правил: Adjektivdeklination am/im/um значение модальных глаголов X-jährig порядковые числительные",
-      "Итого: 135. Промежуточная версия — ещё будет доработана"
+      "Итого: 135. Промежуточная версия – ещё будет доработана"
     ],
     "titleEn": "Updating the Database and Rules",
     "itemsEn": [
@@ -660,7 +660,7 @@ window.CHANGELOG = [
       "2 adverbs",
       "1 term (ab)",
       "5 new rules: Adjektivdeklination am / im / um meanings of modal verbs X-jährig ordinal numbers",
-      "Total: 135. This is a preliminary version—it will be further refined."
+      "Total: 135. This is a preliminary version–it will be further refined."
     ]
   },
   {
@@ -782,12 +782,12 @@ window.CHANGELOG = [
     "title": "Обновление правил (Dativ)",
     "items": [
       "4 новых глагола (antworten, danken, gehören, gratulieren)",
-      "3 новых правила: Падежи — роль в предложении Verben mit Dativ порядок Dativ/Akkusativ"
+      "3 новых правила: Падежи – роль в предложении Verben mit Dativ порядок Dativ/Akkusativ"
     ],
     "titleEn": "Rule Update (Dativ)",
     "itemsEn": [
       "4 new verbs (antworten, danken, gehören, gratulieren)",
-      "3 New Rules: Cases — Role in a Sentence Verben mit Dativ Order Dativ / Akkusativ"
+      "3 New Rules: Cases – Role in a Sentence Verben mit Dativ Order Dativ / Akkusativ"
     ]
   },
   {
@@ -797,35 +797,35 @@ window.CHANGELOG = [
       "2 глагола (verkaufen, auspacken)",
       "3 новых термина (Hauptsatz, Nebensatz, weil)",
       "3 новых правила (Nebensatz, mit, weil)",
-      " новая запись в разделе Rules — порядок слов: weil → глагол в конец"
+      " новая запись в разделе Rules – порядок слов: weil → глагол в конец"
     ],
     "titleEn": "A brief update on vocabulary and rules",
     "itemsEn": [
       "2 verbs (verkaufen, auspacken)",
       "3 new terms (Hauptsatz, Nebensatz, weil)",
       "3 new rules (Nebensatz, mit, weil)",
-      " New entry in the \"Rules\" section — word order: \"weil\" → verb at the end"
+      " New entry in the \"Rules\" section – word order: \"weil\" → verb at the end"
     ]
   },
   {
     "date": "2026-05-31",
     "title": "Тренажёр: перестановка блоков и карточек",
     "items": [
-      "Тренажёр: 7 блоков вместо 12 — убраны Zahlen, Begriffe, Regeln и Aussprache (всё это осталось в шпоре)",
-      "Unregelmäßig теперь внутри Verben — отдельной кнопки на главной больше нет.",
-      "Perfekt убран из главного меню — тренировать Partizip II теперь через комбо-кнопку «Partizip II» в любой теме Verben (для всех глаголов или только для unregel — зависит от того, куда зашёл)",
-      "Карточка неправильного глагола теперь показывает сразу Präsens  Präteritum  Perfekt — три времени на одной стороне",
-      "В режиме изучения тап на Unregel сразу открывает карточки — лишний экран «Что изучаем?» убран",
+      "Тренажёр: 7 блоков вместо 12 – убраны Zahlen, Begriffe, Regeln и Aussprache (всё это осталось в шпоре)",
+      "Unregelmäßig теперь внутри Verben – отдельной кнопки на главной больше нет.",
+      "Perfekt убран из главного меню – тренировать Partizip II теперь через комбо-кнопку «Partizip II» в любой теме Verben (для всех глаголов или только для unregel – зависит от того, куда зашёл)",
+      "Карточка неправильного глагола теперь показывает сразу Präsens  Präteritum  Perfekt – три времени на одной стороне",
+      "В режиме изучения тап на Unregel сразу открывает карточки – лишний экран «Что изучаем?» убран",
       "Полный тест Präteritum (все 131 глагол подряд) переехал на страницу карточек, рядом с мини-тестом",
       "Фикс тёмной темы: кнопки-карточки больше не показывают чёрный текст на тёмном фоне"
     ],
     "titleEn": "Training Exercise: Rearranging Blocks and Cards",
     "itemsEn": [
-      "Workout: 7 sets instead of 12—Zahlen, Begriffe, Regeln, and Aussprache have been removed (all of these remain in the cheat sheet)",
+      "Workout: 7 sets instead of 12–Zahlen, Begriffe, Regeln, and Aussprache have been removed (all of these remain in the cheat sheet)",
       "Unregelmäßig Now, on Verben, there is no longer a separate button on the home page.",
-      "Perfekt Removed from the main menu — practice Partizip II; now accessible via the \"Partizip II\" combo button in any topic Verben (for all verbs or only for unregel — depending on where you are)",
+      "Perfekt Removed from the main menu – practice Partizip II; now accessible via the \"Partizip II\" combo button in any topic Verben (for all verbs or only for unregel – depending on where you are)",
       "The irregular verb card now shows all three tenses on one side: Präsens  Präteritum  Perfekt",
-      "In study mode, tapping Unregel opens the flashcards immediately—the extra \"What are we studying?\" screen has been removed",
+      "In study mode, tapping Unregel opens the flashcards immediately–the extra \"What are we studying?\" screen has been removed",
       "The full \"Präteritum\" test (all 131 verbs in a row) has been moved to the flashcards page, next to the mini-test",
       "Dark theme fix: Card buttons no longer display black text on a dark background"
     ]
@@ -837,41 +837,41 @@ window.CHANGELOG = [
       "База: 86 слов и 130 глаголов A2 с Partizip II, вспомогательным глаголом и примерами",
       "Шпора: клик по слову открывает карточку с родом, множественным числом, спряжением и примером",
       "Добавлена вкладка «Perfekt» с таблицей правильных и нерегулярных глаголов",
-      "Добавлено правило: Perfekt — когда sein, когда haben, как образуется Partizip II",
+      "Добавлено правило: Perfekt – когда sein, когда haben, как образуется Partizip II",
       "Меню и разделы переименованы на немецкий: Verben, Substantive, Regeln и т.д.",
-      "Таблицы на телефоне теперь скроллятся горизонтально — не обрезаются",
-      "Темизация вынесена в отдельный файл theme.css — тёмная/светлая тема работает стабильнее"
+      "Таблицы на телефоне теперь скроллятся горизонтально – не обрезаются",
+      "Темизация вынесена в отдельный файл theme.css – тёмная/светлая тема работает стабильнее"
     ],
     "titleEn": "Spora: Database and Interface Update",
     "itemsEn": [
       "Vocabulary: 86 words and 130 verbs A 2 from Partizip II, including auxiliary verbs and examples",
       "Hint: Clicking on a word opens a card showing its gender, plural form, conjugation, and an example.",
       "The \"Perfekt\" tab has been added, featuring a table of regular and irregular verbs",
-      "Rule added: Perfekt — when sein, when haben, how Partizip is formed II",
+      "Rule added: Perfekt – when sein, when haben, how Partizip is formed II",
       "The menus and sections have been renamed to German: \"Verben,\" \"Substantive,\" \"Regeln,\" etc.",
-      "Tables on your phone now scroll horizontally—they won't be cut off",
-      "The theme settings have been moved to a separate file: theme. css — the dark/light theme works more reliably"
+      "Tables on your phone now scroll horizontally–they won't be cut off",
+      "The theme settings have been moved to a separate file: theme. css – the dark/light theme works more reliably"
     ]
   },
   {
     "date": "2026-05-24",
     "title": "Большое обновление тренажёра и базы:",
     "items": [
-      "Глаголы: добавлены отдельные тесты по Präsens и Partizip II — теперь можно тренировать времена точечно",
-      "На экране выбора теста — три кнопки сверху: Partizip II / Präsens / Общий",
-      "Умные дистракторы в тестах — неправильные варианты берутся из той же темы, а не случайно из всего словаря",
-      "Präsens-тесты теперь включают Уровень 4 — собери предложение из плиток",
-      "Фикс блока «🔢 Числа» в тренажёре — числа снова отображаются",
+      "Глаголы: добавлены отдельные тесты по Präsens и Partizip II – теперь можно тренировать времена точечно",
+      "На экране выбора теста – три кнопки сверху: Partizip II / Präsens / Общий",
+      "Умные дистракторы в тестах – неправильные варианты берутся из той же темы, а не случайно из всего словаря",
+      "Präsens-тесты теперь включают Уровень 4 – собери предложение из плиток",
+      "Фикс блока «🔢 Числа» в тренажёре – числа снова отображаются",
       "Убран блок «🔤 Звуки» из тренажёра (в шпоре остался)",
       "База: 270 форм множественного числа, разбиты составные записи, добавлена женская форма для 16 профессий"
     ],
     "titleEn": "Major update to the simulator and database:",
     "itemsEn": [
-      "Verbs: Separate tests have been added for Präsens and Partizip II — you can now practice specific tenses",
+      "Verbs: Separate tests have been added for Präsens and Partizip II – you can now practice specific tenses",
       "On the test selection screen, there are three buttons at the top: Partizip II / Präsens / General",
-      "Clever distractors in tests—the incorrect options are drawn from the same topic, rather than being chosen at random from the entire vocabulary",
-      "Präsens- The tests now include Level 4—put together a sentence using the tiles",
-      "Fixed the \"🔢 Numbers\" block in the simulator—the numbers are displayed again",
+      "Clever distractors in tests–the incorrect options are drawn from the same topic, rather than being chosen at random from the entire vocabulary",
+      "Präsens- The tests now include Level 4–put together a sentence using the tiles",
+      "Fixed the \"🔢 Numbers\" block in the simulator–the numbers are displayed again",
       "The \"🔤 Sounds\" block has been removed from the simulator (it remains in the cheat sheet)",
       "Database: 270 plural forms; compound entries have been broken down; feminine forms have been added for 16 professions"
     ]
@@ -882,13 +882,13 @@ window.CHANGELOG = [
     "items": [
       "Тренажер: добавлены вопросы на Partizip II",
       "Шпора: улучшен поиск",
-      "Добавлены уведомления об обновлениях — кнопка 🔔 справа вверху"
+      "Добавлены уведомления об обновлениях – кнопка 🔔 справа вверху"
     ],
     "titleEn": "Update on the Simulator and Spurs:",
     "itemsEn": [
       "Practice Test: Questions have been added to Partizip II",
       "Spora: Improved Search",
-      "Added update notifications—the 🔔 button in the top right corner"
+      "Added update notifications–the 🔔 button in the top right corner"
     ]
   },
   {
@@ -897,8 +897,8 @@ window.CHANGELOG = [
     "items": [
       "Шпаргалка выросла в полноценный инструмент: словарь, правила и тренажёр с карточками и тестами",
       "Изучение: карточки по темам  мини-тест",
-      "Тестирование — 4 уровня сложности: Ур.1 перевод Ур.2 базовые формы Ур.3 Plural/спряжение глаголов Ур.4 построение предложений",
-      "Ур.5 — в разработке",
+      "Тестирование – 4 уровня сложности: Ур.1 перевод Ур.2 базовые формы Ур.3 Plural/спряжение глаголов Ур.4 построение предложений",
+      "Ур.5 – в разработке",
       "Общий тест: 30 вопросов, каждый раз разные",
       "Проект открыт, файлы на GitHub"
     ],
@@ -906,8 +906,8 @@ window.CHANGELOG = [
     "itemsEn": [
       "The cheat sheet has evolved into a full-fledged tool: a dictionary, grammar rules, and a practice tool with flashcards and quizzes",
       "Study: Topic Flashcards  Mini-Test",
-      "Testing — 4 levels of difficulty: Level 1: Translation; Level 2: Basic forms; Level 3: Plural / verb conjugation; Level 4: Sentence construction",
-      "Lesson 5 — in development",
+      "Testing – 4 levels of difficulty: Level 1: Translation; Level 2: Basic forms; Level 3: Plural / verb conjugation; Level 4: Sentence construction",
+      "Lesson 5 – in development",
       "General Test: 30 questions, different each time",
       "The project is open; the files are available at GitHub"
     ]

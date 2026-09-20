@@ -3,9 +3,9 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Тренажёр — Deutsch Tools</title>
+<title>Тренажёр – Deutsch Tools</title>
 <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🇩🇪</text></svg>">
-<meta property="og:title" content="Тренажёр — Deutsch Tools">
+<meta property="og:title" content="Тренажёр – Deutsch Tools">
 <meta property="og:description" content="Тренажёр по немецкому: тесты, карточки, спряжения">
 <meta property="og:type" content="website">
 <script>
@@ -14,15 +14,15 @@
   document.documentElement.classList.add('theme-' + saved);
 })();
 </script>
-<link rel="stylesheet" href="theme.css?v=20260918">
-<script src="i18n/ru.js?v=20260918"></script>
-<script src="i18n/en.js?v=20260918"></script>
-<script src="i18n/i18n.js?v=20260918"></script>
+<link rel="stylesheet" href="theme.css?v=20260920">
+<script src="i18n/ru.js?v=20260920"></script>
+<script src="i18n/en.js?v=20260920"></script>
+<script src="i18n/i18n.js?v=20260920"></script>
 
 <script crossorigin src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
 <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
-<script src="data.js?v=20260918"></script>
-<script src="rule-render.js?v=20260918"></script>
+<script src="data.js?v=20260920"></script>
+<script src="rule-render.js?v=20260920"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/7.25.6/babel.min.js"></script>
 
 <style>
@@ -51,6 +51,39 @@ html, body {
 .flip-card-inner.flipped { transform: rotateY(180deg); }
 .flip-face { position: absolute; width: 100%; height: 100%; backface-visibility: hidden; -webkit-backface-visibility: hidden; display: flex; align-items: center; justify-content: center; padding: 24px; border-radius: 14px; }
 .flip-face.back { transform: rotateY(180deg); }
+/* Стопка карточек слова. Грани лежат одна на другой (две или три — по данным слова);
+   позиция задаётся атрибутом data-pos, а не классами — так проще переключать из React. */
+.dt-stack-wrap { animation: card-slide-in 0.35s var(--ease-dt); margin-bottom: 14px; }
+.dt-stack { position: relative; height: var(--card-stack-h, 300px); border-radius: 18px; }
+.dt-stack:focus-visible { outline: 2px solid var(--accent); outline-offset: 4px; }
+.dt-stack__card {
+  position: absolute; inset: 0; border-radius: 18px; overflow: hidden;
+  cursor: pointer; display: flex; flex-direction: column;
+  transition: transform .38s var(--ease-dt), opacity .38s var(--ease-dt),
+              box-shadow .38s var(--ease-dt);
+}
+.dt-stack__card[data-pos="0"] { transform: translateY(0) scale(1);       opacity: 1; z-index: 3; box-shadow: var(--shadow-lift, 0 10px 28px rgba(0,0,0,.14)); }
+.dt-stack__card[data-pos="1"] { transform: translateY(9px) scale(1);  opacity: 1; z-index: 2; box-shadow: var(--shadow-card); }
+.dt-stack__card[data-pos="2"] { transform: translateY(18px) scale(1);  opacity: 1; z-index: 1; box-shadow: var(--shadow-card); }
+.dt-stack__card[data-pos="out"] { transform: translateX(-100px) scale(1.02); opacity: 1; z-index: 4; pointer-events: none; }
+.dt-stack__dots { display: flex; justify-content: center; margin-top: 14px; }
+.dt-stack__dot {
+  /* видимая точка 9×9, зона нажатия 41×41: padding + background-clip */
+  box-sizing: content-box; width: 9px; height: 9px; padding: 16px; border: none; border-radius: 50%;
+  background: var(--border-soft); background-clip: content-box; cursor: pointer;
+  transition: background .25s var(--ease-dt), transform .25s var(--ease-dt);
+  -webkit-tap-highlight-color: transparent;
+}
+.dt-stack__dot.is-on { background: var(--accent); background-clip: content-box; transform: scale(1.25); }
+.dt-stack__dot:focus-visible { outline: 2px solid var(--accent); outline-offset: -8px; }
+@media (hover: hover) { .dt-stack__dot:not(.is-on):hover { background: var(--text-muted); background-clip: content-box; } }
+
+@media (prefers-reduced-motion: reduce) {
+  .dt-stack__card { transition: opacity .18s linear; }
+  .dt-stack__card[data-pos="1"],
+  .dt-stack__card[data-pos="2"] { transform: none; opacity: 0; }
+  .dt-stack__card[data-pos="out"] { transform: none; }
+}
 input:focus-visible, button:focus-visible { outline: 2px solid var(--accent); outline-offset: 1px; }
 /* ─── Универсальная tap/hover обратная связь для всех кнопок ───────────────
    :active работает и на тач-устройствах (тап), и при клике мышью — это
@@ -114,7 +147,7 @@ button:active { transform: scale(0.96); }
   margin-bottom: clamp(10px, 2.5vw, 18px);
   flex-shrink: 0;
 }
-.mode-card-title { font-size: 18px; font-weight: 700; color: var(--text-title); margin-bottom: 4px; }
+.mode-card-title { font-size: 18px; font-weight: 700; color: var(--text-title); margin-bottom: 14px; }
 .mode-card-desc { font-size: 13px; color: var(--text-muted); line-height: 1.5; margin-bottom: 20px; }
 @media (max-width: 420px) {
   .mode-grid { grid-template-columns: 1fr; }
@@ -190,7 +223,7 @@ button:active { transform: scale(0.96); }
 </div>
 
 <script type="text/babel" data-presets="react">
-const { useState, useEffect } = React;
+const { useState, useEffect, useRef } = React;
 
 
 // ═══════════════════════════════════════════════════════════════
@@ -416,7 +449,7 @@ const S = {
   },
   heading: {
     fontSize: 28,
-    marginBottom: 4,
+    marginBottom: 16,
     color: "var(--text-title)",
     textAlign: "center",
     fontWeight: 700,
@@ -787,7 +820,7 @@ const ICON_HOME = (
 const ICON_TRAINER_HOME = (
   <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="9" /><circle cx="12" cy="12" r="5" /><circle cx="12" cy="12" r="1" /></svg>
 );
-const ICON_ARROW_LEFT = ( // "Назад"/"Блоки"/"На главную" — раньше был текстовый символ "←", съезжал по вертикали
+const ICON_ARROW_LEFT = ( // "Назад"/"Блоки"/"На главную" – раньше был текстовый символ "←", съезжал по вертикали
   <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M19 12H5M11 6l-6 6 6 6" /></svg>
 );
 const ICON_ARROW_RIGHT = ( // стрелка в CTA-кнопке карточек режима, как на index.html
@@ -862,98 +895,9 @@ function wordField(item, field, enField) {
 }
 
 // ═══════════════════════════════════════════════════════════════
-// КОМПОНЕНТ: КАРТОЧКА СПРЯЖЕНИЯ (FLIP) — для unregel
-// ═══════════════════════════════════════════════════════════════
-function ConjFlipCard({ conj, flipped, onFlip, color }) {
-  return (
-    <div
-      className="flip-card-outer"
-      onClick={onFlip}
-      style={{ perspective: 1000, cursor: "pointer", height: 400, marginBottom: 14, position: "relative", zIndex: 1 }}
-    >
-      <div className={"flip-card-inner" + (flipped ? " flipped" : "")}>
-        <div className="flip-face front"
-             style={{
-               background: "var(--bg-card)",
-               border: `2px solid ${color}`,
-               boxShadow: "var(--shadow-card)",
-               textAlign: "center",
-             }}>
-          <div>
-            {conj.modal && (
-              <span style={{
-                display: "inline-block", padding: "3px 10px", borderRadius: 12,
-                background: "var(--c-modal-tag-bg)", color: "var(--c-modal-tag-fg)",
-                fontSize: 12, fontWeight: 700, marginBottom: 12,
-              }}>Modalverb</span>
-            )}
-            <div style={{ fontSize: 32, fontWeight: 700, color: "var(--text-title)", marginBottom: 8 }}>
-              {conj.verb}
-            </div>
-            {conj.ru && (
-              <div style={{ fontSize: 16, color: "var(--text-muted)", marginBottom: 14 }}>
-                — {wordText(conj)}
-              </div>
-            )}
-            <div style={{ fontSize: 12, color: "var(--text-muted)" }}>
-              {window.t('trainer.tap_to_see_conjugation')}
-            </div>
-          </div>
-        </div>
-        <div className="flip-face back"
-             style={{ background: color, color: "var(--on-color)", textAlign: "center" }}>
-          <div style={{ padding: "0 20px" }}>
-            <div style={{ fontSize: 18, fontWeight: 700, marginBottom: 10 }}>
-              {conj.verb} · {window.t('trainer.praesens_label')}
-            </div>
-            <table style={{ margin: "0 auto", fontSize: 15 }}>
-              <tbody>
-                {conj.pronouns.map((p, i) => (
-                  <tr key={i}>
-                    <td style={{ padding: "3px 12px", textAlign: "right", opacity: 0.85 }}>{p}</td>
-                    <td style={{ padding: "3px 12px", textAlign: "left", fontWeight: 700 }}>
-                      {conj.forms[i]}
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-            {(conj.praeteritum || conj.partizip2) && (
-              <div style={{
-                marginTop: 14, paddingTop: 12,
-                borderTop: "1px solid rgba(255,255,255,0.25)",
-                display: "flex", flexDirection: "column", gap: 4,
-                fontSize: 14,
-              }}>
-                {conj.praeteritum && (
-                  <div>
-                    <span style={{ opacity: 0.85 }}>{window.t('trainer.praeteritum_label')} </span>
-                    <span style={{ fontWeight: 700 }}>{conj.praeteritum}</span>
-                    <span style={{ opacity: 0.7, fontSize: 12 }}> {window.t('trainer.er_sie_es')}</span>
-                  </div>
-                )}
-                {conj.partizip2 && (
-                  <div>
-                    <span style={{ opacity: 0.85 }}>{window.t('trainer.perfekt_label')} </span>
-                    <span style={{ fontWeight: 700 }}>
-                      {conj.aux === "sein" ? "ist" : "hat"} {conj.partizip2}
-                    </span>
-                  </div>
-                )}
-              </div>
-            )}
-          </div>
-        </div>
-      </div>
-    </div>
-  );
-}
-
-
-// ═══════════════════════════════════════════════════════════════
 // КОМПОНЕНТ: КАРТОЧКА PRÄTERITUM (FLIP)
 // ═══════════════════════════════════════════════════════════════
-function PraeteritumFlipCard({ conj, flipped, onFlip, color }) {
+function RecallCard({ conj, flipped, onFlip, color }) {
   return (
     <div
       className="flip-card-outer"
@@ -974,7 +918,7 @@ function PraeteritumFlipCard({ conj, flipped, onFlip, color }) {
             </div>
             {conj.ru && (
               <div style={{ fontSize: 16, color: "var(--text-muted)", marginBottom: 14 }}>
-                — {wordText(conj)}
+                – {wordText(conj)}
               </div>
             )}
             <div style={{ fontSize: 12, color: "var(--text-muted)" }}>
@@ -987,7 +931,7 @@ function PraeteritumFlipCard({ conj, flipped, onFlip, color }) {
           <div style={{ padding: "0 20px" }}>
             <div style={{ fontSize: 14, opacity: 0.85, marginBottom: 8 }}>{window.t('trainer.praeteritum_er_sie_es')}</div>
             <div style={{ fontSize: 36, fontWeight: 700, marginBottom: 16 }}>
-              {conj.praeteritum || "—"}
+              {conj.praeteritum || "–"}
             </div>
             {conj.aux && (
               <div style={{ fontSize: 13, opacity: 0.85 }}>
@@ -1002,128 +946,248 @@ function PraeteritumFlipCard({ conj, flipped, onFlip, color }) {
 }
 
 // ═══════════════════════════════════════════════════════════════
-// КОМПОНЕНТ: КАРТОЧКА (FLIP)
+// КОМПОНЕНТ: СТОПКА КАРТОЧЕК СЛОВА
 // ═══════════════════════════════════════════════════════════════
-function FlipCard({ item, flipped, onFlip, color }) {
-  const badge = item.gender ? S.badge(item.gender) : null;
+// Набор карточек слова. Первые две есть всегда (слово, значение), третья — только
+// если у части речи есть что показать: формы глагола, род и множественное
+// существительного, степени сравнения и антоним прилагательного.
+// Карточка без данных не строится, и точки под стопкой считаются по ней же.
+function buildStackCards(item, forms) {
+  const cards = [{ role: "word" }, { role: "meaning" }];
+  if (item.pos === "verb" && forms) {
+    cards.push({ role: "forms" });
+  } else if (item.pos === "noun" && item.plural) {
+    cards.push({ role: "forms" });
+  } else if (item.pos === "adj" && (item.comparative || item.superlative || item.antonym)) {
+    cards.push({ role: "forms" });
+  }
+  return cards;
+}
+
+// Стопка карточек слова. Заменила две двусторонние карточки, которые рисовали одно и то же
+// в двух режимах, и правка форм требовалась в двух местах.
+// Высота фиксирована (--card-stack-h) и рассчитана на карточку форм глагола — самую
+// тяжёлую по содержимому и одинаковую у всех глаголов, поэтому стопка не скачет
+// при листании словаря.
+// startAt — номер карточки или её роль ("forms"); роль не найдена — открывается первая.
+function WordStack({ item, forms, color, startAt = 0 }) {
   const isVerb = item.pos === "verb";
-  // Для глаголов карточка выше — нужно влезть 6 строк Präsens + Präteritum + Perfekt
-  const cardHeight = isVerb ? 400 : 280;
-  // Резолвим формы только если глагол (избегаем расчёта для существительных)
-  const forms = isVerb ? resolveVerbForms(item, (typeof CONJUGATIONS !== "undefined" ? CONJUGATIONS : [])) : null;
-  return (
-    <div
-      className="flip-card-outer"
-      onClick={onFlip}
-      style={{
-        perspective: 1000,
-        cursor: "pointer",
-        height: cardHeight,
-        marginBottom: 14,
-        position: "relative",
-        zIndex: 1,
-      }}
-    >
-      <div className={"flip-card-inner" + (flipped ? " flipped" : "")}>
-        <div
-          className="flip-face front"
-          style={{
-            background: "var(--bg-card)",
-            border: `2px solid ${color}`,
-            boxShadow: "var(--shadow-card)",
-            textAlign: "center",
-          }}
-        >
-          <div>
-            {badge && (
-              <span
-                style={{
-                  display: "inline-block",
-                  padding: "3px 10px",
-                  borderRadius: 12,
-                  background: badge.bg,
-                  color: badge.fg,
-                  fontSize: 12,
-                  fontWeight: 700,
-                  marginBottom: 12,
-                }}
-              >
-                {badge.label}
-              </span>
-            )}
-            <div style={{ fontSize: 28, fontWeight: 700, color: "var(--text-title)", marginBottom: 8 }}>
-              {item.de}
-            </div>
-            {item.plural && (
-              <div style={{ fontSize: 14, color: "var(--text-muted)", marginBottom: 8 }}>
-                {window.t('trainer.plural_prefix')} {item.plural}
-              </div>
-            )}
-            <div style={{ fontSize: 12, color: "var(--text-muted)" }}>
-              {window.t('trainer.tap_to_flip')}
-            </div>
+  const f = forms || (isVerb
+    ? resolveVerbForms(item, (typeof CONJUGATIONS !== "undefined" ? CONJUGATIONS : []))
+    : null);
+  const cards = buildStackCards(item, f);
+  const n = cards.length;
+  const startIdx = typeof startAt === "string"
+    ? Math.max(0, cards.findIndex(c => c.role === startAt))
+    : Math.min(Math.max(startAt, 0), n - 1);
+
+  const [step, setStep] = useState(startIdx);
+  // outIdx — карточка в позиции «out» (уезжает вверх или ещё не приехала сверху);
+  // snap — на кадр отключает переход, чтобы приходящая сверху карточка не «доезжала» снизу.
+  const [outIdx, setOutIdx] = useState(null);
+  const [snap, setSnap] = useState(false);
+  const timerRef = useRef(null);
+  const rafRef = useRef(null);
+  useEffect(() => () => {
+    clearTimeout(timerRef.current);
+    cancelAnimationFrame(rafRef.current);
+  }, []);
+
+  // Знак шага задаёт направление: вперёд уходящая уезжает вверх, назад — приходящая
+  // опускается сверху. Прыжок через карточку (с первой на третью) считается движением
+  // вперёд; тап по стопке и переход с последней на первую тоже вперёд (dir передаётся явно).
+  const goTo = (target, forcedDir) => {
+    if (target === step || target < 0 || target >= n) return;
+    clearTimeout(timerRef.current);
+    cancelAnimationFrame(rafRef.current);
+    const dir = forcedDir || (target > step ? "fwd" : "back");
+    if (dir === "fwd") {
+      setSnap(false);
+      setOutIdx(step);
+      setStep(target);
+      // уходящая остаётся в «out» на время перехода, иначе мигнёт: сразу окажется снизу и проявится
+      timerRef.current = setTimeout(() => setOutIdx(null), 380);
+    } else {
+      setSnap(true);
+      setOutIdx(target);
+      setStep(target);
+      // два кадра: сначала карточка встаёт сверху без перехода, потом опускается на место
+      rafRef.current = requestAnimationFrame(() => {
+        rafRef.current = requestAnimationFrame(() => { setOutIdx(null); setSnap(false); });
+      });
+    }
+  };
+  const next = () => goTo((step + 1) % n, "fwd");
+  const prev = () => goTo((step - 1 + n) % n, "back");
+  const onKeyDown = (e) => {
+    if (e.key === "ArrowRight") { e.preventDefault(); next(); }
+    else if (e.key === "ArrowLeft") { e.preventDefault(); prev(); }
+  };
+
+  const T = (k) => window.t(k);
+  const prepList = item.prep || [];
+  const govLabel = (i) => prepList[i] + " + " + ((item.prepCase || [])[i] || "") + ".";
+
+  // Примеры: сейчас у слова один (exampleDe/exampleRu); второй появится вместе
+  // с колонками example2_de/example2_ru. Ярлык управления ставится, только если примеров
+  // столько же, сколько управлений (и управлений больше одного) — тогда они идут парами по порядку.
+  const examples = [
+    { de: item.exampleDe, tr: wordField(item, "exampleRu", "exampleEn") },
+    { de: item.example2De, tr: wordField(item, "example2Ru", "example2En") },
+  ].filter(x => x.de);
+  const labelled = prepList.length > 1 && examples.length === prepList.length;
+
+  const mutedLine = { fontSize: 13, opacity: 0.85 };
+  const stripColon = (s) => s.replace(/:\s*$/, "");
+  const labelStyle = { fontSize: 13, color: "var(--text-muted)", textAlign: "right", paddingTop: 1 };
+  const article = { m: "der", f: "die", n: "das", pl: "die" }[item.gender];
+  // Род существительного: цветной бейдж + артикль перед словом. Артикль — это то,
+  // что реально произносят; бейдж снимает двусмысленность die (femininum или Plural).
+  const badge = item.gender ? S.badge(item.gender) : null;
+
+  const renderCard = (c) => {
+    if (c.role === "word") {
+      return (
+        <div style={{
+          flex: 1, display: "flex", flexDirection: "column", alignItems: "center",
+          justifyContent: "center", textAlign: "center", padding: 24,
+          background: "var(--bg-card)", border: `2px solid ${color}`, borderRadius: 18,
+        }}>
+{badge && (
+<span style={{
+display: "inline-block", padding: "3px 10px", borderRadius: 12,
+background: badge.bg, color: badge.fg, fontSize: 12, fontWeight: 700, marginBottom: 12,
+}}>
+{badge.label}
+</span>
+)}
+          <div style={{ fontSize: 30, fontWeight: 700, color: "var(--text-title)" }}>
+{article && <span style={{ color: "var(--text-muted)", fontWeight: 400 }}>{article} </span>}
+            {item.reflexive ? "sich " : ""}{item.de}
           </div>
-        </div>
-        <div
-          className="flip-face back"
-          style={{
-            background: color,
-            color: "var(--on-color)",
-            textAlign: "center",
-          }}
-        >
-          {isVerb ? (
-            <div style={{ padding: "0 16px", width: "100%" }}>
-              <div style={{ fontSize: 16, fontWeight: 700, marginBottom: 4 }}>
-                {item.de} · <span style={{ opacity: 0.9, fontWeight: 400 }}>{wordText(item)}</span>
-              </div>
-              <div style={{ fontSize: 13, opacity: 0.85, marginBottom: 10 }}>{window.t('trainer.praesens_label')}</div>
-              <table style={{ margin: "0 auto", fontSize: 14 }}>
-                <tbody>
-                  {forms.pronouns.map((p, i) => (
-                    <tr key={i}>
-                      <td style={{ padding: "2px 12px", textAlign: "right", opacity: 0.85 }}>{p}</td>
-                      <td style={{ padding: "2px 12px", textAlign: "left", fontWeight: 700 }}>
-                        {forms.praesens[i]}
-                      </td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-              {(forms.praeteritum || forms.partizip2) && (
-                <div style={{
-                  marginTop: 12, paddingTop: 10,
-                  borderTop: "1px solid rgba(255,255,255,0.25)",
-                  display: "flex", flexDirection: "column", gap: 3,
-                  fontSize: 13,
-                }}>
-                  {forms.praeteritum && (
-                    <div>
-                      <span style={{ opacity: 0.85 }}>{window.t('trainer.praeteritum_label')} </span>
-                      <span style={{ fontWeight: 700 }}>{forms.praeteritum}</span>
-                      <span style={{ opacity: 0.7, fontSize: 11 }}> {window.t('trainer.er_sie_es')}</span>
-                    </div>
-                  )}
-                  {forms.partizip2 && (
-                    <div>
-                      <span style={{ opacity: 0.85 }}>{window.t('trainer.perfekt_label')} </span>
-                      <span style={{ fontWeight: 700 }}>
-                        {forms.aux === "sein" ? "ist" : "hat"} {forms.partizip2}
-                      </span>
-                    </div>
-                  )}
+          {prepList.length > 0 && (
+            <div style={{ marginTop: 12, display: "flex", flexDirection: "column", gap: 3, fontSize: 16 }}>
+              {prepList.map((p, i) => (
+                <div key={i}>
+                  <span style={{ color: "var(--accent)", fontWeight: 600 }}>{p}</span>
+                  <span style={{ color: "var(--text-muted)" }}> + {(item.prepCase || [])[i] || ""}.</span>
                 </div>
-              )}
-            </div>
-          ) : (
-            <div>
-              <div style={{ fontSize: 24, fontWeight: 700, marginBottom: 10 }}>{wordText(item)}</div>
-              {item.note && (
-                <div style={{ fontSize: 13, opacity: 0.9, lineHeight: 1.5, padding: "0 20px" }}>{wordField(item, "note", "noteEn")}</div>
-              )}
+              ))}
             </div>
           )}
         </div>
+      );
+    }
+    if (c.role === "meaning") {
+      const alt = wordField(item, "altRu", "altEn");
+      const note = wordField(item, "note", "noteEn");
+      return (
+        <div style={{ flex: 1, display: "flex", flexDirection: "column", background: color, color: "var(--on-color)", borderRadius: 18}}>
+          <div style={{
+            padding: "16px 22px", textAlign: "center",
+            background: "color-mix(in srgb, var(--on-color) 14%, transparent)",
+            borderBottom: "1px solid color-mix(in srgb, var(--on-color) 30%, transparent)",
+          }}>
+            <div style={{ fontSize: 22, fontWeight: 700 }}>{wordText(item)}</div>
+            {alt && <div style={{ fontSize: 13, opacity: 0.75, marginTop: 2 }}>{alt}</div>}
+          </div>
+          <div style={{ flex: 1, overflowY: "auto", padding: "14px 22px", display: "flex", flexDirection: "column", gap: 10, textAlign: "center", justifyContent: "center" }}>
+            {examples.length === 0 ? (
+              <div style={{ ...mutedLine, opacity: 0.7 }}>{T("trainer.no_examples")}</div>
+            ) : examples.map((ex, i) => (
+              <div key={i}>
+                {labelled && <div style={{ fontSize: 11, fontWeight: 700, opacity: 0.8, marginBottom: 2 }}>{govLabel(i)}</div>}
+                <div style={{ fontSize: 15, fontStyle: "italic" }}>{ex.de}</div>
+                {ex.tr && <div style={{ ...mutedLine, marginTop: 1 }}>{ex.tr}</div>}
+              </div>
+            ))}
+            {note && <div style={{ ...mutedLine, opacity: 0.75 }}>{note}</div>}
+          </div>
+        </div>
+      );
+    }
+    // role === "forms": слева колонка подписей, справа содержимое
+    const rows = [];
+    if (isVerb && f) {
+      rows.push(
+        <div key="l1" style={labelStyle}>{stripColon(T("trainer.praesens_label"))}</div>,
+        <table key="v1" style={{ fontSize: 14, borderCollapse: "collapse" }}>
+          <tbody>
+            {f.pronouns.map((p, i) => (
+              <tr key={i}>
+                <td style={{ padding: "1px 10px 1px 0", color: "var(--text-muted)" }}>{p}</td>
+                <td style={{ padding: "1px 0", fontWeight: 700, color: "var(--text-title)" }}>{f.praesens[i]}</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>,
+        // линия во всю ширину карточки: тянем за габарит сетки, лишнее обрезает overflow: hidden
+        <div key="hr" style={{ gridColumn: "1 / -1", height: 1, background: "var(--border-soft)", margin: "4px -240px" }} />
+      );
+      if (f.praeteritum) rows.push(
+        <div key="l2" style={labelStyle}>{stripColon(T("trainer.praeteritum_label"))}</div>,
+        <div key="v2" style={{ fontSize: 14 }}>
+          <span style={{ fontWeight: 700, color: "var(--text-title)" }}>{f.praeteritum}</span>
+          <span style={{ color: "var(--text-muted)", fontSize: 11 }}> {T("trainer.er_sie_es")}</span>
+        </div>
+      );
+      if (f.partizip2) rows.push(
+        <div key="l3" style={labelStyle}>{stripColon(T("trainer.perfekt_label"))}</div>,
+        <div key="v3" style={{ fontSize: 14, fontWeight: 700, color: "var(--text-title)" }}>
+          {f.aux === "sein" ? "ist" : "hat"} {f.partizip2}
+        </div>
+      );
+    } else if (item.pos === "noun") {
+      rows.push(
+        <div key="l1" style={labelStyle}>Artikel</div>,
+        <div key="v1" style={{ fontSize: 16, fontWeight: 700, color: "var(--text-title)" }}>{article ? article + " " : ""}{item.de}</div>,
+        <div key="l2" style={labelStyle}>{stripColon(T("trainer.plural_prefix"))}</div>,
+        <div key="v2" style={{ fontSize: 16, fontWeight: 700, color: "var(--text-title)" }}>{item.plural}</div>
+      );
+    } else if (item.pos === "adj") {
+      [["Komparativ", item.comparative], ["Superlativ", item.superlative], ["Antonym", item.antonym]]
+        .filter(r => r[1])
+        .forEach((r, i) => rows.push(
+          <div key={"l" + i} style={labelStyle}>{r[0]}</div>,
+          <div key={"v" + i} style={{ fontSize: 16, fontWeight: 700, color: "var(--text-title)" }}>{r[1]}</div>
+        ));
+    }
+    return (
+      <div style={{
+        flex: 1, display: "flex", alignItems: "center", justifyContent: "center",
+        background: "var(--bg-card)", border: `2px solid ${color}`, borderRadius: 18, padding: "16px 24px",
+      }}>
+        <div style={{ display: "grid", gridTemplateColumns: "auto auto", columnGap: 16, rowGap: 6, alignItems: "start" }}>
+          {rows}
+        </div>
+      </div>
+    );
+  };
+
+  return (
+    <div className="dt-stack-wrap" onKeyDown={onKeyDown}>
+      <div className="dt-stack" tabIndex={0} onClick={next}
+           role="group" aria-label={item.de}>
+        {cards.map((c, i) => (
+          <div key={c.role}
+               className="dt-stack__card"
+               data-pos={i === outIdx ? "out" : String((i - step + n) % n)}
+               aria-hidden={i === step ? undefined : "true"}
+               style={snap && i === outIdx ? { transition: "none" } : undefined}>
+            {renderCard(c)}
+          </div>
+        ))}
+      </div>
+      {/* Точки работают и как индикатор, и как навигация: из последней карточки
+          обратно на первую иначе только по кругу, тремя тапами вместо одного. */}
+      <div className="dt-stack__dots">
+        {cards.map((_, i) => (
+          <button key={i} type="button"
+                  className={"dt-stack__dot" + (i === step ? " is-on" : "")}
+                  aria-label={T("trainer.stack_go_to") + " " + (i + 1)}
+                  aria-current={i === step ? "true" : undefined}
+                  onClick={() => goTo(i)} />
+        ))}
       </div>
     </div>
   );
@@ -1145,7 +1209,7 @@ function FlipCard({ item, flipped, onFlip, color }) {
 function formatNounFull(item) {
   // "der Tisch — die Tische" или "die Frau — die Frauen"
   // Если plural есть — добавляем; если нет — только de
-  if (item.plural) return `${item.de} — ${item.plural}`;
+  if (item.plural) return `${item.de} – ${item.plural}`;
   return item.de;
 }
 
@@ -1172,7 +1236,7 @@ function conjRegelmaessig(infinitive, pronoun) {
     "tragen", "waschen", "fallen", "halten", "schreiben",
   ]);
   if (UNREGEL.has(infinitive)) {
-    console.warn(`conjRegelmaessig: «${infinitive}» — нерегулярный, должен браться из CONJUGATIONS`);
+    console.warn(`conjRegelmaessig: «${infinitive}» – нерегулярный, должен браться из CONJUGATIONS`);
     return infinitive;  // вернём инфинитив, лучше чем мусор
   }
 
@@ -1214,7 +1278,7 @@ function conjRegelmaessig(infinitive, pronoun) {
       return stem + "st";                       // du machst
 
     case "er":
-    case "sie":  // 3.л. ед. (контекст — она)
+    case "sie":  // 3.л. ед. (контекст – она)
     case "es":
       if (needsE) return stem + "et";           // er arbeitet, atmet
       return stem + "t";                        // er macht
@@ -1322,7 +1386,7 @@ function praeteritumRegelmaessig(infinitive) {
   return stem + (needsE ? "ete" : "te");
 }
 
-// Резолвер форм глагола для FlipCard: возвращает 6 форм Präsens + Präteritum + Perfekt
+// Резолвер форм глагола для WordStack: возвращает 6 форм Präsens + Präteritum + Perfekt
 // Источники по приоритету:
 //   1. CONJUGATIONS (для unregel — там полные формы)
 //   2. Поля самой записи VOCAB (.praeteritum, .partizip2, .aux)
@@ -1936,7 +2000,7 @@ function buildAutoQuestions(topics, vocab, conjugations, pos) {
       if (reg) {
         pool.push({
           auto: true, level: "A1", difficulty: 3, type: "conj",
-          q: `Проспрягай «${reg.verb}»${reg.ru ? " — " + reg.ru : ""} в Präsens:`,
+          q: `Проспрягай «${reg.verb}»${reg.ru ? " – " + reg.ru : ""} в Präsens:`,
           verb: reg.verb,
           tense: "Präsens",
           pronouns: ["ich", "du", "er/sie/es", "wir", "ihr", "sie/Sie"],
@@ -1950,7 +2014,7 @@ function buildAutoQuestions(topics, vocab, conjugations, pos) {
     const generated = [0,1,2,3,4,5].map(i => getConjForm(v.de, i, conjugations));
     pool.push({
       auto: true, level: "A1", difficulty: 3, type: "conj",
-      q: `Проспрягай «${v.de}» — ${v.ru} в Präsens:`,
+      q: `Проспрягай «${v.de}» – ${v.ru} в Präsens:`,
       verb: v.de,
       tense: "Präsens",
       pronouns: ["ich", "du", "er/sie/es", "wir", "ihr", "sie/Sie"],
@@ -2032,7 +2096,7 @@ function genL2_unregel_one_form(conj) {
   const correctForm = conj.forms[pronounIdx];
   return {
     auto: true, level: "A1", difficulty: 2, type: "fill",
-    q: `${pronoun} ___ (${conj.verb}${conj.ru ? " — " + conj.ru : ""})`,
+    q: `${pronoun} ___ (${conj.verb}${conj.ru ? " – " + conj.ru : ""})`,
     ans: correctForm,
     altAns: [],
     hint: `${conj.verb} в Präsens`,
@@ -2057,7 +2121,7 @@ function genL2_unregel_one_form_mc(conj) {
   const ans = opts.indexOf(correctForm);
   return {
     auto: true, level: "A1", difficulty: 2, type: "mc",
-    q: `Спряги «${conj.verb}»${conj.ru ? " — " + conj.ru : ""} для «${conj.pronouns[pronounIdx]}»:`,
+    q: `Спряги «${conj.verb}»${conj.ru ? " – " + conj.ru : ""} для «${conj.pronouns[pronounIdx]}»:`,
     opts, ans,
     sourceId: conj.id,
   };
@@ -2067,7 +2131,7 @@ function genL2_unregel_one_form_mc(conj) {
 function genL3_unregel_full_conj(conj) {
   return {
     auto: true, level: "A2", difficulty: 3, type: "conj",
-    q: `Проспрягай «${conj.verb}»${conj.ru ? " — " + conj.ru : ""} в Präsens:`,
+    q: `Проспрягай «${conj.verb}»${conj.ru ? " – " + conj.ru : ""} в Präsens:`,
     verb: conj.verb,
     tense: "Präsens",
     pronouns: conj.pronouns,
@@ -2181,7 +2245,7 @@ function buildUnregelMiniTest(conjugations) {
     const opts = shuffle([c.partizip2, ...distractors]);
     questions.push({
       auto: true, level: "A1", difficulty: 1, type: "mc",
-      q: `Partizip II от «${c.verb}»${c.ru ? " — " + c.ru : ""}?`,
+      q: `Partizip II от «${c.verb}»${c.ru ? " – " + c.ru : ""}?`,
       opts, ans: opts.indexOf(c.partizip2),
       sourceId: c.id,
     });
@@ -2227,7 +2291,7 @@ function buildUnregelMiniTest(conjugations) {
     const opts = shuffle([correctForm, ...result.slice(0, 3)]);
     questions.push({
       auto: true, level: "A1", difficulty: 1, type: "mc",
-      q: `Форма «${pronoun}» от «${c.verb}»${c.ru ? " — " + c.ru : ""}?`,
+      q: `Форма «${pronoun}» от «${c.verb}»${c.ru ? " – " + c.ru : ""}?`,
       opts, ans: opts.indexOf(correctForm),
       sourceId: c.id,
     });
@@ -2320,7 +2384,7 @@ function genPerfL3_p2_fill(verb) {
   if (!verb.partizip2) return null;
   return {
     auto: true, level: "A1", difficulty: 3, type: "fill",
-    q: `Поставь в Partizip II: «${verb.verb}» — ${verb.ru || ""}`,
+    q: `Поставь в Partizip II: «${verb.verb}» – ${verb.ru || ""}`,
     ans: verb.partizip2,
     altAns: [],
     hint: `aux: ${verb.aux || "haben"}`,
@@ -2528,7 +2592,7 @@ function buildPartizip2Pool(verbItems, conjugations) {
     // Ур.2 fill — «Введи Partizip II»
     pool.push({
       auto: true, level: "A1", difficulty: 2, type: "fill",
-      q: `Partizip II от «${verb}»${ru ? " — " + ru : ""}:`,
+      q: `Partizip II от «${verb}»${ru ? " – " + ru : ""}:`,
       ans: p2, altAns: [],
       hint: `ge…(t/en): ${verb}`,
       sourceId: id,
@@ -2589,7 +2653,7 @@ function buildPraesensPool(verbItems, conjugations) {
       if (reg) {
         pool.push({
           auto: true, level: "A1", difficulty: 3, type: "conj",
-          q: `Проспрягай «${reg.verb}»${reg.ru ? " — " + reg.ru : ""} в Präsens:`,
+          q: `Проспрягай «${reg.verb}»${reg.ru ? " – " + reg.ru : ""} в Präsens:`,
           verb: reg.verb, tense: "Präsens",
           pronouns: ["ich", "du", "er/sie/es", "wir", "ihr", "sie/Sie"],
           ans: reg.forms, sourceId: reg.id,
@@ -2600,7 +2664,7 @@ function buildPraesensPool(verbItems, conjugations) {
     const generated = [0,1,2,3,4,5].map(i => getConjForm(item.de, i, conjugations));
     pool.push({
       auto: true, level: "A1", difficulty: 3, type: "conj",
-      q: `Проспрягай «${item.de}» — ${item.ru || item.de} в Präsens:`,
+      q: `Проспрягай «${item.de}» – ${item.ru || item.de} в Präsens:`,
       verb: item.de, tense: "Präsens",
       pronouns: ["ich", "du", "er/sie/es", "wir", "ihr", "sie/Sie"],
       ans: generated, sourceId: item.id,
@@ -2665,7 +2729,7 @@ function buildPraesensPool(verbItems, conjugations) {
 
   // Для каждого глагола генерируем 1-2 tiles-вопроса (один на форму)
   for (const item of verbItems) {
-    if (item.de.includes(" ")) continue;  // разделяемые — пропускаем
+    if (item.de.includes(" ")) continue;  // разделяемые – пропускаем
     if (!item.ru) continue;
     // У русского перевода нет личных форм (быть-конструкции, предикативы,
     // безличные) — ставится update_data.py: колонкой no_ru_forms в xlsx либо
@@ -2802,7 +2866,7 @@ function buildPraeteritumTestSession(blockId, topics) {
       const opts = shuffle([praet, ...distractors.slice(0, 3)]);
       pool.push({
         auto: true, level: c.level || "A2", difficulty: 2, type: "mc",
-        q: `Präteritum от «${c.verb}»${c.ru ? " — " + c.ru : ""}?\n(er/sie/es)`,
+        q: `Präteritum от «${c.verb}»${c.ru ? " – " + c.ru : ""}?\n(er/sie/es)`,
         opts, ans: opts.indexOf(praet),
         sourceId: c.id,
       });
@@ -2811,7 +2875,7 @@ function buildPraeteritumTestSession(blockId, topics) {
     // Тип 2: fill — вписать Präteritum
     pool.push({
       auto: true, level: c.level || "A2", difficulty: 3, type: "fill",
-      q: `Präteritum: er ___ (${c.verb}${c.ru ? " — " + c.ru : ""})`,
+      q: `Präteritum: er ___ (${c.verb}${c.ru ? " – " + c.ru : ""})`,
       ans: praet,
       hint: `Präteritum от ${c.verb}`,
       sourceId: c.id,
@@ -2823,7 +2887,7 @@ function buildPraeteritumTestSession(blockId, topics) {
       const opts2 = shuffle([c.ru, ...otherRu.slice(0, 3)]);
       pool.push({
         auto: true, level: c.level || "A2", difficulty: 1, type: "mc",
-        q: `«${c.verb}» в Präteritum: «${praet}» — что значит?`,
+        q: `«${c.verb}» в Präteritum: «${praet}» – что значит?`,
         opts: opts2, ans: opts2.indexOf(c.ru),
         sourceId: c.id,
       });
@@ -2886,18 +2950,18 @@ function buildFullPool(blockId, topics, type, vocab, conjugations, manualQuestio
       if (dist.length >= 2) {
         const opts = shuffle([praet, ...dist]);
         autoPool.push({ auto: true, level: c.level||"A2", difficulty: 2, type: "mc",
-          q: `Präteritum от «${c.verb}»${c.ru ? " — "+c.ru : ""}?
+          q: `Präteritum от «${c.verb}»${c.ru ? " – "+c.ru : ""}?
 (er/sie/es)`,
           opts, ans: opts.indexOf(praet), sourceId: c.id });
       }
       autoPool.push({ auto: true, level: c.level||"A2", difficulty: 4, type: "fill",
-        q: `Präteritum: er ___ (${c.verb}${c.ru ? " — "+c.ru : ""})`,
+        q: `Präteritum: er ___ (${c.verb}${c.ru ? " – "+c.ru : ""})`,
         ans: praet, hint: `Präteritum от ${c.verb}`, sourceId: c.id });
       const otherRu = shuffle(conjugations.filter(o => o.id !== c.id && o.ru).map(o => o.ru)).slice(0, 3);
       if (c.ru && otherRu.length >= 2) {
         const opts2 = shuffle([c.ru, ...otherRu]);
         autoPool.push({ auto: true, level: c.level||"A2", difficulty: 1, type: "mc",
-          q: `«${c.verb}» в Präteritum: «${praet}» — что значит?`,
+          q: `«${c.verb}» в Präteritum: «${praet}» – что значит?`,
           opts: opts2, ans: opts2.indexOf(c.ru), sourceId: c.id });
       }
     }
@@ -2946,7 +3010,7 @@ function buildPraeteritumFullSession() {
   const list = CONJUGATIONS.filter(c => c.praeteritum);
   return shuffle(list).map(c => ({
     auto: true, level: c.level || "A2", difficulty: 3, type: "fill",
-    q: `Präteritum: er ___ (${c.verb}${c.ru ? " — " + c.ru : ""})`,
+    q: `Präteritum: er ___ (${c.verb}${c.ru ? " – " + c.ru : ""})`,
     ans: c.praeteritum,
     hint: `Präteritum от ${c.verb}`,
     sourceId: c.id,
@@ -3203,7 +3267,7 @@ function App() {
       return;
     }
     if (b.kind) {
-      console.warn("Блок «" + b.label + "» — пока только в справочнике. В тренажёре появится позже.");
+      console.warn("Блок «" + b.label + "» – пока только в справочнике. В тренажёре появится позже.");
       return;
     }
     if (blockHasSubblocks(b)) setPhase("select-subblock");
@@ -3560,7 +3624,7 @@ function App() {
     if (v && v.note) return wordField(v, "note", "noteEn");
     // Ищем в CONJUGATIONS
     const c = CONJUGATIONS.find(x => x.id === q.sourceId);
-    if (c && c.ru) return `${c.verb} — ${wordText(c)}`;
+    if (c && c.ru) return `${c.verb} – ${wordText(c)}`;
     return q.explain || "";
   }
 
@@ -4195,7 +4259,7 @@ function App() {
                     <span style={{ fontSize: 14, fontWeight: 600 }}>{li.action}</span>
                   </div>
                   <span style={{ fontSize: 13, color: "var(--text-muted)" }}>
-                    {hasAny ? `${count} ${window.t('trainer.n_questions')}` : "—"}
+                    {hasAny ? `${count} ${window.t('trainer.n_questions')}` : "–"}
                   </span>
                 </button>
               );
@@ -4220,7 +4284,7 @@ function App() {
           right={<span style={S.muted}>{cardIdx + 1} / {vocab.length}</span>}
           icon={icon} onTheme={cycleTheme} onLang={cycleLang} onHome={goHome} />
         <div style={S.containerRead}>
-          <FlipCard key={item.id} item={item} flipped={flipped} onFlip={() => setFlipped(!flipped)} color={activeBlock.color} />
+          <WordStack key={item.id} item={item} color={activeBlock.color} />
           <div style={{ display: "flex", gap: 12, justifyContent: "center", marginTop: 20 }}>
             <button style={S.outlineBtn()} onClick={prevCard} disabled={cardIdx === 0}>{ICON_ARROW_LEFT} {window.t('trainer.back')}</button>
             <button style={S.primaryBtn(activeBlock.color)} onClick={nextCard}>
@@ -4265,7 +4329,7 @@ function App() {
               <Icon name="dice" /> {window.t('trainer.shuffle')} {neuShuffle ? <Icon name="check" size={12} /> : ""}
             </button>
           </div>
-          <FlipCard key={item.id} item={item} flipped={flipped} onFlip={() => setFlipped(!flipped)} color={activeBlock.color} />
+          <WordStack key={item.id} item={item} color={activeBlock.color} />
           <div style={{ display: "flex", gap: 12, justifyContent: "center", marginTop: 20 }}>
             <button style={S.outlineBtn()} onClick={() => { if (cardIdx > 0) { setCardIdx(cardIdx - 1); setFlipped(false); } }} disabled={cardIdx === 0}>{ICON_ARROW_LEFT} {window.t('trainer.back')}</button>
             <button style={S.primaryBtn(activeBlock.color)} onClick={() => {
@@ -4369,7 +4433,7 @@ function App() {
           right={<span style={S.muted}>{cardIdx + 1} / {praetList.length}</span>}
           icon={icon} onTheme={cycleTheme} onLang={cycleLang} onHome={goHome} />
         <div style={S.containerRead}>
-          <PraeteritumFlipCard key={conj.id || conj.verb} conj={conj} flipped={flipped}
+          <RecallCard key={conj.id || conj.verb} conj={conj} flipped={flipped}
                                onFlip={() => setFlipped(!flipped)}
                                color="var(--c-praeteritum)" />
           <div style={{ display: "flex", gap: 12, justifyContent: "center", marginTop: 20 }}>
@@ -4406,6 +4470,16 @@ function App() {
       return <div style={S.page}><div style={S.containerRead}>{window.t('trainer.no_conj_data')}</div></div>;
     }
     const conj = CONJUGATIONS[cardIdx];
+    // Стопке нужна запись слова (управление, примеры, перевод) — в conj их нет.
+    // Формы берём из самого conj: они там уже разложены.
+    const conjItem = VOCAB.find(v => v.de === conj.verb) || { id: conj.id || conj.verb, de: conj.verb, ru: conj.ru, en: conj.en, pos: "verb" };
+    const conjForms = {
+      pronouns: conj.pronouns,
+      praesens: conj.forms,
+      praeteritum: conj.praeteritum || null,
+      partizip2: conj.partizip2 || null,
+      aux: conj.aux || "haben",
+    };
     return (
       <div style={S.page}>
         <TopBar
@@ -4418,9 +4492,7 @@ function App() {
           right={<span style={S.muted}>{cardIdx + 1} / {CONJUGATIONS.length}</span>}
           icon={icon} onTheme={cycleTheme} onLang={cycleLang} onHome={goHome} />
         <div style={S.containerRead}>
-          <ConjFlipCard key={conj.id || conj.verb} conj={conj} flipped={flipped}
-                        onFlip={() => setFlipped(!flipped)}
-                        color={activeBlock.color} />
+          <WordStack key={conj.id || conj.verb} item={conjItem} forms={conjForms} color={activeBlock.color} startAt="forms" />
           <div style={{ display: "flex", gap: 12, justifyContent: "center", marginTop: 20 }}>
             <button style={S.outlineBtn()} onClick={prevCard} disabled={cardIdx === 0}>{ICON_ARROW_LEFT} {window.t('trainer.back')}</button>
             <button style={S.primaryBtn(activeBlock.color)}
@@ -4560,7 +4632,7 @@ function App() {
               </>
             )}
 
-            {/* Объяснение (note слова или explain вопроса) — после ответа */}
+            {/* Объяснение (note слова или explain вопроса) – после ответа */}
             {answered && (() => {
               const explainText = getNoteForQuestion(q);
               if (!explainText) return null;
@@ -4770,7 +4842,7 @@ function App() {
                           normalise(conjAnswers[i] || "") === normalise(a));
                         // Сохраняем ответы пользователя как объект {pronoun: form}
                         const userValue = q.pronouns.map((p, i) =>
-                          `${p} ${conjAnswers[i] || "—"}`).join(", ");
+                          `${p} ${conjAnswers[i] || "–"}`).join(", ");
                         submitAnswer(allCorrect, userValue);
                       }}>
                 {window.t('trainer.check_btn')}
@@ -4849,7 +4921,7 @@ function App() {
                     <div style={S.reviewLine}>
                       {window.t('trainer.your_answer')}{" "}
                       <span style={S.reviewMyAns(ua.isCorrect)}>
-                        {userText || "—"}
+                        {userText || "–"}
                       </span>
                     </div>
                     {!ua.isCorrect && correctText && (

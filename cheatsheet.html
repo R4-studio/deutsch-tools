@@ -1,15 +1,15 @@
 <!DOCTYPE html>
 <html lang="ru"><head><meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Справочник — Deutsch Tools</title>
+<title>Справочник – Deutsch Tools</title>
 <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🇩🇪</text></svg>">
-<meta property="og:title" content="Справочник — Deutsch Tools">
+<meta property="og:title" content="Справочник – Deutsch Tools">
 <meta property="og:description" content="Интерактивный справочник по немецкому: слова, правила, произношение">
 <meta property="og:type" content="website">
-<link rel="stylesheet" href="theme.css?v=20260918">
-<script src="i18n/ru.js?v=20260918"></script>
-<script src="i18n/en.js?v=20260918"></script>
-<script src="i18n/i18n.js?v=20260918"></script>
+<link rel="stylesheet" href="theme.css?v=20260920">
+<script src="i18n/ru.js?v=20260920"></script>
+<script src="i18n/en.js?v=20260920"></script>
+<script src="i18n/i18n.js?v=20260920"></script>
 <style>
 *{box-sizing:border-box;margin:0;padding:0}
 body{font-family:sans-serif;font-size:13px;color:var(--text-main);line-height:1.4;background:var(--bg-body);overflow-x:hidden}
@@ -17,8 +17,9 @@ body{font-family:sans-serif;font-size:13px;color:var(--text-main);line-height:1.
   display: flex;
   flex-wrap: wrap;
   gap: 8px;
-  margin-top: 92px;
-  padding: 0 12px;
+  margin: 92px auto 0;
+  padding: 0 15px;
+  max-width: calc(var(--w-wide) + 30px);
 }
 .tab {
   display: inline-flex;
@@ -90,6 +91,9 @@ table {
 /* Ширины колонок задаются через классы; добавляются автоматически JS */
 /* таблицы: ширина колонок по содержимому, padding 10px */
 table.noun-table, table.vocab-table { table-layout: auto; width: 100%; }
+.voc-de  { font-weight: 600; color: var(--text-title); }
+.voc-gov { font-size: 12.5px; color: var(--text-muted); margin-top: 2px; line-height: 1.4; }
+.voc-gov b { color: var(--accent); font-weight: 600; }
 table.noun-table th:nth-child(2), table.noun-table td:nth-child(2) { text-align: center; white-space: nowrap; width: 1%; padding-left: 8px; padding-right: 8px; }
 
 /* Бэйджи не должны разрываться, даже в узких ячейках */
@@ -453,6 +457,8 @@ tr[data-vid], [data-vid].conj-card { cursor: pointer; }
 .modal-row:last-child { border-bottom: none; }
 .modal-label { flex: 0 0 140px; color: var(--text-muted); }
 .modal-value { flex: 1; color: var(--text-main); word-break: break-word; }
+.modal-value b { color: var(--accent); font-weight: 600; }
+.modal-kasus { color: var(--text-muted); }
 .word-modal-close {
   position: absolute; top: 8px; right: 8px;
   width: 36px; height: 36px;
@@ -469,8 +475,8 @@ tr[data-vid], [data-vid].conj-card { cursor: pointer; }
   document.documentElement.classList.add('theme-' + saved);
 })();
 </script>
-<script src="data.js?v=20260918"></script>
-<script src="rule-render.js?v=20260918"></script>
+<script src="data.js?v=20260920"></script>
+<script src="rule-render.js?v=20260920"></script>
 <script>
 // wordText(item) — перевод слова с учётом языка (мультиязычность, слой 2):
 // en, если выбран английский и оно переведено (VOCAB.en из update_data.py/DeepL),
@@ -544,18 +550,18 @@ function topicLabel(topic) {
 }
 var TABS_CONFIG = [
   { id: 'new',     icon: 'sparkle',   label: 'Neu' },
-  { id: 'nums',    icon: 'hash',      label: 'Zahlen' },
-  { id: 'sounds',  icon: 'waveform',  label: 'Laute' },
+  { id: 'nouns',   icon: 'box',       label: 'Substantive' },
   { id: 'verbs',   icon: 'bolt',      label: 'Verben' },
   { id: 'unregel', icon: 'flame',     label: 'Unregelmäßige Konjugation' },
-  { id: 'perfekt', icon: 'history',   label: 'Vergangenheit', tabsOnly: true },
-  { id: 'nouns',   icon: 'box',       label: 'Substantive' },
   { id: 'adj',     icon: 'palette',   label: 'Adjektive' },
   { id: 'adv',     icon: 'shuffle',   label: 'Adverbien' },
   { id: 'mestoim', icon: 'user',      label: 'Pronomen' },
   { id: 'termin',  icon: 'clipboard', label: 'Begriffe' },
   { id: 'rules',   icon: 'ruleset',   label: 'Regeln' },
+  { id: 'perfekt', icon: 'history',   label: 'Vergangenheit', tabsOnly: true },
   { id: 'phrases', icon: 'chat',      label: 'Phrasen' },
+  { id: 'nums',    icon: 'hash',      label: 'Zahlen' },
+  { id: 'sounds',  icon: 'waveform',  label: 'Laute' },
 ];
 function renderTabsAndMenu() {
   var menuHtml = TABS_CONFIG.filter(function(t) { return !t.tabsOnly; }).map(function(t) {
@@ -664,10 +670,10 @@ document.addEventListener('DOMContentLoaded', hydrateIcons);
 <tr><td>wohnen</td><td>жить, проживать</td><td></td></tr>
 <tr><td>heißen</td><td>зваться, называться</td><td></td></tr>
 <tr><td>finden</td><td>находить</td><td></td></tr>
-<tr><td>bleiben</td><td>оставаться</td><td>Unregelmäßig | Ich bleibe zu Hause — я остаюсь дома</td></tr>
+<tr><td>bleiben</td><td>оставаться</td><td>Unregelmäßig | Ich bleibe zu Hause – я остаюсь дома</td></tr>
 <tr><td>fehlen</td><td>отсутствовать, не хватать</td><td></td></tr>
 <tr><td>dauern</td><td>длиться</td><td></td></tr>
-<tr><td>setzen</td><td>ставить, сажать</td><td>sich setzen = садиться | Setz dich! — Садись!</td></tr>
+<tr><td>setzen</td><td>ставить, сажать</td><td>sich setzen = садиться | Setz dich! – Садись!</td></tr>
 <tr><td>sitzen</td><td>сидеть</td><td></td></tr>
 <tr><td>warten</td><td>ждать</td><td></td></tr>
 <tr><td>waren</td><td>были</td><td>Präteritum от <b>sein</b>: wir/sie/Sie waren | подробнее: вкладка Правила</td></tr>
@@ -678,7 +684,7 @@ document.addEventListener('DOMContentLoaded', hydrateIcons);
 <div class="section-title" data-icon="target">Modalverben и условные формы</div>
 <table><tbody>
 <tr><th>Немецкий</th><th>Перевод</th><th>Примечание</th></tr>
-<tr><td>können</td><td>мочь, уметь</td><td>Modalverb, Unregelmäßig — см. вкладку Спряжение</td></tr>
+<tr><td>können</td><td>мочь, уметь</td><td>Modalverb, Unregelmäßig – см. вкладку Спряжение</td></tr>
 <tr><td>müssen</td><td>должен, нужно</td><td>Modalverb, Unregelmäßig</td></tr>
 <tr><td>wollen</td><td>хотеть</td><td>Modalverb, Unregelmäßig</td></tr>
 <tr><td>möchten</td><td>хотел бы (вежливо)</td><td>Modalverb, вежливая форма</td></tr>
@@ -686,7 +692,7 @@ document.addEventListener('DOMContentLoaded', hydrateIcons);
 <tr><td>dürfen</td><td>иметь право / разрешено</td><td>Modalverb | Ich darf hier nicht rauchen.</td></tr>
 <tr><td>hätte gern</td><td>хотел бы (вежливо)</td><td>⚠ готовая форма, не инфинитив: haben → hätte</td></tr>
 <tr><td>würde + Infinitiv</td><td>бы / условное наклонение</td><td>⚠ готовая конструкция: werden → würde / würdest / würden</td></tr>
-<tr><td>sollen</td><td>быть должным (кому-то/по чужой воле)</td><td>Modalverb | sollen — обязательство ИЗВНЕ (так сказали, так положено) | ≠ müssen (обязательство ИЗНУТРИ) | Du sollst nicht lügen — Не лги (тебе говорят)</td></tr>
+<tr><td>sollen</td><td>быть должным (кому-то/по чужой воле)</td><td>Modalverb | sollen – обязательство ИЗВНЕ (так сказали, так положено) | ≠ müssen (обязательство ИЗНУТРИ) | Du sollst nicht lügen – Не лги (тебе говорят)</td></tr>
 </tbody></table>
 </div>
 
@@ -705,7 +711,7 @@ document.addEventListener('DOMContentLoaded', hydrateIcons);
 <tr><td>Fahrrad fahren</td><td>ехать на велосипеде</td><td></td></tr>
 <tr><td>spazieren gehen</td><td>гулять, идти на прогулку</td><td>отделяемая: gehen | Ich gehe spazieren.</td></tr>
 <tr><td>Gassi gehen</td><td>выгуливать собаку</td><td>разговорное | mit dem Hund Gassi gehen</td></tr>
-<tr><td>joggen</td><td>бегать (трусцой)</td><td>Ich gehe joggen — я хожу на пробежку</td></tr>
+<tr><td>joggen</td><td>бегать (трусцой)</td><td>Ich gehe joggen – я хожу на пробежку</td></tr>
 <tr><td>abholen</td><td>забирать (кого-то/что-то)</td><td>отделяемая: ab- | Ich hole dich ab - Я тебя заберу</td></tr>
 <tr><td>bringen</td><td>приносить (однонаправленно)</td><td>A→B: из точки A в точку B, сам не возвращается | Kannst du mir das Buch bringen?</td></tr>
 <tr><td>holen</td><td>сходить и принести</td><td>A→B→A: уходишь, берёшь и возвращаешься | Ich hole dir Wasser - схожу, принесу воды</td></tr>
@@ -747,9 +753,9 @@ document.addEventListener('DOMContentLoaded', hydrateIcons);
 <tr><td>bekommen</td><td>получать</td><td></td></tr>
 <tr><td>kriegen</td><td>получать</td><td>разговорное = bekommen</td></tr>
 <tr><td>nehmen</td><td>брать</td><td>Unregelmäßig: nimmst / nimmt</td></tr>
-<tr><td>benutzen</td><td>использовать, пользоваться</td><td>Den Aufzug benutzen — пользоваться лифтом</td></tr>
-<tr><td>abstellen</td><td>ставить / выключать</td><td>отделяемая: ab- | das Auto abstellen — припарковать | das Radio abstellen — выключить</td></tr>
-<tr><td>rauchen</td><td>курить</td><td>das Rauchen ist verboten — курение запрещено</td></tr>
+<tr><td>benutzen</td><td>использовать, пользоваться</td><td>Den Aufzug benutzen – пользоваться лифтом</td></tr>
+<tr><td>abstellen</td><td>ставить / выключать</td><td>отделяемая: ab- | das Auto abstellen – припарковать | das Radio abstellen – выключить</td></tr>
+<tr><td>rauchen</td><td>курить</td><td>das Rauchen ist verboten – курение запрещено</td></tr>
 <tr><td>anfangen</td><td>начинать</td><td>отделяемая: an-</td></tr>
 <tr><td>vorbereiten</td><td>подготавливать</td><td>отделяемая: vor-</td></tr>
 <tr><td>schlafen</td><td>спать</td><td>Unregelmäßig</td></tr>
@@ -760,7 +766,7 @@ document.addEventListener('DOMContentLoaded', hydrateIcons);
 <div class="section-title" data-icon="chat">Общение / эмоции</div>
 <table><tbody>
 <tr><th>Немецкий</th><th>Перевод</th><th>Примечание</th></tr>
-<tr><td>passen</td><td>подходить</td><td>Das passt! — Подходит! / Норм! | прил.: passend — подходящий</td></tr>
+<tr><td>passen</td><td>подходить</td><td>Das passt! – Подходит! / Норм! | прил.: passend – подходящий</td></tr>
 <tr><td>sprechen</td><td>говорить</td><td>Unregelmäßig</td></tr>
 <tr><td>fragen</td><td>спрашивать</td><td></td></tr>
 <tr><td>buchstabieren</td><td>произносить по буквам</td><td></td></tr>
@@ -773,15 +779,15 @@ document.addEventListener('DOMContentLoaded', hydrateIcons);
 <tr><td>küssen</td><td>целовать</td><td></td></tr>
 <tr><td>kennenlernen</td><td>познакомиться</td><td>отделяемая: kennen- | Ich lerne sie kennen</td></tr>
 <tr><td>sich vorstellen</td><td>представляться</td><td>возвратный + отделяемая vor- | Ich stelle mich vor</td></tr>
-<tr><td>sich wundern</td><td>удивляться</td><td>возвратный | Ich wundere mich — я удивляюсь | über + Akk: Ich wundere mich über das Wetter.</td></tr>
+<tr><td>sich wundern</td><td>удивляться</td><td>возвратный | Ich wundere mich – я удивляюсь | über + Akk: Ich wundere mich über das Wetter.</td></tr>
 <tr><td>treffen</td><td>встречать / встречаться</td><td>Unregelmäßig</td></tr>
 <tr><td>einladen</td><td>приглашать</td><td>отделяемая: ein-</td></tr>
 <tr><td>schicken</td><td>отправлять</td><td>schickt - форма er/sie/es</td></tr>
-<tr><td>vermissen</td><td>скучать, чувствовать отсутствие</td><td>об эмоции — когда не хватает человека или вещи | Ich vermisse dich — я скучаю по тебе | ≠ verlieren</td></tr>
+<tr><td>vermissen</td><td>скучать, чувствовать отсутствие</td><td>об эмоции – когда не хватает человека или вещи | Ich vermisse dich – я скучаю по тебе | ≠ verlieren</td></tr>
 <tr><td>verlieren</td><td>терять, потерять / проиграть</td><td>о предмете или игре | Ich habe meinen Schlüssel verloren. | ≠ vermissen</td></tr>
-<tr><td>grenzen</td><td>граничить</td><td>от <b>die Grenze</b> | grenzen an + Akk — граничить с | Deutschland grenzt an Polen</td></tr>
-<tr><td>verabreden</td><td>договариваться (о встрече)</td><td>обычно с кем-то — почти всегда возвратное: <b>sich verabreden</b></td></tr>
-<tr><td>sich verabreden</td><td>условиться о встрече</td><td>возвратный | Ich verabrede mich mit Anna — Договариваюсь о встрече с Анной | sich + mit + Dat</td></tr>
+<tr><td>grenzen</td><td>граничить</td><td>от <b>die Grenze</b> | grenzen an + Akk – граничить с | Deutschland grenzt an Polen</td></tr>
+<tr><td>verabreden</td><td>договариваться (о встрече)</td><td>обычно с кем-то – почти всегда возвратное: <b>sich verabreden</b></td></tr>
+<tr><td>sich verabreden</td><td>условиться о встрече</td><td>возвратный | Ich verabrede mich mit Anna – Договариваюсь о встрече с Анной | sich + mit + Dat</td></tr>
 </tbody></table>
 </div>
 
@@ -792,7 +798,7 @@ document.addEventListener('DOMContentLoaded', hydrateIcons);
 <tr><td>arbeiten</td><td>работать</td><td></td></tr>
 <tr><td>am Computer arbeiten</td><td>работать за компьютером</td><td></td></tr>
 <tr><td>schreiben</td><td>писать</td><td></td></tr>
-<tr><td>lesen</td><td>читать</td><td>Unregelmäßig (e→ie) | Ich lese die Zeitung — я читаю газету</td></tr>
+<tr><td>lesen</td><td>читать</td><td>Unregelmäßig (e→ie) | Ich lese die Zeitung – я читаю газету</td></tr>
 <tr><td>hören</td><td>слушать</td><td></td></tr>
 <tr><td>wiederholen</td><td>повторять</td><td></td></tr>
 <tr><td>verdienen</td><td>зарабатывать</td><td>Ich verdiene 2000 Euro im Monat.</td></tr>
@@ -813,20 +819,20 @@ document.addEventListener('DOMContentLoaded', hydrateIcons);
 <tr><td>tanzen</td><td>танцевать</td><td></td></tr>
 <tr><td>fotografieren</td><td>фотографировать</td><td></td></tr>
 <tr><td>tätowieren</td><td>делать татуировку</td><td></td></tr>
-<tr><td>sehen</td><td>смотреть, видеть</td><td>Unregelmäßig (e→ie) | Ich sehe fern — смотрю телевизор</td></tr>
+<tr><td>sehen</td><td>смотреть, видеть</td><td>Unregelmäßig (e→ie) | Ich sehe fern – смотрю телевизор</td></tr>
 <tr><td>gucken</td><td>смотреть, глядеть</td><td>разговорное, чаще на севере Германии</td></tr>
 <tr><td>schauen</td><td>смотреть, глядеть</td><td>нейтральное, чаще на юге / в Австрии</td></tr>
-<tr><td>surfen</td><td>сёрфить</td><td>два значения: im Internet surfen — сидеть в интернете | Wellenreiten / surfen — заниматься сёрфингом (спорт)</td></tr>
+<tr><td>surfen</td><td>сёрфить</td><td>два значения: im Internet surfen – сидеть в интернете | Wellenreiten / surfen – заниматься сёрфингом (спорт)</td></tr>
 <tr><td>reiten</td><td>ездить верхом</td><td></td></tr>
 <tr><td>organisieren</td><td>организовывать</td><td></td></tr>
 <tr><td>zoomen</td><td>звонить по видео (зумить)</td><td></td></tr>
-<tr><td>Sport treiben</td><td>заниматься спортом</td><td>устойчивое выражение | Ich treibe Sport — я занимаюсь спортом</td></tr>
+<tr><td>Sport treiben</td><td>заниматься спортом</td><td>устойчивое выражение | Ich treibe Sport – я занимаюсь спортом</td></tr>
 <tr><td>Partys feiern</td><td>отмечать вечеринки</td><td></td></tr>
 <tr><td>Shoppen</td><td>шопинг</td><td></td></tr>
 <tr><td>Gitarre spielen</td><td>играть на гитаре</td><td>auch: Klavier/Geige spielen</td></tr>
 <tr><td>werfen</td><td>бросать, кидать</td><td>Unregelmäßig (e→i): du wirfst, er wirft</td></tr>
 <tr><td>fangen</td><td>ловить, поймать</td><td>Unregelmäßig (a→ä): du fängst, er fängt | ⚠ не путать с anfangen (начинать)</td></tr>
-<tr><td>brausen</td><td>шуметь / мчаться / принимать душ</td><td>3 значения: 1) Wind braust — ветер шумит | 2) Auto braust — машина мчится | 3) sich brausen — принимать душ (= sich duschen)</td></tr>
+<tr><td>brausen</td><td>шуметь / мчаться / принимать душ</td><td>3 значения: 1) Wind braust – ветер шумит | 2) Auto braust – машина мчится | 3) sich brausen – принимать душ (= sich duschen)</td></tr>
 </tbody></table>
 </div>
 
@@ -834,7 +840,7 @@ document.addEventListener('DOMContentLoaded', hydrateIcons);
 <div class="section-title" data-icon="cloud-rain">Безличные (погода и пр.)</div>
 <table><tbody>
 <tr><th>Немецкий</th><th>Перевод</th><th>Примечание</th></tr>
-<tr><td>es hagelt</td><td>идёт град</td><td>безличный глагол | только с es | Es hagelt stark — идёт сильный град</td></tr>
+<tr><td>es hagelt</td><td>идёт град</td><td>безличный глагол | только с es | Es hagelt stark – идёт сильный град</td></tr>
 </tbody></table>
 </div>
 
@@ -1219,18 +1225,18 @@ document.addEventListener('DOMContentLoaded', hydrateIcons);
 <div class="section-title" data-icon="calendar">Дни / Месяцы / Даты</div>
 <table><tbody>
 <tr><th>Немецкий</th><th>Артикль</th><th>Перевод / Примечание</th></tr>
-<tr><td>der Montag</td><td><span class="badge m">m</span></td><td>понедельник | am Montag — в понедельник</td></tr>
+<tr><td>der Montag</td><td><span class="badge m">m</span></td><td>понедельник | am Montag – в понедельник</td></tr>
 <tr><td>der Dienstag</td><td><span class="badge m">m</span></td><td>вторник | am Dienstag</td></tr>
 <tr><td>der Mittwoch</td><td><span class="badge m">m</span></td><td>среда | am Mittwoch</td></tr>
 <tr><td>der Donnerstag</td><td><span class="badge m">m</span></td><td>четверг | am Donnerstag</td></tr>
 <tr><td>der Freitag</td><td><span class="badge m">m</span></td><td>пятница | am Freitag</td></tr>
 <tr><td>der Samstag</td><td><span class="badge m">m</span></td><td>суббота | am Samstag</td></tr>
 <tr><td>der Sonntag</td><td><span class="badge m">m</span></td><td>воскресенье | am Sonntag</td></tr>
-<tr><td>der Mai</td><td><span class="badge m">m</span></td><td>май | im Mai — в мае</td></tr>
+<tr><td>der Mai</td><td><span class="badge m">m</span></td><td>май | im Mai – в мае</td></tr>
 <tr><td>der Termin</td><td><span class="badge m">m</span></td><td>встреча / запись | einen Termin ausmachen</td></tr>
 <tr><td>der Geburtstag</td><td><span class="badge m">m</span></td><td>день рождения | Alles Gute zum Geburtstag!</td></tr>
 <tr><td>die Hochzeit</td><td><span class="badge f">f</span></td><td>свадьба</td></tr>
-<tr><td>die Woche</td><td><span class="badge f">f</span></td><td>неделя | Pl: die Wochen | diese Woche — на этой неделе | nächste Woche — на следующей</td></tr>
+<tr><td>die Woche</td><td><span class="badge f">f</span></td><td>неделя | Pl: die Wochen | diese Woche – на этой неделе | nächste Woche – на следующей</td></tr>
 </tbody></table>
 </div>
 
@@ -1241,7 +1247,7 @@ document.addEventListener('DOMContentLoaded', hydrateIcons);
 <tr><td>der Film</td><td><span class="badge m">m</span></td><td>фильм</td></tr>
 <tr><td>der Zeichentrickfilm</td><td><span class="badge m">m</span></td><td>рисованный мультфильм | Zeichnen + Trick + Film</td></tr>
 <tr><td>der Puppentrickfilm</td><td><span class="badge m">m</span></td><td>кукольный мультфильм | Puppe = кукла</td></tr>
-<tr><td>die Zeitung</td><td><span class="badge f">f</span></td><td>газета | Pl: die Zeitungen | Zeitung lesen — читать газету</td></tr>
+<tr><td>die Zeitung</td><td><span class="badge f">f</span></td><td>газета | Pl: die Zeitungen | Zeitung lesen – читать газету</td></tr>
 <tr><td>der Fernsehabend</td><td><span class="badge m">m</span></td><td>вечер у телевизора | Fernseh + Abend</td></tr>
 </tbody></table>
 </div>
@@ -1267,8 +1273,8 @@ document.addEventListener('DOMContentLoaded', hydrateIcons);
 <tr><td>die Kneipe</td><td><span class="badge f">f</span></td><td>пивная / бар / паб | разговорное</td></tr>
 <tr><td>die Sportkneipe</td><td><span class="badge f">f</span></td><td>спорт-бар (где смотрят матчи) | Sport + Kneipe</td></tr>
 <tr><td>der Reiseführer</td><td><span class="badge m">m</span></td><td>путеводитель / экскурсовод | Reise + Führer</td></tr>
-<tr><td>der Eintritt</td><td><span class="badge m">m</span></td><td>вход / входная плата | Eintritt frei — вход бесплатный</td></tr>
-<tr><td>der Rabatt</td><td><span class="badge m">m</span></td><td>скидка | 10% Rabatt — скидка 10%</td></tr>
+<tr><td>der Eintritt</td><td><span class="badge m">m</span></td><td>вход / входная плата | Eintritt frei – вход бесплатный</td></tr>
+<tr><td>der Rabatt</td><td><span class="badge m">m</span></td><td>скидка | 10% Rabatt – скидка 10%</td></tr>
 <tr><td>der/die Jugendliche</td><td><span class="badge m">m</span> / <span class="badge f">f</span></td><td>подросток / молодой человек | Pl: die Jugendlichen | склоняется как прилагательное</td></tr>
 </tbody></table>
 </div>
@@ -1281,8 +1287,8 @@ document.addEventListener('DOMContentLoaded', hydrateIcons);
 <tr><td>die Katze</td><td><span class="badge f">f</span></td><td>кошка | Pl: die Katzen</td></tr>
 <tr><td>die Maus</td><td><span class="badge f">f</span></td><td>мышь | Pl: die Mäuse</td></tr>
 <tr><td>der Baum</td><td><span class="badge m">m</span></td><td>дерево | Pl: die Bäume</td></tr>
-<tr><td>der Sommer</td><td><span class="badge m">m</span></td><td>лето | im Sommer — летом</td></tr>
-<tr><td>das Meer</td><td><span class="badge n">n</span></td><td>море | ans Meer fahren — поехать к морю</td></tr>
+<tr><td>der Sommer</td><td><span class="badge m">m</span></td><td>лето | im Sommer – летом</td></tr>
+<tr><td>das Meer</td><td><span class="badge n">n</span></td><td>море | ans Meer fahren – поехать к морю</td></tr>
 <tr><td>die Natur</td><td><span class="badge f">f</span></td><td>природа</td></tr>
 </tbody></table>
 </div>
@@ -1332,7 +1338,7 @@ document.addEventListener('DOMContentLoaded', hydrateIcons);
 <tr><td>die U-Bahn</td><td><span class="badge f">f</span></td><td>метро</td></tr>
 <tr><td>die S-Bahn</td><td><span class="badge f">f</span></td><td>городская электричка</td></tr>
 <tr><td>das Benzin</td><td><span class="badge n">n</span></td><td>бензин</td></tr>
-<tr><td>der Fahrgast</td><td><span class="badge m">m</span></td><td>пассажир (общ. транспорт) | Fahr + Gast | Pl: die Fahrgäste — пассажиры</td></tr>
+<tr><td>der Fahrgast</td><td><span class="badge m">m</span></td><td>пассажир (общ. транспорт) | Fahr + Gast | Pl: die Fahrgäste – пассажиры</td></tr>
 </tbody></table>
 </div>
 
@@ -1350,7 +1356,7 @@ document.addEventListener('DOMContentLoaded', hydrateIcons);
 <tr><td>der Schlüssel</td><td><span class="badge m">m</span></td><td>ключ</td></tr>
 <tr><td>die Freizeit</td><td><span class="badge f">f</span></td><td>свободное время, досуг</td></tr>
 <tr><td>die Dehnung</td><td><span class="badge f">f</span></td><td>стретчинг / растяжка</td></tr>
-<tr><td>das Dach</td><td><span class="badge n">n</span></td><td>крыша | произносится [дах] | Pl: die Dächer | ein Dach über dem Kopf — крыша над головой</td></tr>
+<tr><td>das Dach</td><td><span class="badge n">n</span></td><td>крыша | произносится [дах] | Pl: die Dächer | ein Dach über dem Kopf – крыша над головой</td></tr>
 </tbody></table>
 </div>
 
@@ -1526,7 +1532,7 @@ document.addEventListener('DOMContentLoaded', hydrateIcons);
 <table>
 <tbody>
 <tr><th>Немецкий</th><th>Артикль</th><th>Перевод</th></tr>
-<tr><td>das Frühstück</td><td><span class="badge n">n</span></td><td>завтрак | beim Frühstück — за завтраком</td></tr>
+<tr><td>das Frühstück</td><td><span class="badge n">n</span></td><td>завтрак | beim Frühstück – за завтраком</td></tr>
 <tr><td>das Mittagessen</td><td><span class="badge n">n</span></td><td>обед</td></tr>
 <tr><td>das Croissant</td><td><span class="badge n">n</span></td><td>круассан</td></tr>
 <tr><td>das Pausenbrot</td><td><span class="badge n">n</span></td><td>бутерброд на перекус</td></tr>
@@ -1581,10 +1587,10 @@ document.addEventListener('DOMContentLoaded', hydrateIcons);
 <tr><td>der Fahrstuhl</td><td><span class="badge m">m</span></td><td>лифт (разговорное) | = der Aufzug (официальное)</td></tr>
 <tr><td>die Hauptstadt</td><td><span class="badge f">f</span></td><td>столица | Berlin ist die Hauptstadt Deutschlands.</td></tr>
 <tr><td>die WG (die Wohngemeinschaft)</td><td><span class="badge f">f</span></td><td>совместная квартира | Wohn + Gemeinschaft = жильё + сообщество | Ich wohne in einer WG.</td></tr>
-<tr><td>die Nähe</td><td><span class="badge f">f</span></td><td>близость | in der Nähe — поблизости, рядом | in der Nähe vom Bahnhof — рядом с вокзалом</td></tr>
-<tr><td>der Hof</td><td><span class="badge m">m</span></td><td>двор | Pl: die Höfe | im Hof — во дворе</td></tr>
+<tr><td>die Nähe</td><td><span class="badge f">f</span></td><td>близость | in der Nähe – поблизости, рядом | in der Nähe vom Bahnhof – рядом с вокзалом</td></tr>
+<tr><td>der Hof</td><td><span class="badge m">m</span></td><td>двор | Pl: die Höfe | im Hof – во дворе</td></tr>
 <tr><td>das Zimmer</td><td><span class="badge n">n</span></td><td>комната | Pl: die Zimmer | ≠ die Wohnung (вся квартира)</td></tr>
-<tr><td>die Miete</td><td><span class="badge f">f</span></td><td>арендная плата | Miete zahlen — платить аренду</td></tr>
+<tr><td>die Miete</td><td><span class="badge f">f</span></td><td>арендная плата | Miete zahlen – платить аренду</td></tr>
 <tr><td>die Fläche / die Wohnfläche</td><td><span class="badge f">f</span></td><td>площадь / жилая площадь | в объявлениях: Wohnfläche: 60 m²</td></tr>
 <tr><td>die Etage</td><td><span class="badge f">f</span></td><td>этаж | = der Stock | die 1. Etage = der 1. Stock</td></tr>
 <tr><td>der Garten</td><td><span class="badge m">m</span></td><td>сад / двор | Pl: die Gärten</td></tr>
@@ -1680,12 +1686,12 @@ document.addEventListener('DOMContentLoaded', hydrateIcons);
 <table>
 <tbody>
 <tr><th>Немецкий</th><th>Артикль</th><th>Перевод</th></tr>
-<tr><td>der Anhang</td><td><span class="badge m">m</span></td><td>вложение / приложение | an + hängen (висеть) | im Anhang — во вложении</td></tr>
+<tr><td>der Anhang</td><td><span class="badge m">m</span></td><td>вложение / приложение | an + hängen (висеть) | im Anhang – во вложении</td></tr>
 <tr><td>die Nutzung</td><td><span class="badge f">f</span></td><td>использование | от <b>nutzen</b> (= benutzen без приставки) | -ung всегда die | Offline-Nutzung</td></tr>
-<tr><td>der Zugriff</td><td><span class="badge m">m</span></td><td>доступ | zu (к) + Griff (хватка) | Zugriff auf das Internet — доступ к интернету</td></tr>
+<tr><td>der Zugriff</td><td><span class="badge m">m</span></td><td>доступ | zu (к) + Griff (хватка) | Zugriff auf das Internet – доступ к интернету</td></tr>
 <tr><td>der Besitzer / die Besitzerin</td><td><span class="badge m">m</span> / <span class="badge f">f</span></td><td>владелец / владелица</td></tr>
-<tr><td>die Beziehungen</td><td><span class="badge pl">Pl</span></td><td>связи, знакомства | разг. "Vitamin B" — полезные связи / блат</td></tr>
-<tr><td>das Glück</td><td><span class="badge n">n</span></td><td>счастье, удача | Viel Glück! — Удачи! | kein Plural</td></tr>
+<tr><td>die Beziehungen</td><td><span class="badge pl">Pl</span></td><td>связи, знакомства | разг. "Vitamin B" – полезные связи / блат</td></tr>
+<tr><td>das Glück</td><td><span class="badge n">n</span></td><td>счастье, удача | Viel Glück! – Удачи! | kein Plural</td></tr>
 <tr><td>der Spaß</td><td><span class="badge m">m</span></td><td>веселье, удовольствие | Viel Spaß! | Es macht Spaß</td></tr>
 <tr><td>der Urlaub</td><td><span class="badge m">m</span></td><td>отпуск, каникулы | Ich bin im Urlaub</td></tr>
 <tr><td>die Leitung</td><td><span class="badge f">f</span></td><td>руководство; линия, связь | die Internetleitung</td></tr>
@@ -1731,7 +1737,7 @@ document.addEventListener('DOMContentLoaded', hydrateIcons);
 <table>
 <tbody>
 <tr><th>Немецкий</th><th>Артикль</th><th>Перевод</th></tr>
-<tr><td>die Dauer</td><td><span class="badge f">f</span></td><td>длительность | от <b>dauern</b> (длиться) | прил.: dauerhaft — постоянный, долговременный</td></tr>
+<tr><td>die Dauer</td><td><span class="badge f">f</span></td><td>длительность | от <b>dauern</b> (длиться) | прил.: dauerhaft – постоянный, долговременный</td></tr>
 <tr><td>die Zeit</td><td><span class="badge f">f</span></td><td>время | Ich habe Zeit / keine Zeit</td></tr>
 <tr><td>die Uhr</td><td><span class="badge f">f</span></td><td>часы (в общем)</td></tr>
 <tr><td>die Wanduhr</td><td><span class="badge f">f</span></td><td>настенные часы</td></tr>
@@ -1747,18 +1753,18 @@ document.addEventListener('DOMContentLoaded', hydrateIcons);
 <table><tbody>
 <tr><th>Немецкий</th><th>Артикль</th><th>Перевод / Примечание</th></tr>
 <tr><td>das Leben</td><td><span class="badge n">n</span></td><td>жизнь</td></tr>
-<tr><td>die Arbeit</td><td><span class="badge f">f</span></td><td>работа | bei der Arbeit — на работе</td></tr>
-<tr><td>die Hilfe</td><td><span class="badge f">f</span></td><td>помощь | Hilfe! — Помогите!</td></tr>
+<tr><td>die Arbeit</td><td><span class="badge f">f</span></td><td>работа | bei der Arbeit – на работе</td></tr>
+<tr><td>die Hilfe</td><td><span class="badge f">f</span></td><td>помощь | Hilfe! – Помогите!</td></tr>
 <tr><td>das Ziel</td><td><span class="badge n">n</span></td><td>цель</td></tr>
 <tr><td>die Bedienung / der Service</td><td><span class="badge f">f</span></td><td>обслуживание / сервис</td></tr>
-<tr><td>die Decke</td><td><span class="badge f">f</span></td><td>потолок / одеяло | два значения — контекст важен</td></tr>
+<tr><td>die Decke</td><td><span class="badge f">f</span></td><td>потолок / одеяло | два значения – контекст важен</td></tr>
 <tr><td>die Steuer</td><td><span class="badge f">f</span></td><td>налог | Pl: die Steuern</td></tr>
 <tr><td>das Wetter</td><td><span class="badge n">n</span></td><td>погода</td></tr>
-<tr><td>die Laune</td><td><span class="badge f">f</span></td><td>настроение | gute/schlechte Laune — хорошее/плохое настроение</td></tr>
+<tr><td>die Laune</td><td><span class="badge f">f</span></td><td>настроение | gute/schlechte Laune – хорошее/плохое настроение</td></tr>
 <tr><td>der Stress</td><td><span class="badge m">m</span></td><td>стресс | Ich habe Stress</td></tr>
 <tr><td>das Problem</td><td><span class="badge n">n</span></td><td>проблема</td></tr>
 <tr><td>der Gast</td><td><span class="badge m">m</span></td><td>гость</td></tr>
-<tr><td>die Grenze</td><td><span class="badge f">f</span></td><td>граница / предел | произносится [грэнцэ] | Pl: die Grenzen | глагол: grenzen — граничить</td></tr>
+<tr><td>die Grenze</td><td><span class="badge f">f</span></td><td>граница / предел | произносится [грэнцэ] | Pl: die Grenzen | глагол: grenzen – граничить</td></tr>
 </tbody></table>
 </div>
 
@@ -1790,18 +1796,18 @@ document.addEventListener('DOMContentLoaded', hydrateIcons);
 <div class="section-title" data-icon="thermometer">Описание предметов / характеристики</div>
 <table><tbody>
 <tr><th>Немецкий</th><th>Перевод</th><th>Примечание</th></tr>
-<tr><td>passend</td><td>подходящий</td><td>от passen (подходить) | passende Schuhe — подходящие туфли</td></tr>
-<tr><td>dauerhaft</td><td>постоянный, долговременный</td><td>от Dauer (длительность) | -haft = «обладающий свойством» | dauerhafte Lösung — постоянное решение</td></tr>
+<tr><td>passend</td><td>подходящий</td><td>от passen (подходить) | passende Schuhe – подходящие туфли</td></tr>
+<tr><td>dauerhaft</td><td>постоянный, долговременный</td><td>от Dauer (длительность) | -haft = «обладающий свойством» | dauerhafte Lösung – постоянное решение</td></tr>
 <tr><td>groß</td><td>большой</td><td>↔ klein</td></tr>
 <tr><td>klein</td><td>маленький</td><td>↔ groß</td></tr>
 <tr><td>alt</td><td>старый</td><td>↔ neu | также: пожилой (о людях)</td></tr>
 <tr><td>neu</td><td>новый</td><td>↔ alt</td></tr>
-<tr><td>hell</td><td>светлый, яркий</td><td>↔ dunkel | helle Wohnung — светлая квартира</td></tr>
+<tr><td>hell</td><td>светлый, яркий</td><td>↔ dunkel | helle Wohnung – светлая квартира</td></tr>
 <tr><td>dunkel</td><td>тёмный</td><td>↔ hell</td></tr>
 <tr><td>kalt</td><td>холодный / холодно</td><td>↔ warm / heiß</td></tr>
 <tr><td>laut</td><td>громкий, шумный</td><td>↔ ruhig</td></tr>
 <tr><td>ruhig</td><td>спокойный, тихий</td><td>↔ laut</td></tr>
-<tr><td>hoch</td><td>высокий</td><td>↔ niedrig | ⚠ в сравнении: höher (выше) | hohe Decke — высокий потолок</td></tr>
+<tr><td>hoch</td><td>высокий</td><td>↔ niedrig | ⚠ в сравнении: höher (выше) | hohe Decke – высокий потолок</td></tr>
 <tr><td>scharf</td><td>острый (о еде) / резкий</td><td>↔ mild | Das Essen ist zu scharf.</td></tr>
 <tr><td>süß</td><td>сладкий / милый</td><td>в разговорном - "милый, cute"</td></tr>
 <tr><td>leicht</td><td>лёгкий</td><td>↔ schwer; также: простой</td></tr>
@@ -1827,7 +1833,7 @@ document.addEventListener('DOMContentLoaded', hydrateIcons);
 <tr><td>freundlich</td><td>дружелюбный, вежливый</td><td>Er ist sehr freundlich</td></tr>
 <tr><td>nervös</td><td>нервный, взволнованный</td><td>Ich bin nervös</td></tr>
 <tr><td>fit</td><td>в форме, бодрый</td><td>↔ müde</td></tr>
-<tr><td>allein</td><td>один, в одиночестве</td><td>Ich lebe allein — я живу один | ≠ zusammen</td></tr>
+<tr><td>allein</td><td>один, в одиночестве</td><td>Ich lebe allein – я живу один | ≠ zusammen</td></tr>
 <tr><td>anstrengend</td><td>утомительный, напряжённый</td><td>Der Tag war sehr anstrengend</td></tr>
 <tr><td>einfach</td><td>простой, лёгкий</td><td>↔ schwer / schwierig</td></tr>
 <tr><td>langweilig</td><td>скучный</td><td>↔ interessant</td></tr>
@@ -1841,8 +1847,8 @@ document.addEventListener('DOMContentLoaded', hydrateIcons);
 <tr><td>beruflich</td><td>по работе, профессиональный</td><td>Ich reise beruflich | Beruf = профессия</td></tr>
 <tr><td>ähnlich</td><td>похожий</td><td></td></tr>
 <tr><td>gelernt</td><td>выученный</td><td>Ich habe viel gelernt</td></tr>
-<tr><td>fertig</td><td>готовый, законченный</td><td>Ich bin fertig — я закончил</td></tr>
-<tr><td>schade</td><td>жаль</td><td>Das ist schade! — Жаль! / Очень жаль! | Schade, dass... — Жаль, что...</td></tr>
+<tr><td>fertig</td><td>готовый, законченный</td><td>Ich bin fertig – я закончил</td></tr>
+<tr><td>schade</td><td>жаль</td><td>Das ist schade! – Жаль! / Очень жаль! | Schade, dass... – Жаль, что...</td></tr>
 </tbody></table>
 </div>
 
@@ -1886,7 +1892,7 @@ document.addEventListener('DOMContentLoaded', hydrateIcons);
 <tr><th>Немецкий</th><th>Перевод</th><th>Примечание</th></tr>
 <tr><td>jetzt</td><td>сейчас</td><td>в данный момент</td></tr>
 <tr><td>heute</td><td>сегодня</td><td>↔ gestern / morgen</td></tr>
-<tr><td>gestern</td><td>вчера</td><td>Gestern war es kalt — Вчера было холодно</td></tr>
+<tr><td>gestern</td><td>вчера</td><td>Gestern war es kalt – Вчера было холодно</td></tr>
 <tr><td>morgen</td><td>завтра</td><td>⚠ ≠ der <b>Morgen</b> (m, утро)! morgen со строчной = завтра, Morgen с заглавной = утро</td></tr>
 <tr><td>früh</td><td>рано</td><td>Ich stehe früh auf</td></tr>
 <tr><td>später</td><td>позже</td><td>Bis später!</td></tr>
@@ -1894,7 +1900,7 @@ document.addEventListener('DOMContentLoaded', hydrateIcons);
 <tr><td>zuerst</td><td>сначала, прежде всего</td><td>Zuerst esse ich, dann arbeite ich</td></tr>
 <tr><td>dann</td><td>затем, потом</td><td></td></tr>
 <tr><td>endlich</td><td>наконец-то</td><td>Endlich! / Wir sind endlich da</td></tr>
-<tr><td>schon</td><td>уже</td><td>⚠ ≠ schön! Ich bin schon da — Я уже здесь</td></tr>
+<tr><td>schon</td><td>уже</td><td>⚠ ≠ schön! Ich bin schon da – Я уже здесь</td></tr>
 <tr><td>immer</td><td>всегда</td><td>шкала: immer → oft → manchmal → selten → nie</td></tr>
 <tr><td>oft</td><td>часто</td><td></td></tr>
 <tr><td>manchmal</td><td>иногда</td><td></td></tr>
@@ -1918,7 +1924,7 @@ document.addEventListener('DOMContentLoaded', hydrateIcons);
 <tr><td>rechts</td><td>направо</td><td></td></tr>
 <tr><td>oben</td><td>вверху</td><td></td></tr>
 <tr><td>unten</td><td>внизу</td><td></td></tr>
-<tr><td>vor</td><td>перед</td><td>Das Fahrrad steht vor der Tür — велосипед стоит перед дверью</td></tr>
+<tr><td>vor</td><td>перед</td><td>Das Fahrrad steht vor der Tür – велосипед стоит перед дверью</td></tr>
 <tr><td>unterwegs</td><td>в пути</td><td></td></tr>
 </tbody></table>
 </div>
@@ -1931,12 +1937,12 @@ document.addEventListener('DOMContentLoaded', hydrateIcons);
 <tr><td>ein bisschen</td><td>немного</td><td></td></tr>
 <tr><td>wenig</td><td>мало</td><td>↔ viel</td></tr>
 <tr><td>mehr</td><td>больше, ещё</td><td></td></tr>
-<tr><td>nicht mehr</td><td>больше не, уже не</td><td>Ich bin nicht mehr müde — я больше не устал</td></tr>
-<tr><td>zu</td><td>слишком</td><td>zu scharf — слишком острый | zu laut — слишком громко</td></tr>
+<tr><td>nicht mehr</td><td>больше не, уже не</td><td>Ich bin nicht mehr müde – я больше не устал</td></tr>
+<tr><td>zu</td><td>слишком</td><td>zu scharf – слишком острый | zu laut – слишком громко</td></tr>
 <tr><td>nur</td><td>только</td><td>Das kostet nur 5 Euro</td></tr>
 <tr><td>besonders</td><td>особенно</td><td></td></tr>
 <tr><td>beide / beiden</td><td>оба / обоих</td><td>зависит от падежа</td></tr>
-<tr><td>pro</td><td>за / на (каждого)</td><td>pro Person — на человека | 10 € pro Stunde — 10 € в час</td></tr>
+<tr><td>pro</td><td>за / на (каждого)</td><td>pro Person – на человека | 10 € pro Stunde – 10 € в час</td></tr>
 <tr><td>leichter</td><td>легче</td><td>сравн. степень от leicht</td></tr>
 </tbody></table>
 </div>
@@ -1945,7 +1951,7 @@ document.addEventListener('DOMContentLoaded', hydrateIcons);
 <div class="section-title" data-icon="handshake">Согласие / реакции</div>
 <table><tbody>
 <tr><th>Немецкий</th><th>Перевод</th><th>Примечание</th></tr>
-<tr><td>gleichfalls</td><td>взаимно, также</td><td>Danke gleichfalls! — ответ на пожелание</td></tr>
+<tr><td>gleichfalls</td><td>взаимно, также</td><td>Danke gleichfalls! – ответ на пожелание</td></tr>
 <tr><td>ebenfalls</td><td>также, тоже</td><td>= gleichfalls, чуть формальнее</td></tr>
 <tr><td>ebenso</td><td>точно так же</td><td></td></tr>
 <tr><td>stimmt</td><td>верно, правильно</td><td>форма глагола stimmen, используется как "точно!"</td></tr>
@@ -1967,7 +1973,7 @@ document.addEventListener('DOMContentLoaded', hydrateIcons);
 <div class="section-title" data-icon="target">Прочие наречия / частицы</div>
 <table><tbody>
 <tr><th>Немецкий</th><th>Перевод</th><th>Примечание</th></tr>
-<tr><td>dabei</td><td>при этом / рядом / при деле</td><td>Ich bin dabei — я участвую / я здесь | Er schläft dabei — он при этом спит</td></tr>
+<tr><td>dabei</td><td>при этом / рядом / при деле</td><td>Ich bin dabei – я участвую / я здесь | Er schläft dabei – он при этом спит</td></tr>
 <tr><td>leider</td><td>к сожалению</td><td>Leider kann ich nicht kommen</td></tr>
 <tr><td>vielleicht</td><td>может быть</td><td></td></tr>
 <tr><td>gerne</td><td>охотно, с удовольствием</td><td>Ich mache das gerne</td></tr>
@@ -1975,7 +1981,7 @@ document.addEventListener('DOMContentLoaded', hydrateIcons);
 <tr><td>aber</td><td>но, однако</td><td>союз | Ich lerne Deutsch, aber es ist schwer.</td></tr>
 <tr><td>vom</td><td>от / из</td><td>von + dem = vom (Dativ)</td></tr>
 <tr><td>doch</td><td>же / ведь / всё-таки</td><td>усилительная частица</td></tr>
-<tr><td>Halt</td><td>типа / ну / просто</td><td>Das ist halt so — Ну, это типа так</td></tr>
+<tr><td>Halt</td><td>типа / ну / просто</td><td>Das ist halt so – Ну, это типа так</td></tr>
 </tbody></table>
 </div>
 
@@ -2017,7 +2023,7 @@ document.addEventListener('DOMContentLoaded', hydrateIcons);
 <tr><td>Sie (вежл.)</td><td>Sie</td><td>Ihnen</td></tr>
 </tbody>
 </table>
-<p style="font-size:12px;margin-top:6px" data-icon="warning">es в Dativ — <b>ihm</b>, не ihr | <b>ihr</b> = «ей» (Dativ от sie-она) и «вы» (группа, Nominativ) — два разных значения!</p>
+<p style="font-size:12px;margin-top:6px" data-icon="warning">es в Dativ – <b>ihm</b>, не ihr | <b>ihr</b> = «ей» (Dativ от sie-она) и «вы» (группа, Nominativ) – два разных значения!</p>
 </div>
 
 <div class="rule-box">
@@ -2033,8 +2039,8 @@ document.addEventListener('DOMContentLoaded', hydrateIcons);
 <tr><td>sie/Sie</td><td>sich</td><td>sich</td></tr>
 </tbody>
 </table>
-<p style="font-size:12px;margin-top:6px" data-icon="bulb">ich/du/wir/ihr — совпадают с Personalpronomen | <b>er/sie/es</b> и <b>sie/Sie</b> → всегда <b>sich</b><br>
-Akk vs Dat: <b>Ich wasche mich</b> (я моюсь — себя, Akk) | <b>Ich wasche mir die Hände</b> (я мою себе руки — кому? мне, Dat)</p>
+<p style="font-size:12px;margin-top:6px" data-icon="bulb">ich/du/wir/ihr – совпадают с Personalpronomen | <b>er/sie/es</b> и <b>sie/Sie</b> → всегда <b>sich</b><br>
+Akk vs Dat: <b>Ich wasche mich</b> (я моюсь – себя, Akk) | <b>Ich wasche mir die Hände</b> (я мою себе руки – кому? мне, Dat)</p>
 </div>
 
 <div class="section">
@@ -2072,7 +2078,7 @@ Akk vs Dat: <b>Ich wasche mich</b> (я моюсь — себя, Akk) | <b>Ich wa
 <tbody><tr><th>Немецкий</th><th>Перевод</th><th>Примечание</th></tr>
 <tr><td>der Aussagesatz</td><td>утвердительное предложение</td><td>Subj. + Verb + ... | Ich lerne Deutsch.</td></tr>
 <tr><td>der Fragesatz</td><td>вопросительное предложение</td><td>W-Frage: W-Wort + Verb | Ja/Nein: Verb + Subj.</td></tr>
-<tr><td>das Präteritum</td><td>простое прошедшее время</td><td>war, hatte — чаще письмен. речь и sein/haben/Modalverben</td></tr>
+<tr><td>das Präteritum</td><td>простое прошедшее время</td><td>war, hatte – чаще письмен. речь и sein/haben/Modalverben</td></tr>
 <tr><td>das Präsens</td><td>настоящее время</td><td>основная разговорная форма</td></tr>
 <tr><td>das Subjekt</td><td>подлежащее</td><td>отвечает на Wer? / Was? (Nominativ)</td></tr>
 <tr><td>das Objekt</td><td>дополнение</td><td>Akkusativ или Dativ</td></tr>
@@ -2107,8 +2113,8 @@ Akk vs Dat: <b>Ich wasche mich</b> (я моюсь — себя, Akk) | <b>Ich wa
 <div class="section-title">W-Fragen (вопросительные слова)</div>
 <table>
 <tbody><tr><th>Слово</th><th>Перевод</th><th>Примечание</th></tr>
-<tr><td>Wer?</td><td>Кто?</td><td>Wer ist das? — Кто это?</td></tr>
-<tr><td>Was?</td><td>Что?</td><td>Was machst du? — Что ты делаешь?</td></tr>
+<tr><td>Wer?</td><td>Кто?</td><td>Wer ist das? – Кто это?</td></tr>
+<tr><td>Was?</td><td>Что?</td><td>Was machst du? – Что ты делаешь?</td></tr>
 <tr><td>Wo?</td><td>Где?</td><td>статика (место)</td></tr>
 <tr><td>Woher?</td><td>Откуда?</td><td>Woher kommst du?</td></tr>
 <tr><td>Wohin?</td><td>Куда?</td><td>движение (направление)</td></tr>
@@ -2125,11 +2131,11 @@ Akk vs Dat: <b>Ich wasche mich</b> (я моюсь — себя, Akk) | <b>Ich wa
 <div class="panel" id="tab-rules">
 
 <div class="rule-box">
-<p style="font-weight:600;margin-bottom:8px">Possessivartikel — окончания притяжательных артиклей</p>
+<p style="font-weight:600;margin-bottom:8px">Possessivartikel – окончания притяжательных артиклей</p>
 <table style="margin-bottom:10px">
 <tr><th>Род</th><th>Артикль</th><th>Окончание</th><th>Пример (mein)</th></tr>
-<tr><td><b>m (der)</b></td><td>der</td><td>— (нет)</td><td>Das ist <b>mein</b> Kuli.</td></tr>
-<tr><td><b>n (das)</b></td><td>das</td><td>— (нет)</td><td>Das ist <b>mein</b> Buch.</td></tr>
+<tr><td><b>m (der)</b></td><td>der</td><td>– (нет)</td><td>Das ist <b>mein</b> Kuli.</td></tr>
+<tr><td><b>n (das)</b></td><td>das</td><td>– (нет)</td><td>Das ist <b>mein</b> Buch.</td></tr>
 <tr><td><b>f (die)</b></td><td>die</td><td>+<b>e</b></td><td>Das ist <b>mein<span style="color:var(--accent-red-bright)">e</span></b> Wohnung.</td></tr>
 <tr><td><b>Pl (die)</b></td><td>die</td><td>+<b>e</b></td><td>Das sind <b>mein<span style="color:var(--accent-red-bright)">e</span></b> Eltern.</td></tr>
 </table>
@@ -2137,7 +2143,7 @@ Akk vs Dat: <b>Ich wasche mich</b> (я моюсь — себя, Akk) | <b>Ich wa
 </div>
 
 <div class="section">
-<div class="section-title" data-icon="ruleset">Verbot — запрет (man darf nicht / kein)</div>
+<div class="section-title" data-icon="ruleset">Verbot – запрет (man darf nicht / kein)</div>
 <div class="rule-box">
 <p style="font-weight:600;margin-bottom:8px">Конструкция запрета через <b>man</b> (= "нельзя" / "не разрешается"):</p>
 <table style="margin-bottom:10px">
@@ -2145,12 +2151,12 @@ Akk vs Dat: <b>Ich wasche mich</b> (я моюсь — себя, Akk) | <b>Ich wa
 <tr><td>Man darf nicht + Verb</td><td>Man darf nicht grillen.</td><td>Здесь нельзя жарить на гриле.</td></tr>
 <tr><td>Man darf kein + Nomen</td><td>Man darf keine Haustiere haben.</td><td>Нельзя держать домашних животных.</td></tr>
 </table>
-<p style="font-size:12px" data-icon="bulb"><b>nicht</b> — отрицает действие | <b>kein/keine</b> — отрицает существительное<br><span data-icon="bulb"></span> <b>man</b> — безличное местоимение (= "нельзя / не разрешается" — без конкретного лица)</p>
+<p style="font-size:12px" data-icon="bulb"><b>nicht</b> – отрицает действие | <b>kein/keine</b> – отрицает существительное<br><span data-icon="bulb"></span> <b>man</b> – безличное местоимение (= "нельзя / не разрешается" – без конкретного лица)</p>
 </div>
 </div>
 
 <div class="section">
-<div class="section-title">sein vs haben — когда что использовать</div>
+<div class="section-title">sein vs haben – когда что использовать</div>
 <div class="rule-box">
 <table style="margin-bottom:10px">
 <tr><th>Глагол</th><th>Используется с</th><th>Пример</th></tr>
@@ -2166,7 +2172,7 @@ Akk vs Dat: <b>Ich wasche mich</b> (я моюсь — себя, Akk) | <b>Ich wa
 <div class="rule-box">
 <div class="two-col">
 <div>
-<p style="font-weight:600;margin-bottom:6px">sein — быть</p>
+<p style="font-weight:600;margin-bottom:6px">sein – быть</p>
 <table class="conj-table"><tbody>
 <tr><td>ich</td><td>war</td></tr><tr><td>du</td><td>warst</td></tr>
 <tr><td>er/sie/es</td><td>war</td></tr><tr><td>wir</td><td>waren</td></tr>
@@ -2174,7 +2180,7 @@ Akk vs Dat: <b>Ich wasche mich</b> (я моюсь — себя, Akk) | <b>Ich wa
 </tbody></table>
 </div>
 <div>
-<p style="font-weight:600;margin-bottom:6px">haben — иметь</p>
+<p style="font-weight:600;margin-bottom:6px">haben – иметь</p>
 <table class="conj-table"><tbody>
 <tr><td>ich</td><td>hatte</td></tr><tr><td>du</td><td>hattest</td></tr>
 <tr><td>er/sie/es</td><td>hatte</td></tr><tr><td>wir</td><td>hatten</td></tr>
@@ -2182,12 +2188,12 @@ Akk vs Dat: <b>Ich wasche mich</b> (я моюсь — себя, Akk) | <b>Ich wa
 </tbody></table>
 </div>
 </div>
-<p style="font-size:12px;margin-top:10px" data-icon="bulb">Wie war das Treffen? — Das Treffen <b>war</b> toll! / Wir <b>hatten</b> viel Spaß!</p>
+<p style="font-size:12px;margin-top:10px" data-icon="bulb">Wie war das Treffen? – Das Treffen <b>war</b> toll! / Wir <b>hatten</b> viel Spaß!</p>
 </div>
 </div>
 
 <div class="section">
-<div class="section-title">wissen vs kennen — в чём разница?</div>
+<div class="section-title">wissen vs kennen – в чём разница?</div>
 <div class="rule-box">
 <table style="margin-bottom:10px">
 <tr><th>Глагол</th><th>Когда используется</th><th>Пример</th></tr>
@@ -2207,7 +2213,7 @@ Akk vs Dat: <b>Ich wasche mich</b> (я моюсь — себя, Akk) | <b>Ich wa
 </div>
 
 <div class="section">
-<div class="section-title">sich — возвратное местоимение</div>
+<div class="section-title">sich – возвратное местоимение</div>
 <div class="rule-box">
 <p style="font-size:13px;margin-bottom:10px"><b>sich</b> = себя / себе. Используется в возвратных глаголах, когда действие направлено на самого субъекта.</p>
 <table>
@@ -2392,36 +2398,36 @@ m/n → mein/sein/ihr &nbsp;|&nbsp; f/Pl → meine/seine/ihre
 </div>
 
 <div class="section">
-<div class="section-title">Wohin? — направление + Präposition <b>in</b> + Akkusativ</div>
+<div class="section-title">Wohin? – направление + Präposition <b>in</b> + Akkusativ</div>
 <div class="rule-box">
-<p style="font-size:13px;margin-bottom:10px"><b>Wohin?</b> (куда?) — вопрос о направлении движения. Используется <b>in + Akkusativ</b>.</p>
+<p style="font-size:13px;margin-bottom:10px"><b>Wohin?</b> (куда?) – вопрос о направлении движения. Используется <b>in + Akkusativ</b>.</p>
 <table>
 <tr><th>Артикль</th><th>+ in</th><th>Пример</th></tr>
-<tr><td>der (m)</td><td>in <b>den</b></td><td>Ich gehe <b>in den Park</b> — иду в парк</td></tr>
-<tr><td>das (n)</td><td>in <b>das</b> = <b>ins</b></td><td>Ich gehe <b>ins Kino</b> — иду в кино</td></tr>
-<tr><td>die (f)</td><td>in <b>die</b></td><td>Ich gehe <b>in die Kneipe</b> — иду в паб</td></tr>
+<tr><td>der (m)</td><td>in <b>den</b></td><td>Ich gehe <b>in den Park</b> – иду в парк</td></tr>
+<tr><td>das (n)</td><td>in <b>das</b> = <b>ins</b></td><td>Ich gehe <b>ins Kino</b> – иду в кино</td></tr>
+<tr><td>die (f)</td><td>in <b>die</b></td><td>Ich gehe <b>in die Kneipe</b> – иду в паб</td></tr>
 </table>
-<p style="font-size:12px;margin-top:8px" data-icon="bulb"><b>in + das = ins</b> (слитная форма) | <b>in + dem = im</b> (для Wo? — где?)<br><span data-icon="warning"></span> Различай: <b>Wohin?</b> → Akkusativ (in den, ins, in die) | <b>Wo?</b> → Dativ (im, im, in der)</p>
+<p style="font-size:12px;margin-top:8px" data-icon="bulb"><b>in + das = ins</b> (слитная форма) | <b>in + dem = im</b> (для Wo? – где?)<br><span data-icon="warning"></span> Различай: <b>Wohin?</b> → Akkusativ (in den, ins, in die) | <b>Wo?</b> → Dativ (im, im, in der)</p>
 </div>
 </div>
 
 <div class="section">
-<div class="section-title">sollen vs müssen — два «должен»</div>
+<div class="section-title">sollen vs müssen – два «должен»</div>
 <div class="rule-box">
 <table>
 <tr><th></th><th>sollen</th><th>müssen</th></tr>
-<tr><td>Источник</td><td>внешний — кто-то сказал / так положено</td><td>внутренний / объективный — сам так решил или иначе нельзя</td></tr>
+<tr><td>Источник</td><td>внешний – кто-то сказал / так положено</td><td>внутренний / объективный – сам так решил или иначе нельзя</td></tr>
 <tr><td>Пример</td><td>Du <b>sollst</b> nicht rauchen<br>(тебе говорят, что нельзя)</td><td>Ich <b>muss</b> schlafen<br>(сам устал, надо)</td></tr>
 <tr><td>Ещё</td><td>Ich <b>soll</b> Milch kaufen<br>(мама попросила)</td><td>Ich <b>muss</b> Milch kaufen<br>(дома кончилось)</td></tr>
 </table>
-<p style="font-size:12px;margin-top:8px" data-icon="bulb">Грубо: <b>sollen</b> — «надо для кого-то» | <b>müssen</b> — «надо мне / по сути»</p>
+<p style="font-size:12px;margin-top:8px" data-icon="bulb">Грубо: <b>sollen</b> – «надо для кого-то» | <b>müssen</b> – «надо мне / по сути»</p>
 </div>
 </div>
 
 <div class="section">
 <div class="section-title">Склонение прилагательных перед существительным</div>
 <div class="rule-box">
-<p style="font-size:13px;margin-bottom:10px">Прилагательное в словаре стоит <b>без окончания</b> (groß, schön, nächst, gut). Но <b>перед существительным</b> оно ВСЕГДА получает окончание — зависит от рода, числа и падежа.</p>
+<p style="font-size:13px;margin-bottom:10px">Прилагательное в словаре стоит <b>без окончания</b> (groß, schön, nächst, gut). Но <b>перед существительным</b> оно ВСЕГДА получает окончание – зависит от рода, числа и падежа.</p>
 
 <p style="font-size:13px;font-weight:600;margin:10px 0 6px" data-icon="pin">Две позиции прилагательного:</p>
 <table style="margin-bottom:12px">
@@ -2446,7 +2452,7 @@ m/n → mein/sein/ihr &nbsp;|&nbsp; f/Pl → meine/seine/ihre
 <tr><td>n, Nom/Akk</td><td>nächst<b>es</b> Jahr</td><td>следующий год</td></tr>
 <tr><td>Dat (любой род)</td><td>im nächst<b>en</b> Jahr</td><td>в следующем году</td></tr>
 </table>
-<p style="font-size:12px;margin-top:8px" data-icon="bulb">Простое правило: <b>в Dativ всегда -en</b> | в Akk у m-рода тоже <b>-en</b> | остальное обычно <b>-e</b><br><span data-icon="warning"></span> Без артикля (неопределённый/нулевой) — окончания немного другие. Это уровень A2+, пока запомни базовый случай.</p>
+<p style="font-size:12px;margin-top:8px" data-icon="bulb">Простое правило: <b>в Dativ всегда -en</b> | в Akk у m-рода тоже <b>-en</b> | остальное обычно <b>-e</b><br><span data-icon="warning"></span> Без артикля (неопределённый/нулевой) – окончания немного другие. Это уровень A2+, пока запомни базовый случай.</p>
 </div>
 </div>
 
@@ -2559,13 +2565,13 @@ m/n → mein/sein/ihr &nbsp;|&nbsp; f/Pl → meine/seine/ihre
 <tr><th>Немецкий</th><th>Артикль</th><th>Перевод / Примечание</th></tr>
 <tr><td>der Anrufbeantworter</td><td><span class="badge m">m</span></td><td>автоответчик | Anruf (звонок) + beantworten (отвечать) | разговорно: AB</td></tr>
 <tr><td>die Kantine</td><td><span class="badge f">f</span></td><td>столовая (на работе/в школе) | Pl: die Kantinen | in der Kantine essen</td></tr>
-<tr><td>die Anrede</td><td><span class="badge f">f</span></td><td>обращение (в письме/речи) | an + Rede (речь) | Sehr geehrte Damen und Herren — формальная Anrede</td></tr>
-<tr><td>der Gruß</td><td><span class="badge m">m</span></td><td>приветствие / поклон | Pl: die Grüße | Liebe Grüße (LG) — с приветом, в конце письма | Viele Grüße — много приветов</td></tr>
-<tr><td>der Teilnehmer</td><td><span class="badge m">m</span></td><td>участник | <b>teil</b> (часть) + <b>Nehmer</b> (берущий, от nehmen — брать) | f: die Teilnehmerin | Pl: die Teilnehmer</td></tr>
+<tr><td>die Anrede</td><td><span class="badge f">f</span></td><td>обращение (в письме/речи) | an + Rede (речь) | Sehr geehrte Damen und Herren – формальная Anrede</td></tr>
+<tr><td>der Gruß</td><td><span class="badge m">m</span></td><td>приветствие / поклон | Pl: die Grüße | Liebe Grüße (LG) – с приветом, в конце письма | Viele Grüße – много приветов</td></tr>
+<tr><td>der Teilnehmer</td><td><span class="badge m">m</span></td><td>участник | <b>teil</b> (часть) + <b>Nehmer</b> (берущий, от nehmen – брать) | f: die Teilnehmerin | Pl: die Teilnehmer</td></tr>
 <tr><td>der Mitarbeiter</td><td><span class="badge m">m</span></td><td>сотрудник | <b>mit</b> (с) + <b>Arbeiter</b> (работник, от arbeiten) = «совместный работник» | f: die Mitarbeiterin | Pl: die Mitarbeiter</td></tr>
-<tr><td>das Angebot</td><td><span class="badge n">n</span></td><td>предложение (товар/услуга) / акция | от <b>anbieten</b> (предлагать) | Pl: die Angebote | im Angebot — по акции</td></tr>
-<tr><td>die Sache</td><td><span class="badge f">f</span></td><td>вещь / дело | Pl: die Sachen | meine Sachen — мои вещи | Das ist meine Sache — это моё дело</td></tr>
-<tr><td>die Kunst</td><td><span class="badge f">f</span></td><td>искусство | Pl: die Künste | <b>Künstler</b> — художник/артист | <b>künstlich</b> — искусственный</td></tr>
+<tr><td>das Angebot</td><td><span class="badge n">n</span></td><td>предложение (товар/услуга) / акция | от <b>anbieten</b> (предлагать) | Pl: die Angebote | im Angebot – по акции</td></tr>
+<tr><td>die Sache</td><td><span class="badge f">f</span></td><td>вещь / дело | Pl: die Sachen | meine Sachen – мои вещи | Das ist meine Sache – это моё дело</td></tr>
+<tr><td>die Kunst</td><td><span class="badge f">f</span></td><td>искусство | Pl: die Künste | <b>Künstler</b> – художник/артист | <b>künstlich</b> – искусственный</td></tr>
 <tr><td>die Ausstellung</td><td><span class="badge f">f</span></td><td>выставка | от <b>ausstellen</b> (выставлять) | aus (наружу) + stellen (ставить) | -ung всегда die</td></tr>
 <tr><td>die Sonderausstellung</td><td><span class="badge f">f</span></td><td>спец-выставка / временная выставка | <b>Sonder-</b> (особый / специальный) + <b>Ausstellung</b> (выставка)</td></tr>
 </tbody></table>
@@ -2574,25 +2580,25 @@ m/n → mein/sein/ihr &nbsp;|&nbsp; f/Pl → meine/seine/ihre
 <div class="section-title" data-icon="bolt">Глаголы</div>
 <table><tbody>
 <tr><th>Немецкий</th><th>Перевод</th><th>Примечание</th></tr>
-<tr><td>kreuzen</td><td>отметить крестиком / пересекать</td><td>от <b>das Kreuz</b> (крест) | <b>ankreuzen</b> — отметить крестиком в тесте/анкете (отделяемая: an-)</td></tr>
-<tr><td>teilnehmen</td><td>участвовать</td><td>отделяемая: teil- | <b>teil</b> (часть) + <b>nehmen</b> (брать) — буквально «брать часть» | teilnehmen <b>an</b> + Dat | Ich nehme an dem Kurs teil</td></tr>
-<tr><td>laden</td><td>1) грузить, заряжать 2) приглашать</td><td>Unregelmäßig (a→ä): du lädst, er lädt | das Handy laden — зарядить телефон | jdn zum Essen laden — пригласить кого-то на ужин | приставочные: <b>einladen</b> (приглашать), <b>aufladen</b> (заряжать), <b>herunterladen</b> (скачивать)</td></tr>
+<tr><td>kreuzen</td><td>отметить крестиком / пересекать</td><td>от <b>das Kreuz</b> (крест) | <b>ankreuzen</b> – отметить крестиком в тесте/анкете (отделяемая: an-)</td></tr>
+<tr><td>teilnehmen</td><td>участвовать</td><td>отделяемая: teil- | <b>teil</b> (часть) + <b>nehmen</b> (брать) – буквально «брать часть» | teilnehmen <b>an</b> + Dat | Ich nehme an dem Kurs teil</td></tr>
+<tr><td>laden</td><td>1) грузить, заряжать 2) приглашать</td><td>Unregelmäßig (a→ä): du lädst, er lädt | das Handy laden – зарядить телефон | jdn zum Essen laden – пригласить кого-то на ужин | приставочные: <b>einladen</b> (приглашать), <b>aufladen</b> (заряжать), <b>herunterladen</b> (скачивать)</td></tr>
 </tbody></table>
 </div>
 <div class="section">
 <div class="section-title" data-icon="palette">Прилагательные / Наречия</div>
 <table><tbody>
 <tr><th>Немецкий</th><th>Перевод</th><th>Примечание</th></tr>
-<tr><td>herzlich</td><td>сердечный / искренний / тёплый</td><td>от <b>das Herz</b> (сердце) + <b>-lich</b> | herzlich willkommen — добро пожаловать (букв. «сердечно приветствуем») | herzliche Grüße — сердечный привет</td></tr>
-<tr><td>willkommen</td><td>добро пожаловать / желанный</td><td>Willkommen in Berlin! | Herzlich willkommen! — стандартное приветствие | jemanden willkommen heißen — приветствовать кого-то</td></tr>
-<tr><td>täglich</td><td>ежедневный / ежедневно</td><td>от <b>Tag</b> (день) + <b>-lich</b> | täglich geöffnet — открыто ежедневно | dreimal täglich — три раза в день</td></tr>
-<tr><td>direkt</td><td>прямой / прямо / напрямую</td><td>direkt aus Frankfurt — прямо из Франкфурта (⚠ aus, не von — для городов) | direkt vor dem Haus — прямо перед домом</td></tr>
+<tr><td>herzlich</td><td>сердечный / искренний / тёплый</td><td>от <b>das Herz</b> (сердце) + <b>-lich</b> | herzlich willkommen – добро пожаловать (букв. «сердечно приветствуем») | herzliche Grüße – сердечный привет</td></tr>
+<tr><td>willkommen</td><td>добро пожаловать / желанный</td><td>Willkommen in Berlin! | Herzlich willkommen! – стандартное приветствие | jemanden willkommen heißen – приветствовать кого-то</td></tr>
+<tr><td>täglich</td><td>ежедневный / ежедневно</td><td>от <b>Tag</b> (день) + <b>-lich</b> | täglich geöffnet – открыто ежедневно | dreimal täglich – три раза в день</td></tr>
+<tr><td>direkt</td><td>прямой / прямо / напрямую</td><td>direkt aus Frankfurt – прямо из Франкфурта (⚠ aus, не von – для городов) | direkt vor dem Haus – прямо перед домом</td></tr>
 </tbody></table>
 </div>
 <div class="section">
 <div class="section-title" data-icon="ruleset">Правила</div>
 <div class="rule-box">
-<h3>Суффикс <b>-lich</b> — образование прилагательных</h3>
+<h3>Суффикс <b>-lich</b> – образование прилагательных</h3>
 <p style="font-size:13px;margin-bottom:10px">Суффикс <b>-lich</b> превращает существительное в прилагательное со значением «относящийся к / похожий на». Похож на русский суффикс «-ный».</p>
 <table>
 <tr><th>Существительное</th><th>+ -lich</th><th>Перевод</th></tr>
@@ -2935,7 +2941,7 @@ document.addEventListener('click', function(e) {
       else if ((' ' + np).includes(' ' + q)) score = 600; // совпадает со словом в primary
       else if (np.includes(q)) score = 400;               // primary содержит подстроку
       else score = 200;                                   // только в secondary/note
-      score -= e.primary.length * 0.5;                    // более короткие — выше
+      score -= e.primary.length * 0.5;                    // более короткие – выше
       scored.push({ entry: e, score: score });
     }
 
@@ -3005,7 +3011,7 @@ document.addEventListener('click', function(e) {
         const h3 = box.querySelector('h3');
         if (!h3) continue;
         // h3 содержит "verbname — перевод"
-        const h3text = norm(h3.textContent.split('—')[0].trim());
+        const h3text = norm(h3.textContent.split('–')[0].trim());
         if (h3text === target) return box;
       }
     }
@@ -3065,7 +3071,7 @@ document.addEventListener('click', function(e) {
     top.forEach((e, i) => {
       const icon = ic(ICONS[e.kind]) || '•';
       const secText = (e.item && e.item.ru != null) ? wordText(e.item) : e.secondary;
-      const sec = secText ? ' <span class="sr-secondary">— ' + escHtml(secText) + '</span>' : '';
+      const sec = secText ? ' <span class="sr-secondary">– ' + escHtml(secText) + '</span>' : '';
       html += '<div class="search-result" data-idx="' + i + '" role="option">'
             + '<span class="sr-icon">' + icon + '</span>'
             + '<span class="sr-kind">' + e.kind + ':</span>'
@@ -3203,7 +3209,7 @@ document.addEventListener('click', function(e) {
 
 (function() {
   if (typeof VOCAB === 'undefined') {
-    console.warn('data.js не загружен — рендер справочника пропущен');
+    console.warn('data.js не загружен – рендер справочника пропущен');
     return;
   }
 
@@ -3236,7 +3242,15 @@ document.addEventListener('click', function(e) {
 
   // ─── Рендер строки глагола с Partizip II ────────────────────────────────
   function renderVerbRow(item) {
-    return '<tr data-vid="' + escHtml(item.id) + '"><td>' + escHtml(item.de) + '</td>'
+    // Управление идёт второй строкой в первой ячейке: оно часть словарной формы,
+    // а не отдельные данные. Колонок по-прежнему три — на телефоне таблица не едет.
+    const gov = (item.prep || []).map((p, i) =>
+      '<b>' + escHtml(p) + '</b> + ' + escHtml((item.prepCase || [])[i] || '') + '.'
+    ).join(' · ');
+    return '<tr data-vid="' + escHtml(item.id) + '">'
+         + '<td><div class="voc-de">' + escHtml(item.de) + '</div>'
+         + (gov ? '<div class="voc-gov">' + gov + '</div>' : '')
+         + '</td>'
          + '<td>' + escHtml(wordText(item)) + '</td>'
          + '<td>' + escHtml(wordField(item, 'note', 'noteEn')) + '</td></tr>';
   }
@@ -3305,7 +3319,7 @@ document.addEventListener('click', function(e) {
     for (const item of items) {
       if (seen[item.id]) continue;
       seen[item.id] = true;
-      const lvl = LEVEL_ORDER.includes(item.level) ? item.level : '—';
+      const lvl = LEVEL_ORDER.includes(item.level) ? item.level : '–';
       (groups[lvl] = groups[lvl] || []).push(item);
     }
     return groups;
@@ -3327,7 +3341,7 @@ document.addEventListener('click', function(e) {
       const groups = groupByLevel(srcItems);
       let core = LEVEL_ORDER.filter(l => groups[l]);
       if (mode === 'level-desc') core = core.slice().reverse();
-      const order = core.concat(groups['—'] ? ['—'] : []);
+      const order = core.concat(groups['–'] ? ['–'] : []);
       if (order.length === 0) return '';
 
       return order.map(lvl => {
@@ -3545,7 +3559,7 @@ document.addEventListener('click', function(e) {
       const vidAttr = vid ? ' data-vid="' + escHtml(vid) + '"' : '';
       const modalTag = c.modal ? ' <span style="background:var(--c-modal-tag-bg);padding:2px 8px;border-radius:6px;font-size:12px;color:var(--c-modal-tag-fg)">Modalverb</span>' : '';
       html += '<div class="rule-box conj-card"' + vidAttr + ' style="cursor:' + (vid ? 'pointer' : 'default') + '"><h3>' + escHtml(c.verb)
-            + (c.ru ? ' — ' + escHtml(wordText(c)) : '') + modalTag + '</h3>'
+            + (c.ru ? ' – ' + escHtml(wordText(c)) : '') + modalTag + '</h3>'
             + '<table class="conj-table"><tbody>';
       for (let i = 0; i < c.pronouns.length; i++) {
         html += '<tr><td>' + escHtml(c.pronouns[i]) + '</td>'
@@ -3585,8 +3599,8 @@ document.addEventListener('click', function(e) {
     html += '<p style="text-align:center;font-size:18px;margin:14px 0;padding:10px;background:var(--bg-th);border-radius:8px">'
           + '<b>haben</b> ' + t('perfekt.or') + ' <b style="color:var(--accent-red)">sein</b> (' + t('perfekt.in_praesens') + ') + <b>Partizip II</b></p>';
     html += '<p style="font-size:13px"><b>' + t('perfekt.example_label') + '</b><br>'
-          + 'Ich <b>habe</b> ein Buch <b>gelesen</b>. — ' + t('perfekt.ex1_ru') + '<br>'
-          + 'Wir <b style="color:var(--accent-red)">sind</b> nach Berlin <b>gefahren</b>. — ' + t('perfekt.ex2_ru') + '</p>';
+          + 'Ich <b>habe</b> ein Buch <b>gelesen</b>. – ' + t('perfekt.ex1_ru') + '<br>'
+          + 'Wir <b style="color:var(--accent-red)">sind</b> nach Berlin <b>gefahren</b>. – ' + t('perfekt.ex2_ru') + '</p>';
     html += '</div></div>';
 
     // ─── Правило 2: Когда haben, когда sein ──────────────────────────────
@@ -3647,7 +3661,7 @@ document.addEventListener('click', function(e) {
         }
       }
       html += '<div class="section">';
-      html += '<div class="section-title">' + ic('clipboard') + ' Unregelmäßig — ' + t('perfekt.unregel_table_title') + '</div>';
+      html += '<div class="section-title">' + ic('clipboard') + ' Unregelmäßig – ' + t('perfekt.unregel_table_title') + '</div>';
       html += '<table style="width:100%"><thead><tr>'
             + '<th style="text-align:left;padding:6px 10px">Infinitiv</th>'
             + '<th style="text-align:left;padding:6px 10px">' + t('cheatsheet.th_translation') + '</th>'
@@ -3906,6 +3920,9 @@ document.addEventListener('click', function(e) {
   const HIDDEN_FIELDS = new Set([
     "id", "de", "ru", "en", "pos", "topics", "domen", "group",
     "new", "quizUse", "strictOrder", "ruForms", "ruNoForms", "noRuForms", "meanings",
+    // управление собирается отдельной строкой ниже, а не общим циклом:
+    // иначе разъедется на prep и prepCase с сырыми подписями
+    "prep", "prepCase",
     // *En-поля показываются не отдельной строкой, а подменяют значение
     // своей ru-пары в EN_FIELD_PAIRS ниже — сюда, чтобы цикл их не дублировал
     "altEn", "noteEn", "warningEn", "exampleEn"
@@ -3939,7 +3956,7 @@ document.addEventListener('click', function(e) {
       if (SKIP_IN_LOOP.has(key)) continue;
       let val = EN_FIELD_PAIRS[key] ? wordField(v, key, EN_FIELD_PAIRS[key]) : v[key];
       if (val === null || val === undefined || val === '') continue;
-      if (typeof val === 'boolean') val = val ? 'ja' : '—';
+      if (typeof val === 'boolean') val = val ? 'ja' : '–';
       if (Array.isArray(val)) val = val.join(', ');
       const label = FIELD_LABELS[key] || key;
       lines.push('<div class="modal-row"><span class="modal-label">' + escHtml(label) + ':</span><span class="modal-value">' + escHtml(String(val)) + '</span></div>');
@@ -3953,6 +3970,17 @@ document.addEventListener('click', function(e) {
         + '<span class="modal-value" style="font-style:italic">' + escHtml(v.exampleDe) + '</span>'
         + (exampleRuText ? '<span class="modal-value" style="color:var(--text-muted);font-size:12px">' + escHtml(exampleRuText) + '</span>' : '')
         + '</div>');
+    }
+
+    // Управление глагола — одной строкой, как и в таблице словаря.
+    if (v.prep && v.prep.length) {
+      const gov = v.prep.map(function (p, i) {
+        return '<b>' + escHtml(p) + '</b> <span class="modal-kasus">+ '
+             + escHtml((v.prepCase || [])[i] || '') + '.</span>';
+      }).join(' · ');
+      lines.push('<div class="modal-row"><span class="modal-label">'
+        + window.t('cheatsheet.gov_label') + '</span><span class="modal-value">'
+        + gov + '</span></div>');
     }
 
     // Спряжение (только для глаголов)
@@ -3986,7 +4014,7 @@ document.addEventListener('click', function(e) {
         lines.push(table);
       } else {
         // Нет данных — показываем заглушку
-        lines.push('<div class="modal-row"><span class="modal-label">Спряжение:</span><span class="modal-value" style="color:var(--text-muted)">— нет данных</span></div>');
+        lines.push('<div class="modal-row"><span class="modal-label">Спряжение:</span><span class="modal-value" style="color:var(--text-muted)">– нет данных</span></div>');
       }
     }
 

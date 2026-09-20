@@ -1,18 +1,18 @@
 <!DOCTYPE html>
 <html lang="ru">
 <head>
-<!-- CACHE_VERSION: 20260918 — правь дату только тут, pre-commit hook сам разносит её по всем ?v= во всех html-файлах -->
+<!-- CACHE_VERSION: 20260920 — правь дату только тут, pre-commit hook сам разносит её по всем ?v= во всех html-файлах -->
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Deutsch Tools — Справочник и тренажёр по немецкому</title>
+<title>Deutsch Tools – Справочник и тренажёр по немецкому</title>
 <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🇩🇪</text></svg>">
-<meta property="og:title" content="Deutsch Tools — Справочник и тренажёр по немецкому">
+<meta property="og:title" content="Deutsch Tools – Справочник и тренажёр по немецкому">
 <meta property="og:description" content="Бесплатные инструменты для изучения немецкого: справочник и тренажёр">
 <meta property="og:type" content="website">
-<link rel="stylesheet" href="theme.css?v=20260918">
-<script src="i18n/ru.js?v=20260918"></script>
-<script src="i18n/en.js?v=20260918"></script>
-<script src="i18n/i18n.js?v=20260918"></script>
+<link rel="stylesheet" href="theme.css?v=20260920">
+<script src="i18n/ru.js?v=20260920"></script>
+<script src="i18n/en.js?v=20260920"></script>
+<script src="i18n/i18n.js?v=20260920"></script>
 <style>
 html, body {
   margin: 0; padding: 0;
@@ -413,7 +413,7 @@ h1 {
   margin-bottom: 4px;
 }
 .changelog-items li::before {
-  content: "—";
+  content: "–";
   position: absolute;
   left: 0;
   color: var(--text-muted);
@@ -600,7 +600,7 @@ h1 {
       </div>
     </div>
     <div class="dt-footer__meta">
-      <span id="footer-update">Update: — · открытый проект</span>
+      <span id="footer-update">Update: – · открытый проект</span>
       <a href="https://github.com/r4-studio/deutsch-tools" target="_blank">
         <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2a10 10 0 0 0-3.16 19.5c.5.1.68-.22.68-.48v-1.7c-2.78.6-3.37-1.34-3.37-1.34-.46-1.16-1.11-1.47-1.11-1.47-.9-.62.07-.6.07-.6 1 .07 1.53 1.03 1.53 1.03.9 1.52 2.34 1.08 2.91.83.09-.65.35-1.08.63-1.33-2.22-.25-4.56-1.11-4.56-4.94 0-1.09.39-1.98 1.03-2.68-.1-.25-.45-1.27.1-2.65 0 0 .84-.27 2.75 1.02a9.6 9.6 0 0 1 5 0c1.91-1.29 2.75-1.02 2.75-1.02.55 1.38.2 2.4.1 2.65.64.7 1.03 1.59 1.03 2.68 0 3.84-2.34 4.68-4.57 4.93.36.31.68.92.68 1.85v2.74c0 .27.18.58.69.48A10 10 0 0 0 12 2Z"/></svg>
         GitHub
@@ -651,7 +651,7 @@ if (window.matchMedia) {
 applyThemeIcon(localStorage.getItem('theme') || 'auto');
 
 // ─── Заглушка "Появится позже" (донат, соцсети, профиль/установка/FAQ/о проекте/обратная связь) ──
-var SITE_VERSION = 'v68';
+var SITE_VERSION = 'v5.2 beta';
 function showStub(msg) {
   var el = document.getElementById('dt-toast');
   el.textContent = msg || t('toast.default');
@@ -779,7 +779,7 @@ document.addEventListener('keydown', function(ev) {
 function renderFooterUpdate() {
   var footerUpdate = document.getElementById('footer-update');
   if (!footerUpdate) return;
-  var dateStr = CHANGELOG.length ? formatDate(CHANGELOG[0].date) : '—';
+  var dateStr = CHANGELOG.length ? formatDate(CHANGELOG[0].date) : '–';
   footerUpdate.textContent = t('footer.update_label') + ' ' + dateStr + ' - ' + SITE_VERSION + ' · ' + t('footer.open_project');
 }
 
@@ -793,7 +793,7 @@ function renderFooterUpdate() {
     updateDot();
     renderFooterUpdate();
   };
-  s.onerror = function() { /* нет файла — без точки, без модалки */ };
+  s.onerror = function() { /* нет файла – без точки, без модалки */ };
   document.head.appendChild(s);
 })();
 

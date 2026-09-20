@@ -2947,6 +2947,10 @@ def process_verbs(rows, warn):
         # ── VOCAB-запись глагола (все поля схемы verbs) ──
         vi = {"de": verb}
         vi.update(apply_schema_verb(r))
+        preps, cases = collect_prep(r, verb, warn)
+        if preps:
+            vi["prep"] = preps
+            vi["prepCase"] = cases
         vi["pos"] = "verb"
         attach_common(vi, r, "verb")
         vocab_items.append(vi)
@@ -3027,6 +3031,43 @@ VERB_VOCAB_SCHEMA = [
     # в xlsx — тогда r.get() вернёт None и признак просто не проставится.
     ("no_ru_forms", "noRuForms", "bool"),
 ]
+# Управление глагола: предлог + падеж. В xlsx лежит парами (prep1/prep1_case,
+# prep2/prep2_case) — так удобнее заполнять руками. В data.js склеивается в два
+# параллельных массива, чтобы карточка рисовала строки циклом и не зависела от
+# того, сколько управлений у глагола: одно, два или потом три.
+PREP_CASE_ALIASES = {
+    "akk": "Akk", "akkusativ": "Akk",
+    "dat": "Dat", "dativ": "Dat",
+    "gen": "Gen", "genitiv": "Gen",
+}
+
+def collect_prep(r, verb, warn):
+    preps, cases = [], []
+    i = 1
+    while True:
+        p = clean(r.get(f"prep{i}"))
+        c = clean(r.get(f"prep{i}_case"))
+        if p is None and c is None:
+            # колонок с таким номером в листе нет вовсе — дальше не идём
+            if f"prep{i}" not in r: break
+            i += 1
+            if i > 5: break
+            continue
+        if p and not c:
+            warn.append(f"verbs: «{verb}» — prep{i}={p} без падежа")
+        elif c and not p:
+            warn.append(f"verbs: «{verb}» — prep{i}_case={c} без предлога")
+        elif p and c:
+            norm = PREP_CASE_ALIASES.get(c.strip().lower())
+            if not norm:
+                warn.append(f"verbs: «{verb}» — непонятный падеж prep{i}_case={c!r} (нужно Akk/Dat/Gen)")
+            else:
+                preps.append(p.strip().lower())
+                cases.append(norm)
+        i += 1
+        if i > 5: break
+    return preps, cases
+
 def apply_schema_verb(r):
     out = {}
     for col, key, kind in VERB_VOCAB_SCHEMA:
@@ -3648,6 +3689,7 @@ if __name__ == '__main__':
                   "comparative", "superlative", "antonym", "derivedFrom",
                   "kind", "case", "digit", "transcription", "context",
                   "type", "modal", "separable", "prefix", "reflexive", "impersonal",
+                  "prep", "prepCase",
                   "aux", "partizip2", "praeteritum", "ruForms", "ruNoForms",
                   "priority", "source", "exampleDe", "exampleRu", "exampleEn", "quizUse",
                   "strictOrder", "warning", "warningEn", "label"]
