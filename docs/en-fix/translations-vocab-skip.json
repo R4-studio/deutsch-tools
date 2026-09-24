@@ -19,6 +19,18 @@
     ]
   },
   "VOCAB": {
+    "a0328": {
+      "de": "entschieden",
+      "en": "resolute",
+      "altEn": "firm",
+      "altEnSource": "manual",
+      "source": "manual"
+    },
+    "a0330": {
+      "de": "stellensuchend",
+      "en": "job-seeking",
+      "source": "manual"
+    },
     "a0045": {
       "de": "einfach",
       "altEn": "easy",
@@ -839,6 +851,16 @@
       "en": "dry cleaner's",
       "source": "manual"
     },
+    "n1375": {
+      "de": "Personalausweis",
+      "en": "identity card",
+      "source": "manual"
+    },
+    "n1391": {
+      "de": "Sekretär",
+      "en": "secretary",
+      "source": "manual"
+    },
     "p0014": {
       "de": "jeder",
       "en": "every",
@@ -1287,6 +1309,11 @@
     "v0451": {
       "de": "basteln",
       "en": "to do crafts",
+      "source": "manual"
+    },
+    "v0508": {
+      "de": "festigen",
+      "en": "to strengthen",
       "source": "manual"
     }
   }
