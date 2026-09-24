@@ -1,5 +1,32 @@
 window.CHANGELOG = [
   {
+    "date": "2026-09-24",
+    "title": "Карточки, пустые разделы и мелочи в тренажёре",
+    "items": [
+      "Карточки слова перестроены: сначала само слово, потом перевод с формами, потом примеры и заметки",
+      "Третья карточка не показывается, если у слова нет ни примеров, ни заметки – и точка под стопкой тоже пропадает",
+      "Листание стопки стало быстрее и ровнее",
+      "Пустые темы и блоки больше не показываются в списках – а если всё же попал в пустой раздел, оттуда теперь можно выйти",
+      "Слова вроде der/die Bekannte показывают оба рода сразу",
+      "Модальным глаголам вернулась пометка Modalverb",
+      "В тесте следующий вопрос больше не открывается с подсвеченным вариантом, который ты не выбирал",
+      "Нажатие на карточку успевает отработать до смены экрана",
+      "Уточнены переводы: разведены пары, которые переводились одинаково и ломали проверку ответа"
+    ],
+    "titleEn": "Word cards, empty sections and trainer fixes",
+    "itemsEn": [
+      "Word cards rearranged: the word itself first, then the translation with forms, then examples and notes",
+      "The third card is skipped when a word has neither examples nor a note – and its dot disappears with it",
+      "Flipping through the stack is faster and smoother",
+      "Empty topics and blocks are no longer listed – and if you do land in an empty section, you can now get out",
+      "Words like der/die Bekannte now show both genders",
+      "Modal verbs got their Modalverb tag back",
+      "In a test, the next question no longer opens with an option highlighted that you never picked",
+      "A tap on a card now finishes before the screen changes",
+      "Translations tightened: pairs that translated identically and broke answer checking are now distinct"
+    ]
+  },
+  {
     "date": "2026-09-20",
     "title": "Карточки слов стопкой и управление глаголов",
     "items": [

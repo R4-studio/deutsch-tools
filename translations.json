@@ -13979,12 +13979,14 @@
     },
     "73f06c6f9830bde3": {
       "_src_altEn": "извещение",
+      "_src_note": "Bescheid sagen/geben – дать знать; Bescheid wissen – быть в курсе",
       "altEn": "notice",
       "altEnSource": "deepl-ru",
       "backtranslation": "die Bekanntmachung",
-      "date": "2026-08-27",
+      "date": "2026-09-24",
       "de": "Bescheid",
       "en": "notice",
+      "noteEn": "Bescheid sagen/geben – to let someone know; Bescheid wissen – to stay informed",
       "source": "haiku",
       "verdict": "ok"
     },
@@ -15339,6 +15341,13 @@
       "source": "haiku",
       "verdict": "ok"
     },
+    "8396a46ae45b0500": {
+      "backtranslation": "der Nachteil",
+      "date": "2026-09-24",
+      "de": "Nachteil",
+      "en": "disadvantage",
+      "source": "deepl"
+    },
     "83a1f19a4a84bd80": {
       "date": "2026-09-05",
       "de": "kosten",
@@ -16381,11 +16390,13 @@
       "source": "deepl"
     },
     "90d2a03d05a99239": {
+      "_src_note": "слабое склонение: den/dem/des Kunden; ж.р. die Kundin",
       "backtranslation": "Kunde",
-      "date": "2026-08-27",
+      "date": "2026-09-24",
       "de": "Kunde",
       "en": "customer",
       "exampleEn": "The customer has a question.",
+      "noteEn": "weak declension: den/dem/des Kunden; feminine gender die Kundin",
       "source": "deepl"
     },
     "90dbd2bbe5713b47": {
