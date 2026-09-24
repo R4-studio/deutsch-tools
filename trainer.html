@@ -59,8 +59,9 @@ html, body {
 .dt-stack__card {
   position: absolute; inset: 0; border-radius: 18px; overflow: hidden;
   cursor: pointer; display: flex; flex-direction: column;
-  transition: transform .38s var(--ease-dt), opacity .38s var(--ease-dt),
-              box-shadow .38s var(--ease-dt);
+  /* Линейно и коротко: с --ease-dt (почти ease) и .38s карточка трогалась медленно
+     и движение провисало. Длительность связана с таймером в goTo (WordStack). */
+  transition: transform .22s linear, opacity .22s linear, box-shadow .22s linear;
 }
 .dt-stack__card[data-pos="0"] { transform: translateY(0) scale(1);       opacity: 1; z-index: 3; box-shadow: var(--shadow-lift, 0 10px 28px rgba(0,0,0,.14)); }
 .dt-stack__card[data-pos="1"] { transform: translateY(9px) scale(1);  opacity: 1; z-index: 2; box-shadow: var(--shadow-card); }
@@ -82,7 +83,9 @@ html, body {
   .dt-stack__card { transition: opacity .18s linear; }
   .dt-stack__card[data-pos="1"],
   .dt-stack__card[data-pos="2"] { transform: none; opacity: 0; }
-  .dt-stack__card[data-pos="out"] { transform: none; }
+  /* opacity: 0 обязательно: иначе берётся 1 из основного правила, и уходящая карточка
+     стоит поверх новой (z-index: 4), пока её не снимет таймер. */
+  .dt-stack__card[data-pos="out"] { transform: none; opacity: 0; }
 }
 input:focus-visible, button:focus-visible { outline: 2px solid var(--accent); outline-offset: 1px; }
 /* ─── Универсальная tap/hover обратная связь для всех кнопок ───────────────
@@ -877,6 +880,22 @@ function TopBar({ left, right, icon, onTheme, onHome, onLang }) {
   );
 }
 
+// Экран-заглушка «здесь пока пусто»: текст плюс шапка с возвратом на уровень выше.
+// Голый div без шапки был тупиком — выйти можно было только перезагрузкой, а системная
+// «назад» на Android уводит из приложения целиком. Пустые темы и блоки в списки выбора
+// не попадают, так что сюда приходят только по прямой ссылке или если данные пропали
+// после обновления базы.
+function EmptyScreen({ text, onBack, color, icon, onTheme, onHome, onLang }) {
+  return (
+    <div style={S.page}>
+      <TopBar
+        left={<button style={S.outlineBtn(color)} onClick={onBack}>{ICON_ARROW_LEFT} {window.t('trainer.back')}</button>}
+        icon={icon} onTheme={onTheme} onLang={onLang} onHome={onHome} />
+      <div style={{ ...S.containerRead, textAlign: "center", color: "var(--text-muted)", padding: "48px 0" }}>{text}</div>
+    </div>
+  );
+}
+
 // wordText(item) — перевод слова с учётом языка (мультиязычность, слой 2):
 // en, если выбран английский и оно переведено (VOCAB.en/CONJUGATIONS.en из
 // update_data.py/DeepL), иначе всегда ru. Тот же паттерн, что в cheatsheet.html.
@@ -948,34 +967,29 @@ function RecallCard({ conj, flipped, onFlip, color }) {
 // ═══════════════════════════════════════════════════════════════
 // КОМПОНЕНТ: СТОПКА КАРТОЧЕК СЛОВА
 // ═══════════════════════════════════════════════════════════════
-// Набор карточек слова. Первые две есть всегда (слово, значение), третья — только
-// если у части речи есть что показать: формы глагола, род и множественное
-// существительного, степени сравнения и антоним прилагательного.
+// Набор карточек слова по логике изучения: «что это» → «что значит» → «как употребляется».
+//   word    — слово: артикль и род у существительного, управление у глагола;
+//   meaning — перевод и формы, если они есть (спряжение, множественное, степени);
+//             есть всегда: перевод есть у каждого слова, отсутствие форм карточку не отменяет;
+//   usage   — примеры и заметка; только если есть хоть что-то из них.
 // Карточка без данных не строится, и точки под стопкой считаются по ней же.
-function buildStackCards(item, forms) {
+function buildStackCards(item) {
   const cards = [{ role: "word" }, { role: "meaning" }];
-  if (item.pos === "verb" && forms) {
-    cards.push({ role: "forms" });
-  } else if (item.pos === "noun" && item.plural) {
-    cards.push({ role: "forms" });
-  } else if (item.pos === "adj" && (item.comparative || item.superlative || item.antonym)) {
-    cards.push({ role: "forms" });
-  }
+  if (item.exampleDe || item.example2De || item.note) cards.push({ role: "usage" });
   return cards;
 }
 
 // Стопка карточек слова. Заменила две двусторонние карточки, которые рисовали одно и то же
 // в двух режимах, и правка форм требовалась в двух местах.
-// Высота фиксирована (--card-stack-h) и рассчитана на карточку форм глагола — самую
-// тяжёлую по содержимому и одинаковую у всех глаголов, поэтому стопка не скачет
-// при листании словаря.
-// startAt — номер карточки или её роль ("forms"); роль не найдена — открывается первая.
+// Высота фиксирована (--card-stack-h) и рассчитана на карточку значения глагола — перевод
+// плюс спряжение, самую тяжёлую по содержимому, поэтому стопка не скачет при листании словаря.
+// startAt — номер карточки или её роль ("meaning"); роль не найдена — открывается первая.
 function WordStack({ item, forms, color, startAt = 0 }) {
   const isVerb = item.pos === "verb";
   const f = forms || (isVerb
     ? resolveVerbForms(item, (typeof CONJUGATIONS !== "undefined" ? CONJUGATIONS : []))
     : null);
-  const cards = buildStackCards(item, f);
+  const cards = buildStackCards(item);
   const n = cards.length;
   const startIdx = typeof startAt === "string"
     ? Math.max(0, cards.findIndex(c => c.role === startAt))
@@ -1005,8 +1019,9 @@ function WordStack({ item, forms, color, startAt = 0 }) {
       setSnap(false);
       setOutIdx(step);
       setStep(target);
-      // уходящая остаётся в «out» на время перехода, иначе мигнёт: сразу окажется снизу и проявится
-      timerRef.current = setTimeout(() => setOutIdx(null), 380);
+      // уходящая остаётся в «out» на время перехода, иначе мигнёт: сразу окажется снизу и проявится;
+      // 220 = длительность transition у .dt-stack__card, менять вместе
+      timerRef.current = setTimeout(() => setOutIdx(null), 220);
     } else {
       setSnap(true);
       setOutIdx(target);
@@ -1037,13 +1052,19 @@ function WordStack({ item, forms, color, startAt = 0 }) {
   ].filter(x => x.de);
   const labelled = prepList.length > 1 && examples.length === prepList.length;
 
-  const mutedLine = { fontSize: 13, opacity: 0.85 };
   const stripColon = (s) => s.replace(/:\s*$/, "");
-  const labelStyle = { fontSize: 13, color: "var(--text-muted)", textAlign: "right", paddingTop: 1 };
-  const article = { m: "der", f: "die", n: "das", pl: "die" }[item.gender];
+  const labelStyle = { fontSize: 13, opacity: 0.75, textAlign: "right", paddingTop: 1 };
   // Род существительного: цветной бейдж + артикль перед словом. Артикль — это то,
   // что реально произносят; бейдж снимает двусмысленность die (femininum или Plural).
-  const badge = item.gender ? S.badge(item.gender) : null;
+  // Род бывает составным ("m/f" у субстантивированных прилагательных — der/die Bekannte):
+  // режем по слешу, бейдж на каждую часть, артикли склеиваем. Так же разбирает справочник.
+  const genders = item.gender ? String(item.gender).split("/").map(g => g.trim()).filter(Boolean) : [];
+  const article = genders.map(g => ({ m: "der", f: "die", n: "das", pl: "die" }[g])).filter(Boolean).join("/");
+  const badges = genders.map(g => S.badge(g)).filter(Boolean);
+  // Модальные глаголы: флаг есть и у записи слова, и в CONJUGATIONS — в режиме Unregel
+  // запись слова может оказаться заглушкой без флага, поэтому смотрим в оба места.
+  const conjRec = isVerb && typeof CONJUGATIONS !== "undefined" ? CONJUGATIONS.find(c => c.verb === item.de) : null;
+  const isModal = isVerb && !!(item.modal || (conjRec && conjRec.modal));
 
   const renderCard = (c) => {
     if (c.role === "word") {
@@ -1053,14 +1074,26 @@ function WordStack({ item, forms, color, startAt = 0 }) {
           justifyContent: "center", textAlign: "center", padding: 24,
           background: "var(--bg-card)", border: `2px solid ${color}`, borderRadius: 18,
         }}>
-{badge && (
-<span style={{
-display: "inline-block", padding: "3px 10px", borderRadius: 12,
-background: badge.bg, color: badge.fg, fontSize: 12, fontWeight: 700, marginBottom: 12,
-}}>
-{badge.label}
-</span>
-)}
+          {(badges.length > 0 || isModal) && (
+            <div style={{ display: "flex", gap: 6, justifyContent: "center", marginBottom: 12 }}>
+              {badges.map((b, i) => (
+                <span key={i} style={{
+                  display: "inline-block", padding: "3px 10px", borderRadius: 12,
+                  background: b.bg, color: b.fg, fontSize: 12, fontWeight: 700,
+                }}>
+                  {b.label}
+                </span>
+              ))}
+              {isModal && (
+                <span style={{
+                  display: "inline-block", padding: "2px 8px", borderRadius: 6,
+                  background: "var(--c-modal-tag-bg)", color: "var(--c-modal-tag-fg)", fontSize: 12,
+                }}>
+                  Modalverb
+                </span>
+              )}
+            </div>
+          )}
           <div style={{ fontSize: 30, fontWeight: 700, color: "var(--text-title)" }}>
 {article && <span style={{ color: "var(--text-muted)", fontWeight: 400 }}>{article} </span>}
             {item.reflexive ? "sich " : ""}{item.de}
@@ -1080,85 +1113,91 @@ background: badge.bg, color: badge.fg, fontSize: 12, fontWeight: 700, marginBott
     }
     if (c.role === "meaning") {
       const alt = wordField(item, "altRu", "altEn");
-      const note = wordField(item, "note", "noteEn");
+      // Формы: слева колонка подписей, справа содержимое. Карточка цветная, поэтому
+      // приглушённое — через прозрачность от var(--on-color), а не токенами текста.
+      const rows = [];
+      if (isVerb && f) {
+        rows.push(
+          <div key="l1" style={labelStyle}>{stripColon(T("trainer.praesens_label"))}</div>,
+          <table key="v1" style={{ fontSize: 14, borderCollapse: "collapse" }}>
+            <tbody>
+              {f.pronouns.map((p, i) => (
+                <tr key={i}>
+                  <td style={{ padding: "1px 10px 1px 0", opacity: 0.75 }}>{p}</td>
+                  <td style={{ padding: "1px 0", fontWeight: 700 }}>{f.praesens[i]}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>,
+          // линия во всю ширину карточки: тянем за габарит сетки, лишнее обрезает overflowX: hidden
+          <div key="hr" style={{ gridColumn: "1 / -1", height: 1, background: "color-mix(in srgb, var(--on-color) 30%, transparent)", margin: "4px -240px" }} />
+        );
+        if (f.praeteritum) rows.push(
+          <div key="l2" style={labelStyle}>{stripColon(T("trainer.praeteritum_label"))}</div>,
+          <div key="v2" style={{ fontSize: 14 }}>
+            <span style={{ fontWeight: 700 }}>{f.praeteritum}</span>
+            <span style={{ opacity: 0.75, fontSize: 11 }}> {T("trainer.er_sie_es")}</span>
+          </div>
+        );
+        if (f.partizip2) rows.push(
+          <div key="l3" style={labelStyle}>{stripColon(T("trainer.perfekt_label"))}</div>,
+          <div key="v3" style={{ fontSize: 14, fontWeight: 700 }}>
+            {f.aux === "sein" ? "ist" : "hat"} {f.partizip2}
+          </div>
+        );
+      } else if (item.pos === "noun" && item.plural) {
+        rows.push(
+          <div key="l1" style={labelStyle}>{stripColon(T("trainer.plural_prefix"))}</div>,
+          <div key="v1" style={{ fontSize: 16, fontWeight: 700 }}>{item.plural}</div>
+        );
+      } else if (item.pos === "adj") {
+        [["Komparativ", item.comparative], ["Superlativ", item.superlative], ["Antonym", item.antonym]]
+          .filter(r => r[1])
+          .forEach((r, i) => rows.push(
+            <div key={"l" + i} style={labelStyle}>{r[0]}</div>,
+            <div key={"v" + i} style={{ fontSize: 16, fontWeight: 700 }}>{r[1]}</div>
+          ));
+      }
+      const hasForms = rows.length > 0;
+      // Без форм перевод встаёт по центру всей карточки, а не шапкой над пустым полем.
+      const headStyle = hasForms
+        ? { background: "color-mix(in srgb, var(--on-color) 14%, transparent)",
+            borderBottom: "1px solid color-mix(in srgb, var(--on-color) 30%, transparent)" }
+        : { flex: 1, display: "flex", flexDirection: "column", justifyContent: "center" };
       return (
-        <div style={{ flex: 1, display: "flex", flexDirection: "column", background: color, color: "var(--on-color)", borderRadius: 18}}>
-          <div style={{
-            padding: "16px 22px", textAlign: "center",
-            background: "color-mix(in srgb, var(--on-color) 14%, transparent)",
-            borderBottom: "1px solid color-mix(in srgb, var(--on-color) 30%, transparent)",
-          }}>
+        <div style={{ flex: 1, display: "flex", flexDirection: "column", background: color, color: "var(--on-color)", borderRadius: 18 }}>
+          <div style={{ padding: "16px 22px", textAlign: "center", ...headStyle }}>
             <div style={{ fontSize: 22, fontWeight: 700 }}>{wordText(item)}</div>
             {alt && <div style={{ fontSize: 13, opacity: 0.75, marginTop: 2 }}>{alt}</div>}
           </div>
-          <div style={{ flex: 1, overflowY: "auto", padding: "14px 22px", display: "flex", flexDirection: "column", gap: 10, textAlign: "center", justifyContent: "center" }}>
-            {examples.length === 0 ? (
-              <div style={{ ...mutedLine, opacity: 0.7 }}>{T("trainer.no_examples")}</div>
-            ) : examples.map((ex, i) => (
-              <div key={i}>
-                {labelled && <div style={{ fontSize: 11, fontWeight: 700, opacity: 0.8, marginBottom: 2 }}>{govLabel(i)}</div>}
-                <div style={{ fontSize: 15, fontStyle: "italic" }}>{ex.de}</div>
-                {ex.tr && <div style={{ ...mutedLine, marginTop: 1 }}>{ex.tr}</div>}
+          {hasForms && (
+            // margin: auto у сетки, а не центрирование флексом: иначе при переполнении
+            // верх сетки уходит за край и до него не долистать.
+            <div style={{ flex: 1, display: "flex", overflowY: "auto", overflowX: "hidden", padding: "12px 22px" }}>
+              <div style={{ margin: "auto", display: "grid", gridTemplateColumns: "auto auto", columnGap: 16, rowGap: 6, alignItems: "start" }}>
+                {rows}
               </div>
-            ))}
-            {note && <div style={{ ...mutedLine, opacity: 0.75 }}>{note}</div>}
-          </div>
+            </div>
+          )}
         </div>
       );
     }
-    // role === "forms": слева колонка подписей, справа содержимое
-    const rows = [];
-    if (isVerb && f) {
-      rows.push(
-        <div key="l1" style={labelStyle}>{stripColon(T("trainer.praesens_label"))}</div>,
-        <table key="v1" style={{ fontSize: 14, borderCollapse: "collapse" }}>
-          <tbody>
-            {f.pronouns.map((p, i) => (
-              <tr key={i}>
-                <td style={{ padding: "1px 10px 1px 0", color: "var(--text-muted)" }}>{p}</td>
-                <td style={{ padding: "1px 0", fontWeight: 700, color: "var(--text-title)" }}>{f.praesens[i]}</td>
-              </tr>
-            ))}
-          </tbody>
-        </table>,
-        // линия во всю ширину карточки: тянем за габарит сетки, лишнее обрезает overflow: hidden
-        <div key="hr" style={{ gridColumn: "1 / -1", height: 1, background: "var(--border-soft)", margin: "4px -240px" }} />
-      );
-      if (f.praeteritum) rows.push(
-        <div key="l2" style={labelStyle}>{stripColon(T("trainer.praeteritum_label"))}</div>,
-        <div key="v2" style={{ fontSize: 14 }}>
-          <span style={{ fontWeight: 700, color: "var(--text-title)" }}>{f.praeteritum}</span>
-          <span style={{ color: "var(--text-muted)", fontSize: 11 }}> {T("trainer.er_sie_es")}</span>
-        </div>
-      );
-      if (f.partizip2) rows.push(
-        <div key="l3" style={labelStyle}>{stripColon(T("trainer.perfekt_label"))}</div>,
-        <div key="v3" style={{ fontSize: 14, fontWeight: 700, color: "var(--text-title)" }}>
-          {f.aux === "sein" ? "ist" : "hat"} {f.partizip2}
-        </div>
-      );
-    } else if (item.pos === "noun") {
-      rows.push(
-        <div key="l1" style={labelStyle}>Artikel</div>,
-        <div key="v1" style={{ fontSize: 16, fontWeight: 700, color: "var(--text-title)" }}>{article ? article + " " : ""}{item.de}</div>,
-        <div key="l2" style={labelStyle}>{stripColon(T("trainer.plural_prefix"))}</div>,
-        <div key="v2" style={{ fontSize: 16, fontWeight: 700, color: "var(--text-title)" }}>{item.plural}</div>
-      );
-    } else if (item.pos === "adj") {
-      [["Komparativ", item.comparative], ["Superlativ", item.superlative], ["Antonym", item.antonym]]
-        .filter(r => r[1])
-        .forEach((r, i) => rows.push(
-          <div key={"l" + i} style={labelStyle}>{r[0]}</div>,
-          <div key={"v" + i} style={{ fontSize: 16, fontWeight: 700, color: "var(--text-title)" }}>{r[1]}</div>
-        ));
-    }
+    // role === "usage": примеры и заметка
+    const note = wordField(item, "note", "noteEn");
     return (
       <div style={{
-        flex: 1, display: "flex", alignItems: "center", justifyContent: "center",
-        background: "var(--bg-card)", border: `2px solid ${color}`, borderRadius: 18, padding: "16px 24px",
+        flex: 1, display: "flex", overflowY: "auto", padding: "16px 22px",
+        background: "var(--bg-card)", border: `2px solid ${color}`, borderRadius: 18,
       }}>
-        <div style={{ display: "grid", gridTemplateColumns: "auto auto", columnGap: 16, rowGap: 6, alignItems: "start" }}>
-          {rows}
+        <div style={{ margin: "auto 0", width: "100%", display: "flex", flexDirection: "column", gap: 10, textAlign: "center" }}>
+          {examples.map((ex, i) => (
+            <div key={i}>
+              {labelled && <div style={{ fontSize: 11, fontWeight: 700, color: "var(--text-muted)", marginBottom: 2 }}>{govLabel(i)}</div>}
+              <div style={{ fontSize: 15, fontStyle: "italic", color: "var(--text-title)" }}>{ex.de}</div>
+              {ex.tr && <div style={{ fontSize: 13, color: "var(--text-muted)", marginTop: 1 }}>{ex.tr}</div>}
+            </div>
+          ))}
+          {note && <div style={{ fontSize: 13, color: "var(--text-muted)" }}>{note}</div>}
         </div>
       </div>
     );
@@ -3219,6 +3258,37 @@ function App() {
     count += manual.length;
     return Math.min(count, 30);
   }
+  // Пустые темы и блоки не показываем в списках выбора — внутри была бы заглушка.
+  // Считаем так же, как потом строится экран: в изучении — слова с фильтром по части
+  // речи (как getActiveVocab), в тесте — задания (как countQuestions).
+  function isSubEmpty(block, sub) {
+    if (sub.kind === "conjugations") return CONJUGATIONS.length === 0;
+    if (sub.kind) return false;
+    if (mode === "test") return countQuestions(sub.topics, `${block.id}:${sub.id}`) === 0;
+    const pos = BLOCK_POS[block.id];
+    return !VOCAB.some(v => (v.topics || []).some(t => sub.topics.includes(t)) && (!pos || v.pos === pos));
+  }
+  function isBlockEmpty(b) {
+    if (b.kind === "conjugations") return CONJUGATIONS.length === 0;
+    if (b.kind) return false;
+    return !blockHasSubblocks(b) || b.subblocks.every(s => isSubEmpty(b, s));
+  }
+  function renderEmpty(textKey, onBack) {
+    return <EmptyScreen text={window.t(textKey)} onBack={onBack} color={activeBlock.color}
+                        icon={icon} onTheme={cycleTheme} onLang={cycleLang} onHome={goHome} />;
+  }
+  // Карточки выбора (.dt-tap-card): даём сжатию из :active отыграть до смены экрана.
+  // Без задержки React меняет экран на первом кадре анимации, нажатие кажется
+  // несработавшим, и человек жмёт второй раз. 140 мс ≈ transition: transform 0.15s
+  // у .dt-tap-card — менять вместе. Пока переход ждёт, повторные тапы не считаются.
+  const tapPendingRef = useRef(false);
+  function afterTap(fn) {
+    return () => {
+      if (tapPendingRef.current) return;
+      tapPendingRef.current = true;
+      setTimeout(() => { tapPendingRef.current = false; fn(); }, 140);
+    };
+  }
 
   // ─── Действия навигации ─────────────────────────────────────────────────
   function goHome() {
@@ -3501,6 +3571,10 @@ function App() {
     }]);
   }
   function nextQ() {
+    // Сбрасываем фокус при переходе. Ключи кнопок вариантов завязаны на вопрос, так что
+    // узлы и так пересоздаются — это вторая страховка: на новом вопросе не должно
+    // остаться никакого следа от предыдущего нажатия.
+    if (document.activeElement && document.activeElement.blur) document.activeElement.blur();
     if (qIdx + 1 >= questions.length) setPhase("results");
     else {
       setQIdx(qIdx + 1); setUserAns(""); setAnswered(false); setHintVisible(false);
@@ -3769,7 +3843,7 @@ function App() {
           </div>
           <div className="mode-grid">
             <div className="dt-tap-card dt-mode-card" style={S.modeCard}
-                 onClick={() => pickMode("learn")}>
+                 onClick={afterTap(() => pickMode("learn"))}>
               <div className="mode-card-icon" style={{ background: "var(--violet-100)", color: "var(--violet-700)" }}>
                 <Icon name="brain" size={24} />
               </div>
@@ -3781,7 +3855,7 @@ function App() {
               </span>
             </div>
             <div className="dt-tap-card dt-mode-card" style={S.modeCard}
-                 onClick={() => pickMode("test")}>
+                 onClick={afterTap(() => pickMode("test"))}>
               <div className="mode-card-icon" style={{ background: "var(--green-100)", color: "var(--green-700)" }}>
                 <Icon name="clipboard" size={24} />
               </div>
@@ -3793,7 +3867,7 @@ function App() {
               </span>
             </div>
             <div className="dt-tap-card dt-mode-card" style={S.modeCard}
-                 onClick={() => pickMode("rules")}>
+                 onClick={afterTap(() => pickMode("rules"))}>
               <div className="mode-card-icon" style={{ background: "var(--indigo-100)", color: "var(--indigo-700)" }}>
                 <Icon name="ruleset" size={24} />
               </div>
@@ -3821,13 +3895,13 @@ function App() {
         <div style={S.containerWide}>
           <h2 style={{ ...S.heading, textAlign: "center" }}>{window.t('trainer.pick_block')}</h2>
           <div style={S.grid}>
-            {BLOCKS.filter(b => b.kind !== "sounds").map(b => (
+            {BLOCKS.filter(b => b.kind !== "sounds" && !isBlockEmpty(b)).map(b => (
               <div key={b.id} className="dt-tap-card dt-block-card"
                    style={{ ...S.card, "--card-accent": b.color, cursor: "pointer" }}
-                   onClick={() => pickBlock(b)}>
+                   onClick={afterTap(() => pickBlock(b))}>
                 <div style={S.cardTitle}><Icon name={b.icon} size={18} /> {b.label}</div>
                 {b.desc && <div style={S.cardDesc}>{b.desc}</div>}
-                {blockHasSubblocks(b) && <div style={S.cardMeta}>{b.subblocks.length} {window.t('trainer.n_topics')}</div>}
+                {blockHasSubblocks(b) && <div style={S.cardMeta}>{b.subblocks.filter(s => !isSubEmpty(b, s)).length} {window.t('trainer.n_topics')}</div>}
                 {b.kind === "conjugations" && (
                   <div style={S.cardMeta}>{CONJUGATIONS.length} {window.t('trainer.n_verbs')}</div>
                 )}
@@ -3862,7 +3936,7 @@ function App() {
           {!isNeu && mode === "test" && (
             <div style={{ marginBottom: 16 }}>
               <div className="dt-tap-card dt-block-card" style={{ ...S.card, "--card-accent": activeBlock.color, cursor: "pointer" }}
-                   onClick={startTestAll}>
+                   onClick={afterTap(startTestAll)}>
                 <div style={S.cardTitle}><Icon name="flame" size={18} /> {window.t('trainer.test_whole_block')}</div>
                 <div style={S.cardMeta}>{window.t('trainer.all_topics_mixed')}</div>
               </div>
@@ -3888,9 +3962,9 @@ function App() {
 
           {isNeu && (
             <div style={{ display: "flex", flexDirection: "column", gap: 10, marginBottom: 16 }}>
-              {mode === "learn" && (
+              {mode === "learn" && neuAllCount > 0 && (
                 <div className="dt-tap-card dt-block-card" style={{ ...S.card, "--card-accent": activeBlock.color, cursor: "pointer" }}
-                     onClick={() => startNeuLearnAll(false)}>
+                     onClick={afterTap(() => startNeuLearnAll(false))}>
                   <div style={S.cardTitle}><Icon name="book" size={18} /> {window.t('trainer.general_learn')}</div>
                   <div style={S.cardMeta}>{neuAllCount} {window.t('trainer.n_words')} · {window.t('trainer.neu_order')}</div>
                 </div>
@@ -3920,7 +3994,7 @@ function App() {
           )}
 
           <div style={S.grid}>
-            {activeBlock.subblocks.map(sub => {
+            {activeBlock.subblocks.filter(sub => !isSubEmpty(activeBlock, sub)).map(sub => {
               // Особый сабблок Unregel (kind=conjugations) внутри Verben:
               // у него нет topics, источник — массив CONJUGATIONS.
               // В обоих режимах показываем количество глаголов (как было на
@@ -3936,7 +4010,7 @@ function App() {
               return (
                 <div key={sub.id} className="dt-tap-card dt-block-card"
                      style={{ ...S.card, "--card-accent": activeBlock.color, cursor: "pointer" }}
-                     onClick={() => pickSub(sub)}>
+                     onClick={afterTap(() => pickSub(sub))}>
                   <div style={S.cardTitle}><Icon name={sub.icon} size={18} /> {sub.label}</div>
                   {sub.desc && <div style={S.cardDesc}>{sub.desc}</div>}
                   <div style={S.cardMeta}>{metaText}</div>
@@ -4002,7 +4076,7 @@ function App() {
 
           <div style={{ marginBottom: 20 }}>
             <div className="dt-tap-card dt-block-card" style={{ ...S.card, "--card-accent": RULES_BLOCK.color, cursor: "pointer" }}
-                 onClick={startAllRulesTest}>
+                 onClick={afterTap(startAllRulesTest)}>
               <div style={S.cardTitle}><Icon name="flame" size={18} /> {window.t('trainer.rules_test_all')}</div>
               <div style={S.cardMeta}>{totalRuleQuestions} {window.t('trainer.n_questions')} · {rulesWithQuestions} {window.t('trainer.n_rules')}</div>
             </div>
@@ -4037,7 +4111,7 @@ function App() {
                     return (
                       <div key={r.id} className="dt-tap-card dt-block-card"
                            style={{ ...S.card, "--card-accent": RULES_BLOCK.color, cursor: "pointer" }}
-                           onClick={() => openRule(r)}>
+                           onClick={afterTap(() => openRule(r))}>
                         <div style={S.cardTitle}>{wordField(r, 'title', 'titleEn')}</div>
                         <div style={S.cardMeta}>{r.level} · {qCount} {window.t('trainer.n_questions')}</div>
                       </div>
@@ -4274,7 +4348,7 @@ function App() {
   function renderLearnCards() {
     const vocab = getActiveVocab();
     if (vocab.length === 0) {
-      return <div style={S.page}><div style={S.containerRead}>{window.t('trainer.no_words_in_topic')}</div></div>;
+      return renderEmpty('trainer.no_words_in_topic', goBackToSubblocks);
     }
     const item = vocab[cardIdx];
     return (
@@ -4306,7 +4380,7 @@ function App() {
     const base = getNeuAllVocab();
     const vocab = neuShuffle && neuVocabOrder ? neuVocabOrder : base;
     if (vocab.length === 0) {
-      return <div style={S.page}><div style={S.containerRead}>{window.t('trainer.no_new_words')}</div></div>;
+      return renderEmpty('trainer.no_new_words', () => { setPhase("select-subblock"); setActiveSub(null); });
     }
     const item = vocab[cardIdx];
     return (
@@ -4418,7 +4492,7 @@ function App() {
   function renderLearnPraeteritumCards() {
     const praetList = CONJUGATIONS.filter(c => c.praeteritum);
     if (praetList.length === 0) {
-      return <div style={S.page}><div style={S.containerRead}>{window.t('trainer.no_praeteritum_data')}</div></div>;
+      return renderEmpty('trainer.no_praeteritum_data', () => setPhase("select-learn-conj"));
     }
     const conj = praetList[cardIdx] || praetList[0];
     return (
@@ -4467,7 +4541,7 @@ function App() {
 
   function renderLearnConjCards() {
     if (CONJUGATIONS.length === 0) {
-      return <div style={S.page}><div style={S.containerRead}>{window.t('trainer.no_conj_data')}</div></div>;
+      return renderEmpty('trainer.no_conj_data', goBackToSubblocks);
     }
     const conj = CONJUGATIONS[cardIdx];
     // Стопке нужна запись слова (управление, примеры, перевод) — в conj их нет.
@@ -4492,7 +4566,7 @@ function App() {
           right={<span style={S.muted}>{cardIdx + 1} / {CONJUGATIONS.length}</span>}
           icon={icon} onTheme={cycleTheme} onLang={cycleLang} onHome={goHome} />
         <div style={S.containerRead}>
-          <WordStack key={conj.id || conj.verb} item={conjItem} forms={conjForms} color={activeBlock.color} startAt="forms" />
+          <WordStack key={conj.id || conj.verb} item={conjItem} forms={conjForms} color={activeBlock.color}/>
           <div style={{ display: "flex", gap: 12, justifyContent: "center", marginTop: 20 }}>
             <button style={S.outlineBtn()} onClick={prevCard} disabled={cardIdx === 0}>{ICON_ARROW_LEFT} {window.t('trainer.back')}</button>
             <button style={S.primaryBtn(activeBlock.color)}
@@ -4686,8 +4760,13 @@ function App() {
     if (q.type === "mc") {
       return (
         <div style={S.mcOpts}>
+          {/* key завязан на вопрос, а не на индекс. С key={i} React считает кнопки
+              теми же и переиспользует DOM-узлы между вопросами: на узле оставался
+              фокус от тапа, и focus-visible обводил вариант под тем же номером уже
+              в следующем вопросе — выглядело так, будто ответ дан. Туда же переезжало
+              недоигранное сжатие из button:active. Не упрощать обратно до key={i}. */}
           {q.opts.map((opt, i) => (
-            <button key={i}
+            <button key={qIdx + ":" + i}
                     style={{ ...S.mcBtn,
                              ...(answered && i === q.ans ? S.mcBtnCorrect : {}),
                              ...(answered && i !== q.ans && +userAns === i ? S.mcBtnWrong : {}) }}
@@ -4861,7 +4940,6 @@ function App() {
     return (
       <div style={S.page}>
         <TopBar
-          left={<button style={S.outlineBtn(activeBlock.color)} onClick={goHome}>{ICON_ARROW_LEFT} {window.t('nav.back_home')}</button>}
           right={<span style={S.muted}>{modeLabel}</span>}
           icon={icon} onTheme={cycleTheme} onLang={cycleLang} onHome={goHome} />
         <div style={S.containerRead}>

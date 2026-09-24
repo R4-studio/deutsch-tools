@@ -1,5 +1,55 @@
 window.CHANGELOG = [
+  {
+    "date": "2026-09-20",
+    "title": "Карточки слов стопкой и управление глаголов",
+    "items": [
+      "Карточка слова стала стопкой из трёх: немецкое слово, перевод с примерами, формы",
+      "Точки под стопкой показывают, где ты находишься, и переключают карточки – можно прыгнуть на нужную, а не листать по кругу",
+      "Карточка форм не показывается, если у слова нет данных – и точка под ней тоже пропадает",
+      "Листать можно стрелками клавиатуры",
+      "Управление глаголов: у 51 глагола видно, с каким предлогом и в каком падеже он стоит – sich unterhalten über + Akk / mit + Dat",
+      "Управление показано в трёх местах: на карточке в тренажёре, второй строкой под инфинитивом в справочнике и отдельной строкой в карточке слова",
+      "Род существительного вернулся на карточку – цветной бейдж и артикль перед словом. Раньше слова без множественного числа не показывали род вообще",
+      "Новая анимация: карточка уезжает влево"
+    ],
+    "titleEn": "Word cards as a stack, and verb prepositions",
+    "itemsEn": [
+      "A word card is now a stack of three: the German word, the translation with examples, the forms",
+      "The dots under the stack show where you are and switch cards – you can jump straight to the one you need instead of cycling through",
+      "The forms card is skipped when a word has no data – and its dot disappears with it",
+      "Arrow keys flip through the stack",
+      "Verb prepositions: 51 verbs now show which preposition and case they take – sich unterhalten über + Akk / mit + Dat",
+      "Shown in three places: on the trainer card, as a second line under the infinitive in the reference, and as its own row in the word card",
+      "Noun gender is back on the card – a colour badge and the article before the word. Previously words without a plural showed no gender at all",
+      "New animation: the card slides out to the left"
+    ]
+  },
       {
+    "date": "2026-09-20",
+    "title": "Карточки слов стопкой и управление глаголов",
+    "items": [
+      "Карточка слова стала стопкой из трёх: немецкое слово, перевод с примерами, формы",
+      "Точки под стопкой показывают, где ты находишься, и переключают карточки – можно прыгнуть на нужную, а не листать по кругу",
+      "Карточка форм не показывается, если у слова нет данных – и точка под ней тоже пропадает",
+      "Листать можно стрелками клавиатуры",
+      "Управление глаголов: у 51 глагола видно, с каким предлогом и в каком падеже он стоит – sich unterhalten über + Akk / mit + Dat",
+      "Управление показано в трёх местах: на карточке в тренажёре, второй строкой под инфинитивом в справочнике и отдельной строкой в карточке слова",
+      "Род существительного вернулся на карточку – цветной бейдж и артикль перед словом. До этого 176 слов без множественного числа не показывали род вообще",
+      "Новая анимация: карточка уезжает влево"
+    ],
+    "titleEn": "Word cards as a stack, and verb prepositions",
+    "itemsEn": [
+      "A word card is now a stack of three: the German word, the translation with examples, the forms",
+      "The dots under the stack show where you are and switch cards – you can jump straight to the one you need instead of cycling through",
+      "The forms card is skipped when a word has no data – and its dot disappears with it",
+      "Arrow keys flip through the stack",
+      "Verb prepositions: 51 verbs now show which preposition and case they take – sich unterhalten über + Akk / mit + Dat",
+      "Shown in three places: on the trainer card, as a second line under the infinitive in the reference, and as its own row in the word card",
+      "Noun gender is back on the card – a colour badge and the article before the word. Until now 176 words without a plural showed no gender at all",
+      "New animation: the card slides out to the left"
+    ]
+  },  
+    {
     "date": "2026-09-18",
     "title": "Свободный ввод, речевые клише и 111 новых слов",
     "items": [
