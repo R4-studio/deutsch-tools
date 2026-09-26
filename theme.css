@@ -1,5 +1,5 @@
 /* ═══════════════════════════════════════════════════════════════
-   theme.css — единая палитра Deutsch Tools
+   theme.css — единая палитра deutra
    Подключается в index.html, cheatsheet.html, trainer.html
    Переменные используются и шпорой, и тренажёром.
    ═══════════════════════════════════════════════════════════════ */
@@ -808,4 +808,47 @@ html {
 @media (prefers-reduced-motion: reduce) {
   .to-top,
   .to-top.is-visible { transform: none; }
+}
+
+/* ─── Верхняя панель с брендом ─────────────────────────────────
+   Раньше лежала копиями в index/about/faq, а на datenschutz и impressum
+   её не было вовсе — шапка там рисовалась неоформленной.
+   Собрано в одно место 26.09.2026: ширина берётся из токена, а
+   text-decoration/color нужны потому, что на большинстве страниц
+   бренд — это ссылка на index, и только на самой index он <div>. */
+.dt-topnav {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  max-width: var(--w-content);
+  width: 100%;
+  margin: 0 auto;
+  padding: 20px 20px 0;
+  box-sizing: border-box;
+}
+.dt-topnav__brand {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  text-decoration: none;
+  color: inherit;
+}
+.dt-topnav__mark {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background: var(--grey-900);
+  color: #fff;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  flex-shrink: 0;
+}
+.dt-topnav__word {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--text-title);
 }

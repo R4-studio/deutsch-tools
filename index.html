@@ -4,13 +4,13 @@
 <!-- CACHE_VERSION: 20260926 — правь дату только тут, pre-commit hook сам разносит её по всем ?v= во всех html-файлах -->
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Deutsch Tools – Справочник и тренажёр по немецкому</title>
+<title>deutra – Справочник и тренажёр по немецкому</title>
 <link rel="icon" href="icons/favicon.svg" type="image/svg+xml">
 <link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
 <link rel="manifest" href="manifest.webmanifest">
 <meta name="theme-color" media="(prefers-color-scheme: light)" content="#FAFAFA">
 <meta name="theme-color" media="(prefers-color-scheme: dark)" content="#0E0E0E">
-<meta property="og:title" content="Deutsch Tools – Справочник и тренажёр по немецкому">
+<meta property="og:title" content="deutra – Справочник и тренажёр по немецкому">
 <meta property="og:description" content="Бесплатные инструменты для изучения немецкого: справочник и тренажёр">
 <meta property="og:type" content="website">
 <link rel="stylesheet" href="theme.css?v=20260926">
@@ -34,40 +34,6 @@ body {
 }
 
 /* ─── Навбар ──────────────────────────────── */
-.dt-topnav {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  max-width: var(--w-content);
-  width: 100%;
-  margin: 0 auto;
-  padding: 20px 20px 0;
-  box-sizing: border-box;
-}
-.dt-topnav__brand {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-}
-.dt-topnav__mark {
-  width: 32px;
-  height: 32px;
-  border-radius: 50%;
-  background: var(--grey-900);
-  color: #fff;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 11px;
-  font-weight: 700;
-  letter-spacing: -0.02em;
-  flex-shrink: 0;
-}
-.dt-topnav__word {
-  font-size: 14px;
-  font-weight: 600;
-  color: var(--text-title);
-}
 
 /* ─── Основной блок ──────────────────────────────── */
 .main-wrap {
@@ -496,7 +462,7 @@ h1 {
 <div class="dt-topnav">
   <div class="dt-topnav__brand">
     <span class="dt-topnav__mark"><svg viewBox="0 0 318.09 393.12" width="16.2" height="20" fill="currentColor" aria-hidden="true" focusable="false"><path d="M235.27,360.12l-34.07-34.37-60.5,60.84c-8.65,8.7-22.72,8.71-31.39.03l-15.63-15.65,76.27-76.69-42.11-42.49,31.21-31.51,107.56,108.5-31.34,31.34Z"/><path d="M113.6,328.22l-31.21,31.46-15.73-15.86c-8.57-8.64-8.57-22.57,0-31.2h0c8.67-8.74,22.79-8.74,31.46,0l15.48,15.6Z"/><path d="M137.67,31.1v152.12s-99.78,100.63-99.78,100.63c-8.67,8.74-22.79,8.74-31.46,0h0c-8.56-8.64-8.57-22.57,0-31.2l87.09-87.85V63.01l-55.62,56.12c-8.67,8.74-22.8,8.75-31.46,0h0c-8.57-8.64-8.57-22.56,0-31.2L84.49,9.2c12.12-12.23,31.87-12.28,44.06-.11h0c5.84,5.83,9.12,13.75,9.12,22.01Z"/><path d="M189.54,9.09c12.18-12.17,31.93-12.12,44.06.11l78.07,78.73c8.56,8.64,8.56,22.56,0,31.2h0c-8.67,8.74-22.8,8.74-31.46,0l-55.62-56.12v101.79s87.09,87.85,87.09,87.85c8.56,8.64,8.56,22.56,0,31.2h0c-8.67,8.74-22.8,8.74-31.46,0l-99.78-100.63V31.1c0-8.26,3.28-16.17,9.12-22.01h0Z"/></svg></span>
-    <span class="dt-topnav__word">Deutsch Tools</span>
+    <span class="dt-topnav__word">deutra</span>
   </div>
   <div class="dt-topnav__actions">
     <button class="dt-donate" onclick="showStub(t('toast.donate'))" data-i18n-title="nav.donate_title" title="Поддержать проект">
@@ -525,7 +491,7 @@ h1 {
 <div class="main-wrap">
 <div class="container">
   <div class="brand">r4-studio</div>
-  <h1>Deutsch Tools</h1>
+  <h1>deutra</h1>
   <div class="subtitle" data-i18n="hero.subtitle">Справочник и тренажёр по немецкому языку</div>
 
   <div class="cards">
@@ -562,11 +528,11 @@ h1 {
         <div class="dt-info-item__sub" data-i18n="info.profile.sub">Скоро</div>
       </span>
     </button>
-    <button class="dt-info-item" onclick="showStub()">
+    <button class="dt-info-item" onclick="installApp()">
       <span class="dt-info-item__icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v12"/><path d="m7 10 5 5 5-5"/><path d="M4 21h16"/></svg></span>
       <span class="dt-info-item__text">
         <div class="dt-info-item__title" data-i18n="info.install.title">Установка</div>
-        <div class="dt-info-item__sub" data-i18n="info.install.sub">Скоро</div>
+        <div class="dt-info-item__sub" id="install-sub" data-i18n="info.install.sub">Скоро</div>
       </span>
     </button>
     <a class="dt-info-item" href="faq.html">
@@ -664,6 +630,57 @@ function showStub(msg) {
   var duration = 1800 + Math.max(0, (el.textContent.length - 20)) * 40;
   showStub._t = setTimeout(function() { el.classList.remove('show'); }, duration);
 }
+
+/* ─── Установка приложения ────────────────────────────────────────────
+   beforeinstallprompt приходит только в Chromium и только когда манифест
+   и иконки на месте. Событие надо перехватить и придержать: prompt()
+   можно вызвать один раз и только по жесту пользователя, поэтому сам
+   вызов живёт в installApp(), а не в обработчике события.
+   На iOS события нет вовсе — Safari ставит приложение только вручную
+   через «Поделиться», поэтому там показываем инструкцию.
+   Подпись под кнопкой переключаем через data-i18n, а не textContent,
+   иначе смена языка затрёт её обратно. */
+var dtInstallEvent = null;
+
+function dtInstallSub(key) {
+  var el = document.getElementById('install-sub');
+  if (!el) return;
+  el.setAttribute('data-i18n', key);
+  el.innerHTML = t(key);
+}
+
+function dtIsStandalone() {
+  return (window.matchMedia && window.matchMedia('(display-mode: standalone)').matches)
+      || window.navigator.standalone === true;
+}
+
+window.addEventListener('beforeinstallprompt', function(e) {
+  e.preventDefault();
+  dtInstallEvent = e;
+  dtInstallSub('info.install.ready');
+});
+
+window.addEventListener('appinstalled', function() {
+  dtInstallEvent = null;
+  dtInstallSub('info.install.done');
+});
+
+function installApp() {
+  if (dtIsStandalone()) { dtInstallSub('info.install.done'); return; }
+  if (dtInstallEvent) {
+    dtInstallEvent.prompt();
+    dtInstallEvent.userChoice.then(function(res) {
+      if (res && res.outcome === 'accepted') dtInstallSub('info.install.done');
+      dtInstallEvent = null;
+    });
+    return;
+  }
+  var ios = /iphone|ipad|ipod/i.test(navigator.userAgent)
+         || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
+  showStub(t(ios ? 'toast.install_ios' : 'toast.install_na'));
+}
+
+if (dtIsStandalone()) dtInstallSub('info.install.done');
 
 // ─── Changelog ──────────────────────────────────
 var CHANGELOG = [];
