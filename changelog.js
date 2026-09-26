@@ -1,5 +1,26 @@
 window.CHANGELOG = [
   {
+  "date": "2026-09-26",
+  "title": "Новое имя, иконка и установка на телефон",
+  "items": [
+    "Приложение теперь называется deutra – содержимое не поменялось",
+    "Сайт можно установить на телефон: кнопка «Установка» на главной",
+    "После установки открывается как обычное приложение, без адресной строки",
+    "Появились иконка на домашнем экране и заставка при запуске",
+    "Новый знак в шапке и на главной странице",
+    "Impressum и Datenschutz больше не игнорируют тёмную тему"
+  ],
+  "titleEn": "New name, icon and install on phone",
+  "itemsEn": [
+    "The app is now called deutra – nothing changed inside",
+    "The site can be installed on a phone: use the Install button on the home page",
+    "Once installed it opens like a normal app, without the address bar",
+    "Added a home screen icon and a splash screen on launch",
+    "New mark in the header and on the home page",
+    "Impressum and Datenschutz no longer ignore the dark theme"
+  ]
+},
+  {
     "date": "2026-09-24",
     "title": "Карточки, пустые разделы и мелочи в тренажёре",
     "items": [
