@@ -833,22 +833,16 @@ html {
   text-decoration: none;
   color: inherit;
 }
-.dt-topnav__mark {
-  width: 32px;
-  height: 32px;
-  border-radius: 50%;
-  background: var(--grey-900);
-  color: #fff;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 11px;
-  font-weight: 700;
-  letter-spacing: -0.02em;
-  flex-shrink: 0;
-}
-.dt-topnav__word {
-  font-size: 14px;
-  font-weight: 600;
+/* Логотип в шапке — горизонтальный локап целиком, знак и слово одним
+   SVG. Раньше тут были кружок со знаком и слово системным шрифтом:
+   на 14px гарнитура логотипа всё равно не читалась, а два элемента
+   приходилось выравнивать между собой руками.
+   Высота 26px: слово внутри локапа занимает 64.5 из 128 единиц, то есть
+   выходит ~13px — прежний кегль подписи. currentColor даёт тему даром. */
+.dt-topnav__logo {
+  height: 26px;
+  width: auto;
+  display: block;
   color: var(--text-title);
+  flex-shrink: 0;
 }
