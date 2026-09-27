@@ -98,10 +98,21 @@ body{font-family:sans-serif;font-size:13px;color:var(--text-main);line-height:1.
   user-select: none;
   cursor: pointer;
   touch-action: manipulation;
-  transition: transform 0.15s var(--ease-dt);
+  transition: color 0.2s var(--ease-dt), border-color 0.2s var(--ease-dt), transform 0.15s var(--ease-dt);
 }
 .section-sep__pill svg { flex-shrink: 0; }
 .section-sep__pill:active { transform: scale(0.95); }
+/* Hover навигации (табы и плашки) — как .dt-rule-peek в тренажёре: обводка и
+   текст акцентом. Заливку --bg-row-hover не берём: в тёмной теме она совпадает
+   с --bg-tab и hover не видно. Только там, где есть мышь, — на таче не залипает.
+   Активный таб не трогаем: у него своя инверсная заливка. */
+@media (hover: hover) {
+  .tab:not(.active):hover,
+  .section-sep__pill:hover {
+    border-color: var(--accent);
+    color: var(--accent);
+  }
+}
 /* Секции, содержащие таблицу (списки слов) — оформляем карточкой, как на главной.
    :has() специально ограничивает эффект только табличными секциями — иначе
    .section с несколькими .rule-box внутри (вкладка Regeln) получил бы «карточку
