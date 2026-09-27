@@ -995,6 +995,87 @@ html {
   transform: translateX(-50%) translateY(0);
 }
 
+/* ── Модалка «Установка на iPhone» ──────────────────────────────────
+   На iOS нет beforeinstallprompt: установить приложение может только
+   сам пользователь через меню «Поделиться». Названия пунктов в этом
+   меню зависят от языка телефона, поэтому инструкция опирается не на
+   слова, а на значки — они одинаковые на любом языке.
+   Форма повторяет .word-modal из cheatsheet.html: тот же оверлей,
+   тот же радиус и тень, чтобы модалки на сайте выглядели одинаково. */
+.dt-install-modal {
+  position: fixed; inset: 0;
+  background: var(--bg-overlay);
+  display: none; align-items: center; justify-content: center;
+  z-index: 1000; padding: 20px;
+}
+.dt-install-modal.open { display: flex; }
+.dt-install-modal__card {
+  background: var(--bg-card);
+  border: 1px solid var(--border-soft);
+  border-radius: 18px;
+  box-shadow: var(--shadow-modal);
+  max-width: 420px; width: 100%;
+  max-height: 85vh; overflow-y: auto;
+  padding: 28px 24px 20px;
+  position: relative;
+  box-sizing: border-box;
+}
+.dt-install-modal__title {
+  font-size: 20px; font-weight: 700;
+  color: var(--text-title);
+  margin: 0 0 20px;
+  padding-right: 36px;   /* место под крестик */
+  text-wrap: balance;
+}
+.dt-install-modal__steps {
+  display: flex; flex-direction: column; gap: 18px;
+  margin-bottom: 24px;
+}
+.dt-install-step {
+  display: flex; align-items: center; gap: 16px;
+}
+/* Колонка иконок фиксированной ширины: тексты шагов начинаются по одной
+   линии, хотя сами значки разной ширины (стрелка уже плитки). */
+.dt-install-step__icon {
+  flex: 0 0 44px;
+  display: flex; align-items: center; justify-content: center;
+  /* Синий берём из палитры сырым, а не через --accent: в тёмной теме
+     --accent зелёный, и значки позеленели бы. --cyan-500 один и тот же
+     в обеих темах и совпадает с кнопкой «Понятно» в светлой. */
+  color: var(--cyan-500);
+}
+.dt-install-step__icon svg { display: block; height: 34px; width: auto; }
+/* Третий шаг — готовая иконка на экране. Плитка и знак на ней зашиты
+   в самой картинке: приложение выглядит так в любой теме. А подпись
+   под плиткой — это подпись домашнего экрана, она идёт цветом текста. */
+.dt-install-step__icon--result { color: var(--text-main); }
+.dt-install-step__icon--result svg { height: 46px; }
+.dt-install-step__text {
+  flex: 1;
+  font-size: 14px; line-height: 1.45;
+  color: var(--text-main);
+}
+.dt-install-modal__ok {
+  display: block; width: 100%;
+  padding: 12px 20px;
+  background: var(--accent);
+  color: var(--on-color);
+  border: none; border-radius: 12px;
+  font-size: 15px; font-weight: 600;
+  font-family: inherit;
+  cursor: pointer;
+  transition: filter 0.2s var(--ease-dt);
+}
+.dt-install-modal__ok:hover { filter: brightness(0.92); }
+.dt-install-modal__close {
+  position: absolute; top: 8px; right: 8px;
+  width: 36px; height: 36px;
+  background: transparent; border: none;
+  color: var(--text-muted); font-size: 26px;
+  cursor: pointer; line-height: 1;
+}
+.dt-install-modal__close:hover { color: var(--text-main); }
+
 /* Перестроение нижнего ряда. Пять кнопок в строку помещаются только на
    широком экране: до 700px они переносятся по две в ряд, до 420px — по одной.
    Жило в index.html вместе с остальными стилями блока, переехало сюда вместе
