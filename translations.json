@@ -150,6 +150,12 @@
       "source": "deepl",
       "verb": "leihen"
     },
+    "17caa60907b630b4": {
+      "date": "2026-09-27",
+      "en": "to take over",
+      "source": "deepl",
+      "verb": "übernehmen"
+    },
     "19304d0fc5a5fc00": {
       "date": "2026-08-27",
       "en": "to compare",
@@ -173,6 +179,12 @@
       "en": "to eat",
       "source": "deepl",
       "verb": "essen"
+    },
+    "1ed74d0cab1f3703": {
+      "date": "2026-09-27",
+      "en": "to occur",
+      "source": "deepl",
+      "verb": "auftreten"
     },
     "1ef7f79d3ca7fae0": {
       "date": "2026-08-27",
@@ -630,6 +642,12 @@
       "source": "deepl",
       "verb": "vorstellen"
     },
+    "9cfc6af0fc86f9ef": {
+      "date": "2026-09-27",
+      "en": "to learn",
+      "source": "deepl",
+      "verb": "erfahren"
+    },
     "9e68b9a680949058": {
       "date": "2026-08-27",
       "en": "to fall asleep",
@@ -899,6 +917,12 @@
       "en": "to look",
       "source": "deepl",
       "verb": "aussehen"
+    },
+    "e4d69835c1a23ee4": {
+      "date": "2026-09-27",
+      "en": "to find out",
+      "source": "deepl",
+      "verb": "herausfinden"
     },
     "e7997e6b9f5c8e68": {
       "date": "2026-08-27",
@@ -2246,6 +2270,12 @@
       "source": "deepl",
       "verb": "glauben"
     },
+    "a0092450690f1cee": {
+      "date": "2026-09-27",
+      "en": "to inquire",
+      "source": "deepl",
+      "verb": "erkundigen"
+    },
     "a0ad3780ed68ce1c": {
       "date": "2026-08-27",
       "en": "to inform",
@@ -2912,6 +2942,12 @@
       "source": "deepl",
       "verb": "berechnen"
     },
+    "eceb8c0ab7ce3acc": {
+      "date": "2026-09-27",
+      "en": "to have an effect",
+      "source": "deepl",
+      "verb": "wirken"
+    },
     "ed22bdddf1af92ac": {
       "date": "2026-09-03",
       "en": "to brake",
@@ -3534,6 +3570,22 @@
       "source": "manual",
       "title": "Ersatzinfinitiv – инфинитив вместо Partizip II",
       "titleEn": "Ersatzinfinitiv – the infinitive instead of Partizip II"
+    },
+    "r0069": {
+      "content_md_en": "[sub] hätte and wäre work on their own, würde is a prop for everything else\n### Look at what exactly you want\nwhat you want | form | example |\nto have – a thing, time, a dog | hätte gern + Akkusativ | Ich hätte gern einen Labrador. |\nto be – someone, somewhere, some way | wäre gern + noun or adjective | Ich wäre gern in Leipzig. |\nto do – an action | würde gern + infinitive at the end | Ich würde gern schlafen. |\n### Why the split runs this way\nhätte is the Konjunktiv II of haben (to have), wäre the Konjunktiv II of sein (to be). These are full verbs with a meaning of their own, so they need no second verb.\nwürde is the Konjunktiv II of werden, but here it carries no meaning at all. It is a prop: it exists only to pull into Konjunktiv II a verb that has no distinct form of its own left.\n⚠ Hence the consequence: würde haben and würde sein are not said. haben and sein have their own form – no prop needed.\n### Two loose ends the textbook leaves out\nModalverben (modal verbs) never switch to würde. There is könnte, müsste, dürfte – but würde können does not exist.\nwollen and sollen take no Umlaut: wollte and sollte match the Präteritum letter for letter. Only the context shows which one is meant.\n### A wish inside a Nebensatz with wenn\nwenn sends its own verb to the end. The Hauptsatz follows after the comma, and its verb lands right behind it – in first position, ahead of the subject.\nWenn Abbas Zeit hätte, würde er Fußball spielen.\n:::outcomes\nNebensatz with wenn | the verb travels all the way to the end: Wenn Abbas Zeit **hätte**\nHauptsatz after the comma | the verb sits right after the comma, ahead of the subject: , **würde** er Fußball spielen\n:::\nBoth halves stand in Konjunktiv II. One half in Konjunktiv and the other in the indicative – not allowed.\n💡 Two würde in a row is not an error, but it sounds bad: Wenn ich Zeit haben würde, würde ich spielen. With haben doubly so, because it has a form of its own. Use hätte.\n### Where these forms come from in the first place [collapse]\nKonjunktiv II is built from the Präteritum: stem + Umlaut where there is anything to put one on, + the endings -e, -est, -e, -en, -et, -en.\nverb | Präteritum | Konjunktiv II |\nhaben | hatte | hätte |\nsein | war | wäre |\nwerden | wurde | würde |\nkönnen | konnte | könnte |\nWeak verbs have no Umlaut and nothing to take one from: ich machte is “I did” and “I would do” at the same time. The form exists, but it cannot be told apart from the past tense, so it gets replaced by würde machen.\nWith haben, sein, the Modalverben and about a dozen strong verbs the difference holds through the Umlaut, and no replacement is needed there.\n### Strong verbs that kept a form of their own [collapse]\nThere are few of them, and in speech they sound fine without würde.\nverb | Konjunktiv II |\nwissen | wüsste |\nkommen | käme |\ngehen | ginge |\ngeben | gäbe |\nbrauchen | bräuchte |\nbleiben | bliebe |\nlassen | ließe |\nThe other strong verbs have a synthetic form too, but in conversation it sounds bookish – there people take würde.",
+      "examplesEn": "Ich hätte gern mehr Zeit für Freunde und Hobbys. – I would like more time for friends and hobbies.\nSie wäre abends gern früher zu Hause. – She would like to be home earlier in the evening.\nSie würde lieber von zu Hause arbeiten. – She would rather work from home.\nWenn Abbas Zeit hätte, würde er Fußball spielen. – If Abbas had time, he would play football.\nWenn sie keine Überstunden machen müsste, wäre sie glücklicher. – If she did not have to work overtime, she would be happier.\nIch hätte gern einen Labrador. – I would like a Labrador.\nIch wäre gern in Leipzig. – I would like to be in Leipzig.",
+      "noteEn": "Related: r0067 – the same condition, but without wenn: Sollte …, müsste …",
+      "source": "manual",
+      "title": "Konjunktiv II: hätte / wäre / würde – какую форму брать",
+      "titleEn": "Konjunktiv II: hätte / wäre / würde – which form to take"
+    },
+    "r0070": {
+      "content_md_en": "[sub] the da-word replaces nothing – it holds the slot for the Nebensatz\n### What is going on\nSome verbs come with a fixed preposition: sich freuen über, warten auf, träumen von. What such a verb takes can be not a word but a whole Nebensatz (subordinate clause) with dass. But a preposition cannot stand in front of dass – über dass does not exist.\nThe way out: the preposition fuses with da- and stays in the Hauptsatz. The Nebensatz follows after it.\nIch freue mich darüber, dass du Zeit hast.\n### How this differs from r0064\nIn r0064 the da-word stands in place of a noun and points backwards: Worauf wartest du? – Ich warte darauf. There darauf means “for it” and replaces a thing already named.\nHere it replaces nothing and points forwards: darüber is empty on its own, and its content is the Nebensatz that has not been said yet. A word doing this job is called a Korrelat.\n### How to build it\n1. Take the fixed preposition of the verb.\n2. Glue da- onto the front. Before a vowel an -r- is inserted (über → darüber, auf → darauf, an → daran), before a consonant it is not (von → davon, mit → damit, für → dafür).\n3. Put it in the Hauptsatz, then the comma, then dass, and the verb of the Nebensatz at the end.\n:::outcomes\nsich freuen über | Ich freue mich **darüber**, dass du Zeit hast.\nwarten auf | Ich habe **darauf** gewartet, dass die Situation sich ändert.\nträumen von | Ich träume **davon**, dass mein Hobby mein Beruf wird.\n:::\n### Can it be dropped [collapse]\nIt depends on the verb. There is no general rule, and no ready list of “obligatory here, optional there” either – the grammars say as much themselves. With verbs that carry a fixed preposition the Korrelat normally stands. Put it in: leaving it out shows more than one word too many.\n⚠ sich freuen takes two prepositions, and the preposition changes the meaning.\nüber – about something already here or past: Ich freue mich darüber, dass du da bist. (Glad you are here.)\nauf – about something still ahead: Ich freue mich darauf, dass du morgen kommst. (Looking forward to you coming tomorrow.)",
+      "examplesEn": "Ich freue mich darüber, dass du Zeit hast. – I am glad that you have time.\nIch habe darauf gewartet, dass die Situation sich ändert. – I was waiting for the situation to change.\nIch träume davon, dass mein Hobby mein Beruf wird. – I dream of my hobby becoming my job.\nAchte darauf, dass du pünktlich bist. – Make sure that you are on time.\nWir sprechen darüber, dass die Stelle befristet ist. – We are talking about the position being temporary.",
+      "noteEn": "Related: r0064 – da(r)- and wo(r)- in place of a noun",
+      "source": "manual",
+      "title": "Korrelat da(r)- перед dass-Satz",
+      "titleEn": "Korrelat da(r)- before a dass-Satz"
     }
   },
   "SOUNDS": {
@@ -3919,6 +3971,16 @@
       "en": "by (doing something)",
       "noteEn": "Subordinating conjunction — the verb moves to the end: Man spart Strom, indem man den Stecker zieht. It names the manner, not the cause: replace it with weil and the sentence stops answering \"how?\"",
       "source": "manual"
+    },
+    "t0060": {
+      "en": "as well as",
+      "noteEn": "a listing conjunction, the same sense as und, but written register. It does not change the word order. Not to be confused with so wie – “the same way as”",
+      "source": "manual"
+    },
+    "t0061": {
+      "en": "unreal condition",
+      "noteEn": "a condition that is not met – Wenn ich Zeit hätte, würde ich kommen. Both halves stand in Konjunktiv II",
+      "source": "manual"
     }
   },
   "VOCAB": {
@@ -4003,7 +4065,7 @@
     "00d63ed709ebba34": {
       "_src_note": "Слово не привязано к полу. В зависимости der, die меняется пол слова.",
       "backtranslation": "Erwachsene",
-      "date": "2026-09-24",
+      "date": "2026-09-27",
       "de": "Erwachsene",
       "en": "adult",
       "noteEn": "The word is not gender-specific. Depending on der, die, the gender of the word changes.",
@@ -4074,7 +4136,7 @@
       "altEn": "temporary exhibition",
       "altEnSource": "deepl-ru",
       "backtranslation": "Sonderausstellung",
-      "date": "2026-09-24",
+      "date": "2026-09-27",
       "de": "Sonderausstellung",
       "en": "special exhibition",
       "noteEn": "Sonder- (special) + Ausstellung (exhibition)",
@@ -4125,7 +4187,7 @@
       "altEn": "team leader",
       "altEnSource": "deepl-ru",
       "backtranslation": "Teamleiter",
-      "date": "2026-09-24",
+      "date": "2026-09-27",
       "de": "Teamleiter",
       "en": "team leader",
       "source": "manual"
@@ -4135,7 +4197,7 @@
       "_src_note": "проходить ратсояния",
       "altEn": "to cover",
       "altEnSource": "manual",
-      "date": "2026-09-24",
+      "date": "2026-09-27",
       "de": "zurücklegen",
       "en": "to put aside",
       "noteEn": "undergo rehabilitation",
@@ -4147,7 +4209,7 @@
       "altEn": "to call",
       "altEnSource": "manual",
       "backtranslation": "klingeln",
-      "date": "2026-09-24",
+      "date": "2026-09-27",
       "de": "klingeln",
       "en": "to ring",
       "source": "manual"
@@ -4187,7 +4249,7 @@
     },
     "034fc0b31868cc6f": {
       "backtranslation": "öffnen",
-      "date": "2026-09-24",
+      "date": "2026-09-27",
       "de": "aufmachen",
       "en": "to open",
       "source": "manual",
@@ -4211,13 +4273,13 @@
     },
     "038c6da4b5244ad3": {
       "backtranslation": "Lesen",
-      "date": "2026-09-24",
+      "date": "2026-09-27",
       "de": "Lesen",
       "en": "Read",
       "source": "manual"
     },
     "0393c26fe8fe8f77": {
-      "date": "2026-09-24",
+      "date": "2026-09-27",
       "de": "zuhören",
       "en": "to listen",
       "source": "manual",
@@ -4255,7 +4317,7 @@
     "0405905f097a9896": {
       "altEn": "after all",
       "altEnSource": "manual",
-      "date": "2026-09-24",
+      "date": "2026-09-27",
       "de": "schließlich",
       "en": "finally",
       "source": "manual"
@@ -4430,6 +4492,13 @@
       "source": "haiku",
       "verdict": "ok"
     },
+    "07303268cb1be976": {
+      "backtranslation": "die Entwicklung",
+      "date": "2026-09-27",
+      "de": "Entwicklung",
+      "en": "development",
+      "source": "deepl"
+    },
     "0740469068b45a9b": {
       "date": "2026-09-05",
       "de": "Beamte",
@@ -4507,7 +4576,7 @@
       "source": "deepl"
     },
     "088a86074271d947": {
-      "date": "2026-09-24",
+      "date": "2026-09-27",
       "de": "Schadenssumme",
       "en": "amount of damages",
       "source": "manual"
@@ -4546,7 +4615,7 @@
     "08b61cfc90305265": {
       "_src_note": "\"etwas ist los\" – что-то происходит",
       "backtranslation": "los",
-      "date": "2026-09-24",
+      "date": "2026-09-27",
       "de": "los",
       "en": "go on",
       "noteEn": "\"etwas ist los\" – something is happening",
@@ -4630,7 +4699,7 @@
     },
     "097ba3d3d2026d08": {
       "_src_note": "субстантивированное прилагательное, в перечнях без артикля",
-      "date": "2026-09-24",
+      "date": "2026-09-27",
       "de": "Digitales",
       "en": "digital matters",
       "noteEn": "a nominalised adjective, used without an article in lists",
@@ -4649,7 +4718,7 @@
       "altEn": "ZIP code",
       "altEnSource": "manual",
       "backtranslation": "Postleitzahl",
-      "date": "2026-09-24",
+      "date": "2026-09-27",
       "de": "Postleitzahl",
       "en": "postal code",
       "source": "manual"
@@ -4723,7 +4792,7 @@
       "source": "deepl"
     },
     "0ab8f937023e255d": {
-      "date": "2026-09-24",
+      "date": "2026-09-27",
       "de": "seither",
       "en": "since then",
       "source": "manual"
@@ -4759,12 +4828,19 @@
       "en": "sink",
       "source": "deepl"
     },
+    "0b290886990ab5d2": {
+      "backtranslation": "die Körpersprache",
+      "date": "2026-09-27",
+      "de": "Körpersprache",
+      "en": "body language",
+      "source": "deepl"
+    },
     "0b3130be3bc4513f": {
       "_src_altEn": "с приветом",
       "_src_note": "конец письма/сообщения",
       "altEn": "Best regards",
       "altEnSource": "deepl-ru",
-      "date": "2026-09-24",
+      "date": "2026-09-27",
       "de": "LG (Liebe Grüße)",
       "en": "Kind regards",
       "noteEn": "End of letter/message",
@@ -4842,7 +4918,7 @@
       "altEn": "ice",
       "altEnSource": "deepl-ru",
       "backtranslation": "Eis",
-      "date": "2026-09-24",
+      "date": "2026-09-27",
       "de": "Eis",
       "en": "ice cream",
       "source": "manual"
@@ -4875,7 +4951,7 @@
     "0c297383748cf8db": {
       "altEn": "adviser",
       "altEnSource": "manual",
-      "date": "2026-09-24",
+      "date": "2026-09-27",
       "de": "Verbraucherthema",
       "en": "consumer issue",
       "source": "manual"
@@ -4892,7 +4968,7 @@
     },
     "0c65ca4e3cb7716f": {
       "backtranslation": "Bedenken Sie",
-      "date": "2026-09-24",
+      "date": "2026-09-27",
       "de": "Betrachten",
       "en": "Look at",
       "source": "manual",
@@ -4945,7 +5021,7 @@
       "_src_note": "eine Versicherung / einen Vertrag abschließen – заключить страховку / договор",
       "altEn": "to take out (insurance), to sign (a contract)",
       "altEnSource": "manual",
-      "date": "2026-09-24",
+      "date": "2026-09-27",
       "de": "abschließen",
       "en": "to lock",
       "noteEn": "eine Versicherung / einen Vertrag abschließen – to take out insurance / to sign a contract",
@@ -5103,6 +5179,16 @@
       "source": "haiku",
       "verdict": "ok"
     },
+    "0e16f3f7c0f42da7": {
+      "_src_note": "Partizip I – основа плюс -end. Работает как прилагательное и склоняется",
+      "backtranslation": "führend",
+      "date": "2026-09-27",
+      "de": "führend",
+      "en": "leading",
+      "exampleEn": "a leading company in event management",
+      "noteEn": "Partizip I – \"base plus\" -end. It functions as an adjective and is inflected",
+      "source": "deepl"
+    },
     "0e2e62fe11d2570f": {
       "backtranslation": "die Stadtrundfahrt",
       "date": "2026-08-27",
@@ -5192,7 +5278,7 @@
     },
     "0f1e18b90dd4f10f": {
       "_src_note": "разговорное сокращение от Haftpflichtversicherung",
-      "date": "2026-09-24",
+      "date": "2026-09-27",
       "de": "Haftpflicht",
       "en": "personal liability",
       "noteEn": "short for Haftpflichtversicherung",
@@ -5240,7 +5326,7 @@
       "altEn": "men's clothing",
       "altEnSource": "deepl-ru",
       "backtranslation": "Herrenmode",
-      "date": "2026-09-24",
+      "date": "2026-09-27",
       "de": "Herrenmode",
       "en": "men's fashion",
       "noteEn": "nur Sg",
@@ -5262,7 +5348,7 @@
     },
     "10089312e8aee804": {
       "backtranslation": "Preisvergleich",
-      "date": "2026-09-24",
+      "date": "2026-09-27",
       "de": "Preisvergleich",
       "en": "price comparison",
       "source": "manual"
@@ -5301,7 +5387,7 @@
       "_src_altEn": "нечаянно",
       "altEn": "unintentionally",
       "altEnSource": "deepl-ru",
-      "date": "2026-09-24",
+      "date": "2026-09-27",
       "de": "aus Versehen",
       "en": "by mistake",
       "source": "manual"
@@ -5317,7 +5403,7 @@
     },
     "113a721074f993ff": {
       "backtranslation": "Grenzen",
-      "date": "2026-09-24",
+      "date": "2026-09-27",
       "de": "grenzen",
       "en": "to border",
       "source": "manual"
@@ -5344,6 +5430,18 @@
       "de": "lustig",
       "en": "funny",
       "exampleEn": "That's funny!",
+      "source": "deepl"
+    },
+    "11f5427d345c4cf2": {
+      "_src_altEn": "die Assistentin",
+      "_src_note": "слабое склонение – den Assistenten, dem Assistenten, des Assistenten",
+      "altEn": "the assistant",
+      "altEnSource": "deepl",
+      "backtranslation": "der Assistent",
+      "date": "2026-09-27",
+      "de": "Assistent",
+      "en": "assistant",
+      "noteEn": "Weak declension – den Assistenten, dem Assistenten, des Assistenten",
       "source": "deepl"
     },
     "120f065bfd18b4e7": {
@@ -5381,6 +5479,13 @@
       "noteEn": "↔ aussteigen",
       "source": "deepl"
     },
+    "12a82f7d9d37f15a": {
+      "backtranslation": "das Marketing",
+      "date": "2026-09-27",
+      "de": "Marketing",
+      "en": "marketing",
+      "source": "deepl"
+    },
     "12be4174829f52f8": {
       "backtranslation": "Schutz",
       "date": "2026-08-27",
@@ -5401,7 +5506,7 @@
     },
     "12dc408a6e3d6a72": {
       "backtranslation": "Scheibe",
-      "date": "2026-09-24",
+      "date": "2026-09-27",
       "de": "Scheibe",
       "en": "pane",
       "source": "manual"
@@ -5434,6 +5539,14 @@
       "source": "haiku",
       "verdict": "ok"
     },
+    "1303a5ed82c5c8bd": {
+      "backtranslation": "geeignet",
+      "date": "2026-09-27",
+      "de": "geeignet",
+      "en": "suitable",
+      "exampleEn": "Are you a good fit for this position?",
+      "source": "deepl"
+    },
     "1351675831595311": {
       "_src_altEn": "завхоз",
       "altEn": "caretaker",
@@ -5452,7 +5565,7 @@
       "verdict": "fix"
     },
     "1395e6f3bfe79cb8": {
-      "date": "2026-09-24",
+      "date": "2026-09-27",
       "de": "den Versicherungsbeitrag per Überweisung zahlen",
       "en": "to pay the insurance premium by bank transfer",
       "source": "manual"
@@ -5536,7 +5649,7 @@
     },
     "14c89e34da144ba0": {
       "backtranslation": "Die Obstdiät",
-      "date": "2026-09-24",
+      "date": "2026-09-27",
       "de": "Obstdiät",
       "en": "fruit diet",
       "source": "manual"
@@ -5593,7 +5706,7 @@
     },
     "15306aabaf6e238c": {
       "_src_note": "die Versicherung gilt ab / für – страховка действует с / для",
-      "date": "2026-09-24",
+      "date": "2026-09-27",
       "de": "gelten",
       "en": "to be valid",
       "noteEn": "die Versicherung gilt ab / für – the policy is valid from / for",
@@ -5655,7 +5768,7 @@
       "_src_altEn": "требование",
       "altEn": "credit",
       "altEnSource": "manual",
-      "date": "2026-09-24",
+      "date": "2026-09-27",
       "de": "Anspruch",
       "en": "claim",
       "source": "manual"
@@ -6046,7 +6159,7 @@
       "source": "deepl"
     },
     "18db1a87144a67c3": {
-      "date": "2026-09-24",
+      "date": "2026-09-27",
       "de": "Homeoffice",
       "en": "home office",
       "exampleEn": "work from home",
@@ -6086,7 +6199,7 @@
     "18f00310fe7ec3d1": {
       "altEn": "field",
       "altEnSource": "manual",
-      "date": "2026-09-24",
+      "date": "2026-09-27",
       "de": "Verbraucherzentrale",
       "en": "consumer advice centre",
       "source": "manual"
@@ -6109,6 +6222,13 @@
       "noteEn": "In Russian, “after someone”; in German, a direct object: jemanden beobachten",
       "source": "haiku",
       "verdict": "ok"
+    },
+    "1917c29fefbd50bf": {
+      "backtranslation": "die Pünktlichkeit",
+      "date": "2026-09-27",
+      "de": "Pünktlichkeit",
+      "en": "punctuality",
+      "source": "deepl"
     },
     "1933b8b9f0c1546d": {
       "_src_altEn": "занавеска",
@@ -6239,7 +6359,7 @@
     "1b1a0806c438c6b7": {
       "_src_note": "однонаправленно",
       "backtranslation": "bringen",
-      "date": "2026-09-24",
+      "date": "2026-09-27",
       "de": "bringen",
       "en": "to bring",
       "noteEn": "unidirectional",
@@ -6258,7 +6378,7 @@
       "altEn": "to entertain",
       "altEnSource": "deepl-ru",
       "backtranslation": "unterhalten",
-      "date": "2026-09-24",
+      "date": "2026-09-27",
       "de": "unterhalten",
       "en": "to talk",
       "noteEn": "sich unterhalten über + Akk",
@@ -6324,7 +6444,7 @@
     },
     "1b9e3130bf696093": {
       "backtranslation": "die Bildung",
-      "date": "2026-09-24",
+      "date": "2026-09-27",
       "de": "Bildung",
       "en": "education",
       "source": "manual"
@@ -6413,7 +6533,7 @@
     "1c785a31bc5e53b0": {
       "altEn": "plan",
       "altEnSource": "manual",
-      "date": "2026-09-24",
+      "date": "2026-09-27",
       "de": "Tarif",
       "en": "rate",
       "noteEn": "same as Vorstellungsgespräch",
@@ -6452,7 +6572,7 @@
     "1ce1b1446b533cbf": {
       "altEn": "viewing",
       "altEnSource": "manual",
-      "date": "2026-09-24",
+      "date": "2026-09-27",
       "de": "Besichtigung",
       "en": "tour",
       "source": "manual"
@@ -6625,7 +6745,7 @@
       "_src_altEn": "застраховать",
       "altEn": "to insure",
       "altEnSource": "deepl-ru",
-      "date": "2026-09-24",
+      "date": "2026-09-27",
       "de": "absichern",
       "en": "to safeguard",
       "source": "manual"
@@ -6643,6 +6763,14 @@
       "de": "international",
       "en": "international",
       "source": "deepl"
+    },
+    "1ee1a018f983728b": {
+      "backtranslation": "die Geschäftsführung",
+      "date": "2026-09-27",
+      "de": "Geschäftsleitung",
+      "en": "management",
+      "source": "haiku",
+      "verdict": "ok"
     },
     "1eeee3b8d85322e1": {
       "backtranslation": "das Handy",
@@ -6668,7 +6796,7 @@
       "altEn": "contacts",
       "altEnSource": "manual",
       "backtranslation": "Beziehungen",
-      "date": "2026-09-24",
+      "date": "2026-09-27",
       "de": "Beziehungen",
       "en": "relationships",
       "noteEn": "colloq. “Vitamin B” – useful connections / pull",
@@ -6685,7 +6813,7 @@
     "1f6e7774e41ec483": {
       "_src_note": "имя собственное",
       "backtranslation": "Brandenburger Tor",
-      "date": "2026-09-24",
+      "date": "2026-09-27",
       "de": "Brandenburger Tor",
       "en": "Brandenburg Gate",
       "noteEn": "proper noun",
@@ -6732,7 +6860,7 @@
     "1fe9e67553b26233": {
       "_src_note": "Foto + Ausstellung (n0399) | составное слово",
       "backtranslation": "Fotoausstellung",
-      "date": "2026-09-24",
+      "date": "2026-09-27",
       "de": "Fotoausstellung",
       "en": "photo exhibition",
       "noteEn": "Foto + Ausstellung (n 0399) | compound word",
@@ -6852,7 +6980,7 @@
     },
     "214bb574be9f6362": {
       "backtranslation": "Paprika",
-      "date": "2026-09-24",
+      "date": "2026-09-27",
       "de": "Paprika",
       "en": "bell pepper",
       "source": "manual"
@@ -6981,7 +7109,7 @@
     },
     "22fd6984a092f482": {
       "backtranslation": "brauchen",
-      "date": "2026-09-24",
+      "date": "2026-09-27",
       "de": "brauchen",
       "en": "to need",
       "source": "manual"
@@ -7157,7 +7285,7 @@
       "_src_note": "наречие «точно»: Das ist bestimmt richtig | прилагательное «определённый»: bestimmte Produkte",
       "altEn": "certain",
       "altEnSource": "manual",
-      "date": "2026-09-24",
+      "date": "2026-09-27",
       "de": "bestimmt",
       "en": "definitely",
       "noteEn": "adverb: Das ist bestimmt richtig | adjective: bestimmte Produkte",
@@ -7181,6 +7309,18 @@
       "date": "2026-08-27",
       "de": "Chef",
       "en": "boss",
+      "source": "deepl"
+    },
+    "2571e2c6e327b667": {
+      "_src_altEn": "обман",
+      "_src_note": "множественного нет",
+      "altEn": "deception",
+      "altEnSource": "deepl-ru",
+      "backtranslation": "der Betrug",
+      "date": "2026-09-27",
+      "de": "Betrug",
+      "en": "fraud",
+      "noteEn": "There is no plural form",
       "source": "deepl"
     },
     "25a5f9914fbc8498": {
@@ -7224,6 +7364,14 @@
       "source": "haiku",
       "verdict": "ok"
     },
+    "262e0306f4ecffea": {
+      "backtranslation": "abgeschlossen",
+      "date": "2026-09-27",
+      "de": "abgeschlossen",
+      "en": "completed",
+      "exampleEn": "completed vocational training",
+      "source": "deepl"
+    },
     "26702328c95a4ced": {
       "backtranslation": "Wetter",
       "date": "2026-08-27",
@@ -7254,7 +7402,7 @@
     },
     "273888fb7a1464ac": {
       "backtranslation": "der Schalter",
-      "date": "2026-09-24",
+      "date": "2026-09-27",
       "de": "Schalter",
       "en": "counter",
       "source": "manual"
@@ -7262,7 +7410,7 @@
     "276e4f4c17e35dbe": {
       "_src_note": "zu scharf – слишком острый | zu laut – слишком громко",
       "backtranslation": "zu",
-      "date": "2026-09-24",
+      "date": "2026-09-27",
       "de": "zu",
       "en": "too",
       "noteEn": "zu scharf – too sharp | zu laut – too loud",
@@ -7291,7 +7439,7 @@
       "source": "deepl"
     },
     "27dcc3fa683327b5": {
-      "date": "2026-09-24",
+      "date": "2026-09-27",
       "de": "schimpfen",
       "en": "to scold",
       "source": "manual",
@@ -7343,7 +7491,7 @@
       "altEn": "to be born",
       "altEnSource": "manual",
       "backtranslation": "geboren werden",
-      "date": "2026-09-24",
+      "date": "2026-09-27",
       "de": "geboren sein",
       "en": "to be born",
       "source": "manual",
@@ -7435,7 +7583,7 @@
     },
     "28c0cce4e56b3739": {
       "backtranslation": "die Lippe",
-      "date": "2026-09-24",
+      "date": "2026-09-27",
       "de": "Lippe",
       "en": "lip",
       "source": "manual"
@@ -7447,6 +7595,13 @@
       "en": "current",
       "source": "haiku",
       "verdict": "ok"
+    },
+    "28d07043dc486184": {
+      "backtranslation": "Mimik und Gestik",
+      "date": "2026-09-27",
+      "de": "Mimik und Gestik",
+      "en": "Facial Expressions and Gestures",
+      "source": "deepl"
     },
     "28d10b36c0e4c8ab": {
       "_src_altEn": "прям",
@@ -7605,6 +7760,13 @@
       "source": "haiku",
       "verdict": "fix"
     },
+    "29f39e28427a33c2": {
+      "date": "2026-09-27",
+      "de": "der erste Eindruck",
+      "en": "first impression",
+      "source": "haiku",
+      "verdict": "fix"
+    },
     "2a0b68f17e2ccc71": {
       "_src_note": "Müll + Eimer | ↔ Eimer (обычное ведро)",
       "backtranslation": "Mülleimer",
@@ -7678,7 +7840,7 @@
       "altEn": "loose",
       "altEnSource": "manual",
       "backtranslation": "weit",
-      "date": "2026-09-24",
+      "date": "2026-09-27",
       "de": "weit",
       "en": "wide",
       "source": "manual"
@@ -7736,7 +7898,7 @@
     },
     "2b6028842c511d5f": {
       "backtranslation": "beschäftigen",
-      "date": "2026-09-24",
+      "date": "2026-09-27",
       "de": "beschäftigen",
       "en": "to be busy with",
       "source": "manual"
@@ -7753,7 +7915,7 @@
       "altEn": "place",
       "altEnSource": "deepl-ru",
       "backtranslation": "Ort",
-      "date": "2026-09-24",
+      "date": "2026-09-27",
       "de": "Ort",
       "en": "town",
       "source": "manual"
@@ -7792,7 +7954,7 @@
       "_src_note": "о столике",
       "altEn": "occupied",
       "altEnSource": "manual",
-      "date": "2026-09-24",
+      "date": "2026-09-27",
       "de": "Frei",
       "en": "free",
       "noteEn": "About the table",
@@ -7842,7 +8004,7 @@
     },
     "2c9b818b1a61f627": {
       "backtranslation": "abheben",
-      "date": "2026-09-24",
+      "date": "2026-09-27",
       "de": "abheben",
       "en": "to withdraw",
       "source": "manual"
@@ -7927,20 +8089,20 @@
     },
     "2d16bd9ef273c6a1": {
       "backtranslation": "Altstadt",
-      "date": "2026-09-24",
+      "date": "2026-09-27",
       "de": "Altstadt",
       "en": "old town",
       "source": "manual"
     },
     "2d4526b20056db68": {
       "backtranslation": "Bluten",
-      "date": "2026-09-24",
+      "date": "2026-09-27",
       "de": "bluten",
       "en": "to bleed",
       "source": "manual"
     },
     "2d7b0a96c86d5809": {
-      "date": "2026-09-24",
+      "date": "2026-09-27",
       "de": "wegen Krankheit vorzeitig beenden",
       "en": "to end early due to illness",
       "source": "manual"
@@ -8021,6 +8183,19 @@
       "source": "haiku",
       "verdict": "ok"
     },
+    "2e355929492ab022": {
+      "_src_altEn": "справляться",
+      "_src_note": "спрашиваешь не человека, а о чём – sich erkundigen nach dem Termin",
+      "altEn": "to manage",
+      "altEnSource": "deepl-ru",
+      "backtranslation": "sich erkundigen",
+      "date": "2026-09-27",
+      "de": "erkundigen",
+      "en": "to inquire",
+      "noteEn": "You're not asking about a person, but about what—sich erkundigen nach dem Termin",
+      "source": "haiku",
+      "verdict": "ok"
+    },
     "2e70765da3a5309d": {
       "date": "2026-09-05",
       "de": "Post",
@@ -8092,7 +8267,7 @@
     },
     "2f6ce7e4a73ad113": {
       "_src_note": "синоним Vorstellungsgespräch",
-      "date": "2026-09-24",
+      "date": "2026-09-27",
       "de": "Bewerbungsgespräch",
       "en": "job interview",
       "noteEn": "same as Vorstellungsgespräch",
@@ -8112,7 +8287,7 @@
     },
     "2fa3803f2cc62b43": {
       "backtranslation": "Staubsaugen",
-      "date": "2026-09-24",
+      "date": "2026-09-27",
       "de": "staubsaugen",
       "en": "to vacuum",
       "source": "manual"
@@ -8305,7 +8480,7 @@
     },
     "3220d1aba1aee724": {
       "backtranslation": "Hauptbahnhof",
-      "date": "2026-09-24",
+      "date": "2026-09-27",
       "de": "Hauptbahnhof",
       "en": "central station",
       "source": "manual"
@@ -8422,7 +8597,7 @@
     "33ab24f53c2b0038": {
       "_src_note": "сокращение от die Operation",
       "backtranslation": "das oP",
-      "date": "2026-09-24",
+      "date": "2026-09-27",
       "de": "OP",
       "en": "surgery",
       "noteEn": "abbreviation for die Operation",
@@ -8430,7 +8605,7 @@
     },
     "33b0815b1df7031e": {
       "backtranslation": "Kopierraum",
-      "date": "2026-09-24",
+      "date": "2026-09-27",
       "de": "Kopierraum",
       "en": "copy room",
       "source": "manual"
@@ -8519,6 +8694,15 @@
       "en": "let's",
       "source": "haiku",
       "verdict": "ok"
+    },
+    "3468b8bd31658472": {
+      "_src_note": "«überwünscht» не существует. Приставка un-, корень erwünscht",
+      "backtranslation": "unerwünscht",
+      "date": "2026-09-27",
+      "de": "unerwünscht",
+      "en": "undesirable",
+      "noteEn": "\"überwünscht\" does not exist. The prefix is un-, and the root is erwünscht",
+      "source": "deepl"
     },
     "346f8f368cf12cbb": {
       "backtranslation": "der Witz",
@@ -8855,7 +9039,7 @@
       "altEn": "young person",
       "altEnSource": "manual",
       "backtranslation": "Jugendliche",
-      "date": "2026-09-24",
+      "date": "2026-09-27",
       "de": "Jugendliche",
       "en": "teenager",
       "noteEn": "is inflected as an adjective",
@@ -8931,7 +9115,7 @@
       "_src_altEn": "увольняться",
       "altEn": "to resign",
       "altEnSource": "manual",
-      "date": "2026-09-24",
+      "date": "2026-09-27",
       "de": "kündigen",
       "en": "to terminate",
       "source": "manual"
@@ -8945,7 +9129,7 @@
     },
     "38d7b44f73dc0b89": {
       "backtranslation": "Zeiteinteilung",
-      "date": "2026-09-24",
+      "date": "2026-09-27",
       "de": "Zeiteinteilung",
       "en": "time management",
       "source": "manual"
@@ -9118,7 +9302,7 @@
     },
     "3b16b08f215096c7": {
       "backtranslation": "Jugendaustausch",
-      "date": "2026-09-24",
+      "date": "2026-09-27",
       "de": "Jugendaustausch",
       "en": "youth exchange",
       "source": "manual"
@@ -9129,7 +9313,7 @@
       "altEn": "amount",
       "altEnSource": "manual",
       "backtranslation": "Höhe",
-      "date": "2026-09-24",
+      "date": "2026-09-27",
       "de": "Höhe",
       "en": "height",
       "noteEn": "↔ Breite, Tiefe | die Höhe des Beitrags – the amount of the contribution",
@@ -9191,10 +9375,22 @@
     },
     "3bcc37284c6693c5": {
       "backtranslation": "Haftpflichtversicherung",
-      "date": "2026-09-24",
+      "date": "2026-09-27",
       "de": "Haftpflichtversicherung",
       "en": "liability insurance",
       "source": "manual"
+    },
+    "3bdade11b5048f78": {
+      "_src_altEn": "окончание учёбы",
+      "_src_note": "eine abgeschlossene Ausbildung – законченное образование",
+      "altEn": "completion of studies",
+      "altEnSource": "deepl-ru",
+      "backtranslation": "der Abschluss",
+      "date": "2026-09-27",
+      "de": "Abschluss",
+      "en": "degree",
+      "noteEn": "eine abgeschlossene Ausbildung – completed education",
+      "source": "deepl"
     },
     "3be411ed87d49365": {
       "backtranslation": "der Umzug",
@@ -9219,7 +9415,7 @@
     },
     "3c61d5792181dd7a": {
       "backtranslation": "der Pass",
-      "date": "2026-09-24",
+      "date": "2026-09-27",
       "de": "Pass",
       "en": "passport",
       "source": "manual"
@@ -9283,7 +9479,7 @@
       "altEn": "to think",
       "altEnSource": "deepl-ru",
       "backtranslation": "denken",
-      "date": "2026-09-24",
+      "date": "2026-09-27",
       "de": "meinen",
       "en": "to mean",
       "exampleEn": "What do you think about that?",
@@ -9442,7 +9638,7 @@
     },
     "3ed2b27b903b0be7": {
       "_src_note": "sich ernähren von + Dativ",
-      "date": "2026-09-24",
+      "date": "2026-09-27",
       "de": "ernähren",
       "en": "to eat",
       "noteEn": "sich ernähren von + Dativ – to live on",
@@ -9593,7 +9789,7 @@
       "source": "deepl"
     },
     "401b40500162e443": {
-      "date": "2026-09-24",
+      "date": "2026-09-27",
       "de": "einfahren",
       "en": "to drive in",
       "source": "manual"
@@ -9630,7 +9826,7 @@
       "_src_altEn": "прогулка на корабле",
       "altEn": "boat ride",
       "altEnSource": "deepl-ru",
-      "date": "2026-09-24",
+      "date": "2026-09-27",
       "de": "Schifffahrt",
       "en": "shipping",
       "source": "manual",
@@ -9703,6 +9899,13 @@
       "de": "lächeln",
       "en": "to smile",
       "source": "deepl"
+    },
+    "416320542b7ce532": {
+      "date": "2026-09-27",
+      "de": "Kundenbetreuung",
+      "en": "customer care",
+      "source": "haiku",
+      "verdict": "fix"
     },
     "41801d21f378e822": {
       "_src_altEn": "пользоваться",
@@ -9793,7 +9996,7 @@
       "source": "deepl"
     },
     "42249483903cefeb": {
-      "date": "2026-09-24",
+      "date": "2026-09-27",
       "de": "folgend",
       "en": "following",
       "source": "manual"
@@ -9811,6 +10014,15 @@
       "de": "Gott",
       "en": "god",
       "source": "deepl"
+    },
+    "4254d6f55937fd41": {
+      "_src_note": "Vorstellungen von der Zukunft – представления о будущем",
+      "date": "2026-09-27",
+      "de": "Vorstellung",
+      "en": "idea",
+      "noteEn": "Vorstellungen von der Zukunft – visions of the future",
+      "source": "haiku",
+      "verdict": "fix"
     },
     "4260a6ed0891740d": {
       "backtranslation": "Cousin",
@@ -9920,7 +10132,7 @@
     },
     "434d75286d7211f5": {
       "backtranslation": "das Einwohnermeldeamt",
-      "date": "2026-09-24",
+      "date": "2026-09-27",
       "de": "Einwohnermeldeamt",
       "en": "resident registration office",
       "source": "manual"
@@ -9951,7 +10163,7 @@
       "altEn": "to register",
       "altEnSource": "deepl-ru",
       "backtranslation": "Anmelden",
-      "date": "2026-09-24",
+      "date": "2026-09-27",
       "de": "anmelden",
       "en": "to sign up",
       "source": "manual"
@@ -9971,7 +10183,7 @@
       "_src_note": "на сленге может означать употребление наркотиков - трактовка зависит от контекста",
       "altEn": "to use in doses",
       "altEnSource": "manual",
-      "date": "2026-09-24",
+      "date": "2026-09-27",
       "de": "Teile konsumieren",
       "en": "to use (drugs)",
       "noteEn": "slang; may refer to drug use – depends on context",
@@ -10034,7 +10246,7 @@
     },
     "4501dc98d416781f": {
       "backtranslation": "Antrag",
-      "date": "2026-09-24",
+      "date": "2026-09-27",
       "de": "Antrag",
       "en": "application",
       "source": "manual"
@@ -10062,7 +10274,7 @@
       "_src_altEn": "die Sekretärin",
       "altEn": "the secretary",
       "altEnSource": "deepl",
-      "date": "2026-09-24",
+      "date": "2026-09-27",
       "de": "Sekretär",
       "en": "secretary",
       "source": "manual"
@@ -10210,7 +10422,7 @@
       "source": "deepl"
     },
     "471d0acfadd2f111": {
-      "date": "2026-09-24",
+      "date": "2026-09-27",
       "de": "Essverhalten",
       "en": "eating behaviour",
       "source": "manual"
@@ -10298,7 +10510,7 @@
       "_src_altEn": "увеличиваться",
       "altEn": "to increase",
       "altEnSource": "manual",
-      "date": "2026-09-24",
+      "date": "2026-09-27",
       "de": "zunehmen",
       "en": "to gain weight",
       "source": "manual"
@@ -10326,7 +10538,7 @@
       "altEn": "stupid",
       "altEnSource": "manual",
       "backtranslation": "albern",
-      "date": "2026-09-24",
+      "date": "2026-09-27",
       "de": "doof",
       "en": "silly",
       "noteEn": "colloquial; can also be translated as \"silly\"; similar in meaning to  blöd",
@@ -10352,6 +10564,19 @@
       "date": "2026-08-27",
       "de": "Laden",
       "en": "store",
+      "source": "haiku",
+      "verdict": "ok"
+    },
+    "491b9ea1492a216a": {
+      "_src_altEn": "die Angestellte",
+      "_src_note": "склоняется как прилагательное – der Angestellte, ein Angestellter, die Angestellte",
+      "altEn": "the employee",
+      "altEnSource": "deepl",
+      "backtranslation": "der Mitarbeiter",
+      "date": "2026-09-27",
+      "de": "Angestellte",
+      "en": "employee",
+      "noteEn": "It is inflected as an adjective—derAngestellte, einAngestellter, dieAngestellte",
       "source": "haiku",
       "verdict": "ok"
     },
@@ -10505,7 +10730,7 @@
     "4aec861937e3c809": {
       "altEn": "over it",
       "altEnSource": "manual",
-      "date": "2026-09-24",
+      "date": "2026-09-27",
       "de": "darüber",
       "en": "about it",
       "source": "manual"
@@ -10549,7 +10774,7 @@
     "4b27c0f13a0cd321": {
       "_src_note": "как Büro (n0277), но место",
       "backtranslation": "Fundbüro",
-      "date": "2026-09-24",
+      "date": "2026-09-27",
       "de": "Fundbüro",
       "en": "lost and found office",
       "noteEn": "like Büro (n 0277), but the location",
@@ -10597,7 +10822,7 @@
       "altEn": "treasure",
       "altEnSource": "deepl-ru",
       "backtranslation": "Schatz",
-      "date": "2026-09-24",
+      "date": "2026-09-27",
       "de": "Schatz",
       "en": "darling",
       "noteEn": "statement",
@@ -10736,7 +10961,7 @@
       "_src_note": "befreit von + Dativ – освобождён от",
       "altEn": "to exempt",
       "altEnSource": "manual",
-      "date": "2026-09-24",
+      "date": "2026-09-27",
       "de": "befreien",
       "en": "to free",
       "noteEn": "befreit von + Dativ – exempt from",
@@ -10774,7 +10999,7 @@
       "_src_altEn": "заниматься",
       "altEn": "to engage in",
       "altEnSource": "deepl-ru",
-      "date": "2026-09-24",
+      "date": "2026-09-27",
       "de": "treiben",
       "en": "to drive",
       "source": "manual",
@@ -10944,7 +11169,7 @@
     },
     "4e806857b18ff989": {
       "backtranslation": "Regierungsviertel",
-      "date": "2026-09-24",
+      "date": "2026-09-27",
       "de": "Regierungsviertel",
       "en": "government district",
       "source": "manual"
@@ -11061,7 +11286,7 @@
       "_src_note": "двойное значение: уверенность и безопасность",
       "altEn": "safe",
       "altEnSource": "deepl-ru",
-      "date": "2026-09-24",
+      "date": "2026-09-27",
       "de": "sicher",
       "en": "sure",
       "noteEn": "a dual meaning: confidence and safety",
@@ -11095,7 +11320,7 @@
       "source": "deepl"
     },
     "4ff9d83e745586b9": {
-      "date": "2026-09-24",
+      "date": "2026-09-27",
       "de": "Lastschrift",
       "en": "direct debit",
       "source": "manual"
@@ -11292,7 +11517,7 @@
     },
     "528c7fe15068780a": {
       "backtranslation": "das Gesundheitsamt",
-      "date": "2026-09-24",
+      "date": "2026-09-27",
       "de": "Gesundheitsamt",
       "en": "public health department",
       "source": "manual"
@@ -11328,7 +11553,7 @@
       "altEn": "there",
       "altEnSource": "deepl-ru",
       "backtranslation": "da",
-      "date": "2026-09-24",
+      "date": "2026-09-27",
       "de": "da",
       "en": "here",
       "source": "manual"
@@ -11371,7 +11596,7 @@
       "altEn": "blanket",
       "altEnSource": "deepl-ru",
       "backtranslation": "Decke",
-      "date": "2026-09-24",
+      "date": "2026-09-27",
       "de": "Decke",
       "en": "ceiling",
       "noteEn": "Two meanings—context matters",
@@ -11391,7 +11616,7 @@
       "verdict": "ok"
     },
     "53978fb479ead86a": {
-      "date": "2026-09-24",
+      "date": "2026-09-27",
       "de": "einschließen",
       "en": "to include",
       "source": "manual"
@@ -11442,7 +11667,7 @@
       "_src_altEn": "сажать",
       "altEn": "to plant",
       "altEnSource": "deepl-ru",
-      "date": "2026-09-24",
+      "date": "2026-09-27",
       "de": "setzen",
       "en": "to put",
       "source": "manual",
@@ -11475,7 +11700,7 @@
       "_src_note": "sich um + Akkusativ: Es handelt sich um einen Fehler | von + Dativ (о книге, фильме): Das Buch handelt von der Liebe",
       "altEn": "it concerns",
       "altEnSource": "manual",
-      "date": "2026-09-24",
+      "date": "2026-09-27",
       "de": "es handelt sich um",
       "en": "it is about",
       "noteEn": "sich um + Akkusativ: Es handelt sich um einen Fehler | von + Dativ (a book, a film): Das Buch handelt von der Liebe",
@@ -11483,7 +11708,7 @@
     },
     "55335520d16f36fa": {
       "backtranslation": "Fragen",
-      "date": "2026-09-24",
+      "date": "2026-09-27",
       "de": "Fragen",
       "en": "Ask",
       "source": "manual"
@@ -11551,6 +11776,19 @@
       "exampleEn": "10% off",
       "source": "deepl"
     },
+    "5600d9e68c821d42": {
+      "_src_altEn": "die Bürokauffrau",
+      "_src_note": "множественное на -leute, а не на -männer",
+      "altEn": "the office clerk",
+      "altEnSource": "deepl",
+      "backtranslation": "der Büroangestellte",
+      "date": "2026-09-27",
+      "de": "Bürokaufmann",
+      "en": "office clerk",
+      "noteEn": "The plural ends in -leute, not -männer",
+      "source": "haiku",
+      "verdict": "ok"
+    },
     "56195d90e8a88501": {
       "backtranslation": "die Anleitung",
       "date": "2026-08-27",
@@ -11561,7 +11799,7 @@
     },
     "56278632726591fd": {
       "backtranslation": "füttern",
-      "date": "2026-09-24",
+      "date": "2026-09-27",
       "de": "füttern",
       "en": "to feed",
       "source": "manual"
@@ -11571,7 +11809,7 @@
       "_src_note": "sich engagieren für + Akkusativ",
       "altEn": "to invest",
       "altEnSource": "deepl-ru",
-      "date": "2026-09-24",
+      "date": "2026-09-27",
       "de": "engagieren",
       "en": "to get involved",
       "noteEn": "sich engagieren für + Akkusativ",
@@ -11624,7 +11862,7 @@
     },
     "56a62858381cb3c4": {
       "backtranslation": "die Pause",
-      "date": "2026-09-24",
+      "date": "2026-09-27",
       "de": "Pause",
       "en": "break",
       "source": "manual"
@@ -11672,6 +11910,15 @@
       "noteEn": "↔ kaufen",
       "source": "deepl"
     },
+    "572c824bf6cd6528": {
+      "_src_note": "Stärken und Schwächen – про это спрашивают на собеседовании",
+      "backtranslation": "die Stärke",
+      "date": "2026-09-27",
+      "de": "Stärke",
+      "en": "strength",
+      "noteEn": "Stärken und Schwächen – They ask about this during the interview",
+      "source": "deepl"
+    },
     "576a9d33c0c0243f": {
       "date": "2026-09-22",
       "de": "weiterbilden",
@@ -11694,13 +11941,13 @@
       "_src_altEn": "причинять",
       "altEn": "to cause",
       "altEnSource": "deepl-ru",
-      "date": "2026-09-24",
+      "date": "2026-09-27",
       "de": "verursachen",
       "en": "to cause",
       "source": "manual"
     },
     "57e4a40b9e2a30d9": {
-      "date": "2026-09-24",
+      "date": "2026-09-27",
       "de": "mitversichert",
       "en": "covered by the same policy",
       "source": "manual"
@@ -11743,7 +11990,7 @@
     },
     "587163c3a77cae5d": {
       "backtranslation": "Schreiben",
-      "date": "2026-09-24",
+      "date": "2026-09-27",
       "de": "Schreiben",
       "en": "Write",
       "source": "manual"
@@ -11783,6 +12030,13 @@
       "de": "Damenmode",
       "en": "women's fashion",
       "noteEn": "nur Sg",
+      "source": "deepl"
+    },
+    "589cd1e30d5eadd9": {
+      "backtranslation": "die Ehrlichkeit",
+      "date": "2026-09-27",
+      "de": "Ehrlichkeit",
+      "en": "honesty",
       "source": "deepl"
     },
     "58aebbba7ea332ac": {
@@ -11835,6 +12089,15 @@
       "source": "haiku",
       "verdict": "ok"
     },
+    "59175a36296ac269": {
+      "_src_note": "единственного числа не бывает",
+      "backtranslation": "die Computerkenntnisse",
+      "date": "2026-09-27",
+      "de": "Computerkenntnisse",
+      "en": "computer skills",
+      "noteEn": "There is no such thing as a singular number",
+      "source": "deepl"
+    },
     "59213e8c41ab6181": {
       "_src_note": "склоняется как прилагательное: ein Kranker, eine Kranke",
       "date": "2026-09-03",
@@ -11849,7 +12112,7 @@
       "altEn": "doctor's office",
       "altEnSource": "manual",
       "backtranslation": "die Praxis",
-      "date": "2026-09-24",
+      "date": "2026-09-27",
       "de": "Praxis",
       "en": "practice",
       "source": "manual"
@@ -11885,7 +12148,7 @@
     "5a44da9432843fe8": {
       "altEn": "now and then",
       "altEnSource": "manual",
-      "date": "2026-09-24",
+      "date": "2026-09-27",
       "de": "zwischendurch",
       "en": "in between",
       "source": "manual"
@@ -11992,6 +12255,14 @@
       "en": "exhausted",
       "source": "deepl"
     },
+    "5b189102fc464c5d": {
+      "backtranslation": "die Linie",
+      "date": "2026-09-27",
+      "de": "Zeile",
+      "en": "line",
+      "source": "haiku",
+      "verdict": "ok"
+    },
     "5b345791752f7297": {
       "_src_altEn": "расторжение договора",
       "altEn": "termination of a contract",
@@ -12010,6 +12281,14 @@
       "en": "fruit",
       "noteEn": "in general",
       "source": "deepl"
+    },
+    "5b7c56ef7a67664f": {
+      "backtranslation": "ruhig",
+      "date": "2026-09-27",
+      "de": "leise",
+      "en": "quiet",
+      "source": "haiku",
+      "verdict": "ok"
     },
     "5b8e853cd2d83e8e": {
       "_src_note": "существительное – die Bremse (n0830)",
@@ -12067,7 +12346,7 @@
       "source": "deepl"
     },
     "5d2ab54d9a5a413d": {
-      "date": "2026-09-24",
+      "date": "2026-09-27",
       "de": "Wolke",
       "en": "cloud",
       "source": "manual"
@@ -12095,7 +12374,7 @@
     },
     "5d87b91fd0adaee7": {
       "backtranslation": "der Antwortbogen",
-      "date": "2026-09-24",
+      "date": "2026-09-27",
       "de": "Antwortbogen",
       "en": "answer sheet",
       "source": "manual"
@@ -12160,7 +12439,7 @@
       "altEn": "regards",
       "altEnSource": "manual",
       "backtranslation": "Gruß",
-      "date": "2026-09-24",
+      "date": "2026-09-27",
       "de": "Gruß",
       "en": "greeting",
       "exampleEn": "Best regards (LG)",
@@ -12258,7 +12537,7 @@
     "5fb31759944bcc2d": {
       "_src_warning": "готовая форма, не инфинитив: haben → hätte",
       "backtranslation": "möchte",
-      "date": "2026-09-24",
+      "date": "2026-09-27",
       "de": "hätte gern",
       "en": "would like",
       "source": "manual",
@@ -12269,7 +12548,7 @@
       "_src_altEn": "неважно",
       "altEn": "it doesn't matter",
       "altEnSource": "deepl-ru",
-      "date": "2026-09-24",
+      "date": "2026-09-27",
       "de": "egal",
       "en": "no matter",
       "exampleEn": "I don't care about that",
@@ -12375,6 +12654,17 @@
       "date": "2026-08-27",
       "de": "leicht",
       "en": "light",
+      "source": "haiku",
+      "verdict": "ok"
+    },
+    "60e9474d9a65b962": {
+      "_src_altEn": "die Arbeitnehmerin",
+      "altEn": "the female employee",
+      "altEnSource": "deepl",
+      "backtranslation": "der Mitarbeiter",
+      "date": "2026-09-27",
+      "de": "Arbeitnehmer",
+      "en": "employee",
       "source": "haiku",
       "verdict": "ok"
     },
@@ -12577,6 +12867,13 @@
       "en": "plant",
       "source": "deepl"
     },
+    "63ba86df58c1aece": {
+      "backtranslation": "das Grafikprogramm",
+      "date": "2026-09-27",
+      "de": "Grafikprogramm",
+      "en": "graphics program",
+      "source": "deepl"
+    },
     "63c24cce3bf536a7": {
       "backtranslation": "ungesund",
       "date": "2026-08-30",
@@ -12641,7 +12938,7 @@
       "altEn": "to start",
       "altEnSource": "deepl-ru",
       "backtranslation": "öffnen",
-      "date": "2026-09-24",
+      "date": "2026-09-27",
       "de": "eröffnen",
       "en": "to open",
       "noteEn": "start a business / open an account",
@@ -12821,6 +13118,18 @@
       "en": "to repeat",
       "source": "deepl"
     },
+    "663142f4381327e2": {
+      "_src_altEn": "держаться",
+      "_src_note": "sicher auftreten – держаться уверенно. Aux sein, потому что это не действие над предметом, а появление",
+      "altEn": "to hold up",
+      "altEnSource": "deepl-ru",
+      "backtranslation": "auftreten",
+      "date": "2026-09-27",
+      "de": "auftreten",
+      "en": "to occur",
+      "noteEn": "sicher auftreten – to carry oneself with confidence. Aux sein, because this is not an action performed on an object, but an appearance",
+      "source": "deepl"
+    },
     "664b8ccbd6c0da76": {
       "_src_altEn": "иначе",
       "altEn": "otherwise",
@@ -12862,7 +13171,7 @@
       "altEn": "phone number",
       "altEnSource": "manual",
       "backtranslation": "Handynummer",
-      "date": "2026-09-24",
+      "date": "2026-09-27",
       "de": "Handynummer",
       "en": "cell phone number",
       "source": "manual"
@@ -12963,6 +13272,15 @@
       "source": "haiku",
       "verdict": "ok"
     },
+    "67bdfe47556cb5ab": {
+      "_src_note": "единственного числа почти не бывает – говорят только во множественном",
+      "backtranslation": "die Sprachkenntnisse",
+      "date": "2026-09-27",
+      "de": "Sprachkenntnisse",
+      "en": "language skills",
+      "noteEn": "The singular form is almost never used—people only speak in the plural",
+      "source": "manual"
+    },
     "67d01d85bbdc0b57": {
       "_src_note": "wünschen + Dativ + Akkusativ | Ich wünsche Ihnen einen schönen Tag.",
       "backtranslation": "Wunsch",
@@ -13051,7 +13369,7 @@
     "68664d6058c3b0e2": {
       "altEn": "event",
       "altEnSource": "manual",
-      "date": "2026-09-24",
+      "date": "2026-09-27",
       "de": "Einzelreise",
       "en": "individual trip",
       "source": "manual"
@@ -13140,7 +13458,7 @@
     },
     "69850d2c46fa75c6": {
       "backtranslation": "Sprechen",
-      "date": "2026-09-24",
+      "date": "2026-09-27",
       "de": "Sprechen",
       "en": "Speak",
       "source": "manual"
@@ -13293,7 +13611,7 @@
       "_src_note": "es handelt sich um – речь идёт о (см. фразы)",
       "altEn": "to trade",
       "altEnSource": "manual",
-      "date": "2026-09-24",
+      "date": "2026-09-27",
       "de": "handeln",
       "en": "to act",
       "noteEn": "es handelt sich um – this refers to (see phrases)",
@@ -13346,6 +13664,15 @@
       "en": "to give as a gift",
       "exampleEn": "I'm giving you a book.",
       "noteEn": "schenken + Dativ + Akkusativ | Er schenkt der Frau einen Ring.",
+      "source": "haiku",
+      "verdict": "fix"
+    },
+    "6c2848f7d45ee13a": {
+      "_src_note": "множественного нет",
+      "date": "2026-09-27",
+      "de": "Gestik",
+      "en": "gesture",
+      "noteEn": "There is no plural form",
       "source": "haiku",
       "verdict": "fix"
     },
@@ -13831,6 +14158,14 @@
       "en": "half-board",
       "source": "deepl"
     },
+    "7236d6895390416b": {
+      "backtranslation": "die berufliche Ausbildung",
+      "date": "2026-09-27",
+      "de": "Berufsausbildung",
+      "en": "vocational training",
+      "source": "haiku",
+      "verdict": "ok"
+    },
     "723dfaf8e8d52d05": {
       "backtranslation": "Lied",
       "date": "2026-08-27",
@@ -13840,7 +14175,7 @@
     },
     "724c8c79c14016b2": {
       "_src_note": "осматривать достопримечательности",
-      "date": "2026-09-24",
+      "date": "2026-09-27",
       "de": "besichtigen",
       "en": "to view",
       "noteEn": "to visit the sights",
@@ -13946,7 +14281,7 @@
     },
     "7353ea9c52634b0b": {
       "backtranslation": "klassisch",
-      "date": "2026-09-24",
+      "date": "2026-09-27",
       "de": "klassisch",
       "en": "classic",
       "source": "manual"
@@ -14029,7 +14364,7 @@
       "_src_note": "зависит от падежа",
       "altEn": "both",
       "altEnSource": "deepl",
-      "date": "2026-09-24",
+      "date": "2026-09-27",
       "de": "beide",
       "en": "both",
       "noteEn": "depends on the case",
@@ -14038,7 +14373,7 @@
     "742cacb5e638662e": {
       "altEn": "adviser",
       "altEnSource": "manual",
-      "date": "2026-09-24",
+      "date": "2026-09-27",
       "de": "Ratgeber",
       "en": "guide",
       "source": "manual"
@@ -14056,6 +14391,15 @@
       "de": "hupen",
       "en": "to honk",
       "source": "deepl"
+    },
+    "744d4fd50f59022e": {
+      "_src_note": "Umgang mit + Dat – обхождение с кем-то или с чем-то. Множественного нет",
+      "date": "2026-09-27",
+      "de": "Umgang",
+      "en": "handling",
+      "noteEn": "Umgang mit + Dat – walking around with someone or something. There is no plural form.",
+      "source": "haiku",
+      "verdict": "fix"
     },
     "7467d742b3b7fc80": {
       "date": "2026-08-27",
@@ -14108,7 +14452,7 @@
     "74dc6df35c0d3629": {
       "_src_note": "jdn beraten; Partizip без ge- (be-)",
       "backtranslation": "konsultieren",
-      "date": "2026-09-24",
+      "date": "2026-09-27",
       "de": "beraten",
       "en": "to advise",
       "noteEn": "jdn beraten; Partizip without ge- (be-)",
@@ -14135,7 +14479,7 @@
       "altEn": "messages",
       "altEnSource": "manual",
       "backtranslation": "Nachrichten",
-      "date": "2026-09-24",
+      "date": "2026-09-27",
       "de": "Nachrichten",
       "en": "news",
       "source": "manual"
@@ -14167,6 +14511,16 @@
       "en": "someone",
       "source": "deepl"
     },
+    "758ac68af15e7f58": {
+      "_src_note": "в вакансиях (m/w/d) divers значит третий пол, а не «разный»",
+      "backtranslation": "verschiedene",
+      "date": "2026-09-27",
+      "de": "divers",
+      "en": "various",
+      "noteEn": "In job postings (m/w/d), “divers” refers to the third gender, not “different.”",
+      "source": "haiku",
+      "verdict": "ok"
+    },
     "759966a63243bdef": {
       "backtranslation": "Mutter",
       "date": "2026-08-27",
@@ -14192,7 +14546,7 @@
     "75b74f13b95bdab1": {
       "_src_note": "только Pl.",
       "backtranslation": "Öffnungszeiten",
-      "date": "2026-09-24",
+      "date": "2026-09-27",
       "de": "Öffnungszeiten",
       "en": "hours of operation",
       "noteEn": "Pl only.",
@@ -14248,7 +14602,7 @@
       "altEn": "more",
       "altEnSource": "manual",
       "backtranslation": "weiterhin",
-      "date": "2026-09-24",
+      "date": "2026-09-27",
       "de": "weiter",
       "en": "further",
       "noteEn": "weitere Informationen – Additional Information",
@@ -14285,7 +14639,7 @@
     },
     "770bbb2b0db61a1f": {
       "backtranslation": "Zoll",
-      "date": "2026-09-24",
+      "date": "2026-09-27",
       "de": "Zoll",
       "en": "customs",
       "source": "manual"
@@ -14350,7 +14704,7 @@
     },
     "7793f750f34b1b94": {
       "backtranslation": "Sportabteilung",
-      "date": "2026-09-24",
+      "date": "2026-09-27",
       "de": "Sportabteilung",
       "en": "sports department",
       "source": "manual"
@@ -14507,7 +14861,7 @@
     "796fea13c956b7e2": {
       "_src_note": "вежливый заказ (Konjunktiv II)",
       "backtranslation": "Ich würde gerne …",
-      "date": "2026-09-24",
+      "date": "2026-09-27",
       "de": "Ich hätte gern …",
       "en": "I'd like …",
       "noteEn": "Polite request (Konjunktiv II)",
@@ -14648,7 +15002,7 @@
     "7ae3aa725c656bb3": {
       "altEn": "law",
       "altEnSource": "manual",
-      "date": "2026-09-24",
+      "date": "2026-09-27",
       "de": "Recht",
       "en": "right",
       "source": "manual"
@@ -14755,7 +15109,7 @@
       "altEn": "appendix",
       "altEnSource": "deepl-ru",
       "backtranslation": "Anhang",
-      "date": "2026-09-24",
+      "date": "2026-09-27",
       "de": "Anhang",
       "en": "attachment",
       "exampleEn": "in the attachment",
@@ -14779,7 +15133,7 @@
       "altEn": "to leave",
       "altEnSource": "deepl-ru",
       "backtranslation": "aussetzen",
-      "date": "2026-09-24",
+      "date": "2026-09-27",
       "de": "aussetzen",
       "en": "to abandon",
       "noteEn": "Not in the sense of physically \"throwing\" or \"tossing\"—this is werfen; aussetzen, which is about leaving an animal or a person without help",
@@ -14867,7 +15221,7 @@
       "source": "deepl"
     },
     "7d773361323a2f91": {
-      "date": "2026-09-24",
+      "date": "2026-09-27",
       "de": "basteln",
       "en": "to do crafts",
       "source": "manual",
@@ -14976,7 +15330,7 @@
       "verdict": "ok"
     },
     "7eb122cc279651ee": {
-      "date": "2026-09-24",
+      "date": "2026-09-27",
       "de": "langweilen",
       "en": "to be bored",
       "source": "manual",
@@ -15044,7 +15398,7 @@
       "source": "deepl"
     },
     "7f4c862a5d2cdd22": {
-      "date": "2026-09-24",
+      "date": "2026-09-27",
       "de": "Es lohnt sich nicht",
       "en": "It's not worth it",
       "source": "manual"
@@ -15086,8 +15440,17 @@
       "en": "cozy",
       "source": "deepl"
     },
+    "7fd6ce919b789f8f": {
+      "_src_note": "Bereitschaft zu + Dat – готовность к чему-то",
+      "backtranslation": "die Bereitschaft",
+      "date": "2026-09-27",
+      "de": "Bereitschaft",
+      "en": "readiness",
+      "noteEn": "Bereitschaft zu + Dat – readiness for something",
+      "source": "deepl"
+    },
     "7fdac5dc142938a3": {
-      "date": "2026-09-24",
+      "date": "2026-09-27",
       "de": "fremd",
       "en": "foreign",
       "source": "manual",
@@ -15310,7 +15673,7 @@
       "verdict": "ok"
     },
     "834abfe867ad42d5": {
-      "date": "2026-09-24",
+      "date": "2026-09-27",
       "de": "stellensuchend",
       "en": "job-seeking",
       "source": "manual"
@@ -15478,10 +15841,18 @@
     "853ded54c14695e6": {
       "altEn": "credit",
       "altEnSource": "manual",
-      "date": "2026-09-24",
+      "date": "2026-09-27",
       "de": "Kredit",
       "en": "loan",
       "source": "manual"
+    },
+    "8542c78a28f05265": {
+      "date": "2026-09-27",
+      "de": "zukünftig",
+      "en": "future",
+      "exampleEn": "my future employer",
+      "source": "haiku",
+      "verdict": "fix"
     },
     "8551b7a6019c1e77": {
       "backtranslation": "lang",
@@ -15554,7 +15925,7 @@
       "_src_altEn": "примерочная",
       "altEn": "fitting room",
       "altEnSource": "deepl-ru",
-      "date": "2026-09-24",
+      "date": "2026-09-27",
       "de": "Anprobe",
       "en": "fitting",
       "exampleEn": "Where is the fitting room?",
@@ -15585,7 +15956,7 @@
       "_src_note": "jdm etw leihen",
       "altEn": "to borrow",
       "altEnSource": "manual",
-      "date": "2026-09-24",
+      "date": "2026-09-27",
       "de": "leihen",
       "en": "to lend",
       "noteEn": "jdm etw leihen",
@@ -15694,7 +16065,7 @@
     },
     "87ff3e75abbd6706": {
       "backtranslation": "Fernsehen schauen",
-      "date": "2026-09-24",
+      "date": "2026-09-27",
       "de": "fernsehen",
       "en": "to watch TV",
       "source": "manual",
@@ -15862,7 +16233,7 @@
       "altEn": "arrival",
       "altEnSource": "deepl-ru",
       "backtranslation": "Anreise",
-      "date": "2026-09-24",
+      "date": "2026-09-27",
       "de": "Anreise",
       "en": "arrival",
       "source": "manual"
@@ -16328,7 +16699,7 @@
       "source": "deepl"
     },
     "8f99a62654beb5f3": {
-      "date": "2026-09-24",
+      "date": "2026-09-27",
       "de": "böse",
       "en": "angry",
       "source": "manual",
@@ -16443,7 +16814,7 @@
     },
     "9142b5d0dd4a7775": {
       "backtranslation": "die Halle",
-      "date": "2026-09-24",
+      "date": "2026-09-27",
       "de": "Halle",
       "en": "hall",
       "source": "manual"
@@ -16479,6 +16850,15 @@
       "en": "to read",
       "exampleEn": "I'm reading the newspaper.",
       "source": "deepl"
+    },
+    "91aab0fad2c05209": {
+      "_src_note": "организация мероприятий как профессия",
+      "date": "2026-09-27",
+      "de": "Eventmanagement",
+      "en": "event management",
+      "noteEn": "Event Planning as a Profession",
+      "source": "haiku",
+      "verdict": "fix"
     },
     "91aefdb34caaa68c": {
       "_src_altEn": "einen Termin ausmachen",
@@ -16542,7 +16922,7 @@
       "_src_altEn": "изменять",
       "altEn": "to change",
       "altEnSource": "deepl-ru",
-      "date": "2026-09-24",
+      "date": "2026-09-27",
       "de": "ändern",
       "en": "to change",
       "source": "manual"
@@ -16638,7 +17018,7 @@
     },
     "937504f72179d940": {
       "backtranslation": "Rathaus",
-      "date": "2026-09-24",
+      "date": "2026-09-27",
       "de": "Rathaus",
       "en": "city hall",
       "source": "manual"
@@ -16697,7 +17077,7 @@
     },
     "9437624f18bff1f9": {
       "backtranslation": "Fleischabteilung",
-      "date": "2026-09-24",
+      "date": "2026-09-27",
       "de": "Fleischabteilung",
       "en": "meat department",
       "source": "manual"
@@ -16829,7 +17209,7 @@
       "source": "deepl"
     },
     "9575033844413be0": {
-      "date": "2026-09-24",
+      "date": "2026-09-27",
       "de": "verärgert",
       "en": "annoyed",
       "source": "manual"
@@ -16959,7 +17339,7 @@
       "altEn": "brother-in-law",
       "altEnSource": "manual",
       "backtranslation": "Schwager",
-      "date": "2026-09-24",
+      "date": "2026-09-27",
       "de": "Schwager",
       "en": "brother-in-law",
       "source": "manual"
@@ -17134,7 +17514,7 @@
     },
     "994cce2d27b00509": {
       "backtranslation": "Zeiger",
-      "date": "2026-09-24",
+      "date": "2026-09-27",
       "de": "Zeiger",
       "en": "clock hand",
       "source": "manual"
@@ -17147,7 +17527,7 @@
       "source": "deepl"
     },
     "997b1379518ccc83": {
-      "date": "2026-09-24",
+      "date": "2026-09-27",
       "de": "Versicherungsbeitrag",
       "en": "insurance premium",
       "source": "manual"
@@ -17222,6 +17602,15 @@
       "source": "haiku",
       "verdict": "ok"
     },
+    "99a735c31a2a5a80": {
+      "_src_note": "множественного нет",
+      "backtranslation": "die Mimik",
+      "date": "2026-09-27",
+      "de": "Mimik",
+      "en": "facial expressions",
+      "noteEn": "There is no plural form",
+      "source": "deepl"
+    },
     "99b05d228d51cc40": {
       "_src_note": "разговорное выражение",
       "backtranslation": "Info",
@@ -17295,7 +17684,7 @@
     },
     "9a9f4d411cd6bef4": {
       "backtranslation": "Reihe",
-      "date": "2026-09-24",
+      "date": "2026-09-27",
       "de": "Reihe",
       "en": "row",
       "source": "manual"
@@ -17484,7 +17873,7 @@
     },
     "9d5ad49cb06b8edd": {
       "backtranslation": "öffnen",
-      "date": "2026-09-24",
+      "date": "2026-09-27",
       "de": "öffnen",
       "en": "to open",
       "source": "manual"
@@ -17660,7 +18049,7 @@
       "altEn": "to turn over",
       "altEnSource": "deepl-ru",
       "backtranslation": "umdrehen",
-      "date": "2026-09-24",
+      "date": "2026-09-27",
       "de": "umdrehen",
       "en": "to turn around",
       "source": "manual"
@@ -17722,6 +18111,15 @@
       "en": "definitely",
       "source": "haiku",
       "verdict": "ok"
+    },
+    "a03e1efb002575b4": {
+      "_src_note": "в вакансиях пишут die üblichen Softwareprogramme – обычный офисный набор",
+      "backtranslation": "das Softwareprogramm",
+      "date": "2026-09-27",
+      "de": "Softwareprogramm",
+      "en": "software program",
+      "noteEn": "Job postings list die, üblichen, and Softwareprogramme—standard office software.",
+      "source": "deepl"
     },
     "a0513094b8a1f08a": {
       "backtranslation": "die Stelle im Ausland",
@@ -17879,7 +18277,7 @@
     },
     "a27581dc770b42c9": {
       "backtranslation": "stärken",
-      "date": "2026-09-24",
+      "date": "2026-09-27",
       "de": "festigen",
       "en": "to strengthen",
       "source": "manual",
@@ -17888,7 +18286,7 @@
     "a28f200e4625a9af": {
       "altEn": "barely enough",
       "altEnSource": "manual",
-      "date": "2026-09-24",
+      "date": "2026-09-27",
       "de": "knapp",
       "en": "tight",
       "source": "manual"
@@ -17924,7 +18322,7 @@
     },
     "a3357f3395d4fb3a": {
       "backtranslation": "Bedienungsanleitung",
-      "date": "2026-09-24",
+      "date": "2026-09-27",
       "de": "Bedienungsanleitung",
       "en": "user manual",
       "source": "manual"
@@ -18034,7 +18432,7 @@
       "_src_note": "Partizip II от entscheiden, живёт и отдельным словом.\nsich рядом – глагол: Er hat sich entschieden.\nОкончание перед существительным – прилагательное: ein entschiedener Gegner.\nГолое перед другим словом – «категорически»: entschieden dagegen.",
       "altEn": "firm",
       "altEnSource": "manual",
-      "date": "2026-09-24",
+      "date": "2026-09-27",
       "de": "entschieden",
       "en": "resolute",
       "noteEn": "Partizip II From entscheiden; it also stands on its own.\nsich \"next to\" – verb: Er hat sich entschieden.\nEndings before a noun—adjective: ein entschiedener Gegner.\n\"Goloe\" followed by another word—\"categorically\": entschieden dagegen.",
@@ -18054,6 +18452,19 @@
       "de": "Federmäppchen",
       "en": "pencil case",
       "source": "deepl"
+    },
+    "a45f0d403729f6e8": {
+      "_src_altEn": "следи за тем, чтобы ...",
+      "_src_note": "darauf держит место для придаточного – без него «Achte, dass» не говорят",
+      "altEn": "make sure that ...",
+      "altEnSource": "deepl-ru",
+      "backtranslation": "Stellen Sie sicher, dass …",
+      "date": "2026-09-27",
+      "de": "Achte darauf, dass ...",
+      "en": "Make sure that ...",
+      "noteEn": "darauf takes the place of a subordinate clause—without it, people don't say “Achte” or “dass”",
+      "source": "haiku",
+      "verdict": "ok"
     },
     "a498f22c84817211": {
       "backtranslation": "etwas",
@@ -18131,7 +18542,7 @@
     },
     "a57612db0b278467": {
       "backtranslation": "der Personalausweis",
-      "date": "2026-09-24",
+      "date": "2026-09-27",
       "de": "Personalausweis",
       "en": "identity card",
       "source": "manual"
@@ -18260,7 +18671,7 @@
       "verdict": "ok"
     },
     "a722ce7050e4e9e1": {
-      "date": "2026-09-24",
+      "date": "2026-09-27",
       "de": "Haar",
       "en": "hair",
       "source": "manual"
@@ -18273,6 +18684,18 @@
       "exampleEn": "The goods will be picked up in the morning.",
       "source": "haiku",
       "verdict": "ok"
+    },
+    "a73f600e5b5d47a1": {
+      "_src_altEn": "брать на себя",
+      "_src_note": "über- здесь неотделяемая – ich übernehme, а не «nehme über»",
+      "altEn": "to take on",
+      "altEnSource": "deepl-ru",
+      "backtranslation": "übernehmen",
+      "date": "2026-09-27",
+      "de": "übernehmen",
+      "en": "to take over",
+      "noteEn": "über- Here, the hyphen is not separable—ich übernehme—not “nehme über.”",
+      "source": "deepl"
     },
     "a762ad1302143b0b": {
       "_src_altEn": "фиксированный",
@@ -18300,7 +18723,7 @@
       "altEn": "self-employed",
       "altEnSource": "manual",
       "backtranslation": "freiberuflich",
-      "date": "2026-09-24",
+      "date": "2026-09-27",
       "de": "freiberuflich",
       "en": "freelance",
       "source": "manual"
@@ -18329,7 +18752,7 @@
     },
     "a7cca111cd1f219f": {
       "backtranslation": "die Reinigung",
-      "date": "2026-09-24",
+      "date": "2026-09-27",
       "de": "Reinigung",
       "en": "dry cleaner's",
       "source": "manual"
@@ -18475,6 +18898,16 @@
       "source": "haiku",
       "verdict": "fix"
     },
+    "a9769560c715701a": {
+      "_src_altEn": "die Projektmanagerin",
+      "altEn": "the female project manager",
+      "altEnSource": "deepl",
+      "date": "2026-09-27",
+      "de": "Projektmanager",
+      "en": "project manager",
+      "source": "haiku",
+      "verdict": "fix"
+    },
     "a97a302f75951d42": {
       "backtranslation": "Tankstelle",
       "date": "2026-08-27",
@@ -18519,6 +18952,15 @@
       "en": "constantly",
       "source": "haiku",
       "verdict": "ok"
+    },
+    "a9fa1365316afe86": {
+      "_src_note": "der erste Eindruck – первое впечатление",
+      "backtranslation": "der Eindruck",
+      "date": "2026-09-27",
+      "de": "Eindruck",
+      "en": "impression",
+      "noteEn": "der erste Eindruck – first impression",
+      "source": "deepl"
     },
     "a9fe492ef1d35845": {
       "_src_altEn": "экзаменовать",
@@ -18729,6 +19171,15 @@
       "en": "city center",
       "source": "deepl"
     },
+    "ac57b66e257a6830": {
+      "_src_note": "в объявлениях часто разорвано переносом – Wirtschafts- / wissenschaften. Это одно слово",
+      "date": "2026-09-27",
+      "de": "Wirtschaftswissenschaften",
+      "en": "economic sciences",
+      "noteEn": "In advertisements, the word is often hyphenated—Wirtschafts- / wissenschaften. It is one word.",
+      "source": "haiku",
+      "verdict": "fix"
+    },
     "ac802ddf2fc277c6": {
       "backtranslation": "die Stirn",
       "date": "2026-09-03",
@@ -18833,7 +19284,7 @@
     "adb4adb1dcaf0759": {
       "altEn": "one-time",
       "altEnSource": "manual",
-      "date": "2026-09-24",
+      "date": "2026-09-27",
       "de": "einmalig",
       "en": "one-off",
       "source": "manual"
@@ -18875,7 +19326,7 @@
       "source": "deepl"
     },
     "ae24c3f848e45b2e": {
-      "date": "2026-09-24",
+      "date": "2026-09-27",
       "de": "Paketbotin",
       "en": "parcel courier",
       "noteEn": "female form of Paketbote",
@@ -18984,7 +19435,7 @@
       "altEn": "to happen",
       "altEnSource": "deepl-ru",
       "backtranslation": "passieren",
-      "date": "2026-09-24",
+      "date": "2026-09-27",
       "de": "geschehen",
       "en": "to happen",
       "noteEn": "≈ passieren, literary",
@@ -18993,7 +19444,7 @@
     },
     "afceb1be85fc274e": {
       "backtranslation": "Hinzufügen",
-      "date": "2026-09-24",
+      "date": "2026-09-27",
       "de": "hinzufügen",
       "en": "to add",
       "source": "manual"
@@ -19023,7 +19474,7 @@
       "source": "deepl"
     },
     "b05046ae2b7970db": {
-      "date": "2026-09-24",
+      "date": "2026-09-27",
       "de": "Essgewohnheit",
       "en": "eating habit",
       "source": "manual"
@@ -19082,7 +19533,7 @@
       "source": "deepl"
     },
     "b1a2aa37d13954cf": {
-      "date": "2026-09-24",
+      "date": "2026-09-27",
       "de": "Frischhaltedose",
       "en": "food storage container",
       "source": "manual"
@@ -19118,6 +19569,18 @@
       "source": "deepl",
       "warningEn": "For comparison: höher (above)"
     },
+    "b20e9778e65c444d": {
+      "_src_altEn": "действовать",
+      "_src_note": "wirken + прилагательное без окончания – Er wirkt nervös. С sein было бы «он нервный», с wirken – «кажется нервным»",
+      "altEn": "to act",
+      "altEnSource": "deepl-ru",
+      "date": "2026-09-27",
+      "de": "wirken",
+      "en": "to seem",
+      "noteEn": "wirken + adjectives without endings—Er, wirkt, nervös. With sein, it would be “he is nervous”; with wirken, it would be “he seems nervous.”",
+      "source": "haiku",
+      "verdict": "fix"
+    },
     "b296dda600bbabc0": {
       "backtranslation": "Arbeitskleidung",
       "date": "2026-08-27",
@@ -19149,7 +19612,7 @@
     },
     "b2cccc4ce89d7af1": {
       "backtranslation": "Erste-Hilfe-Kurs",
-      "date": "2026-09-24",
+      "date": "2026-09-27",
       "de": "Erste-Hilfe-Kurs",
       "en": "first aid course",
       "source": "manual"
@@ -19305,7 +19768,7 @@
       "_src_altEn": "трапеза",
       "altEn": "meal",
       "altEnSource": "deepl-ru",
-      "date": "2026-09-24",
+      "date": "2026-09-27",
       "de": "Mahlzeit",
       "en": "meal",
       "source": "manual"
@@ -19445,6 +19908,18 @@
       "exampleEn": "Is that possible?",
       "source": "deepl"
     },
+    "b5efbed1aed18a28": {
+      "_src_altEn": "уход",
+      "_src_note": "Betreuung von Kindern – присмотр за детьми, Kundenbetreuung – работа с клиентами",
+      "altEn": "care",
+      "altEnSource": "deepl-ru",
+      "date": "2026-09-27",
+      "de": "Betreuung",
+      "en": "care",
+      "noteEn": "Betreuung von Kindern – Childcare, Kundenbetreuung – Customer service",
+      "source": "haiku",
+      "verdict": "fix"
+    },
     "b5fa495081a367ab": {
       "_src_note": "zu Fuß gehen – идти пешком",
       "backtranslation": "der Fuß",
@@ -19570,6 +20045,15 @@
       "source": "haiku",
       "verdict": "ok"
     },
+    "b7521e4b9cb14fba": {
+      "_src_note": "möglichst + прилагательное значит «настолько …, насколько выйдет» – möglichst gute Kenntnisse",
+      "date": "2026-09-27",
+      "de": "möglichst",
+      "en": "as far as possible",
+      "noteEn": "möglichst + The adjective means “as much as possible” – möglichst gute Kenntnisse",
+      "source": "haiku",
+      "verdict": "fix"
+    },
     "b75cc83f00941e91": {
       "_src_altEn": "прекращать",
       "altEn": "to stop",
@@ -19612,7 +20096,7 @@
     },
     "b7c5facd6d905881": {
       "backtranslation": "Röntgen",
-      "date": "2026-09-24",
+      "date": "2026-09-27",
       "de": "röntgen",
       "en": "to X-ray",
       "source": "manual"
@@ -19649,10 +20133,20 @@
     },
     "b7fe4b9a60bb9683": {
       "backtranslation": "Hygieneschulung",
-      "date": "2026-09-24",
+      "date": "2026-09-27",
       "de": "Hygieneschulung",
       "en": "hygiene training",
       "source": "manual"
+    },
+    "b7ff926efb5089f1": {
+      "_src_altEn": "die Arbeitgeberin",
+      "altEn": "the female employer",
+      "altEnSource": "deepl",
+      "backtranslation": "der Arbeitgeber",
+      "date": "2026-09-27",
+      "de": "Arbeitgeber",
+      "en": "employer",
+      "source": "deepl"
     },
     "b8103532efbad783": {
       "backtranslation": "das Nasenspray",
@@ -19669,7 +20163,7 @@
       "source": "deepl"
     },
     "b81f0d5b85a95021": {
-      "date": "2026-09-24",
+      "date": "2026-09-27",
       "de": "Einzelperson",
       "en": "individual",
       "source": "manual"
@@ -19774,7 +20268,7 @@
     },
     "b9922c2091705822": {
       "backtranslation": "Entschuldigung",
-      "date": "2026-09-24",
+      "date": "2026-09-27",
       "de": "Entschuldigung",
       "en": "apology",
       "source": "manual"
@@ -19810,7 +20304,7 @@
     },
     "ba0c9df29d5840a3": {
       "_src_note": "круглые десятки от 20: zwanzig, vierzig…",
-      "date": "2026-09-24",
+      "date": "2026-09-27",
       "de": "…zig",
       "en": "-ty",
       "noteEn": "the suffix in zwanzig, dreißig — like English -ty in twenty, thirty",
@@ -19827,6 +20321,18 @@
       "en": "sink",
       "noteEn": "spülen + Becken | ↔ Waschbecken (in the bathroom)",
       "source": "deepl"
+    },
+    "ba1c24f32c53b804": {
+      "_src_altEn": "условленная встреча",
+      "_src_note": "eine Verabredung haben – быть с кем-то договорённым о встрече",
+      "altEn": "a scheduled meeting",
+      "altEnSource": "deepl-ru",
+      "date": "2026-09-27",
+      "de": "Verabredung",
+      "en": "arrangement",
+      "noteEn": "eine Verabredung haben – to have made plans to meet someone",
+      "source": "haiku",
+      "verdict": "fix"
     },
     "ba66f283dddb4802": {
       "date": "2026-08-27",
@@ -19912,7 +20418,7 @@
       "altEn": "preferably",
       "altEnSource": "manual",
       "backtranslation": "eher",
-      "date": "2026-09-24",
+      "date": "2026-09-27",
       "de": "lieber",
       "en": "rather",
       "source": "manual",
@@ -19973,7 +20479,7 @@
     },
     "bbb9475e60658a98": {
       "backtranslation": "bellen",
-      "date": "2026-09-24",
+      "date": "2026-09-27",
       "de": "bellen",
       "en": "to bark",
       "source": "manual"
@@ -20040,7 +20546,7 @@
       "altEn": "luck",
       "altEnSource": "deepl-ru",
       "backtranslation": "Glück",
-      "date": "2026-09-24",
+      "date": "2026-09-27",
       "de": "Glück",
       "en": "happiness",
       "exampleEn": "Good luck!",
@@ -20068,6 +20574,15 @@
       "date": "2026-08-27",
       "de": "Formalität",
       "en": "formality",
+      "source": "deepl"
+    },
+    "bcad00f464cf7379": {
+      "_src_note": "irreale Bedingung – условие, которое не выполнено: Wenn ich Zeit hätte …",
+      "backtranslation": "die Bedingung",
+      "date": "2026-09-27",
+      "de": "Bedingung",
+      "en": "condition",
+      "noteEn": "irreale Bedingung – a condition that is not met: Wenn ich Zeit hätte …",
       "source": "deepl"
     },
     "bccf08bd19ff97bd": {
@@ -20164,7 +20679,7 @@
     },
     "bde7cce665e73686": {
       "backtranslation": "vergessen",
-      "date": "2026-09-24",
+      "date": "2026-09-27",
       "de": "vergessen",
       "en": "to forget",
       "source": "manual"
@@ -20232,7 +20747,7 @@
     },
     "be712072b4e739c6": {
       "backtranslation": "Auswählen",
-      "date": "2026-09-24",
+      "date": "2026-09-27",
       "de": "auswählen",
       "en": "to select",
       "source": "manual"
@@ -20277,7 +20792,7 @@
       "altEn": "directly",
       "altEnSource": "manual",
       "backtranslation": "richtig",
-      "date": "2026-09-24",
+      "date": "2026-09-27",
       "de": "direkt",
       "en": "direct",
       "exampleEn": "right in front of the house",
@@ -20338,7 +20853,7 @@
     },
     "bf820d1cf715ded9": {
       "_src_note": "nur Sg (как отрасль/устройства)",
-      "date": "2026-09-24",
+      "date": "2026-09-27",
       "de": "Technik",
       "en": "technology",
       "noteEn": "nur Sg (such as an industry/device)",
@@ -20348,7 +20863,7 @@
     "bf991869fcc35145": {
       "altEn": "event",
       "altEnSource": "manual",
-      "date": "2026-09-24",
+      "date": "2026-09-27",
       "de": "Aktion",
       "en": "campaign",
       "source": "manual"
@@ -20405,7 +20920,7 @@
     },
     "c05665b8d047a24f": {
       "backtranslation": "singen",
-      "date": "2026-09-24",
+      "date": "2026-09-27",
       "de": "singen",
       "en": "to sing",
       "source": "manual"
@@ -20497,7 +21012,7 @@
       "source": "deepl"
     },
     "c1212f541b6753b1": {
-      "date": "2026-09-24",
+      "date": "2026-09-27",
       "de": "hingehen",
       "en": "to go there",
       "source": "manual"
@@ -20539,6 +21054,13 @@
       "date": "2026-08-27",
       "de": "Elefant",
       "en": "elephant",
+      "source": "deepl"
+    },
+    "c1bb0697095a83c1": {
+      "backtranslation": "die Qualifikation",
+      "date": "2026-09-27",
+      "de": "Qualifikation",
+      "en": "qualification",
       "source": "deepl"
     },
     "c1dc9a9ea8c5658b": {
@@ -20606,6 +21128,16 @@
       "noteEn": "stronger than lecker",
       "source": "haiku",
       "verdict": "ok"
+    },
+    "c27f7e257297e148": {
+      "_src_altEn": "трудная задача",
+      "altEn": "difficult task",
+      "altEnSource": "deepl-ru",
+      "backtranslation": "die Herausforderung",
+      "date": "2026-09-27",
+      "de": "Herausforderung",
+      "en": "challenge",
+      "source": "deepl"
     },
     "c2881ff45308c09f": {
       "_src_altEn": "дело",
@@ -20686,7 +21218,7 @@
       "source": "deepl"
     },
     "c3851cf9e18681ff": {
-      "date": "2026-09-24",
+      "date": "2026-09-27",
       "de": "hierlassen",
       "en": "to leave here",
       "source": "manual"
@@ -20738,7 +21270,7 @@
       "altEn": "German football league",
       "altEnSource": "manual",
       "backtranslation": "Bundesliga",
-      "date": "2026-09-24",
+      "date": "2026-09-27",
       "de": "Bundesliga",
       "en": "Bundesliga",
       "source": "manual"
@@ -20870,7 +21402,7 @@
       "_src_note": "о буре и о гневе: der Sturm rast, er rast vor Wut | «громить» = randalieren, не rasen",
       "altEn": "to race",
       "altEnSource": "deepl-ru",
-      "date": "2026-09-24",
+      "date": "2026-09-27",
       "de": "rasen",
       "en": "to speed",
       "noteEn": "On storms and anger: der Sturm rast, er rast vor Wut | “to destroy” = randalieren, not rasen",
@@ -20950,7 +21482,7 @@
       "altEn": "female hairdresser",
       "altEnSource": "manual",
       "backtranslation": "Friseur",
-      "date": "2026-09-24",
+      "date": "2026-09-27",
       "de": "Friseur",
       "en": "hairdresser",
       "exampleEn": "I need to go to the hair salon.",
@@ -21062,7 +21594,7 @@
     },
     "c7aa0c023c3aab43": {
       "backtranslation": "Verdienst",
-      "date": "2026-09-24",
+      "date": "2026-09-27",
       "de": "Verdienst",
       "en": "earnings",
       "source": "manual"
@@ -21100,7 +21632,7 @@
       "_src_altEn": "связь",
       "altEn": "connection",
       "altEnSource": "deepl-ru",
-      "date": "2026-09-24",
+      "date": "2026-09-27",
       "de": "Leitung",
       "en": "management",
       "exampleEn": "the Internet connection",
@@ -21110,7 +21642,7 @@
     "c89902547837b0df": {
       "_src_note": "Artikel + Merkmale (Pl) | используется в объявлениях",
       "backtranslation": "Die Produktmerkmale",
-      "date": "2026-09-24",
+      "date": "2026-09-27",
       "de": "Artikelmerkmale",
       "en": "product features",
       "noteEn": "Artikel + Merkmale (Pl) | used in advertisements",
@@ -21136,6 +21668,18 @@
       "date": "2026-08-27",
       "de": "Schwanz",
       "en": "tail",
+      "source": "deepl"
+    },
+    "c95fd12e0dd3cce0": {
+      "_src_altEn": "медиа",
+      "_src_note": "единственное число – das Medium",
+      "altEn": "media",
+      "altEnSource": "deepl-ru",
+      "backtranslation": "die Medien",
+      "date": "2026-09-27",
+      "de": "Medien",
+      "en": "media",
+      "noteEn": "Singular: das Medium",
       "source": "deepl"
     },
     "c985f7bf32a96d6b": {
@@ -21211,7 +21755,7 @@
     "ca6c400710714caa": {
       "altEn": "field",
       "altEnSource": "manual",
-      "date": "2026-09-24",
+      "date": "2026-09-27",
       "de": "Bereich",
       "en": "area",
       "source": "manual"
@@ -21220,7 +21764,7 @@
       "_src_altEn": "обжечь",
       "altEn": "to burn oneself",
       "altEnSource": "manual",
-      "date": "2026-09-24",
+      "date": "2026-09-27",
       "de": "verbrennen",
       "en": "to burn",
       "source": "manual"
@@ -21397,7 +21941,7 @@
       "altEn": "to turn off",
       "altEnSource": "deepl-ru",
       "backtranslation": "ausschalten",
-      "date": "2026-09-24",
+      "date": "2026-09-27",
       "de": "abstellen",
       "en": "to put down",
       "exampleEn": "Turn off the radio.",
@@ -21635,7 +22179,7 @@
     },
     "cf793ee0da4ed715": {
       "backtranslation": "fett",
-      "date": "2026-09-24",
+      "date": "2026-09-27",
       "de": "fett",
       "en": "fatty",
       "source": "manual"
@@ -21656,7 +22200,7 @@
     },
     "cfb6dcaa2a5aa21c": {
       "backtranslation": "Ferienwohnung",
-      "date": "2026-09-24",
+      "date": "2026-09-27",
       "de": "Ferienwohnung",
       "en": "vacation rental",
       "source": "manual"
@@ -21709,7 +22253,7 @@
     },
     "d0311086766a141d": {
       "backtranslation": "die Führung",
-      "date": "2026-09-24",
+      "date": "2026-09-27",
       "de": "Führung",
       "en": "guided tour",
       "source": "manual"
@@ -21771,7 +22315,7 @@
     },
     "d0ad12dccd1c44bb": {
       "backtranslation": "das Bad",
-      "date": "2026-09-24",
+      "date": "2026-09-27",
       "de": "Bad",
       "en": "bathroom",
       "source": "manual"
@@ -21789,7 +22333,7 @@
       "altEn": "to happen",
       "altEnSource": "deepl-ru",
       "backtranslation": "passieren",
-      "date": "2026-09-24",
+      "date": "2026-09-27",
       "de": "passieren",
       "en": "to happen",
       "noteEn": "Was ist passiert?",
@@ -21883,6 +22427,17 @@
       "date": "2026-08-27",
       "de": "Formular",
       "en": "form",
+      "source": "deepl"
+    },
+    "d1ec7d3429333ccb": {
+      "_src_altEn": "обязательный",
+      "altEn": "mandatory",
+      "altEnSource": "deepl-ru",
+      "backtranslation": "erforderlich",
+      "date": "2026-09-27",
+      "de": "erforderlich",
+      "en": "required",
+      "exampleEn": "Good language skills are required.",
       "source": "deepl"
     },
     "d1fba1549394291e": {
@@ -22010,7 +22565,7 @@
       "_src_altEn": "Maklerin",
       "altEn": "agent",
       "altEnSource": "manual",
-      "date": "2026-09-24",
+      "date": "2026-09-27",
       "de": "Makler",
       "en": "broker",
       "source": "manual"
@@ -22144,7 +22699,7 @@
       "_src_altEn": "пораниться",
       "altEn": "to hurt oneself",
       "altEnSource": "manual",
-      "date": "2026-09-24",
+      "date": "2026-09-27",
       "de": "verletzen",
       "en": "to injure",
       "source": "manual"
@@ -22158,7 +22713,7 @@
       "source": "deepl"
     },
     "d443b25cbad9c0ac": {
-      "date": "2026-09-24",
+      "date": "2026-09-27",
       "de": "voraussichtlich",
       "en": "presumably",
       "source": "manual"
@@ -22265,7 +22820,7 @@
       "altEn": "sheet",
       "altEnSource": "deepl-ru",
       "backtranslation": "Bogen",
-      "date": "2026-09-24",
+      "date": "2026-09-27",
       "de": "Bogen",
       "en": "form",
       "source": "manual"
@@ -22380,6 +22935,13 @@
       "en": "to promise",
       "source": "deepl"
     },
+    "d743e01cac8f7637": {
+      "backtranslation": "der Liegestuhl",
+      "date": "2026-09-27",
+      "de": "Liegestuhl",
+      "en": "deck chair",
+      "source": "deepl"
+    },
     "d754e34e5874efc9": {
       "backtranslation": "Bier",
       "date": "2026-08-27",
@@ -22389,7 +22951,7 @@
     },
     "d7797d12380b1757": {
       "_src_note": "разговорное",
-      "date": "2026-09-24",
+      "date": "2026-09-27",
       "de": "dann kein",
       "en": "then no",
       "noteEn": "colloquial",
@@ -22458,7 +23020,7 @@
     },
     "d804895ae4269f07": {
       "backtranslation": "Antworten",
-      "date": "2026-09-24",
+      "date": "2026-09-27",
       "de": "Antworten",
       "en": "Answer",
       "source": "manual"
@@ -22468,7 +23030,7 @@
       "altEn": "top floor",
       "altEnSource": "manual",
       "backtranslation": "der Dachboden",
-      "date": "2026-09-24",
+      "date": "2026-09-27",
       "de": "Dachgeschoss",
       "en": "attic",
       "source": "manual",
@@ -22537,7 +23099,7 @@
     },
     "d8ef41368013cb4c": {
       "backtranslation": "Rat",
-      "date": "2026-09-24",
+      "date": "2026-09-27",
       "de": "Rat",
       "en": "advice",
       "source": "manual"
@@ -22631,7 +23193,7 @@
     "da65320e805f3499": {
       "_src_note": "ответ на знакомство | = Rад(а) познакомиться",
       "backtranslation": "Das freut mich!",
-      "date": "2026-09-24",
+      "date": "2026-09-27",
       "de": "Freut mich!",
       "en": "Nice to meet you!",
       "noteEn": "Reply to a \"Let's Get to Know Each Other\" Message | = R (a) Get to Know Each Other",
@@ -22670,7 +23232,7 @@
       "altEn": "floor above ground level",
       "altEnSource": "deepl-ru",
       "backtranslation": "der Stock",
-      "date": "2026-09-24",
+      "date": "2026-09-27",
       "de": "Stock",
       "en": "floor",
       "noteEn": "das Erdgeschoss = 0, der 1. Stock = 1 story above ground level, der 2. Stock = 2 stories above ground level, etc.",
@@ -22742,10 +23304,17 @@
     },
     "db3fde408307edca": {
       "backtranslation": "Standesamt",
-      "date": "2026-09-24",
+      "date": "2026-09-27",
       "de": "Standesamt",
       "en": "registry office",
       "source": "manual"
+    },
+    "db551f666f891e5f": {
+      "backtranslation": "die Schwäche",
+      "date": "2026-09-27",
+      "de": "Schwäche",
+      "en": "weakness",
+      "source": "deepl"
     },
     "db5b43f113c7409b": {
       "backtranslation": "Wanderung",
@@ -22991,7 +23560,7 @@
     },
     "de5a6cf159af80b3": {
       "backtranslation": "die Karte von Deutschland",
-      "date": "2026-09-24",
+      "date": "2026-09-27",
       "de": "Deutschlandkarte",
       "en": "map of Germany",
       "source": "manual",
@@ -23129,7 +23698,7 @@
     "dfa082c2db5822d9": {
       "altEn": "after that",
       "altEnSource": "manual",
-      "date": "2026-09-24",
+      "date": "2026-09-27",
       "de": "darauf",
       "en": "on it",
       "source": "manual"
@@ -23160,7 +23729,7 @@
     },
     "dfcf7fe18eb69239": {
       "_src_note": "употребляется безлично: es lohnt sich / es lohnt sich nicht",
-      "date": "2026-09-24",
+      "date": "2026-09-27",
       "de": "lohnen",
       "en": "to be worth it",
       "noteEn": "used impersonally: es lohnt sich / es lohnt sich nicht",
@@ -23178,7 +23747,7 @@
       "altEn": "easy",
       "altEnSource": "manual",
       "backtranslation": "einfach",
-      "date": "2026-09-24",
+      "date": "2026-09-27",
       "de": "einfach",
       "en": "simple",
       "source": "manual"
@@ -23266,6 +23835,13 @@
       "source": "haiku",
       "verdict": "ok"
     },
+    "e1095de45c33ca19": {
+      "backtranslation": "das Zertifikat",
+      "date": "2026-09-27",
+      "de": "Zertifikat",
+      "en": "certificate",
+      "source": "deepl"
+    },
     "e11347aacae2bb6f": {
       "_src_altEn": "корректный",
       "altEn": "correct",
@@ -23350,6 +23926,13 @@
       "de": "Konsulat",
       "en": "consulate",
       "source": "deepl"
+    },
+    "e1e1fbb31a2a844b": {
+      "date": "2026-09-27",
+      "de": "Weltreise",
+      "en": "world tour",
+      "source": "haiku",
+      "verdict": "fix"
     },
     "e1fce61f2299cded": {
       "backtranslation": "das Passwort",
@@ -23476,6 +24059,14 @@
       "noteEn": "Guten Appetit! – Enjoy your meal",
       "source": "deepl"
     },
+    "e31e2bd4d57da9e3": {
+      "backtranslation": "langjährig",
+      "date": "2026-09-27",
+      "de": "langjährig",
+      "en": "long-standing",
+      "exampleEn": "Many years of experience in customer service",
+      "source": "deepl"
+    },
     "e3211c600d0ee03e": {
       "_src_altEn": "железнодорожный путь",
       "altEn": "railway track",
@@ -23576,7 +24167,7 @@
       "source": "deepl"
     },
     "e4245547de468b6b": {
-      "date": "2026-09-24",
+      "date": "2026-09-27",
       "de": "Schokoriegel",
       "en": "chocolate bar",
       "source": "manual"
@@ -23593,7 +24184,7 @@
     "e461d0704fc17280": {
       "_src_note": "Kinder + Abteilung (n0202)",
       "backtranslation": "Kinderabteilung",
-      "date": "2026-09-24",
+      "date": "2026-09-27",
       "de": "Kinderabteilung",
       "en": "children's department",
       "noteEn": "Kinder + Abteilung (n0202)",
@@ -23699,7 +24290,7 @@
       "source": "deepl"
     },
     "e51ebcb1ccaa24ab": {
-      "date": "2026-09-24",
+      "date": "2026-09-27",
       "de": "Überweisung",
       "en": "bank transfer",
       "source": "manual"
@@ -23714,6 +24305,13 @@
       "en": "colorful",
       "source": "haiku",
       "verdict": "ok"
+    },
+    "e52400ae6d1909bf": {
+      "backtranslation": "die Weltmeisterschaft",
+      "date": "2026-09-27",
+      "de": "Weltmeisterschaft",
+      "en": "world championship",
+      "source": "manual"
     },
     "e52cea7ae7754d35": {
       "backtranslation": "Vater",
@@ -23828,7 +24426,7 @@
       "altEn": "price offer",
       "altEnSource": "deepl-ru",
       "backtranslation": "Gebot",
-      "date": "2026-09-24",
+      "date": "2026-09-27",
       "de": "Gebot",
       "en": "bid",
       "noteEn": "ein Gebot abgeben – place a bet",
@@ -23839,6 +24437,15 @@
       "date": "2026-08-27",
       "de": "Gefühl",
       "en": "feeling",
+      "source": "deepl"
+    },
+    "e70db96ed169f434": {
+      "_src_note": "ein paar – несколько, не склоняется и с маленькой буквы. das Paar – пара, два предмета",
+      "backtranslation": "ein paar Tipps",
+      "date": "2026-09-27",
+      "de": "ein paar Tipps",
+      "en": "a few tips",
+      "noteEn": "ein paar – several; it does not change form and is capitalized only when the first letter is a capital letter. das Paar – a pair, two items",
       "source": "deepl"
     },
     "e719477993f3b1c3": {
@@ -23946,7 +24553,7 @@
       "altEn": "to collect",
       "altEnSource": "manual",
       "backtranslation": "abholen",
-      "date": "2026-09-24",
+      "date": "2026-09-27",
       "de": "abholen",
       "en": "to pick up",
       "exampleEn": "I'll pick you up.",
@@ -24026,6 +24633,13 @@
       "en": "end",
       "source": "haiku",
       "verdict": "ok"
+    },
+    "e8b71d5d6292e8b9": {
+      "backtranslation": "sozial",
+      "date": "2026-09-27",
+      "de": "sozial",
+      "en": "social",
+      "source": "deepl"
     },
     "e8f0ba6c3ef53189": {
       "_src_note": "Zeichnen + Trick + Film",
@@ -24197,7 +24811,7 @@
       "source": "deepl"
     },
     "eaacb7ad1e8ec784": {
-      "date": "2026-09-24",
+      "date": "2026-09-27",
       "de": "mit anderen zusammen",
       "en": "together with others",
       "source": "manual"
@@ -24285,7 +24899,7 @@
       "verdict": "ok"
     },
     "eb58b681b03a2e0a": {
-      "date": "2026-09-24",
+      "date": "2026-09-27",
       "de": "Drittel",
       "en": "third",
       "source": "manual"
@@ -24376,10 +24990,23 @@
       "source": "deepl"
     },
     "ec251f1ff2bb9e78": {
-      "date": "2026-09-24",
+      "date": "2026-09-27",
       "de": "gestresst",
       "en": "stressed",
       "source": "manual"
+    },
+    "ec2c3f2619805668": {
+      "_src_altEn": "ограниченный сроком",
+      "_src_note": "договор кончается сам в названный день. unbefristet – бессрочный. Не путать с dringend – «срочный» в смысле «неотложный»",
+      "altEn": "fixed-term",
+      "altEnSource": "deepl-ru",
+      "backtranslation": "befristet",
+      "date": "2026-09-27",
+      "de": "befristet",
+      "en": "fixed-term",
+      "exampleEn": "The position is a two-year fixed-term contract.",
+      "noteEn": "The contract expires automatically on the specified date. unbefristet – open-ended. Do not confuse this with dringend – “term” in the sense of “urgent.”",
+      "source": "deepl"
     },
     "ec2cd37fb6f55680": {
       "backtranslation": "vorschlagen",
@@ -24448,6 +25075,15 @@
       "en": "nine",
       "source": "deepl"
     },
+    "ed0c1ba8290cba39": {
+      "_src_note": "с zu приставка разрывается – herauszufinden",
+      "backtranslation": "herausfinden",
+      "date": "2026-09-27",
+      "de": "herausfinden",
+      "en": "to find out",
+      "noteEn": "When using zu, the connection is lost – herauszufinden",
+      "source": "deepl"
+    },
     "ed246f8ddb888dd4": {
       "backtranslation": "Finger",
       "date": "2026-08-27",
@@ -24493,7 +25129,7 @@
       "source": "deepl"
     },
     "ed6bb59614208670": {
-      "date": "2026-09-24",
+      "date": "2026-09-27",
       "de": "Nussecke",
       "en": "nut triangle",
       "noteEn": "a German pastry",
@@ -24571,7 +25207,7 @@
       "verdict": "ok"
     },
     "ee36c0013270cc0b": {
-      "date": "2026-09-24",
+      "date": "2026-09-27",
       "de": "Ding",
       "en": "thing",
       "source": "manual"
@@ -24875,7 +25511,7 @@
       "altEn": "boyfriend",
       "altEnSource": "manual",
       "backtranslation": "der Freund",
-      "date": "2026-09-24",
+      "date": "2026-09-27",
       "de": "Freund",
       "en": "friend",
       "source": "manual",
@@ -24904,6 +25540,16 @@
       "de": "acht",
       "en": "eight",
       "source": "deepl"
+    },
+    "f1cbc26b27d538a4": {
+      "_src_note": "Partizip II совпадает с инфинитивом – ge- не встаёт, потому что er- неотделяемая",
+      "backtranslation": "lernen",
+      "date": "2026-09-27",
+      "de": "erfahren",
+      "en": "to learn",
+      "noteEn": "Partizip II It agrees with the infinitive—it doesn't work with \"ge-\" because \"er-\" is an inseparable phrase.",
+      "source": "haiku",
+      "verdict": "ok"
     },
     "f1ce30ecb6a6d67c": {
       "date": "2026-08-27",
@@ -25005,13 +25651,13 @@
       "source": "deepl"
     },
     "f2628188fee626ed": {
-      "date": "2026-09-24",
+      "date": "2026-09-27",
       "de": "berufstätig",
       "en": "employed",
       "source": "manual"
     },
     "f299feec2fcacd26": {
-      "date": "2026-09-24",
+      "date": "2026-09-27",
       "de": "zufügen",
       "en": "to inflict",
       "source": "manual"
@@ -25029,7 +25675,7 @@
       "_src_altEn": "рухнуть",
       "altEn": "to collapse",
       "altEnSource": "deepl-ru",
-      "date": "2026-09-24",
+      "date": "2026-09-27",
       "de": "stürzen",
       "en": "to fall",
       "source": "manual"
@@ -25075,7 +25721,7 @@
     },
     "f30e7f8f9f690d11": {
       "backtranslation": "die Telefonauskunft",
-      "date": "2026-09-24",
+      "date": "2026-09-27",
       "de": "Telefonauskunft",
       "en": "directory assistance",
       "source": "manual"
@@ -25089,7 +25735,7 @@
     },
     "f3a0bd0db50382c3": {
       "backtranslation": "(ошибка API)",
-      "date": "2026-09-24",
+      "date": "2026-09-27",
       "de": "nebenan",
       "en": "next door",
       "source": "manual",
@@ -25179,7 +25825,7 @@
       "_src_altEn": "nächst-",
       "altEn": "nearest",
       "altEnSource": "manual",
-      "date": "2026-09-24",
+      "date": "2026-09-27",
       "de": "nächste",
       "en": "next",
       "noteEn": "superlative of nah (near) | declines: nächste Woche (f) | nächsten Montag (m, Akk) | im nächsten Jahr (Dat) | see the rule on Adjektivdeklination",
@@ -25266,7 +25912,7 @@
       "_src_note": "Er schläft dabei – он при этом спит",
       "altEn": "at the same time / in the process",
       "altEnSource": "deepl-ru",
-      "date": "2026-09-24",
+      "date": "2026-09-27",
       "de": "dabei",
       "en": "there",
       "exampleEn": "I'm in",
@@ -25280,6 +25926,13 @@
       "en": "to greet",
       "source": "haiku",
       "verdict": "fix"
+    },
+    "f5fc45e574bd8fd3": {
+      "backtranslation": "die Möglichkeit",
+      "date": "2026-09-27",
+      "de": "Möglichkeit",
+      "en": "possibility",
+      "source": "deepl"
     },
     "f60029cb492142bf": {
       "backtranslation": "hungrig",
@@ -25333,7 +25986,7 @@
       "verdict": "ok"
     },
     "f64209bd3ed62f2a": {
-      "date": "2026-09-24",
+      "date": "2026-09-27",
       "de": "Fastfood",
       "en": "fast food",
       "source": "manual"
@@ -25544,7 +26197,7 @@
       "altEn": "jar",
       "altEnSource": "manual",
       "backtranslation": "Glas",
-      "date": "2026-09-24",
+      "date": "2026-09-27",
       "de": "Glas",
       "en": "glass",
       "noteEn": "A jar for storing preserves and similar items",
@@ -25557,6 +26210,15 @@
       "en": "signature",
       "source": "deepl"
     },
+    "f8684e1d9f704562": {
+      "_src_note": "выездное питание на мероприятиях",
+      "backtranslation": "das Catering",
+      "date": "2026-09-27",
+      "de": "Catering",
+      "en": "catering",
+      "noteEn": "Catering for events",
+      "source": "deepl"
+    },
     "f88f376f26f24105": {
       "date": "2026-08-27",
       "de": "Futter",
@@ -25566,7 +26228,7 @@
     },
     "f897e143d8d54a53": {
       "backtranslation": "mitbringen",
-      "date": "2026-09-24",
+      "date": "2026-09-27",
       "de": "mitbringen",
       "en": "to bring",
       "source": "manual"
@@ -25748,7 +26410,7 @@
       "source": "deepl"
     },
     "fb10387e26a644e8": {
-      "date": "2026-09-24",
+      "date": "2026-09-27",
       "de": "Beratungsstelle",
       "en": "advice centre",
       "noteEn": "a nominalised adjective, used without an article in lists",
@@ -25794,14 +26456,14 @@
       "_src_altEn": "die Versicherungsvertreterin",
       "altEn": "the female insurance agent",
       "altEnSource": "deepl",
-      "date": "2026-09-24",
+      "date": "2026-09-27",
       "de": "Versicherungsvertreter",
       "en": "insurance agent",
       "source": "manual"
     },
     "fb64d728fb6d4193": {
       "_src_note": "auswärts essen – есть не дома",
-      "date": "2026-09-24",
+      "date": "2026-09-27",
       "de": "auswärts",
       "en": "away from home",
       "noteEn": "auswärts essen – to eat out",
@@ -25809,7 +26471,7 @@
     },
     "fb6a2f0566889211": {
       "backtranslation": "sich fragen",
-      "date": "2026-09-24",
+      "date": "2026-09-27",
       "de": "sich wundern",
       "en": "to be surprised",
       "exampleEn": "I'm wondering.",
@@ -25817,7 +26479,7 @@
       "verdict": "ok"
     },
     "fb9778d6365d31b1": {
-      "date": "2026-09-24",
+      "date": "2026-09-27",
       "de": "Institution",
       "en": "institution",
       "source": "manual"
@@ -25942,7 +26604,7 @@
       "_src_note": "jeder (m) / jede (f) / jedes (n) — склоняется как der/die/das",
       "altEn": "every",
       "altEnSource": "deepl",
-      "date": "2026-09-24",
+      "date": "2026-09-27",
       "de": "jeder",
       "en": "every",
       "noteEn": "jeder (m) / jede (f) / jedes (n) — inflected as der / die / das",
@@ -26064,7 +26726,7 @@
     "ff1fab1af8d9ca6a": {
       "_src_note": "Gummistiefel – резиновые",
       "backtranslation": "Stiefel",
-      "date": "2026-09-24",
+      "date": "2026-09-27",
       "de": "Stiefel",
       "en": "boot",
       "noteEn": "Gummistiefel – rubber",
