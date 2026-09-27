@@ -72,6 +72,36 @@ body{font-family:sans-serif;font-size:13px;color:var(--text-main);line-height:1.
 }
 .section{margin-bottom:25px}
 .section-title{font-size:14px;font-weight:700;color:var(--text-title);margin-bottom:12px;display:flex;align-items:center;gap:8px}
+/* Разделитель перед каждой группой на вкладке Neu (вставляет renderNew). Ведёт
+   себя как .tab: по клику открывает вкладку группы (showFromSep). Нижний
+   отступ равен .section{margin-bottom} — иначе ритм между карточками поедет.
+   Ширина колонки — как у .panel > .section, чтобы плашка прижималась к краю
+   карточек, а не окна. */
+.section-sep {
+  display: flex;
+  justify-content: flex-end;
+  max-width: var(--w-wide);
+  margin: 0 auto 25px;
+}
+.section-sep__pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 16px;
+  border-radius: 999px;
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--text-muted);
+  border: 1px solid var(--border-soft);
+  background: var(--bg-tab);
+  white-space: nowrap;
+  user-select: none;
+  cursor: pointer;
+  touch-action: manipulation;
+  transition: transform 0.15s var(--ease-dt);
+}
+.section-sep__pill svg { flex-shrink: 0; }
+.section-sep__pill:active { transform: scale(0.95); }
 /* Секции, содержащие таблицу (списки слов) — оформляем карточкой, как на главной.
    :has() специально ограничивает эффект только табличными секциями — иначе
    .section с несколькими .rule-box внутри (вкладка Regeln) получил бы «карточку
@@ -2563,59 +2593,7 @@ m/n → mein/sein/ihr &nbsp;|&nbsp; f/Pl → meine/seine/ihre
 
 <!-- НОВЫЕ СЛОВА (буфер — живёт до следующей обновы) -->
 <div class="panel active" id="tab-new">
-<div class="section">
-<div class="section-title" data-icon="box">Существительные</div>
-<table><tbody>
-<tr><th>Немецкий</th><th>Артикль</th><th>Перевод / Примечание</th></tr>
-<tr><td>der Anrufbeantworter</td><td><span class="badge m">m</span></td><td>автоответчик | Anruf (звонок) + beantworten (отвечать) | разговорно: AB</td></tr>
-<tr><td>die Kantine</td><td><span class="badge f">f</span></td><td>столовая (на работе/в школе) | Pl: die Kantinen | in der Kantine essen</td></tr>
-<tr><td>die Anrede</td><td><span class="badge f">f</span></td><td>обращение (в письме/речи) | an + Rede (речь) | Sehr geehrte Damen und Herren – формальная Anrede</td></tr>
-<tr><td>der Gruß</td><td><span class="badge m">m</span></td><td>приветствие / поклон | Pl: die Grüße | Liebe Grüße (LG) – с приветом, в конце письма | Viele Grüße – много приветов</td></tr>
-<tr><td>der Teilnehmer</td><td><span class="badge m">m</span></td><td>участник | <b>teil</b> (часть) + <b>Nehmer</b> (берущий, от nehmen – брать) | f: die Teilnehmerin | Pl: die Teilnehmer</td></tr>
-<tr><td>der Mitarbeiter</td><td><span class="badge m">m</span></td><td>сотрудник | <b>mit</b> (с) + <b>Arbeiter</b> (работник, от arbeiten) = «совместный работник» | f: die Mitarbeiterin | Pl: die Mitarbeiter</td></tr>
-<tr><td>das Angebot</td><td><span class="badge n">n</span></td><td>предложение (товар/услуга) / акция | от <b>anbieten</b> (предлагать) | Pl: die Angebote | im Angebot – по акции</td></tr>
-<tr><td>die Sache</td><td><span class="badge f">f</span></td><td>вещь / дело | Pl: die Sachen | meine Sachen – мои вещи | Das ist meine Sache – это моё дело</td></tr>
-<tr><td>die Kunst</td><td><span class="badge f">f</span></td><td>искусство | Pl: die Künste | <b>Künstler</b> – художник/артист | <b>künstlich</b> – искусственный</td></tr>
-<tr><td>die Ausstellung</td><td><span class="badge f">f</span></td><td>выставка | от <b>ausstellen</b> (выставлять) | aus (наружу) + stellen (ставить) | -ung всегда die</td></tr>
-<tr><td>die Sonderausstellung</td><td><span class="badge f">f</span></td><td>спец-выставка / временная выставка | <b>Sonder-</b> (особый / специальный) + <b>Ausstellung</b> (выставка)</td></tr>
-</tbody></table>
-</div>
-<div class="section">
-<div class="section-title" data-icon="bolt">Глаголы</div>
-<table><tbody>
-<tr><th>Немецкий</th><th>Перевод</th><th>Примечание</th></tr>
-<tr><td>kreuzen</td><td>отметить крестиком / пересекать</td><td>от <b>das Kreuz</b> (крест) | <b>ankreuzen</b> – отметить крестиком в тесте/анкете (отделяемая: an-)</td></tr>
-<tr><td>teilnehmen</td><td>участвовать</td><td>отделяемая: teil- | <b>teil</b> (часть) + <b>nehmen</b> (брать) – буквально «брать часть» | teilnehmen <b>an</b> + Dat | Ich nehme an dem Kurs teil</td></tr>
-<tr><td>laden</td><td>1) грузить, заряжать 2) приглашать</td><td>Unregelmäßig (a→ä): du lädst, er lädt | das Handy laden – зарядить телефон | jdn zum Essen laden – пригласить кого-то на ужин | приставочные: <b>einladen</b> (приглашать), <b>aufladen</b> (заряжать), <b>herunterladen</b> (скачивать)</td></tr>
-</tbody></table>
-</div>
-<div class="section">
-<div class="section-title" data-icon="palette">Прилагательные / Наречия</div>
-<table><tbody>
-<tr><th>Немецкий</th><th>Перевод</th><th>Примечание</th></tr>
-<tr><td>herzlich</td><td>сердечный / искренний / тёплый</td><td>от <b>das Herz</b> (сердце) + <b>-lich</b> | herzlich willkommen – добро пожаловать (букв. «сердечно приветствуем») | herzliche Grüße – сердечный привет</td></tr>
-<tr><td>willkommen</td><td>добро пожаловать / желанный</td><td>Willkommen in Berlin! | Herzlich willkommen! – стандартное приветствие | jemanden willkommen heißen – приветствовать кого-то</td></tr>
-<tr><td>täglich</td><td>ежедневный / ежедневно</td><td>от <b>Tag</b> (день) + <b>-lich</b> | täglich geöffnet – открыто ежедневно | dreimal täglich – три раза в день</td></tr>
-<tr><td>direkt</td><td>прямой / прямо / напрямую</td><td>direkt aus Frankfurt – прямо из Франкфурта (⚠ aus, не von – для городов) | direkt vor dem Haus – прямо перед домом</td></tr>
-</tbody></table>
-</div>
-<div class="section">
-<div class="section-title" data-icon="ruleset">Правила</div>
-<div class="rule-box">
-<h3>Суффикс <b>-lich</b> – образование прилагательных</h3>
-<p style="font-size:13px;margin-bottom:10px">Суффикс <b>-lich</b> превращает существительное в прилагательное со значением «относящийся к / похожий на». Похож на русский суффикс «-ный».</p>
-<table>
-<tr><th>Существительное</th><th>+ -lich</th><th>Перевод</th></tr>
-<tr><td>das Herz (сердце)</td><td>herz<b>lich</b></td><td>сердечный</td></tr>
-<tr><td>der Tag (день)</td><td>täg<b>lich</b></td><td>ежедневный</td></tr>
-<tr><td>der Freund (друг)</td><td>freund<b>lich</b></td><td>дружелюбный</td></tr>
-<tr><td>der Mensch (человек)</td><td>mensch<b>lich</b></td><td>человеческий</td></tr>
-<tr><td>der Monat (месяц)</td><td>monat<b>lich</b></td><td>ежемесячный</td></tr>
-<tr><td>der Beruf (профессия)</td><td>beruf<b>lich</b></td><td>профессиональный</td></tr>
-</table>
-<p style="font-size:12px;margin-top:8px" data-icon="bulb">Часто корневая гласная меняется на умлаут: Tag → t<b>ä</b>glich, Nacht → n<b>ä</b>chtlich</p>
-</div>
-</div>
+<!-- Контент рендерится JS из data.js (renderNew) -->
 </div>
 
 <script>
@@ -2727,6 +2705,17 @@ function show(id){
       tab.classList.add('active');
     }
   });
+}
+
+// Переход с плашки-разделителя на вкладке Neu. В отличие от таба, плашку жмут
+// посреди скролла — поэтому поднимаемся наверх и докручиваем ряд табов до
+// активного (на мобилке ряд скроллится по горизонтали).
+function showFromSep(id) {
+  show(id);
+  syncMenuActive();
+  window.scrollTo(0, 0);
+  var tab = document.querySelector('.tab[data-tab="' + id + '"]');
+  if (tab) tab.scrollIntoView({ block: 'nearest', inline: 'center' });
 }
 
 // Переход к карточке правила по ссылке «см. также» (все правила есть на вкладке Regeln)
@@ -3789,29 +3778,33 @@ document.addEventListener('click', function(e) {
     const panel = document.getElementById('tab-new');
     if (!panel) return;
 
+    // Каждая группа — отдельный кусок; ключ = id вкладки из TABS_CONFIG,
+    // оттуда берутся подпись и иконка плашки-разделителя.
+    const groups = [];
+    const add = (tabId, part) => { if (part) groups.push({ tabId, html: part }); };
+
     // Используем renderSections — так же как другие вкладки.
     // Слова попадают в таб через topics (new:new-nouns, new:new-verbs и т.д.)
-    let html = '';
-    html += renderSections('new', ['noun'], renderNounsRow,
-      [t('cheatsheet.th_noun'), t('cheatsheet.th_gender'), t('cheatsheet.th_translation_note')]);
-    html += renderSections('new', ['verb'], renderVerbRow,
-      [t('cheatsheet.th_verb'), t('cheatsheet.th_translation'), t('cheatsheet.th_note')]);
-    html += renderSections('new', ['adj'], renderSimpleRow,
-      [t('cheatsheet.th_adj'), t('cheatsheet.th_translation'), t('cheatsheet.th_note')]);
-    html += renderSections('new', ['adv'], renderSimpleRow,
-      [t('cheatsheet.th_adv'), t('cheatsheet.th_translation'), t('cheatsheet.th_note')]);
-    html += renderSections('new', ['pron'], renderSimpleRow,
-      [t('cheatsheet.th_pron'), t('cheatsheet.th_translation'), t('cheatsheet.th_note')]);
-    html += renderSections('new', ['phrase'], renderSimpleRow,
-      [t('cheatsheet.th_phrase'), t('cheatsheet.th_translation'), t('cheatsheet.th_note')]);
-    html += renderSections('new', ['num'], renderNumRow,
-      [t('cheatsheet.th_number'), t('cheatsheet.th_german'), t('cheatsheet.th_pronunciation')]);
+    add('nouns', renderSections('new', ['noun'], renderNounsRow,
+      [t('cheatsheet.th_noun'), t('cheatsheet.th_gender'), t('cheatsheet.th_translation_note')]));
+    add('verbs', renderSections('new', ['verb'], renderVerbRow,
+      [t('cheatsheet.th_verb'), t('cheatsheet.th_translation'), t('cheatsheet.th_note')]));
+    add('adj', renderSections('new', ['adj'], renderSimpleRow,
+      [t('cheatsheet.th_adj'), t('cheatsheet.th_translation'), t('cheatsheet.th_note')]));
+    add('adv', renderSections('new', ['adv'], renderSimpleRow,
+      [t('cheatsheet.th_adv'), t('cheatsheet.th_translation'), t('cheatsheet.th_note')]));
+    add('mestoim', renderSections('new', ['pron'], renderSimpleRow,
+      [t('cheatsheet.th_pron'), t('cheatsheet.th_translation'), t('cheatsheet.th_note')]));
+    add('phrases', renderSections('new', ['phrase'], renderSimpleRow,
+      [t('cheatsheet.th_phrase'), t('cheatsheet.th_translation'), t('cheatsheet.th_note')]));
+    add('nums', renderSections('new', ['num'], renderNumRow,
+      [t('cheatsheet.th_number'), t('cheatsheet.th_german'), t('cheatsheet.th_pronunciation')]));
 
     // Новые термины (TERMS лежат отдельно от VOCAB, фильтруем по new:new-terms в topics)
     if (typeof TERMS !== 'undefined') {
       const newTerms = TERMS.filter(t => (t.topics || []).some(x => x === 'new:new-terms'));
       if (newTerms.length > 0) {
-        html += '<div class="section">'
+        let html = '<div class="section">'
               + '<div class="section-title">' + topicTitleHtml('new:new-terms') + '</div>'
               + '<table><thead><tr><th>' + t('cheatsheet.th_term') + '</th><th>' + t('cheatsheet.th_translation') + '</th><th>' + t('cheatsheet.th_note') + '</th></tr></thead><tbody>';
         for (const t of newTerms) {
@@ -3820,6 +3813,7 @@ document.addEventListener('click', function(e) {
                 + '<td>' + escHtml(wordField(t, 'note', 'noteEn')) + '</td></tr>';
         }
         html += '</tbody></table></div>';
+        add('termin', html);
       }
     }
 
@@ -3827,7 +3821,7 @@ document.addEventListener('click', function(e) {
     if (typeof SOUNDS !== 'undefined') {
       const newSounds = SOUNDS.filter(s => (s.topics || []).some(x => x === 'new:new-sounds'));
       if (newSounds.length > 0) {
-        html += '<div class="section">'
+        let html = '<div class="section">'
               + '<div class="section-title">' + topicTitleHtml('new:new-sounds') + '</div>'
               + '<table><thead><tr><th>' + t('cheatsheet.th_letter_combo') + '</th><th>' + t('cheatsheet.th_pronunciation') + '</th><th>' + t('cheatsheet.th_example') + '</th></tr></thead><tbody>';
         for (const s of newSounds) {
@@ -3836,6 +3830,7 @@ document.addEventListener('click', function(e) {
                 + '<td>' + escHtml(wordField(s, 'example', 'exampleEn')) + '</td></tr>';
         }
         html += '</tbody></table></div>';
+        add('sounds', html);
       }
     }
 
@@ -3843,14 +3838,29 @@ document.addEventListener('click', function(e) {
     if (typeof RULES !== 'undefined') {
       const newRules = RULES.filter(r => r.new === true);
       if (newRules.length > 0) {
-        html += '<div class="section" style="margin-bottom:24px">';
+        let html = '<div class="section" style="margin-bottom:24px">';
         html += '<div class="section-title" style="font-size:15px;margin-bottom:12px">' + topicTitleHtml('new:new-rules') + '</div>';
         for (const r of newRules) {
           html += renderRuleCard(r);
         }
         html += '</div>';
+        add('rules', html);
       }
     }
+
+    // Плашка-разделитель перед каждой группой, включая первую. Подпись по-немецки
+    // из TABS_CONFIG, без data-i18n — как у табов. Иконка вставляется сразу:
+    // панель перерисовывается при смене языка, hydrateIcons второй раз не придёт.
+    // Клик ведёт на полную вкладку группы — как таб сверху.
+    let html = groups.map(g => {
+      const cfg = TABS_CONFIG.find(c => c.id === g.tabId);
+      const sep = cfg
+        ? '<div class="section-sep"><span class="section-sep__pill" data-tab="' + cfg.id + '"'
+          + ' onclick="showFromSep(\'' + cfg.id + '\')">'
+          + ic(cfg.icon) + ' ' + escHtml(cfg.label) + '</span></div>'
+        : '';
+      return sep + g.html;
+    }).join('');
 
     // Если совсем ничего нет — показываем заглушку
     if (!html.trim()) {
