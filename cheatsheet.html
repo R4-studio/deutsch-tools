@@ -139,7 +139,37 @@ table.noun-table, table.vocab-table { table-layout: auto; width: 100%; }
 .voc-de  { font-weight: 600; color: var(--text-title); }
 .voc-gov { font-size: 12.5px; color: var(--text-muted); margin-top: 2px; line-height: 1.4; }
 .voc-gov b { color: var(--accent); font-weight: 600; }
-table.noun-table th:nth-child(2), table.noun-table td:nth-child(2) { text-align: center; white-space: nowrap; width: 1%; padding-left: 8px; padding-right: 8px; }
+/* Второй слой в ячейке перевода: сам перевод сверху обычным текстом,
+   разбор слова под ним приглушённым. Размер и цвет — как у .voc-gov,
+   чтобы вторые строки во всём справочнике читались одинаково. */
+.voc-note { font-size: 12.5px; color: var(--text-muted); margin-top: 3px; line-height: 1.4; }
+/* На узком экране разбор слова убираем из таблицы — он остаётся в модалке,
+   которая открывается тапом по строке. Таблица держит три колонки без
+   горизонтального скролла. */
+@media (max-width: 768px) {
+  .voc-note, .th-note-part { display: none; }
+}
+/* Общая сетка для всех таблиц существительных: колонки не зависят от того,
+   какие слова попали в топик, и род стоит на одной вертикали во всех секциях.
+   При table-layout: auto это желаемая ширина — длинное слово её расширит,
+   но не разорвётся. */
+table.noun-table th:nth-child(1),
+table.noun-table td:nth-child(1) { width: 30%; }
+table.noun-table th:nth-child(2),
+table.noun-table td:nth-child(2) {
+  text-align: center;
+  white-space: nowrap;
+  width: 64px;
+  box-sizing: border-box;
+  padding-left: 14px;
+  padding-right: 14px;
+  vertical-align: middle;
+}
+/* Бейджи: зазор только МЕЖДУ соседними, не после последнего.
+   Иначе у составного рода (m/f) пара слипается в «mf», а одиночный
+   бейдж уезжает влево от центра на величину margin-right. */
+table.noun-table td:nth-child(2) .badge { margin-right: 0; }
+table.noun-table td:nth-child(2) .badge + .badge { margin-left: 4px; }
 
 /* Бэйджи не должны разрываться, даже в узких ячейках */
 .badge { white-space: nowrap; }
@@ -2719,14 +2749,11 @@ function show(id){
 }
 
 // Переход с плашки-разделителя на вкладке Neu. В отличие от таба, плашку жмут
-// посреди скролла — поэтому поднимаемся наверх и докручиваем ряд табов до
-// активного (на мобилке ряд скроллится по горизонтали).
+// посреди скролла — поэтому поднимаемся наверх.
 function showFromSep(id) {
   show(id);
   syncMenuActive();
   window.scrollTo(0, 0);
-  var tab = document.querySelector('.tab[data-tab="' + id + '"]');
-  if (tab) tab.scrollIntoView({ block: 'nearest', inline: 'center' });
 }
 
 // Переход к карточке правила по ссылке «см. также» (все правила есть на вкладке Regeln)
@@ -3234,7 +3261,15 @@ document.addEventListener('click', function(e) {
     const noteCol = noteParts.join(' | ');
     return '<tr data-vid="' + escHtml(item.id) + '"><td>' + escHtml(item.de) + '</td>'
          + '<td>' + badge + '</td>'
-         + '<td>' + escHtml(wordText(item)) + (noteCol ? ' | ' + escHtml(noteCol) : '') + '</td></tr>';
+         + '<td>' + escHtml(wordText(item))
+         + (noteCol ? '<div class="voc-note">' + escHtml(noteCol) + '</div>' : '')
+         + '</td></tr>';
+  }
+  // Шапка таблицы существительных. «/ Примечание» — отдельным span, чтобы на
+  // мобиле скрыть его вместе с .voc-note: колонка там показывает только перевод.
+  function nounHeaders() {
+    return [t('cheatsheet.th_noun'), t('cheatsheet.th_gender'),
+      t('cheatsheet.th_translation') + '<span class="th-note-part"> / ' + t('cheatsheet.th_note') + '</span>'];
   }
 
   // ─── Рендер обычной таблицы (verb/adj/adv/pron/phrase) ──────────────────
@@ -3696,8 +3731,7 @@ document.addEventListener('click', function(e) {
   function renderNouns() {
     const panel = document.getElementById('tab-nouns');
     if (!panel) return;
-    panel.innerHTML = renderSections('nouns', ['noun'], renderNounsRow,
-      [t('cheatsheet.th_noun'), t('cheatsheet.th_gender'), t('cheatsheet.th_translation_note')]);
+    panel.innerHTML = renderSections('nouns', ['noun'], renderNounsRow, nounHeaders());
   }
 
   // ─── Рендер: adj/adv/mestoim ────────────────────────────────────────────
@@ -3796,8 +3830,7 @@ document.addEventListener('click', function(e) {
 
     // Используем renderSections — так же как другие вкладки.
     // Слова попадают в таб через topics (new:new-nouns, new:new-verbs и т.д.)
-    add('nouns', renderSections('new', ['noun'], renderNounsRow,
-      [t('cheatsheet.th_noun'), t('cheatsheet.th_gender'), t('cheatsheet.th_translation_note')]));
+    add('nouns', renderSections('new', ['noun'], renderNounsRow, nounHeaders()));
     add('verbs', renderSections('new', ['verb'], renderVerbRow,
       [t('cheatsheet.th_verb'), t('cheatsheet.th_translation'), t('cheatsheet.th_note')]));
     add('adj', renderSections('new', ['adj'], renderSimpleRow,
@@ -3898,7 +3931,16 @@ document.addEventListener('click', function(e) {
     renderRules();
     renderPhrases();
     renderNew();
+    // Маркировка повторяется здесь: render*() пересоздают таблицы через innerHTML,
+    // и классы из раннего блока автомаркировки теряются вместе со старой разметкой.
     document.querySelectorAll('table').forEach(t => {
+      if (!t.classList.contains('conj-table')) {
+        const fr = t.rows[0];
+        if (fr) {
+          if (t.querySelector('.badge')) t.classList.add('noun-table');
+          else if (fr.cells.length === 3) t.classList.add('vocab-table');
+        }
+      }
       if (!t.parentElement.classList.contains('table-wrap')) {
         const wrap = document.createElement('div');
         wrap.className = 'table-wrap';
