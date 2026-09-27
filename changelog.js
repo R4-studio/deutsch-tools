@@ -1,5 +1,32 @@
 window.CHANGELOG = [
   {
+  "date": "2026-09-27",
+  "title": "Установка на iPhone, слова про работу и порядок в таблицах",
+  "items": [
+    "Установка на iPhone: вместо подсказки, которая исчезала раньше, чем ты дойдёшь до меню, открывается инструкция из трёх шагов",
+    "Шаги показаны значками из меню телефона, а не словами – работает на любом языке телефона",
+    "67 новых слов про работу и поиск места: Bewerbung, Lebenslauf, Vorstellungsgespräch, Stärken und Schwächen",
+    "Правило Konjunktiv II: когда hätte, когда wäre, а когда würde – и почему именно так",
+    "Правило про da(r)- перед dass: Ich freue mich darüber, dass du Zeit hast",
+    "На вкладке Neu между группами слов появились плашки – по ним можно сразу перейти в нужный раздел",
+    "Кнопки навигации подсвечиваются под курсором",
+    "В таблице существительных колонка рода стала уже, а примечание переехало под перевод отдельной строкой",
+    "На телефоне примечание из таблицы убрано – оно открывается тапом по слову"
+  ],
+  "titleEn": "Install on iPhone, work vocabulary and tidier tables",
+  "itemsEn": [
+    "Install on iPhone: instead of a hint that vanished before you reached the menu, a three-step guide opens",
+    "The steps are shown with the icons from your phone's menu rather than words – so it works whatever language your phone is in",
+    "67 new words about work and job hunting: Bewerbung, Lebenslauf, Vorstellungsgespräch, Stärken und Schwächen",
+    "New rule on Konjunktiv II: when to use hätte, when wäre, and when würde – and why",
+    "New rule on da(r)- before dass: Ich freue mich darüber, dass du Zeit hast",
+    "On the Neu tab there are now labels between word groups – tap one to jump straight to that section",
+    "Navigation buttons highlight under the cursor",
+    "In the nouns table the gender column got narrower, and the note moved under the translation on its own line",
+    "On a phone the note is out of the table – tap a word to see it"
+  ]
+},
+  {
   "date": "2026-09-26",
   "title": "Новое имя, иконка и установка на телефон",
   "items": [
@@ -129,7 +156,30 @@ window.CHANGELOG = [
       "Consistent page width – the header no longer jumps between screens",
       "Mobile: no more blue tap outline, fixed viewport height on iOS"
     ]
-  },  
+  },
+  {
+  "date": "2026-09-17",
+  "title": "Тесты по правилам в тренажёре",
+  "items": [
+    "В тренажёре появился режим «Правила»: тест по одному правилу или по всем сразу вперемешку",
+    "Прямо во время теста можно открыть карточку правила – прогресс не потеряется",
+    "В разборе ошибок каждый вопрос ведёт к своему правилу",
+    "С карточки правила в справочнике теперь можно сразу перейти к тесту",
+    "Вопросов стало 233",
+    "Сортировка справочника «по темам» и «по дате» наконец работает – раньше порядок менялся только при сортировке по уровню",
+    "Тесты есть пока не у всех правил – добавляются постепенно"
+  ],
+  "titleEn": "Rule tests in the trainer",
+  "itemsEn": [
+    "The trainer has a new Regeln mode: test one rule, or all of them mixed together",
+    "You can open the rule card in the middle of a test – your progress stays",
+    "In the results, every question links to the rule behind it",
+    "From a rule card in the reference you can now jump straight into its test",
+    "233 questions now",
+    "Sorting the reference by topic and by date finally works – until now only sorting by level changed anything",
+    "Not every rule has a test yet – they are being added"
+  ]
+},  
     {
     "date": "2026-09-05",
     "title": "135 слов, Futur и Passiv, сортировка в справочнике",
