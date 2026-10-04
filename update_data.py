@@ -3261,6 +3261,7 @@ def process_questions(rows, warn):
             fm = clean(r.get("forms"))
             if fm: item["ans"] = [s.strip() for s in fm.split("|")]
         if clean(r.get("hint")): item["hint"] = clean(r.get("hint"))
+        if clean(r.get("hint_en")): item["hintEn"] = clean(r.get("hint_en"))
         if clean(r.get("explain")): item["explain"] = clean(r.get("explain"))
         rid = clean(r.get("id"))
         if rid: item["id"] = rid
@@ -3699,7 +3700,7 @@ if __name__ == '__main__':
                  "partizip2", "aux", "praeteritum", "separable", "reflexive",
                  "impersonal", "case"]
     Q_KEYS = ["id", "topic", "level", "difficulty", "type", "q", "rule",
-              "opts", "ans", "words", "pronouns", "altAns", "hint", "explain"]
+              "opts", "ans", "words", "pronouns", "altAns", "hint", "hintEn", "explain"]
     R_KEYS = ["id", "title", "titleEn", "topic", "domen", "group", "level", "content_md", "content_md_en",
               "examples", "examplesEn", "note", "noteEn", "new"]
     T_KEYS = ["id", "term", "plural", "ru", "en", "topic", "domen", "group", "level",

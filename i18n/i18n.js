@@ -24,10 +24,16 @@ function getLang() {
   return localStorage.getItem('lang') || 'ru';
 }
 
-function t(key) {
+// Второй аргумент — подстановка {ключ}. Без него поведение прежнее,
+// поэтому все существующие вызовы t('nav.bell_title') работают как работали.
+function t(key, vars) {
   var dict = I18N_DICTS[getLang()] || I18N_DICTS.ru;
-  if (dict && dict[key] != null) return dict[key];
-  return (I18N_DICTS.ru[key] != null) ? I18N_DICTS.ru[key] : key;
+  var s = (dict && dict[key] != null) ? dict[key]
+        : (I18N_DICTS.ru[key] != null ? I18N_DICTS.ru[key] : key);
+  if (!vars) return s;
+  return s.replace(/\{(\w+)\}/g, function (m, k) {
+    return vars[k] != null ? vars[k] : m;
+  });
 }
 
 function applyI18n() {
