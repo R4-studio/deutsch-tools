@@ -1,4 +1,33 @@
 window.CHANGELOG = [
+    {
+  "date": "2026-10-04",
+  "title": "Задания на немецком, тесты к двум правилам и починенные подсказки",
+  "items": [
+    "Задания в тренажёре теперь на немецком: Konjugiere «gehen» im Präsens вместо «Проспрягай gehen в Präsens» – читаешь условие на языке, который учишь",
+    "Если формулировка непонятна, рядом кнопка «Перевести»",
+    "У двух новых правил появились тесты: Konjunktiv II (hätte / wäre / würde) и da(r)- перед dass – по 30 вопросов на каждое",
+    "Тест теперь есть у 35 правил из 70",
+    "Подсказки появились у вопросов с выбором ответа и у плиток – раньше кнопка была только там, где надо вписать слово, и около ста подсказок просто не доходили до экрана",
+    "Переключишь язык посреди теста – задания и подсказки переключатся вместе с ним, а не останутся на старом",
+    "На английском интерфейсе больше не всплывают русские подсказки",
+    "В вопросе про артикль больше не написан падеж – определить его и есть смысл упражнения",
+    "Объяснение после ответа теперь про сам вопрос, а не про примечание к слову",
+    "Объяснения про Dativ и Akkusativ переписаны: не «здесь Dativ», а почему именно он. Ich wasche mich, но Ich wasche mir die Hände – потому что руки уже заняли место прямого дополнения"
+  ],
+  "titleEn": "Tasks in German, tests for two new rules and hints that finally show up",
+  "itemsEn": [
+    "Trainer tasks are now in German: Konjugiere «gehen» im Präsens instead of «Conjugate gehen in the Präsens» – you read the task in the language you are learning",
+    "If the wording is unclear, there is a Translate button next to it",
+    "Two new rules got tests: Konjunktiv II (hätte / wäre / würde) and da(r)- before dass – 30 questions each",
+    "35 of the 70 rules now have a test",
+    "Hints appeared on multiple-choice and tile questions – the button used to exist only where you type the answer, so about a hundred hints never reached the screen",
+    "Switch the language mid-test and the tasks and hints switch with it instead of staying behind",
+    "Russian hints no longer pop up on the English interface",
+    "The article question no longer spells out the case – working it out is the point of the exercise",
+    "The explanation after an answer is now about the question itself, not about the word's note",
+    "Dativ and Akkusativ explanations rewritten: not «this is Dativ» but why. Ich wasche mich, but Ich wasche mir die Hände – because the hands already took the direct-object slot"
+  ]
+},
   {
   "date": "2026-09-27",
   "title": "Установка на iPhone, слова про работу и порядок в таблицах",
