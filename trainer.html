@@ -1865,18 +1865,23 @@ function genL2_pers_pronoun(vocabPool) {
 
 // ─── Генератор: Ур 3 — артикль в контексте (для существительных, mc) ──
 // Шаблоны с указанием падежа
+// why — почему именно этот падеж. Идёт в explain вопроса: падеж в самом
+// задании больше не пишется, значит объяснение после ответа должно называть
+// механизм, а не только правильную букву.
 const ARTICLE_TEMPLATES = [
-  { tmpl: "___ {noun} ist hier",        case: "Nom" },
-  { tmpl: "___ {noun} ist sehr schön",  case: "Nom" },
-  { tmpl: "Ich habe ___ {noun}",        case: "Akk" },
-  { tmpl: "Ich kaufe ___ {noun}",       case: "Akk" },
-  { tmpl: "Ich sehe ___ {noun}",        case: "Akk" },
-  { tmpl: "Er nimmt ___ {noun}",        case: "Akk" },
-  { tmpl: "Ich helfe ___ {noun}",       case: "Dat" },
-  { tmpl: "Ich spreche mit ___ {noun}", case: "Dat" },
-  { tmpl: "Es gehört ___ {noun}",       case: "Dat" },
-  { tmpl: "Wir danken ___ {noun}",      case: "Dat" },
+  { tmpl: "___ {noun} ist hier",        case: "Nom", why: "подлежащее стоит в Nominativ" },
+  { tmpl: "___ {noun} ist sehr schön",  case: "Nom", why: "подлежащее стоит в Nominativ" },
+  { tmpl: "Ich habe ___ {noun}",        case: "Akk", why: "haben требует Akkusativ" },
+  { tmpl: "Ich kaufe ___ {noun}",       case: "Akk", why: "kaufen требует Akkusativ" },
+  { tmpl: "Ich sehe ___ {noun}",        case: "Akk", why: "sehen требует Akkusativ" },
+  { tmpl: "Er nimmt ___ {noun}",        case: "Akk", why: "nehmen требует Akkusativ" },
+  { tmpl: "Ich helfe ___ {noun}",       case: "Dat", why: "helfen требует Dativ" },
+  { tmpl: "Ich spreche mit ___ {noun}", case: "Dat", why: "предлог mit всегда с Dativ" },
+  { tmpl: "Es gehört ___ {noun}",       case: "Dat", why: "gehören требует Dativ" },
+  { tmpl: "Wir danken ___ {noun}",      case: "Dat", why: "danken требует Dativ" },
 ];
+
+const GENDER_RU = { m: "мужского рода", f: "женского рода", n: "среднего рода" };
 
 // Артикли по роду и падежу (с definite артиклем)
 const ARTICLE_FORMS = {
@@ -1901,8 +1906,12 @@ function genL3_article_in_context(item) {
   const display = tmpl.tmpl.replace("{noun}", nounStem);
   return {
     auto: true, level: "A2", difficulty: 3, type: "mc",
-    q: `Вставь артикль (${tmpl.case}):\n${display}`,
+    // Падеж из текста задания убран: определить его по глаголу или предлогу
+    // и есть проверяемый навык. Ответ остаётся однозначным — падеж задаёт
+    // шаблон, род задаёт само слово.
+    q: `Вставь артикль:\n${display}`,
     opts, ans,
+    explain: `${tmpl.why}. ${nounStem} ${GENDER_RU[item.gender]} → ${correct}.`,
     sourceId: item.id,
   };
 }
@@ -3696,14 +3705,18 @@ function App() {
 
   // Получить note слова/глагола привязанного к вопросу через sourceId
   function getNoteForQuestion(q) {
-    if (!q || !q.sourceId) return q?.explain || "";
-    // Ищем в VOCAB
+    if (!q) return "";
+    // explain написан под конкретный вопрос — он первый. note слова и строка
+    // спряжения относятся к слову вообще и годятся только как запасной
+    // вариант. Раньше приоритет был обратный, и под вопросом про артикль в
+    // Dativ всплывало «обычно только Singular» из заметки к слову.
+    if (q.explain) return q.explain;
+    if (!q.sourceId) return "";
     const v = VOCAB.find(x => x.id === q.sourceId);
     if (v && v.note) return wordField(v, "note", "noteEn");
-    // Ищем в CONJUGATIONS
     const c = CONJUGATIONS.find(x => x.id === q.sourceId);
     if (c && c.ru) return `${c.verb} – ${wordText(c)}`;
-    return q.explain || "";
+    return "";
   }
 
   // ─── HOME ──────────────────────────────────────────────────────────────
