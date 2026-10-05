@@ -4359,6 +4359,13 @@
       "en": "course for beginners",
       "source": "manual"
     },
+    "02477926805c33ec": {
+      "date": "2026-10-05",
+      "de": "Hinweis",
+      "en": "instruction",
+      "source": "haiku",
+      "verdict": "fix"
+    },
     "02843c3463331284": {
       "_src_altEn": "гулять",
       "altEn": "to go for a walk",
@@ -4642,9 +4649,13 @@
     },
     "062b6d6dba385d75": {
       "_src_note": "дословно «выстрелить ворота» – гол и ворота одно слово",
+      "backtranslation": "ein Tor zu schießen",
       "date": "2026-10-05",
+      "de": "ein Tor schießen",
+      "en": "to score a goal",
       "noteEn": "literally, “to shoot the goal”—“goal” and “goal” are one word",
-      "source": "deepl"
+      "source": "haiku",
+      "verdict": "ok"
     },
     "064caffc963b10a3": {
       "_src_altEn": "путешествовать пешком",
@@ -5571,6 +5582,14 @@
       "en": "gym",
       "source": "deepl"
     },
+    "0fde105b909c1b54": {
+      "backtranslation": "das Fitnessstudio",
+      "date": "2026-10-05",
+      "de": "Turnhalle",
+      "en": "gym",
+      "source": "haiku",
+      "verdict": "ok"
+    },
     "100359326ebc392b": {
       "backtranslation": "die Lunge",
       "date": "2026-09-03",
@@ -5675,6 +5694,14 @@
       "en": "assistant",
       "noteEn": "Weak declension – den Assistenten, dem Assistenten, des Assistenten",
       "source": "deepl"
+    },
+    "120de524e6175f41": {
+      "backtranslation": "trainieren",
+      "date": "2026-10-05",
+      "de": "ein Workout machen",
+      "en": "to work out",
+      "source": "haiku",
+      "verdict": "ok"
     },
     "120f065bfd18b4e7": {
       "backtranslation": "die Geldbörse",
@@ -6440,8 +6467,11 @@
     "18eb2a6cb20eb001": {
       "_src_note": "два s подряд – одно от Kurs, второе от Start; немецкий стыки корней не упрощает",
       "date": "2026-10-05",
+      "de": "Kursstart",
+      "en": "course start date",
       "noteEn": "Two \"s\" in a row—one from Kurs, the other from Start; German doesn't make root combinations any easier",
-      "source": "deepl"
+      "source": "haiku",
+      "verdict": "fix"
     },
     "18f00310fe7ec3d1": {
       "altEn": "field",
@@ -7598,6 +7628,13 @@
       "en": "disease",
       "source": "deepl"
     },
+    "25bdcf83190363d7": {
+      "date": "2026-10-05",
+      "de": "Umgebung",
+      "en": "surroundings",
+      "source": "haiku",
+      "verdict": "fix"
+    },
     "25e9001f91f130a1": {
       "backtranslation": "Schwester",
       "date": "2026-08-27",
@@ -8184,8 +8221,11 @@
     "2b9ec1992a36211e": {
       "_src_note": "суффикс -ig делает из существительного прилагательное: Jahr → einjährig, Tag → zweitägig",
       "date": "2026-10-05",
+      "de": "einjährig",
+      "en": "one-year",
       "noteEn": "The suffix -ig turns a noun into an adjective: Jahr → einjährig, Tag → zweitägig",
-      "source": "deepl"
+      "source": "haiku",
+      "verdict": "fix"
     },
     "2ba04c4b00e38d1d": {
       "date": "2026-08-27",
@@ -9465,9 +9505,13 @@
     },
     "393df33e69101304": {
       "_src_note": "teilnehmen требует an + Dativ",
+      "backtranslation": "an Wettbewerben teilzunehmen",
       "date": "2026-10-05",
+      "de": "an Wettkämpfen teilnehmen",
+      "en": "to participate in competitions",
       "noteEn": "teilnehmen Requires an + Dativ",
-      "source": "deepl"
+      "source": "haiku",
+      "verdict": "ok"
     },
     "395b9d6eccd9530d": {
       "backtranslation": "weiß",
@@ -9741,8 +9785,11 @@
     "3cb5d93fc825fed0": {
       "_src_note": "от schnuppern – принюхиваться; так называют всё пробное: Schnupperkurs, Schnupperstunde",
       "date": "2026-10-05",
+      "de": "Schnupperwoche",
+      "en": "trial week",
       "noteEn": "From schnuppern – to sniff around; this is the term used for anything experimental: Schnupperkurs, Schnupperstunde",
-      "source": "deepl"
+      "source": "haiku",
+      "verdict": "fix"
     },
     "3ccdea116c901317": {
       "backtranslation": "das Huhn",
@@ -11498,8 +11545,11 @@
     "4e6dd93632dd36be": {
       "_src_note": "работа без оплаты, по доброй воле – Ehrenamt буквально «почётная должность»",
       "date": "2026-10-05",
+      "de": "ehrenamtlich",
+      "en": "voluntary",
       "noteEn": "Unpaid work, done voluntarily—Ehrenamt—literally an “honorary position”",
-      "source": "deepl"
+      "source": "haiku",
+      "verdict": "fix"
     },
     "4e7261013cae7e85": {
       "backtranslation": "der Kurier",
@@ -11988,6 +12038,13 @@
       "source": "haiku",
       "verdict": "fix"
     },
+    "53f3d1689b5d58e5": {
+      "date": "2026-10-05",
+      "de": "Parkmöglichkeit",
+      "en": "parking space",
+      "source": "haiku",
+      "verdict": "fix"
+    },
     "53f5f28e687f9172": {
       "_src_note": "verantwortlich für + Akk",
       "backtranslation": "verantwortlich",
@@ -12437,9 +12494,13 @@
     },
     "58ce2c60539a5ad6": {
       "_src_note": "дословно «богатый сменами» – о работе, программе, дне",
+      "backtranslation": "vielfältig",
       "date": "2026-10-05",
+      "de": "abwechslungsreich",
+      "en": "varied",
       "noteEn": "literally, “full of changes”—referring to work, a program, or a day",
-      "source": "deepl"
+      "source": "haiku",
+      "verdict": "ok"
     },
     "58d152cac0a2484f": {
       "_src_note": "без множественного числа",
@@ -12520,6 +12581,14 @@
       "en": "to look at",
       "source": "haiku",
       "verdict": "fix"
+    },
+    "599cedc65a54261b": {
+      "backtranslation": "der Ballon",
+      "date": "2026-10-05",
+      "de": "Luftballon",
+      "en": "balloon",
+      "source": "haiku",
+      "verdict": "ok"
     },
     "59b6621c18e5b6ab": {
       "backtranslation": "Schere",
@@ -13164,7 +13233,10 @@
       "altEn": "gift certificate",
       "altEnSource": "deepl-ru",
       "date": "2026-10-05",
-      "de": "Gutschein"
+      "de": "Gutschein",
+      "en": "voucher",
+      "source": "haiku",
+      "verdict": "fix"
     },
     "6252eb108cefef68": {
       "backtranslation": "die Universität",
@@ -13202,9 +13274,13 @@
     },
     "62a3477004faf644": {
       "_src_note": "дело, с которым человек обращается – часто в сервисе: Was ist Ihr Anliegen?",
+      "backtranslation": "die Angelegenheit",
       "date": "2026-10-05",
+      "de": "Anliegen",
+      "en": "matter",
       "noteEn": "The issue a person is reporting—often through customer service: Was ist Ihr Anliegen?",
-      "source": "deepl"
+      "source": "haiku",
+      "verdict": "ok"
     },
     "62b73c2e9c153475": {
       "backtranslation": "Augenfarbe",
@@ -13832,9 +13908,13 @@
     },
     "68ec819a09263f11": {
       "_src_note": "в Швейцарии говорят der Match; в Германии средний род",
+      "backtranslation": "das Spiel",
       "date": "2026-10-05",
+      "de": "Match",
+      "en": "match",
       "noteEn": "In Switzerland, they say “der” and “Match”; in Germany, it is neuter",
-      "source": "deepl"
+      "source": "haiku",
+      "verdict": "ok"
     },
     "690b7b4594bb626e": {
       "backtranslation": "modern",
@@ -14580,6 +14660,13 @@
       "en": "driving instructor",
       "source": "deepl"
     },
+    "71b54005a0c13962": {
+      "date": "2026-10-05",
+      "de": "die Lieblingsmannschaft unterstützen",
+      "en": "to support your favourite team",
+      "source": "haiku",
+      "verdict": "fix"
+    },
     "71e7a80aa96c664f": {
       "backtranslation": "Messer",
       "date": "2026-08-27",
@@ -15261,8 +15348,11 @@
     "78904bfb46382282": {
       "_src_note": "не склоняется: gratis bekommen, Eintritt gratis",
       "date": "2026-10-05",
+      "de": "gratis",
+      "en": "for free",
       "noteEn": "Not inflected: gratis bekommen, Eintritt gratis",
-      "source": "deepl"
+      "source": "haiku",
+      "verdict": "fix"
     },
     "78c97cc0ce159618": {
       "backtranslation": "(ошибка API)",
@@ -15365,8 +15455,11 @@
     "799fd89e93a8aeb4": {
       "_src_note": "после sein профессия и роль идут без артикля",
       "date": "2026-10-05",
+      "de": "Fan sein",
+      "en": "to be a fan",
       "noteEn": "After \"sein,\" the profession and role are listed without an article",
-      "source": "deepl"
+      "source": "haiku",
+      "verdict": "fix"
     },
     "79bbc2755431fd73": {
       "date": "2026-08-27",
@@ -15537,9 +15630,13 @@
     },
     "7b6cd995c2f92d0f": {
       "_src_note": "бегут, чтобы собрать деньги: участник ищет спонсоров, те платят за каждый круг",
+      "backtranslation": "der Benefizlauf",
       "date": "2026-10-05",
+      "de": "Spendenlauf",
+      "en": "charity run",
       "noteEn": "They run to raise money: a participant seeks sponsors, who pay for each lap",
-      "source": "deepl"
+      "source": "haiku",
+      "verdict": "ok"
     },
     "7b72192554081391": {
       "backtranslation": "die CD",
@@ -16046,6 +16143,14 @@
       "en": "examiner",
       "source": "deepl"
     },
+    "8169c5daabcd1eb7": {
+      "backtranslation": "Tauchgang",
+      "date": "2026-10-05",
+      "de": "tauchen",
+      "en": "to dive",
+      "source": "haiku",
+      "verdict": "ok"
+    },
     "816d4a46d7ba1185": {
       "backtranslation": "Garage",
       "date": "2026-08-27",
@@ -16229,6 +16334,13 @@
       "source": "haiku",
       "verdict": "ok"
     },
+    "844352a3727f0906": {
+      "date": "2026-10-05",
+      "de": "Ausstattung",
+      "en": "equipment",
+      "source": "haiku",
+      "verdict": "fix"
+    },
     "844cb4454eaf56dd": {
       "backtranslation": "Boden",
       "date": "2026-08-27",
@@ -16324,6 +16436,13 @@
       "de": "zukünftig",
       "en": "future",
       "exampleEn": "my future employer",
+      "source": "haiku",
+      "verdict": "fix"
+    },
+    "8547da4c4c93666b": {
+      "date": "2026-10-05",
+      "de": "Stadtviertel",
+      "en": "city district",
       "source": "haiku",
       "verdict": "fix"
     },
@@ -16613,9 +16732,13 @@
     },
     "88be3a2a25f51755": {
       "_src_note": "глаголы на -ieren Partizip II строят без ge-",
+      "backtranslation": "schmücken",
       "date": "2026-10-05",
+      "de": "dekorieren",
+      "en": "to decorate",
       "noteEn": "Verbs ending in -ierenPartizipII are conjugated without ge-",
-      "source": "deepl"
+      "source": "haiku",
+      "verdict": "ok"
     },
     "88f9f9e855a1397f": {
       "backtranslation": "Hochzeit",
@@ -16987,8 +17110,11 @@
     "8da53288cdf80b1a": {
       "_src_note": "freuen берёт über + Akkusativ, когда радость уже случилась",
       "date": "2026-10-05",
+      "de": "sich über einen Sieg freuen",
+      "en": "to rejoice at a victory",
       "noteEn": "freuen goes to über + Akkusativ when the joy has already happened",
-      "source": "deepl"
+      "source": "haiku",
+      "verdict": "fix"
     },
     "8daf423eaf5e45cd": {
       "date": "2026-09-05",
@@ -17268,12 +17394,19 @@
     },
     "9097027a9a549b68": {
       "_src_note": "работает и предлогом с Genitiv: inklusive aller Kosten",
+      "backtranslation": "einschließlich",
       "date": "2026-10-05",
+      "de": "inklusive",
+      "en": "including",
       "noteEn": "It also works with the Genitiv prefix: inklusive aller Kosten",
-      "source": "deepl"
+      "source": "haiku",
+      "verdict": "ok"
     },
     "90d2a03d05a99239": {
+      "_src_altEn": "покупатель",
       "_src_note": "слабое склонение: den/dem/des Kunden; ж.р. die Kundin",
+      "altEn": "buyer",
+      "altEnSource": "deepl-ru",
       "backtranslation": "Kunde",
       "date": "2026-09-24",
       "de": "Kunde",
@@ -17612,6 +17745,13 @@
       "date": "2026-09-22",
       "de": "Worum handelt es sich?",
       "en": "what is it about?",
+      "source": "haiku",
+      "verdict": "fix"
+    },
+    "946bf931347e5d3c": {
+      "date": "2026-10-05",
+      "de": "stecken",
+      "en": "to stick",
       "source": "haiku",
       "verdict": "fix"
     },
@@ -18184,9 +18324,13 @@
     },
     "9a20a1c07aeaf951": {
       "_src_note": "oder andere. Рядом живёт o. ä. – oder ähnlich, «или подобное»; это разные сокращения",
+      "backtranslation": "usw.",
       "date": "2026-10-05",
+      "de": "o. a.",
+      "en": "etc.",
       "noteEn": "oder andere. o lives nearby. ä. – oder ähnlich, “or something like that”; these are different abbreviations",
-      "source": "deepl"
+      "source": "haiku",
+      "verdict": "ok"
     },
     "9a41e385e326bebe": {
       "backtranslation": "aufhängen",
@@ -18197,9 +18341,13 @@
     },
     "9a4916040e1039cf": {
       "_src_note": "ich segle – e из основы выпадает, как у sammeln и lächeln",
+      "backtranslation": "Segel",
       "date": "2026-10-05",
-      "noteEn": "ich segle – e is no longer part of the main lineup, just like at sammeln and lächeln",
-      "source": "deepl"
+      "de": "segeln",
+      "en": "to sail",
+      "noteEn": "ich segle – e is no longer part of the main lineup, as seen at sammeln and lächeln",
+      "source": "haiku",
+      "verdict": "ok"
     },
     "9a70432056b79888": {
       "backtranslation": "Nachtisch",
@@ -18323,6 +18471,14 @@
       "date": "2026-08-27",
       "de": "kriegen",
       "en": "to get",
+      "source": "haiku",
+      "verdict": "ok"
+    },
+    "9c450008b1ae83ac": {
+      "backtranslation": "der Torwart",
+      "date": "2026-10-05",
+      "de": "Tormann",
+      "en": "goalie",
       "source": "haiku",
       "verdict": "ok"
     },
@@ -18682,6 +18838,14 @@
       "en": "brake light",
       "source": "deepl"
     },
+    "a0d6d8afacb9fee4": {
+      "backtranslation": "immer noch",
+      "date": "2026-10-05",
+      "de": "weiterhin",
+      "en": "still",
+      "source": "haiku",
+      "verdict": "ok"
+    },
     "a0dc40c15d77931e": {
       "backtranslation": "manchmal",
       "date": "2026-08-27",
@@ -18826,8 +18990,11 @@
     "a288653d5ed7590b": {
       "_src_note": "gern не переводится отдельным словом – он добавляет «охотно, с удовольствием»",
       "date": "2026-10-05",
+      "de": "sich gern bewegen",
+      "en": "to like to move",
       "noteEn": "gern It can't be translated with a single word—he adds \"willingly, gladly\"",
-      "source": "deepl"
+      "source": "haiku",
+      "verdict": "fix"
     },
     "a28f200e4625a9af": {
       "altEn": "barely enough",
@@ -18854,8 +19021,11 @@
     "a30048b206e10d9d": {
       "_src_note": "от него всё пробное: Schnupperkurs, Schnupperstunde, Schnupperwoche – «прийти принюхаться»",
       "date": "2026-10-05",
+      "de": "schnuppern",
+      "en": "to sniff around",
       "noteEn": "Everything from him is just a trial run: Schnupperkurs, Schnupperstunde, Schnupperwoche – “come check it out”",
-      "source": "deepl"
+      "source": "haiku",
+      "verdict": "fix"
     },
     "a310388f3d27d26d": {
       "backtranslation": "bewölkt",
@@ -19698,7 +19868,10 @@
       "verdict": "fix"
     },
     "abb3252d0b741ea5": {
+      "_src_altEn": "супер",
       "_src_note": "разговорное",
+      "altEn": "super",
+      "altEnSource": "deepl-ru",
       "date": "2026-08-27",
       "de": "spitze",
       "en": "great",
@@ -19842,8 +20015,11 @@
     "ad5a1483c2e60d37": {
       "_src_note": "еда, которой обеспечивают участников – на мероприятии, в поездке, на работе",
       "date": "2026-10-05",
+      "de": "Verpflegung",
+      "en": "catering",
       "noteEn": "meals provided to participants—at events, on trips, and at work",
-      "source": "deepl"
+      "source": "haiku",
+      "verdict": "fix"
     },
     "ad80184f34859bd9": {
       "backtranslation": "die Solaranlage",
@@ -20218,9 +20394,13 @@
     },
     "b2e385ed3c5ca80c": {
       "_src_note": "сильный глагол: schließen – schloss – geschlossen; приставка an- отделяемая",
+      "backtranslation": "verbinden",
       "date": "2026-10-05",
-      "noteEn": "Strong verb: schließen – schloss – geschlossen; separable prefix an-",
-      "source": "deepl"
+      "de": "anschließen",
+      "en": "to connect",
+      "noteEn": "Strong verb: schließen – schloss – geschlossen; the prefix an- is separable",
+      "source": "haiku",
+      "verdict": "ok"
     },
     "b2f74ecc85d09fa6": {
       "_src_note": "vergleichen mit + Dat",
@@ -20233,9 +20413,13 @@
     },
     "b3070924966cd7e0": {
       "_src_note": "основа на -tz, поэтому du schwitzt без лишнего -s",
+      "backtranslation": "Schweiß",
       "date": "2026-10-05",
-      "noteEn": "The base is \"tz,\" so \"du\" and \"schwitzt\"—without the extra \"s\"",
-      "source": "deepl"
+      "de": "schwitzen",
+      "en": "to sweat",
+      "noteEn": "The base is \"tz,\" so du, schwitzt—without the extra \"s\"",
+      "source": "haiku",
+      "verdict": "ok"
     },
     "b3353bb82b2978a4": {
       "backtranslation": "Rollstuhl",
@@ -20990,7 +21174,10 @@
       "altEn": "interference",
       "altEnSource": "deepl-ru",
       "date": "2026-10-05",
-      "de": "Störung"
+      "de": "Störung",
+      "en": "malfunction",
+      "source": "haiku",
+      "verdict": "fix"
     },
     "ba90b8d6a04d2816": {
       "backtranslation": "Tattoo",
@@ -21418,6 +21605,14 @@
       "source": "haiku",
       "verdict": "fix"
     },
+    "bf022202af168c42": {
+      "backtranslation": "um auf eigene Faust zu trainieren",
+      "date": "2026-10-05",
+      "de": "individuell Sport treiben",
+      "en": "to exercise on your own",
+      "source": "haiku",
+      "verdict": "ok"
+    },
     "bf159e42ba0ea0ca": {
       "_src_altEn": "прямо",
       "_src_warning": "direkt aus Frankfurt – прямо из Франкфурта ( aus, не von – для городов)",
@@ -21527,6 +21722,13 @@
       "de": "aufräumen",
       "en": "to tidy up",
       "source": "deepl"
+    },
+    "c0109c07b76b080f": {
+      "date": "2026-10-05",
+      "de": "im Team Spaß haben",
+      "en": "to have fun as a team",
+      "source": "haiku",
+      "verdict": "fix"
     },
     "c02feb305afa5b92": {
       "backtranslation": "Fleisch",
@@ -22187,9 +22389,13 @@
     },
     "c6f95ba4762acd8b": {
       "_src_note": "разговорное, то же что Training",
+      "backtranslation": "das Training",
       "date": "2026-10-05",
+      "de": "Workout",
+      "en": "workout",
       "noteEn": "colloquial, same as Training",
-      "source": "deepl"
+      "source": "haiku",
+      "verdict": "ok"
     },
     "c7053c2d37d7e820": {
       "_src_note": "eine Firma gründen – основать компанию | Partizip II: gegründet",
@@ -23690,6 +23896,14 @@
       "en": "letter",
       "source": "deepl"
     },
+    "d7cb53fa0fa47839": {
+      "backtranslation": "das Trainingsgelände",
+      "date": "2026-10-05",
+      "de": "Trainingsfläche",
+      "en": "training area",
+      "source": "haiku",
+      "verdict": "ok"
+    },
     "d7ce650ffaf134b6": {
       "backtranslation": "das Stück",
       "date": "2026-09-05",
@@ -23820,9 +24034,13 @@
     },
     "da033a6d85108a9c": {
       "_src_note": "магазин бытовой химии, косметики и мелочей – DM, Müller, Rossmann. Аптекой не является, лекарства там не продают",
+      "backtranslation": "die Drogerie",
       "date": "2026-10-05",
+      "de": "Drogeriemarkt",
+      "en": "drugstore",
       "noteEn": "A store selling household cleaning products, cosmetics, and small items—DM, Müller, Rossmann. It is not a pharmacy; they do not sell medications there.",
-      "source": "deepl"
+      "source": "haiku",
+      "verdict": "ok"
     },
     "da07b49dcf6f80e2": {
       "backtranslation": "der Geburtsort",
@@ -24296,6 +24514,14 @@
       "source": "haiku",
       "verdict": "fix"
     },
+    "de824033dd886afa": {
+      "backtranslation": "um die Muskeln zu trainieren",
+      "date": "2026-10-05",
+      "de": "die Muskeln trainieren",
+      "en": "to exercise the muscles",
+      "source": "haiku",
+      "verdict": "ok"
+    },
     "de9fedbc83e1cc59": {
       "_src_altEn": "вахтёр",
       "altEn": "doorman",
@@ -24615,6 +24841,14 @@
       "en": "reception",
       "source": "deepl"
     },
+    "e190be5fe597a6ee": {
+      "backtranslation": "physisch",
+      "date": "2026-10-05",
+      "de": "körperlich",
+      "en": "physical",
+      "source": "haiku",
+      "verdict": "ok"
+    },
     "e197a576618dce42": {
       "_src_note": "gehängt – переходный, gehangen – непереходный",
       "backtranslation": "hängen",
@@ -24786,8 +25020,10 @@
       "altEnSource": "deepl-ru",
       "date": "2026-10-05",
       "de": "auflösen",
+      "en": "to dissolve",
       "noteEn": "In separable verbs ge-, it comes between the prefix and the root: auf-ge-löst",
-      "source": "deepl"
+      "source": "haiku",
+      "verdict": "fix"
     },
     "e31e2bd4d57da9e3": {
       "backtranslation": "langjährig",
@@ -24901,6 +25137,14 @@
       "de": "Schokoriegel",
       "en": "chocolate bar",
       "source": "manual"
+    },
+    "e443bb29b5758ff9": {
+      "backtranslation": "Anstieg",
+      "date": "2026-10-05",
+      "de": "steigern",
+      "en": "to increase",
+      "source": "haiku",
+      "verdict": "ok"
     },
     "e4443c270361c460": {
       "_src_note": "↔ auf dem Land | Ich wohne in der Stadt.",
@@ -26512,6 +26756,13 @@
       "source": "manual",
       "verdict": "ok"
     },
+    "f3b9536471d4ba75": {
+      "date": "2026-10-05",
+      "de": "Ski fahren",
+      "en": "to ski",
+      "source": "haiku",
+      "verdict": "fix"
+    },
     "f3bb739653aaef7d": {
       "backtranslation": "maximal",
       "date": "2026-08-30",
@@ -27087,6 +27338,14 @@
       "noteEn": "≈ einverstanden sein | akzeptieren + Akk",
       "source": "deepl"
     },
+    "f9d8b81e32b4b478": {
+      "backtranslation": "einzeln",
+      "date": "2026-10-05",
+      "de": "individuell",
+      "en": "individual",
+      "source": "haiku",
+      "verdict": "ok"
+    },
     "f9ede59ee64c818d": {
       "backtranslation": "Vorname",
       "date": "2026-08-27",
@@ -27525,8 +27784,11 @@
     "fef988ed9a021d62": {
       "_src_note": "Wettkampf – спортивная борьба, Wettbewerb – конкурс или соревнование вне спорта",
       "date": "2026-10-05",
+      "de": "Wettkampf",
+      "en": "sporting event",
       "noteEn": "Wettkampf – competitive wrestling, Wettbewerb – a contest or competition outside of sports",
-      "source": "deepl"
+      "source": "haiku",
+      "verdict": "fix"
     },
     "ff1fab1af8d9ca6a": {
       "_src_note": "Gummistiefel – резиновые",
