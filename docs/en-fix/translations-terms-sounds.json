@@ -290,15 +290,99 @@
       "noteEn": "Subordinating conjunction — the verb moves to the end: Man spart Strom, indem man den Stecker zieht. It names the manner, not the cause: replace it with weil and the sentence stops answering \"how?\""
     },
     "t0060": {
-  "de": "sowie",
-  "en": "as well as",
-  "noteEn": "a listing conjunction, the same sense as und, but written register. It does not change the word order. Not to be confused with so wie – “the same way as”"
-},
-"t0061": {
-  "de": "irreale Bedingung",
-  "en": "unreal condition",
-  "noteEn": "a condition that is not met – Wenn ich Zeit hätte, würde ich kommen. Both halves stand in Konjunktiv II"
-}
+      "de": "sowie",
+      "en": "as well as",
+      "noteEn": "a listing conjunction, the same sense as und, but written register. It does not change the word order. Not to be confused with so wie – “the same way as”"
+    },
+    "t0061": {
+      "de": "irreale Bedingung",
+      "en": "unreal condition",
+      "noteEn": "a condition that is not met – Wenn ich Zeit hätte, würde ich kommen. Both halves stand in Konjunktiv II"
+    },
+    "t0062": {
+      "de": "und",
+      "en": "and",
+      "noteEn": "A coordinating conjunction in position 0 – it stands outside the clause, so the word order does not change: Ich lerne Deutsch und ich arbeite."
+    },
+    "t0063": {
+      "de": "oder",
+      "en": "or",
+      "noteEn": "A coordinating conjunction in position 0, it does not change the word order: Nimmst du Tee oder Kaffee?"
+    },
+    "t0064": {
+      "de": "denn",
+      "en": "for",
+      "noteEn": "A coordinating conjunction: it stands outside the clause, so the verb stays in second place – Ich bleibe zu Hause, denn ich bin müde. weil (because) carries the same meaning but sends the verb to the end. English for behaves the same way: I am staying home, for I am tired."
+    },
+    "t0065": {
+      "de": "sondern",
+      "en": "but rather",
+      "noteEn": "Used only after a negation, and it replaces what was rejected: Das ist kein Tee, sondern Kaffee. Without nicht or kein you need aber (but)."
+    },
+    "t0066": {
+      "de": "dass",
+      "en": "that",
+      "noteEn": "Subordinating conjunction – the verb moves to the very end: Ich weiß, dass du morgen kommst."
+    },
+    "t0067": {
+      "de": "wenn",
+      "en": "if",
+      "noteEn": "Subordinating conjunction – the verb goes to the end: Wenn es regnet, bleibe ich zu Hause. A condition or a repeated action; for a single event in the past you need als."
+    },
+    "t0068": {
+      "de": "damit",
+      "en": "so that",
+      "noteEn": "Subordinating conjunction of purpose – the verb goes to the end: Ich spreche langsam, damit du mich verstehst. When both halves share one subject, um ... zu is the usual choice."
+    },
+    "t0069": {
+      "de": "bevor",
+      "en": "before",
+      "noteEn": "Subordinating conjunction – the verb goes to the end: Bevor ich gehe, esse ich etwas."
+    },
+    "t0070": {
+      "de": "ob",
+      "en": "whether",
+      "noteEn": "Subordinating conjunction of the indirect question – the verb goes to the end: Ich weiß nicht, ob er kommt. Not to be confused with wenn: ob is whether, wenn is if."
+    },
+    "t0071": {
+      "de": "nachdem",
+      "en": "after",
+      "noteEn": "Subordinating conjunction – the verb goes to the end, and the tenses have to differ: Plusquamperfekt in the subordinate clause, Präteritum in the main one – Nachdem er gegessen hatte, ging er los."
+    },
+    "t0072": {
+      "de": "falls",
+      "en": "in case",
+      "noteEn": "Subordinating conjunction – the verb goes to the end: Falls es regnet, nehme ich den Schirm. The same as wenn, but it stresses that the case is unlikely."
+    },
+    "t0073": {
+      "de": "während",
+      "en": "while",
+      "noteEn": "Subordinating conjunction – the verb goes to the end: Während ich koche, liest er. The same word also works as a preposition with Genitiv – während des Essens."
+    },
+    "t0074": {
+      "de": "sobald",
+      "en": "as soon as",
+      "noteEn": "Subordinating conjunction – the verb goes to the end: Sobald ich fertig bin, rufe ich dich an."
+    },
+    "t0075": {
+      "de": "solange",
+      "en": "as long as",
+      "noteEn": "Subordinating conjunction – the verb goes to the end: Solange es regnet, bleiben wir hier."
+    },
+    "t0076": {
+      "de": "das Perfekt",
+      "en": "present perfect tense",
+      "noteEn": "haben or sein + Partizip II – the main past form in spoken German"
+    },
+    "t0077": {
+      "de": "die Endung",
+      "en": "grammatical ending",
+      "noteEn": "what changes on the article, the adjective and the verb when they decline or conjugate"
+    },
+    "t0078": {
+      "de": "die Definition",
+      "en": "definition"
+    }
   },
   "SOUNDS": {
     "s0001": {

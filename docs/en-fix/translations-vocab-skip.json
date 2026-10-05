@@ -862,9 +862,9 @@
       "source": "manual"
     },
     "n1422": {
-  "de": "Sprachkenntnisse",
-  "en": "language skills",
-  "source": "manual"
+      "de": "Sprachkenntnisse",
+      "en": "language skills",
+      "source": "manual"
     },
     "n1423": {
       "de": "Weltmeisterschaft",
@@ -1324,6 +1324,11 @@
     "v0508": {
       "de": "festigen",
       "en": "to strengthen",
+      "source": "manual"
+    },
+    "n1498": {
+      "de": "Anfängerkurs",
+      "en": "course for beginners",
       "source": "manual"
     }
   }

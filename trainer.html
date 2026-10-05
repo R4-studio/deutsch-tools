@@ -18,15 +18,15 @@
   document.documentElement.classList.add('theme-' + saved);
 })();
 </script>
-<link rel="stylesheet" href="theme.css?v=20261004">
-<script src="i18n/ru.js?v=20261004"></script>
-<script src="i18n/en.js?v=20261004"></script>
-<script src="i18n/i18n.js?v=20261004"></script>
+<link rel="stylesheet" href="theme.css?v=20261005">
+<script src="i18n/ru.js?v=20261005"></script>
+<script src="i18n/en.js?v=20261005"></script>
+<script src="i18n/i18n.js?v=20261005"></script>
 
 <script crossorigin src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
 <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
-<script src="data.js?v=20261004"></script>
-<script src="rule-render.js?v=20261004"></script>
+<script src="data.js?v=20261005"></script>
+<script src="rule-render.js?v=20261005"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/7.25.6/babel.min.js"></script>
 
 <style>
@@ -1794,8 +1794,19 @@ function genL1_translate_DE_RU(item, vocabPool) {
 
 // ─── Генератор: Ур 1 — перевод RU→DE ─────────────────────────────────────
 function genL1_translate_RU_DE(item, vocabPool) {
+  // Дистрактор не должен значить то же, что спрошено. Вопрос показывает
+  // перевод слова, и вариант с таким же переводом — тоже верный ответ.
+  // Раньше проверялось только немецкое написание, поэтому на «библиотека»
+  // предлагались и Bibliothek, и Bücherei. Это не редкость: синонимы лежат
+  // в одной теме, а дистракторы берутся сначала из своей темы.
   const picks = pickDistractors(item, 3, vocabPool, {
-    acceptable: v => v.de && v.de !== item.de,
+    acceptable: v => {
+      if (!v.de || v.de === item.de) return false;
+      if (item.ru && (v.ru === item.ru || v.altRu === item.ru)) return false;
+      // то же и на английском интерфейсе: там в вопросе стоит item.en
+      if (item.en && (v.en === item.en || v.altEn === item.en)) return false;
+      return true;
+    },
     uniqueKey:  v => v.de,  // уникальность по немецкому написанию
   });
   if (picks.length < 3) return null;
@@ -2009,18 +2020,103 @@ function genL2_pers_pronoun(vocabPool) {
 // why — почему именно этот падеж. Идёт в explain вопроса: падеж в самом
 // задании больше не пишется, значит объяснение после ответа должно называть
 // механизм, а не только правильную букву.
+// need — какие классы слов шаблон допускает. Классов три, потому что двух
+// мало: место нельзя купить и взять («Ich kaufe den Flughafen»), но можно
+// увидеть и поставить подлежащим. Без этой разметки генератор брал слово
+// случайно и выдавал «Ich spreche mit der Theke», «Wir danken dem
+// Nahverkehr», «Ich helfe dem Müll».
+const ALL = ["person", "thing", "place"];
 const ARTICLE_TEMPLATES = [
-  { tmpl: "___ {noun} ist hier",        case: "Nom", why: "подлежащее стоит в Nominativ" },
-  { tmpl: "___ {noun} ist sehr schön",  case: "Nom", why: "подлежащее стоит в Nominativ" },
-  { tmpl: "Ich habe ___ {noun}",        case: "Akk", why: "haben требует Akkusativ" },
-  { tmpl: "Ich kaufe ___ {noun}",       case: "Akk", why: "kaufen требует Akkusativ" },
-  { tmpl: "Ich sehe ___ {noun}",        case: "Akk", why: "sehen требует Akkusativ" },
-  { tmpl: "Er nimmt ___ {noun}",        case: "Akk", why: "nehmen требует Akkusativ" },
-  { tmpl: "Ich helfe ___ {noun}",       case: "Dat", why: "helfen требует Dativ" },
-  { tmpl: "Ich spreche mit ___ {noun}", case: "Dat", why: "предлог mit всегда с Dativ" },
-  { tmpl: "Es gehört ___ {noun}",       case: "Dat", why: "gehören требует Dativ" },
-  { tmpl: "Wir danken ___ {noun}",      case: "Dat", why: "danken требует Dativ" },
+  { tmpl: "___ {noun} ist hier",        case: "Nom", need: ALL,                 why: "подлежащее стоит в Nominativ" },
+  { tmpl: "___ {noun} ist sehr schön",  case: "Nom", need: ["thing", "place"],  why: "подлежащее стоит в Nominativ" },
+  { tmpl: "Ich habe ___ {noun}",        case: "Akk", need: ["thing"],           why: "haben требует Akkusativ" },
+  { tmpl: "Ich kaufe ___ {noun}",       case: "Akk", need: ["thing"],           why: "kaufen требует Akkusativ" },
+  { tmpl: "Ich sehe ___ {noun}",        case: "Akk", need: ALL,                 why: "sehen требует Akkusativ" },
+  { tmpl: "Er nimmt ___ {noun}",        case: "Akk", need: ["thing"],           why: "nehmen требует Akkusativ" },
+  { tmpl: "Ich helfe ___ {noun}",       case: "Dat", need: ["person"],          why: "helfen требует Dativ" },
+  { tmpl: "Ich spreche mit ___ {noun}", case: "Dat", need: ["person"],          why: "предлог mit всегда с Dativ" },
+  { tmpl: "Es gehört ___ {noun}",       case: "Dat", need: ["person"],          why: "gehören требует Dativ" },
+  { tmpl: "Wir danken ___ {noun}",      case: "Dat", need: ["person"],          why: "danken требует Dativ" },
 ];
+
+// Класс слова берётся из его топиков, а не из отдельной колонки в базе:
+// шаблонов десяток, существительных 1461 — дешевле разметить шаблоны.
+// Одушевлённые темы проверены поимённо. people:body, people:identity и
+// people:health сюда НЕ входят: там Hand, Postleitzahl и Fieber — правило
+// «people:* живые» даёт «Ich helfe der Postleitzahl».
+const ANIMATE_TOPICS = new Set([
+  "people:professions", "people:family", "people:roles",
+  "people:relations", "nature:animals",
+]);
+
+// Класс "thing" — положительный список, а не вычет абстрактного. Так вышло
+// после прогона: абстрактность не свойство темы. В communication:general
+// лежат и Brief, и Antwort; из вычета получалось «Ich kaufe die Antwort»,
+// «Ich kaufe das Gehalt», «Ich kaufe den Regen». Перечислить то, что можно
+// купить и взять в руки, оказалось короче и надёжнее.
+const CONCRETE_TOPICS = new Set([
+  "products:food", "products:clothing", "products:tech",
+  "products:kitchenware", "products:stationery", "products:drinks",
+  "products:medical", "products:general", "products:materials",
+  "products:nutrition", "home:furniture", "home:appliances",
+  "home:textiles", "home:bathroom", "home:cleaning", "shopping:units",
+  "shopping:goods", "nature:plants", "movement:transport",
+  "leisure:hobby", "study:classroom",
+]);
+// new:new-nouns сюда НЕ входит: это буфер «Neu», в нём лежит всё только что
+// добавленное, в том числе Vorstellung и Körpersprache. Своя тема у слова
+// есть всегда, по ней и классифицируем.
+
+
+// Места: увидеть и назвать можно, купить и взять в руки — нет.
+const PLACE_TOPICS = new Set([
+  "place:city", "place:buildings", "place:rooms", "place:shops",
+  "place:housing", "leisure:places", "study:places",
+  "work:places", "nature:landscape",
+]);
+
+// n-Deklination: слабые существительные мужского рода получают -(e)n во
+// всех падежах, кроме Nominativ. Шаблон печатал начальную форму и давал
+// неправильный немецкий: «Ich spreche mit dem Kollege» вместо «Kollegen».
+// Список явный, не выведенный из множественного числа: по форме Plural сюда
+// попадают и Doktor (die Doktoren), и Professor — а у них дательный без -n.
+// Beamte и Verwandte — субстантивированные прилагательные, -n берут по
+// своей причине, но результат тот же.
+const N_DEKLINATION = {
+  "Student": "Studenten", "Architekt": "Architekten", "Kollege": "Kollegen",
+  "Nachbar": "Nachbarn", "Kunde": "Kunden", "Affe": "Affen",
+  "Elefant": "Elefanten", "Kandidat": "Kandidaten",
+  "Wunschkandidat": "Wunschkandidaten", "Spezialist": "Spezialisten",
+  "Löwe": "Löwen", "Rezeptionist": "Rezeptionisten", "Tourist": "Touristen",
+  "Beamte": "Beamten", "Verwandte": "Verwandten", "Experte": "Experten",
+  "Artist": "Artisten", "Assistent": "Assistenten", "Mensch": "Menschen",
+};
+
+// Люди, не попавшие в людские темы: Mensch и Lady лежат в people:identity
+// вместе с Postleitzahl и Augenfarbe. Тема у них по смыслу не та, но
+// править базу ради двух слов дороже, чем перечислить их здесь.
+const ANIMATE_EXTRA = new Set(["Mensch", "Lady"]);
+
+// Восемь слов лежат в «людских» темах, но людьми не являются. Заводить ради
+// них отдельную тему дороже, чем перечислить. Выпадают целиком: «Ich kaufe
+// die Affäre» не лучше, чем «Ich helfe dem Kuss».
+const ANIMATE_EXCEPTIONS = new Set([
+  "Kuss", "Affäre", "Verabredung", "Umgang", "Kinderwunsch",
+  "Pfote", "Schwanz", "Tierart",
+]);
+
+// nounClass(item) → "person" | "thing" | "place" | null. null значит «в артикльные
+// вопросы не берём вовсе». Одушевлённость проверяется первой: слово из
+// people:family остаётся человеком, даже если у него есть второй топик.
+function nounClass(item) {
+  const topics = item.topics || [];
+  const stem = (item.de || "").replace(/^(der |die |das )/, "");
+  if (ANIMATE_EXCEPTIONS.has(stem)) return null;
+  if (ANIMATE_EXTRA.has(stem) || topics.some(t => ANIMATE_TOPICS.has(t))) return "person";
+  if (topics.some(t => CONCRETE_TOPICS.has(t))) return "thing";
+  if (topics.some(t => PLACE_TOPICS.has(t))) return "place";
+  return null;
+}
 
 const GENDER_RU = { m: "мужского рода", f: "женского рода", n: "среднего рода" };
 
@@ -2033,7 +2129,12 @@ const ARTICLE_FORMS = {
 
 function genL3_article_in_context(item) {
   if (item.pos !== "noun" || !item.gender || item.gender === "pl") return null;
-  const tmpl = ARTICLE_TEMPLATES[Math.floor(Math.random() * ARTICLE_TEMPLATES.length)];
+  // Шаблон выбирается только среди тех, что подходят слову по одушевлённости.
+  const cls = nounClass(item);
+  if (!cls) return null;
+  const pool = ARTICLE_TEMPLATES.filter(t => t.need.includes(cls));
+  if (!pool.length) return null;
+  const tmpl = pool[Math.floor(Math.random() * pool.length)];
   const forms = ARTICLE_FORMS[item.gender];
   if (!forms) return null;
   const correct = forms[tmpl.case];
@@ -2044,7 +2145,10 @@ function genL3_article_in_context(item) {
   const ans = opts.indexOf(correct);
   // Имя существительного без артикля
   const nounStem = item.de.replace(/^(der |die |das )/, "");
-  const display = tmpl.tmpl.replace("{noun}", nounStem);
+  // В Akkusativ и Dativ слабое существительное встаёт в склонённую форму,
+  // иначе в задании оказывается неправильный немецкий. В Nominativ — нет.
+  const weak = tmpl.case !== "Nom" ? N_DEKLINATION[nounStem] : null;
+  const display = tmpl.tmpl.replace("{noun}", weak || nounStem);
   return {
     auto: true, level: "A2", difficulty: 3, type: "mc",
     // Падеж из текста задания убран: определить его по глаголу или предлогу
@@ -2052,7 +2156,9 @@ function genL3_article_in_context(item) {
     // шаблон, род задаёт само слово.
     ...wording("article_ctx", null, "\n" + display),
     opts, ans,
-    explain: `${tmpl.why}. ${nounStem} ${GENDER_RU[item.gender]} → ${correct}.`,
+    explain: weak
+      ? `${tmpl.why}. ${nounStem} ${GENDER_RU[item.gender]} → ${correct}. И само слово здесь не в начальной форме: ${nounStem} — слабое существительное, вне Nominativ оно получает -(e)n, отсюда ${weak}.`
+      : `${tmpl.why}. ${nounStem} ${GENDER_RU[item.gender]} → ${correct}.`,
     sourceId: item.id,
   };
 }
@@ -2269,8 +2375,12 @@ function genL1_unregel_translate_DE_RU(conj, allConjugations) {
 // ─── unregel-блок: Ур 1 — перевод глагола RU→DE ──────────────────────────
 function genL1_unregel_translate_RU_DE(conj, allConjugations) {
   if (!conj.ru) return null;
+  // Тот же запрет, что в genL1_translate_RU_DE: глагол с таким же переводом
+  // в варианты не идёт, иначе у вопроса два правильных ответа.
   const distractors = allConjugations
-    .filter(c => c.id !== conj.id && c.verb !== conj.verb)
+    .filter(c => c.id !== conj.id && c.verb !== conj.verb
+             && !(conj.ru && c.ru === conj.ru)
+             && !(conj.en && c.en === conj.en))
     .map(c => c.verb);
   if (distractors.length < 3) return null;
   const opts = shuffle([conj.verb, ...shuffle(distractors).slice(0, 3)]);
@@ -5264,6 +5374,6 @@ ReactDOM.render(React.createElement(App), document.getElementById('root'));
 <script data-goatcounter="https://r4studio.goatcounter.com/count"
         async src="//gc.zgo.at/count.js"></script>
 <div id="dt-bottom"></div>
-<script src="bottom.js?v=20261004"></script>
+<script src="bottom.js?v=20261005"></script>
 </body>
 </html>
