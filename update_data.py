@@ -984,6 +984,16 @@ def load_manual_rules_batches(translations, rules, warn):
                     "id↔правило недоступна, ключи применяются на доверии")
     if loaded_ids:
         print(f"  ✓ RULES manual: {len(loaded_ids)} записей из {len(files)} batch-файлов")
+    # Правило без ручного перевода — английский у него собран автоматом и
+    # никем не прочитан. Молчать об этом нельзя: автоперевод ломает немецкие
+    # примеры внутри обратных кавычек, теряет артикли и не делает noteEn,
+    # причём инварианты всего этого не ловят — формально текст чистый.
+    missing = sorted(rid for rid in by_id if rid not in set(loaded_ids))
+    if missing:
+        shown = ", ".join(missing[:8]) + ("…" if len(missing) > 8 else "")
+        warn.append(f"RULES: {len(missing)} правил без ручного перевода ({shown}) — "
+                    f"английский собран автоматом и не проверен. "
+                    f"Перевести и добавить в docs/en-fix/translations-rules-batch01.json")
     return loaded_ids
 
 def apply_manual_rules(rules, translations, warn):
