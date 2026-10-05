@@ -661,11 +661,13 @@ html {
 /* цветной левый бордер + иконка по типу: лампочка — жёлтый, знаки — красный */
 .rule-callout--bulb { border-left: 2px solid var(--orange-400); padding-left: 10px; }
 .rule-callout--warn { border-left: 2px solid var(--red-500);    padding-left: 10px; }
+.rule-callout--bolt { border-left: 2px solid var(--cyan-500);    padding-left: 10px; }
 .rule-callout--bulb svg { color: var(--orange-400); }
 .rule-callout--warn svg { color: var(--red-500); }
+.rule-callout--bolt svg { color: var(--cyan-500); }
 
 .rule-sec { margin: 14px 0 0; }
-.rule-sec__head { font-size: 13px; font-weight: 700; color: var(--text-title); margin: 0 0 6px; }
+.rule-sec__head { font-size: 15px; font-weight: 700; color: var(--text-title); margin: 0 0 6px; }
 
 /* чек-лист шагов — без «обёртки», только нумерованные кружки */
 .rule-steps { list-style: none; margin: 12px 0 0; padding: 0; }
@@ -697,7 +699,7 @@ html {
 .rule-collapse + .rule-collapse { margin-top: 0; }
 .rule-collapse > summary {
   list-style: none; cursor: pointer; padding: 10px 2px;
-  font-size: 13px; font-weight: 600; color: var(--text-title);
+  font-size: 15px; font-weight: 600; color: var(--text-title);
   display: flex; align-items: center; justify-content: space-between; gap: 10px;
 }
 .rule-collapse > summary::-webkit-details-marker { display: none; }
@@ -707,18 +709,13 @@ html {
 .rule-collapse__body > p:first-child,
 .rule-collapse__body > .rule-sec:first-child { margin-top: 2px; }
 
-/* плашка-примечание — цветной бордер слева, текст нейтральный, без заливки */
-.rule-plate {
-  margin: 14px 0 0; padding: 2px 0 2px 12px;
-  border-left: 3px solid var(--orange-400);
-  font-size: 12.5px; color: var(--text-main); line-height: 1.5;
-}
-.rule-plate--cyan { border-left-color: var(--cyan-500); }
-.rule-plate--red  { border-left-color: var(--red-500); }
-.rule-plate > svg { width: 13px; height: 13px; vertical-align: -2px; margin-right: 6px; color: var(--orange-400); }
-.rule-plate--red > svg { color: var(--red-500); }
-.rule-plate--cyan > svg { color: var(--cyan-500); }
-.rule-plate b { color: var(--text-title); }
+/* примечание под правилом — отделяется линией сверху, внутри обычные абзацы
+   и построчные плашки 💡 / ⚠ / ⚡ (те же, что в теле правила) */
+.rule-note { margin: 14px 0 0; padding-top: 12px; border-top: 1px solid var(--border-soft); }
+.rule-note > p { margin: 8px 0; font-size: 13px; line-height: 1.5; }
+.rule-note > p:first-child { margin-top: 0; color: var(--text-muted); }
+.rule-note > p:last-child { color: var(--text-muted); font-size: 12px; }
+.rule-note b { color: var(--text-title); }
 
 /* таблицы правил: колонки по содержимому + горизонтальный скролл (.table-wrap) */
 .rule-card table { table-layout: auto; }

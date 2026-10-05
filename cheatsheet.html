@@ -3791,23 +3791,68 @@ document.addEventListener('click', function(e) {
   function renderRules() {
     const panel = document.getElementById('tab-rules');
     if (!panel || typeof RULES === 'undefined') return;
-    // Группируем все правила по topic (domen:group), заголовок — из TOPIC_TITLES
+    const mode = window.SORT_MODE || 'topic-az';
+
+    // Порядок карточек слушается тот же, что на словарных вкладках и на «Neu».
+    // Раньше renderRules про SORT_MODE не знал вовсе: кнопка переключалась,
+    // подпись менялась, а список стоял в порядке появления правил в RULES.
+    // sortRows переиспользовать нельзя — он сравнивает по полю de, которого у
+    // правила нет; внутри секции сортируем по заголовку.
+    const ruleTitle = r => wordField(r, 'title', 'titleEn') || '';
+    const sortRules = arr => {
+      const a = arr.slice();
+      if (mode === 'date-asc' || mode === 'date-desc') {
+        const rev = mode === 'date-desc';
+        a.sort((x, y) => rev ? idNum(y) - idNum(x) : idNum(x) - idNum(y));
+        return a;
+      }
+      const rev = mode === 'topic-za' || mode === 'level-desc';
+      a.sort((x, y) => {
+        const r = ruleTitle(x).localeCompare(ruleTitle(y), 'de');
+        return rev ? -r : r;
+      });
+      return a;
+    };
+
+    const section = (titleHtml, rules) =>
+        '<div class="section" style="margin-bottom:24px">'
+      + '<div class="section-title" style="font-size:16px;margin-bottom:12px">' + titleHtml + '</div>'
+      + sortRules(rules).map(r => renderRuleCard(r)).join('')
+      + '</div>';
+
+    // Режимы по уровню: секциями становятся уровни, тема уступает место —
+    // ровно как на вкладке «Neu» и на словарных вкладках.
+    if (mode === 'level-asc' || mode === 'level-desc') {
+      const byLevel = {};
+      for (const r of RULES) {
+        const lvl = LEVEL_ORDER.includes(r.level) ? r.level : '–';
+        (byLevel[lvl] = byLevel[lvl] || []).push(r);
+      }
+      let core = LEVEL_ORDER.filter(l => byLevel[l]);
+      if (mode === 'level-desc') core = core.slice().reverse();
+      const order = core.concat(byLevel['–'] ? ['–'] : []);
+      panel.innerHTML = order.map(l => section(escHtml(l), byLevel[l])).join('');
+      return;
+    }
+
     const groups = {};
     for (const r of RULES) {
       const key = r.topic || 'misc';
-      if (!groups[key]) groups[key] = [];
-      groups[key].push(r);
+      (groups[key] = groups[key] || []).push(r);
     }
-    let html = '';
-    for (const topic of Object.keys(groups)) {
-      html += '<div class="section" style="margin-bottom:24px">';
-      html += '<div class="section-title" style="font-size:16px;margin-bottom:12px">' + topicTitleHtml(topic) + '</div>';
-      for (const r of groups[topic]) {
-        html += renderRuleCard(r);
-      }
-      html += '</div>';
+    const topics = Object.keys(groups);
+    if (mode === 'topic-az' || mode === 'topic-za') {
+      topics.sort((a, b) => topicLabel(a).localeCompare(topicLabel(b), 'de'));
+      if (mode === 'topic-za') topics.reverse();
+    } else {
+      // по дате: тема встаёт по своему самому свежему правилу
+      const freshest = {};
+      for (const t of topics) freshest[t] = groups[t].reduce((m, r) => Math.max(m, idNum(r)), 0);
+      topics.sort((a, b) => mode === 'date-desc'
+        ? freshest[b] - freshest[a]
+        : freshest[a] - freshest[b]);
     }
-    panel.innerHTML = html;
+    panel.innerHTML = topics.map(t => section(topicTitleHtml(t), groups[t])).join('');
   }
 
   // ─── Рендер: phrases ────────────────────────────────────────────────────

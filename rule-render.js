@@ -16,7 +16,7 @@ function escHtml(s) {
 function ic(key) { return (typeof ICON_SVGS !== 'undefined' && ICON_SVGS[key]) || ''; }
 
 // Маркеры-иконки в начале строк content_md (правила): 💡 совет, ⚠ предупреждение и т.п.
-var NOTE_ICON_MAP = { '💡': 'bulb', '⚠': 'warning', '📍': 'pin', '🔑': 'key', '✓': 'check', '✗': 'cross', '❗': 'warning', '👉': 'arrow-right' };
+var NOTE_ICON_MAP = { '💡': 'bulb', '⚠': 'warning', '⚡': 'bolt', '📍': 'pin', '🔑': 'key', '✓': 'check', '✗': 'cross', '❗': 'warning', '👉': 'arrow-right' };
 
 // ─── Утилиты для рендера правил ────────────────────────────────────────
 
@@ -169,11 +169,12 @@ function renderRuleBlocks(md) {
     if (steps) { out += ruleChecklist(steps); buf = []; return; }
     for (const line of buf) {
       // флаг u — иначе emoji-класс матчит только суррогатную половину 💡/📍/🔑
-      const m = line.match(/^([💡⚠📍🔑✓✗❗👉])\s*/u);
+      const m = line.match(/^([💡⚠⚡📍🔑✓✗❗👉])\s*/u);
       if (m) {
         const ch = m[1];
         const icon = NOTE_ICON_MAP[ch];
         const mod = ch === '💡' ? ' rule-callout--bulb'
+                  : ch === '⚡' ? ' rule-callout--bolt'
                   : (ch === '⚠' || ch === '❗' || ch === '✗') ? ' rule-callout--warn' : '';
         out += '<p class="rule-callout' + mod + '">' + (icon ? ic(icon) : '') + '<span>' + renderInline(line.slice(m[0].length)) + '</span></p>';
       } else out += '<p>' + renderInline(line) + '</p>';
@@ -239,17 +240,13 @@ function renderRuleBlocks(md) {
 }
 
 function renderRulePlate(text) {
-  if (!text) return '';
-  let cls = 'rule-plate', icon = '';
-  // note может начинаться с маркера 💡/⚠ — вырезаем его, ставим иконку и цвет
-  const m = text.match(/^([💡⚠📍🔑✓✗❗👉])\s*/u);
-  if (m) {
-    text = text.slice(m[0].length);
-    const key = NOTE_ICON_MAP[m[1]];
-    if (key) icon = ic(key);
-    if (m[1] === '⚠' || m[1] === '❗' || m[1] === '✗') cls += ' rule-plate--red';
-  }
-  return '<div class="' + cls + '">' + icon + renderInline(text) + '</div>';
+  if (!text || !text.trim()) return '';
+  // Заметка многострочная: сводка, строки с 💡/⚠/⚡, ссылки «см. также».
+  // Раньше шла одной строкой через renderInline — переносы схлопывались в
+  // абзац, а маркер искался только в самом начале всего текста, поэтому
+  // эмодзи внутри оставались эмодзи. Отдаём тому же рендеру, что и тело:
+  // он разбирает маркеры построчно и ставит иконки.
+  return '<div class="rule-note">' + renderRuleBlocks(text) + '</div>';
 }
 
 // Примеры — отдельная колонка examples/examplesEn. Прогоняются через тот же
