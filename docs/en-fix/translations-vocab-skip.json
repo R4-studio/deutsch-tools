@@ -1330,6 +1330,26 @@
       "de": "Anfängerkurs",
       "en": "course for beginners",
       "source": "manual"
+    },
+    "n0777": {
+      "de": "Weihnachten",
+      "en": "Christmas",
+      "source": "manual"
+    },
+    "n1524": {
+      "de": "Silvester",
+      "en": "New Year's Eve",
+      "source": "manual"
+    },
+    "n1528": {
+      "de": "Arbeitsbescheinigung",
+      "en": "certificate of employment",
+      "source": "manual"
+    },
+    "n1529": {
+      "de": "Erfolgsgeschichte",
+      "en": "success story",
+      "source": "manual"
     }
   }
 }
