@@ -1350,6 +1350,129 @@
       "de": "Erfolgsgeschichte",
       "en": "success story",
       "source": "manual"
+    },
+    "a0358": {
+      "de": "mitgenommen",
+      "en": "worn out",
+      "source": "manual"
+    },
+    "a0359": {
+      "de": "gesperrt",
+      "en": "blocked",
+      "altEn": "closed off",
+      "source": "manual",
+      "altEnSource": "manual"
+    },
+    "a0364": {
+      "de": "kostenpflichtig",
+      "en": "subject to a fee",
+      "source": "manual",
+      "noteEn": "also chargeable; the opposite is kostenlos, free of charge"
+    },
+    "a0367": {
+      "de": "hilfsbereit",
+      "en": "helpful",
+      "noteEn": "helpful of a person, willing to help; hilfreich is helpful of a thing. English has one word for both",
+      "source": "manual"
+    },
+    "a0368": {
+      "de": "geduldig",
+      "en": "patient",
+      "source": "manual"
+    },
+    "adv0183": {
+      "de": "innerhalb",
+      "en": "within",
+      "noteEn": "+ Genitiv: innerhalb der Stadt | innerhalb von + Dativ when the Genitiv is not visible: innerhalb von drei Jahren",
+      "source": "manual"
+    },
+    "n1533": {
+      "de": "Kita",
+      "en": "daycare center",
+      "noteEn": "short for Kindertagesstätte; takes children from infancy and all day, unlike Kindergarten",
+      "source": "manual"
+    },
+    "v0532": {
+      "de": "betreten",
+      "en": "to enter",
+      "source": "manual"
+    },
+    "v0533": {
+      "de": "beherrschen",
+      "en": "to master",
+      "source": "manual"
+    },
+    "v0536": {
+      "de": "sperren",
+      "en": "to block",
+      "altEn": "to close off",
+      "source": "manual",
+      "altEnSource": "manual"
+    },
+    "v0539": {
+      "de": "knacken",
+      "en": "to crack",
+      "source": "manual"
+    },
+    "a0360": {
+      "de": "erreichbar",
+      "en": "reachable",
+      "altEn": "attainable",
+      "noteEn": "of a person: reachable by phone | of a goal: attainable. accessible translates zugänglich",
+      "source": "manual",
+      "altEnSource": "manual"
+    },
+    "a0365": {
+      "de": "kommunikationsfähig",
+      "en": "able to communicate",
+      "altEn": "good at communicating",
+      "noteEn": "job adverts say good communication skills; communicative translates kommunikativ",
+      "source": "manual",
+      "altEnSource": "manual"
+    },
+    "n1518": {
+      "de": "Stadtreinigung",
+      "en": "municipal cleaning service",
+      "source": "manual"
+    },
+    "n1521": {
+      "de": "Einkaufswagen",
+      "en": "shopping cart",
+      "noteEn": "shopping trolley in British English",
+      "source": "manual"
+    },
+    "n1532": {
+      "de": "Vorschule",
+      "en": "pre-school year",
+      "noteEn": "the year before school starts; American preschool is what Germans call Kindergarten",
+      "source": "manual"
+    },
+    "n1534": {
+      "de": "Zusatz",
+      "en": "addition",
+      "noteEn": "a clause added to a contract, a substance added to food (an additive), a supplement to a payment",
+      "source": "manual"
+    },
+    "n1535": {
+      "de": "Eingewöhnung",
+      "en": "settling-in period",
+      "source": "manual"
+    },
+    "v0535": {
+      "de": "beachten",
+      "en": "to observe",
+      "altEn": "to heed",
+      "noteEn": "die Regel beachten – to observe the rule | bitte beachten Sie – please note",
+      "source": "manual",
+      "altEnSource": "manual"
+    },
+    "v0541": {
+      "de": "betrachten",
+      "en": "to look at",
+      "altEn": "to contemplate",
+      "noteEn": "etwas als Problem betrachten – to regard something as a problem",
+      "source": "manual",
+      "altEnSource": "manual"
     }
   }
 }

@@ -915,6 +915,40 @@ def wrap_latin_ignore_tags(text):
 def strip_ignore_tags(text):
     return text.replace("<x>", "").replace("</x>", "")
 
+def missing_latin_tokens(original, translated):
+    """Латинские токены исходника, которых нет в переводе.
+
+    Дефис входит в LATIN_WORD_RE, поэтому у немецкого слова, приклеенного
+    дефисом к русскому (Akkusativ-дополнение, m-рода, sie-она, ein-словом),
+    токеном становится «Akkusativ-» с висящим дефисом. В переводе русская
+    часть уходит вместе с дефисом — «Akkusativ object» — и такой токен не
+    найдётся дословно никогда: проверка ругалась на шесть правил, у которых
+    перевод в порядке. Поэтому если в исходнике за дефисом стоит кириллица,
+    требуем не токен, а его основу отдельным словом.
+
+    Настоящее немецкое «ge-» (обозначение приставки, за дефисом пробел) под
+    исключение не попадает и по-прежнему требуется дословно — иначе проверка
+    пропустила бы «ge» внутри gets или general.
+    """
+    seen, missing = set(), []
+    for m in LATIN_WORD_RE.finditer(original):
+        tok = m.group(0)
+        joins_cyrillic = tok.endswith("-") and bool(
+            re.match(r"[А-Яа-яЁё]", original[m.end():m.end() + 1]))
+        key = (tok, joins_cyrillic)
+        if key in seen:
+            continue
+        seen.add(key)
+        if joins_cyrillic:
+            stem = tok.rstrip("-")
+            whole_word = (r"(?<![A-Za-zÀ-ÖØ-öø-ÿ])" + re.escape(stem)
+                          + r"(?![A-Za-zÀ-ÖØ-öø-ÿ])")
+            if not re.search(whole_word, translated):
+                missing.append(stem)
+        elif tok not in translated:
+            missing.append(tok)
+    return missing
+
 def check_rule_field_invariants(original, translated):
     """(ok, reason). Все четыре инварианта из BRIEF §C: кириллицы нет,
     число строк совпадает, число | в каждой строке совпадает, каждый
@@ -928,7 +962,7 @@ def check_rule_field_invariants(original, translated):
     for idx, (ol, tl) in enumerate(zip(orig_lines, tr_lines), 1):
         if ol.count("|") != tl.count("|"):
             return False, f"строка {idx}: число | не совпадает ({ol.count('|')} → {tl.count('|')})"
-    missing = [tok for tok in dict.fromkeys(LATIN_WORD_RE.findall(original)) if tok not in translated]
+    missing = missing_latin_tokens(original, translated)
     if missing:
         return False, f"пропали токены: {', '.join(missing[:6])}"
     return True, None
@@ -1724,7 +1758,7 @@ def _changelog_items_invariants(items, parts):
             return f"элемент {i}: кириллица в переводе"
         if "<x" in tr or "</x" in tr:
             return f"элемент {i}: остаток тега <x/</x"
-        missing = [tok for tok in dict.fromkeys(LATIN_WORD_RE.findall(src)) if tok not in tr]
+        missing = missing_latin_tokens(src, tr)
         if missing:
             return f"элемент {i}: пропали токены: {', '.join(missing[:6])}"
     return None
